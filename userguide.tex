@@ -71,7 +71,7 @@ Gadget is distributed via anonymous ftp from the MRI ftp site, and the address o
 ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.05, so the file to be downloaded is gadget2.1.05.tar.gz.
+The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.06, so the file to be downloaded is gadget2.1.06.tar.gz.
 
 \bigskip
 Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
@@ -89,11 +89,11 @@ The most recent copy of this document will also be placed on the MRI ftp site, a
 A web site has been set up that contains details of the recent changes to Gadget, documentation updates and other news.  This is also a good place to look for more information about Gadget.  The address of the Gadget web site is {\tt http://www.hafro.is/gadget}
 
 \bigskip
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.05 on a Linux machine:
+Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.06 on a Linux machine:
 
 {\small\begin{verbatim}
-gunzip gadget2.1.05.tar.gz
-tar -xvf gadget2.1.05.tar
+gunzip gadget2.1.06.tar.gz
+tar -xvf gadget2.1.06.tar
 cd source
 make
 \end{verbatim}}
@@ -222,6 +222,11 @@ Starting Gadget with the -printinitial switch will specify a file to which Gadge
 gadget -printfinal <filename>
 \end{verbatim}}
 Starting Gadget with the -printfinal switch will specify a file to which Gadget will write all internal information for the model at the end of the run (ie. the stock populations, likelihood calculations and other information from after the last timestep).  This file will be large for moderately complicated models, and it is of most use for debugging purposes.
+
+{\small\begin{verbatim}
+gadget -maxratio <ratio>
+\end{verbatim}}
+Starting Gadget with the -maxratio switch will specify the maximum ratio of prey that is allowed to be ''consumed'' on any one timestep.  This consumption includes both the consumption by other stocks and the catch by any fleets.  The default value is 0.95, which ensures that no mare than 95\% of the available stock biomass is consumed on a single timestep.
 
 %gadget -noprint
 %gadget -forceprint
@@ -831,11 +836,11 @@ The weight data file consists of a list of the year, timestep, area  and length 
 This growth function is a simplified form of the Von Bertalanffy growth equation.  The increase in the length for each length group the stock is given by equation~\ref{eq:growth8l}, and the corresponding increase in the weight of the stock is given by equation~\ref{eq:growth8w} below:
 
 \begin{equation}\label{eq:growth8l}
-\Delta L_{i} = \left( q_{0} - L_{i} \right) \left( 1 - e^{-q_{1} \Delta t} \right)
+\Delta L_{i} = \left( L_{\infty} - L_{i} \right) \left( 1 - e^{-\kappa \Delta t} \right)
 \end{equation}
 
 \begin{equation}\label{eq:growth8w}
-\Delta W_{i} = q_{2} \left( \left( L_{i} + \Delta L_{i} \right) ^{q_{3}} - {L_{i}}^{q_{3}} \right)
+\Delta W_{i} = \alpha \left( \left( L_{i} + \Delta L_{i} \right) ^{\beta} - {L_{i}}^{\beta} \right)
 \end{equation}
 
 where:\newline
@@ -845,10 +850,10 @@ $<\Delta t>$ is the length of the timestep
 There are a total of 4 parameters for the equation for increase in length and weight.  These are declared in a single vector, as shown below:
 
 {\small\begin{verbatim}
-growthparameters       <growth parameters vector>
+growthparameters       <linf> <kappa> <alpha> <beta>
 \end{verbatim}}
 
-It is important to note that if the value of $q_{0}$ (also termed ''$L_{\infty}$'') is less than the mean length of a length group, then the length increase calculated by equation~\ref{eq:growth8l} would be negative for that length group, which will result in Gadget printing a warning message.  To avoid this, the user should ensure that the value of $q_{0}$ is always greater than the mean length of the largest length group.
+It is important to note that if the value of $L_{\infty}$ is less than the mean length of a length group, then the length increase calculated by equation~\ref{eq:growth8l} would be negative for that length group, which will result in Gadget printing a warning message.  To avoid this, the user should ensure that the value of $L_{\infty}$ is always greater than the mean length of the largest length group.
 
 \section{Growth Implementation}\label{sec:stockgrowthimplement}
 The growth functions described above calculate the mean growth for the stock within the model. This must then be translated into a statistical distribution of actual growths around that mean.  Currently there is only one statistical distribution implemented with Gadget, the beta-binomial, which is described below.
@@ -2807,7 +2812,7 @@ epsilon              <epsilon>
 likelihoodtype       <likelihood type>
 \end{verbatim}}
 
-The $<$stocknames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  The $<$suitability parameters$>$ define the suitability of the survey fleet that was used to collect the survey index data.  This is the same format as the suitability functions for the stock, as discussed in section~\ref{sec:suitability} above.  Note that only one set of suitability values is defined, which will be applied to all the stocks for this likelihood component.
+The $<$stocknames$>$ vector contains a list of all the stocks to be aggregated into a single pseudo stock for the purposes of the data comparison.  The $<$suitability parameters$>$ define the suitability of the survey fleet that was used to collect the survey index data.  This is the same format as the suitability functions for the stock, as discussed in section~\ref{sec:suitability} above.  Note that only one set of suitability values is defined, which will be applied to all the stocks for this likelihood component.
 
 \bigskip
 The $<$fit type$>$ defines what function is to be used to calculate the survey index distribution from the modelled population.  Currently, there are two functions defined, and the valid function names are:
@@ -4042,6 +4047,11 @@ A version of this user guide was printed and published as a Marine Research Inst
 \item added a survey index likelihood component that can use an index based on effort data (see section~\ref{subsec:sibyeffort})
 \item removed the need to specify the timesteps for the LikelihoodPrinter printer class, since the output is generated on the timesteps that the likelihood components have data for (see section~\ref{sec:likelihoodprinter})
 \item changed the ''half feeding value'' format to specify the biomass of the prey, rather than the density of the prey (see section~\ref{sec:consumption})
+\end{itemize}
+
+\section{Gadget version 2.1.06}\label{sec:v2106}
+\begin{itemize}
+\item this version only contains bug fixes, so there are no changes to the format of the input files
 \end{itemize}
 
 \end{document}

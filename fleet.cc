@@ -25,16 +25,14 @@ Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* cons
   int tmpint = 0;
   Formula multscaler;
   IntVector tmpareas;
-  char c;
 
   keeper->addString("fleet");
   keeper->addString(this->getName());
-
   infile >> text >> ws;
   if (strcasecmp(text, "livesonareas") != 0)
     handle.logFileUnexpected(LOGFAIL, "livesonareas", text);
 
-  c = infile.peek();
+  char c = infile.peek();
   while (isdigit(c) && !infile.eof()) {
     infile >> tmpint >> ws;
     tmpareas.resize(1, Area->getInnerArea(tmpint));

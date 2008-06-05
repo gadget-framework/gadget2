@@ -140,5 +140,5 @@ void Predator::readSuitability(CommentStream& infile,
   preference.resize(suitable->numPreys(), keeper);
 
   keeper->clearLast();
-  handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", i);
+  handle.logMessage(LOGMESSAGE, "Read predation data - number of preys", suitable->numPreys());
 }
