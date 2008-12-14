@@ -4,7 +4,8 @@
 #include "pvm3.h"
 #include "netdata.h"
 #include "pvmconstants.h"
-#include "charptrvector.h"
+#include "doublevector.h"
+#include "parametervector.h"
 
 // AJ, 07.09.99
 /**
@@ -33,9 +34,9 @@ private:
 
   int numVar;
   NetDataVariables* netDataVar;
-  double* netDataDouble;
+  DoubleVector netDataDouble;
   struct timeval tmout;
-  CharPtrVector netDataStr;
+  ParameterVector netDataStr;
 
 public:
   SlaveCommunication();
@@ -48,13 +49,14 @@ public:
   int send(NetDataResult* sendData);
   int sendToMaster(double res);
   int receivedVector();
-  void getVector(double* vec);
+  void getVector(DoubleVector& vec);
   int getReceiveType();
   int receiveString();
   int receiveBound();
   int receivedString();
   int receivedBounds();
-  void getBound(double* vec);
-  char* getString(int num);
+  void getBound(DoubleVector& vec);
+  const Parameter& getString(int num);
+  const ParameterVector& getStringVector();
 };
 #endif

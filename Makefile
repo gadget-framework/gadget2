@@ -72,7 +72,7 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     surveydistribution.o surveyindices.o sionstep.o sibyacousticonstep.o \
     sibyageonstep.o sibyfleetonstep.o sibylengthonstep.o sibyeffortonstep.o \
     optinfobfgs.o optinfohooke.o optinfosimann.o bfgs.o hooke.o simann.o \
-    addresskeepervector.o addresskeepermatrix.o intmatrix.o doublematrix.o \
+    addresskeepervector.o addresskeepermatrix.o tagptrvector.o \
     agebandmatrixptrvector.o agebandmatrixptrmatrix.o agebandmatrixratioptrvector.o \
     doublematrixptrvector.o doublematrixptrmatrix.o timevariablevector.o \
     formulavector.o formulamatrix.o formulamatrixptrvector.o charptrmatrix.o \
@@ -80,13 +80,13 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     popratiovector.o popratiomatrix.o popratioindexvector.o fleetptrvector.o \
     baseclassptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
     predatorptrvector.o preyptrvector.o printerptrvector.o stockptrvector.o \
-    migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o \
-    tagptrvector.o optinfoptrvector.o
+    migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
-GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
-    commentstream.o parameter.o parametervector.o errorhandler.o strstack.o
+GADGETINPUT = intvector.o doublevector.o intmatrix.o doublematrix.o \
+    charptrvector.o initialinputfile.o optinfoptrvector.o strstack.o \
+    commentstream.o parameter.o parametervector.o errorhandler.o
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 

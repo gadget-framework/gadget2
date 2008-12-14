@@ -20,6 +20,11 @@ public:
    */
   Parameter(const Parameter& p);
   /**
+   * \brief This is the Parameter constructor for a given string value
+   * \param value is the string value that will be set to the name of the Parameter
+   */
+  Parameter(char* value);
+  /**
    * \brief This is the default Parameter destructor
    */
   ~Parameter();
@@ -51,6 +56,11 @@ public:
    * \return 1 if the two Parameters are equal, 0 otherwise
    */
   int operator == (const Parameter& p) const;
+  /**
+   * \brief This function will check to see if the string that is going to be the name of the Parameter is valid or not
+   * \return 1 if the name is valid, 0 otherwise
+   */
+  int isValidName(char* value);
 private:
   /**
    * \brief This function will check to see if a character from the name of the Parameter is valid or not

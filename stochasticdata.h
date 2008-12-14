@@ -144,9 +144,9 @@ protected:
    */
   SlaveCommunication* slave;
   /**
-   * \brief This is the vector of parameters received from the network communication
+   * \brief This is the DoubleVector of parameters received from the network communication
    */
-  double* dataFromMaster;
+  DoubleVector dataFromMaster;
   /**
    * \brief This is the flag used to denote whether network communication has been succesful or not
    */

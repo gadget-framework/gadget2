@@ -27,7 +27,6 @@ StochasticData::StochasticData() {
 #ifdef GADGET_NETWORK
   slave = new SlaveCommunication();
   getdata = 0;
-  dataFromMaster = NULL;
   this->readFromNetwork();
 #endif
 }
@@ -35,8 +34,6 @@ StochasticData::StochasticData() {
 StochasticData::~StochasticData() {
   if (netrun) {
 #ifdef GADGET_NETWORK
-    if (dataFromMaster != NULL)
-      delete[] dataFromMaster;
     if (getdata)
       slave->stopNetCommunication();
     delete slave;
@@ -73,7 +70,6 @@ void StochasticData::readFromNetwork() {
   numParam = slave->startNetCommunication();
   if (numParam > 0) {
     //successfully started netcommunication
-    dataFromMaster = new double[numParam];
     if (values.Size() == 0) {
       values.resize(numParam, 0.0);
       lowerbound.resize(numParam, 0.0);

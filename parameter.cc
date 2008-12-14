@@ -13,6 +13,19 @@ Parameter::Parameter(const Parameter& p) {
   }
 }
 
+Parameter::Parameter(char* value) {
+  if (value == NULL) {
+    name = NULL;
+  } else {
+    if (this->isValidName(value)) {
+      name = new char[strlen(value) + 1];
+      strcpy(name, value);
+    } else {
+      handle.logMessage(LOGFAIL, "Error in parameter - invalid parameter name", value);
+    }
+  }
+}
+
 Parameter::~Parameter() {
   if (name != NULL) {
     delete[] name;
@@ -39,6 +52,17 @@ Parameter& Parameter::operator = (const Parameter& p) {
     strcpy(name, p.name);
   }
   return *this;
+}
+
+int Parameter::isValidName(char* value) {
+  int len = strlen(value);
+  if (len > MaxStrLength)
+    return 0;
+  int i;
+  for (i = 0; i < len; i++)
+    if (!this->isValidChar(value[i]))
+      return 0;
+  return 1;
 }
 
 int Parameter::isValidChar(int c) {
