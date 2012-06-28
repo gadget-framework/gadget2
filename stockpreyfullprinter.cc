@@ -8,8 +8,8 @@
 #include "readword.h"
 #include "gadget.h"
 #include "runid.h"
+#include "global.h"
 
-extern RunID RUNID;
 extern ErrorHandler handle;
 
 StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClass* const TimeInfo)

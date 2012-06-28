@@ -27,6 +27,7 @@ StochasticData::StochasticData() {
 #ifdef GADGET_NETWORK
   slave = new SlaveCommunication();
   getdata = 0;
+  dataFromMaster = NULL;
   this->readFromNetwork();
 #endif
 }
@@ -34,7 +35,11 @@ StochasticData::StochasticData() {
 StochasticData::~StochasticData() {
   if (netrun) {
 #ifdef GADGET_NETWORK
-    if (getdata)
+    if (dataFromMaster != NULL)
+      delete[] dataFromMaster;
+	// Breytti hér
+	//-----------------------------------------------------------------------------------------
+    if (!getdata)
       slave->stopNetCommunication();
     delete slave;
 #endif
@@ -70,12 +75,12 @@ void StochasticData::readFromNetwork() {
   numParam = slave->startNetCommunication();
   if (numParam > 0) {
     //successfully started netcommunication
+    dataFromMaster = new double[numParam];
     if (values.Size() == 0) {
       values.resize(numParam, 0.0);
       lowerbound.resize(numParam, 0.0);
       upperbound.resize(numParam, 0.0);
     }
-
     //try to receive switches from master
     getdata = slave->receiveFromMaster();
     if (getdata) {
@@ -87,7 +92,6 @@ void StochasticData::readFromNetwork() {
       } else
         getdata = 0;
     }
-
     //try to receive lowerbounds from master
     getdata = slave->receiveFromMaster();
     if (getdata) {
@@ -98,7 +102,6 @@ void StochasticData::readFromNetwork() {
       } else
         getdata = 0;
     }
-
     //try to receive upperbounds from master
     getdata = slave->receiveFromMaster();
     if (getdata) {
@@ -109,7 +112,6 @@ void StochasticData::readFromNetwork() {
       } else
         getdata = 0;
     }
-
     //try to receive vector value from master
     getdata = slave->receiveFromMaster();
     if (getdata) {
@@ -120,7 +122,6 @@ void StochasticData::readFromNetwork() {
       } else
         getdata = 0;
     }
-
   } else
     getdata = 0;
 

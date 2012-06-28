@@ -9,8 +9,8 @@
 #include "prey.h"
 #include "gadget.h"
 #include "runid.h"
+#include "global.h"
 
-extern RunID RUNID;
 extern ErrorHandler handle;
 
 PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const TimeInfo)

@@ -7,20 +7,21 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
               -Wuninitialized -W -pedantic
 
 #DEFINE_FLAGS = -D DEBUG -D INTERRUPT_HANDLER -g -O
-DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O2 -s
+DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O2 
+#-s
 
 ##########################################################################
 # The name of the final executable (eg gadget-paramin or gadget.exe)
-GADGET = gadget
+GADGET = gadget-PARA
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
 # 1. Linux, or Cygwin, or Solaris, without pvm3, g++ compiler
-CXX = g++
+CXX = mpic++
 LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm
-CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
-OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
+CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
+OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
 ##########################################################################
 # 2. Linux, or Cygwin, or Solaris, with pvm3, g++ compiler
 #CXX = g++
@@ -49,7 +50,7 @@ OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 ##########################################################################
 
 GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
-    area.o time.o keeper.o maininfo.o printinfo.o runid.o stochasticdata.o \
+    area.o time.o keeper.o maininfo.o printinfo.o runid.o global.o stochasticdata.o \
     timevariable.o formula.o readaggregation.o readfunc.o readmain.o readword.o \
     actionattimes.o livesonareas.o lengthgroup.o conversionindex.o selectfunc.o \
     suitfunc.o suits.o popinfo.o popinfomemberfunctions.o popratio.o popstatistics.o \
@@ -72,7 +73,7 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     surveydistribution.o surveyindices.o sionstep.o sibyacousticonstep.o \
     sibyageonstep.o sibyfleetonstep.o sibylengthonstep.o sibyeffortonstep.o \
     optinfobfgs.o optinfohooke.o optinfosimann.o bfgs.o hooke.o simann.o \
-    addresskeepervector.o addresskeepermatrix.o tagptrvector.o \
+    addresskeepervector.o addresskeepermatrix.o intmatrix.o doublematrix.o \
     agebandmatrixptrvector.o agebandmatrixptrmatrix.o agebandmatrixratioptrvector.o \
     doublematrixptrvector.o doublematrixptrmatrix.o timevariablevector.o \
     formulavector.o formulamatrix.o formulamatrixptrvector.o charptrmatrix.o \
@@ -80,13 +81,13 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     popratiovector.o popratiomatrix.o popratioindexvector.o fleetptrvector.o \
     baseclassptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
     predatorptrvector.o preyptrvector.o printerptrvector.o stockptrvector.o \
-    migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o
+    migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o \
+    tagptrvector.o optinfoptrvector.o errorhandler.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
-GADGETINPUT = intvector.o doublevector.o intmatrix.o doublematrix.o \
-    charptrvector.o initialinputfile.o optinfoptrvector.o strstack.o \
-    commentstream.o parameter.o parametervector.o errorhandler.o
+GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
+    commentstream.o parameter.o parametervector.o strstack.o 
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 
@@ -104,7 +105,8 @@ install	:	$(GADGET)
 # for newer versions of paramin.  To create this library, you need
 # to type "make libgadgetinput.a" *before* you compile paramin
 ##########################################################################
-libgadgetinput.a	:	$(GADGETINPUT)
+EXTRAINPUT = optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
+libgadgetinput.a	:	$(GADGETINPUT) $(EXTRAINPUT)
 		ar rs libgadgetinput.a $?
 
 clean	:

@@ -9,11 +9,6 @@ PVMConstants::PVMConstants() {
   masterSendString = 5;
   masterReceiveData = 6;
   masterSendBound = 7;
-  hostAdd = 8;
-  hostSuspend = 9;
-  hostResume = 10;
-  hostDelete = 11;
-  taskExit = 12;
   dataEncode = 1;
 }
 

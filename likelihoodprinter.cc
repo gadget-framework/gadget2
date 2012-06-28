@@ -5,8 +5,8 @@
 #include "readword.h"
 #include "gadget.h"
 #include "runid.h"
+#include "global.h"
 
-extern RunID RUNID;
 extern ErrorHandler handle;
 
 LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* const TimeInfo)

@@ -2,8 +2,8 @@
 #include "errorhandler.h"
 #include "gadget.h"
 #include "runid.h"
+#include "global.h"
 
-extern RunID RUNID;
 extern ErrorHandler handle;
 
 void MainInfo::showCorrectUsage(char* error) {

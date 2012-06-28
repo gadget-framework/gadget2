@@ -12,8 +12,8 @@
 #include "readword.h"
 #include "gadget.h"
 #include "runid.h"
+#include "global.h"
 
-extern RunID RUNID;
 extern ErrorHandler handle;
 
 StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const TimeInfo)

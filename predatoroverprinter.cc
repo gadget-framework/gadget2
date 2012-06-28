@@ -9,8 +9,8 @@
 #include "predator.h"
 #include "gadget.h"
 #include "runid.h"
+#include "global.h"
 
-extern RunID RUNID;
 extern ErrorHandler handle;
 
 PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile, const TimeClass* const TimeInfo)

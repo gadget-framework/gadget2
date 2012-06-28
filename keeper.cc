@@ -3,8 +3,8 @@
 #include "runid.h"
 #include "ecosystem.h"
 #include "gadget.h"
+#include "global.h"
 
-extern RunID RUNID;
 extern Ecosystem* EcoSystem;
 extern ErrorHandler handle;
 

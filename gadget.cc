@@ -5,8 +5,8 @@
 #include "errorhandler.h"
 #include "stochasticdata.h"
 #include "interrupthandler.h"
+#include "global.h"
 
-RunID RUNID;
 Ecosystem* EcoSystem;
 ErrorHandler handle;
 
@@ -76,10 +76,11 @@ int main(int aNumber, char* const aVector[]) {
 
     } else if (main.getInitialParamGiven()) {
       if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
-        handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
+	  	handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
       data = new StochasticData(main.getInitialParamFile());
       if (chdir(workingdir) != 0)
         handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
+	
 
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
@@ -121,8 +122,8 @@ int main(int aNumber, char* const aVector[]) {
       handle.logMessage(LOGFAIL, "Error - no parameters can be optimised");
 
     if (main.getInitialParamGiven()) {
-      if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
-        handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
+      	if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
+	        handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
       data = new StochasticData(main.getInitialParamFile());
       if (chdir(workingdir) != 0)
         handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
