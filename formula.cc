@@ -281,7 +281,7 @@ void Formula::setValue(double init) {
 
 CommentStream& operator >> (CommentStream& infile, Formula& F) {
   if (F.type != CONSTANT)
-    handle.logFileMessage(LOGFAIL, "failed to read formula data");
+    handle.logFileMessage(LOGFAIL, "failed to read formula data, f.type != const");
 
   if (infile.fail())
     return infile;
@@ -388,7 +388,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       infile >> ws;
       if (infile.eof()) {
         // Something has gone wrong, no closing bracket
-        handle.logFileMessage(LOGFAIL, "failed to read formula data");
+        handle.logFileMessage(LOGFAIL, "failed to read formula data, no closing bracket");
         return infile;
       }
       c = infile.peek();
@@ -409,9 +409,14 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     return infile;
   }
 
-  if (!isdigit(c) && (c != '-'))  //JMB check that we actually have a number to read
-    handle.logFileMessage(LOGFAIL, "failed to read formula data");
-
+  if (!isdigit(c) && (c != '-')){  //JMB check that we actually have a number to read
+    //    char* tmp;
+    //tmp = new char[strlen(c) + 1];
+    //tmp = strcpy(tmp,c);
+    //cerr << 'hallo' << tmp << '\n';
+    handle.logFileMessage(LOGFAIL,"failed to read formula data, no number to read: ");
+    //delete[] tmp;
+   }
   // Read initial value (could be CONSTANT or PARAMETER)
   if (!(infile >> F.value))
     return infile;
@@ -438,7 +443,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     return infile;
   }
 
-  handle.logFileMessage(LOGFAIL, "failed to read formula data");
+  handle.logFileMessage(LOGFAIL, "failed to read formula data, no detectable pattern");
   return infile;
 }
 

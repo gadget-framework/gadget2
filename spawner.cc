@@ -154,6 +154,9 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     } else if (strcasecmp(functionname, "fecundity") == 0) {
       functionnumber = 4;
       spawnParameters.resize(5, keeper);
+    } else if (strcasecmp(functionname, "baleen") == 0) {
+      functionnumber = 5;
+      spawnParameters.resize(4, keeper);
     } else
       handle.logFileMessage(LOGFAIL, "unrecognised recruitment function", functionname);
 
@@ -415,18 +418,21 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
 
 double SpawnData::calcSpawnNumber(int age, int len, double number, double weight) {
   double temp = 0.0;
-
+  
   switch (functionnumber) {
-    case 1:
-    case 2:
-    case 3:
-      temp = number * weight;
-      break;
-    case 4:
-      temp = pow(LgrpDiv->meanLength(len), spawnParameters[1]) * pow(age, spawnParameters[2])
-             * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
-      break;
-    default:
+  case 1:
+  case 2:
+  case 3:
+    temp = number * weight;
+    break;
+  case 4:
+    temp = pow(LgrpDiv->meanLength(len), spawnParameters[1]) * pow(age, spawnParameters[2])
+      * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
+    break;
+  case 5:
+    temp = number;
+    break;
+  default:
       handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
       break;
   }
@@ -443,17 +449,21 @@ double SpawnData::calcRecruitNumber(double temp, int inarea) {
       ssb += (*spawnNumbers[inarea])[age][len];
 
   switch (functionnumber) {
-    case 1:
-    case 4:
-      total = ssb * spawnParameters[0];
-      break;
-    case 2:
-      total = ssb * spawnParameters[0] * exp(-spawnParameters[1] * ssb);
-      break;
-    case 3:
-      total = ssb * spawnParameters[0] / (spawnParameters[1] + ssb);
-      break;
-    default:
+  case 1:
+  case 4:
+    total = ssb * spawnParameters[0];
+    break;
+  case 2:
+    total = ssb * spawnParameters[0] * exp(-spawnParameters[1] * ssb);
+    break;
+  case 3:
+    total = ssb * spawnParameters[0] / (spawnParameters[1] + ssb);
+    break;
+  case 5:
+    total = ssb * spawnParameters[0] * 
+      (1 + spawnParameters[1] * (1- pow(ssb / spawnParameters[2],double(spawnParameters[3])))); 
+    break;
+  default:
       handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
       break;
   }
