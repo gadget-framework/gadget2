@@ -11,7 +11,7 @@
 #include "gadget.h"
 
 #ifdef GADGET_NETWORK
-#include "pvm3.h"
+#include "mpi.h"
 #include "slavecommunication.h"
 #endif
 
@@ -144,9 +144,9 @@ protected:
    */
   SlaveCommunication* slave;
   /**
-   * \brief This is the DoubleVector of parameters received from the network communication
+   * \brief This is the vector of parameters received from the network communication
    */
-  DoubleVector dataFromMaster;
+  double* dataFromMaster;
   /**
    * \brief This is the flag used to denote whether network communication has been succesful or not
    */
