@@ -1,8 +1,7 @@
 #include "lengthpredator.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 LengthPredator::LengthPredator(const char* givenname, const IntVector& Areas,
   Keeper* const keeper, Formula multscaler) : PopPredator(givenname, Areas) {

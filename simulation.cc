@@ -2,8 +2,7 @@
 #include "errorhandler.h"
 #include "gadget.h"
 #include "interruptinterface.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 void Ecosystem::updatePredationOneArea(int area) {
   int i;

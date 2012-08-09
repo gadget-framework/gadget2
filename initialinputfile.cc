@@ -1,8 +1,7 @@
 #include "initialinputfile.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 int InitialInputFile::isDataLeft() {
   if (!repeatedValues)

@@ -1,7 +1,6 @@
 #include "commentstream.h"
 #include "errorhandler.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 istream& operator >> (istream& istr, Whitespace& ws) {
   int c;

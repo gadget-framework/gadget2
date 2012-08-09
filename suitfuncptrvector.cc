@@ -1,8 +1,7 @@
 #include "suitfuncptrvector.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 SuitFuncPtrVector::~SuitFuncPtrVector() {
   if (v != 0) {

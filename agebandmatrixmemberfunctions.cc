@@ -6,8 +6,7 @@
 #include "popinfovector.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI, double ratio) {
 

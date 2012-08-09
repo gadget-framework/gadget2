@@ -7,8 +7,7 @@
 #include "readword.h"
 #include "readaggregation.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgrpdiv,
   const IntVector& areas, const AreaClass* const Area, const TimeClass* const TimeInfo,

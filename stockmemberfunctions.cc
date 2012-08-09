@@ -13,8 +13,7 @@
 #include "stray.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 void Stock::Migrate(const TimeClass* const TimeInfo) {
   if (doesmigrate && migration->isMigrationStep(TimeInfo)) {

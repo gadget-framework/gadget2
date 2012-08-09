@@ -30,8 +30,7 @@
 #include "surveydistribution.h"
 #include "migrationpenalty.h"
 #include "catchinkilos.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 void Ecosystem::Initialise() {
   PreyPtrVector preyvec;

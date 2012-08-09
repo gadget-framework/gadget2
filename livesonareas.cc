@@ -1,8 +1,7 @@
 #include "livesonareas.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 LivesOnAreas::LivesOnAreas(const IntVector& Areas) : areas(Areas) {
   int i, j, maxim = 0;

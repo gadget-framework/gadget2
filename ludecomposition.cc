@@ -1,7 +1,6 @@
 #include "ludecomposition.h"
 #include "errorhandler.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
   if (A.Ncol() != A.Nrow())

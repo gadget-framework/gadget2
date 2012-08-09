@@ -5,8 +5,7 @@
 #include "readfunc.h"
 #include "readword.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 // ********************************************************
 // Functions for GrowthCalcBase

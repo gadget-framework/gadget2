@@ -5,8 +5,7 @@
 #include "keeper.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, const Keeper* const keeper, double weight, const char* name)

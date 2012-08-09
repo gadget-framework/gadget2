@@ -176,9 +176,9 @@
 #include "intvector.h"
 #include "errorhandler.h"
 #include "ecosystem.h"
+#include "global.h"
 
 extern Ecosystem* EcoSystem;
-extern ErrorHandler handle;
 
 void OptInfoSimann::OptimiseLikelihood() {
 

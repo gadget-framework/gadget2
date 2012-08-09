@@ -2,8 +2,7 @@
 #include "predator.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 PredatorOverAggregator::PredatorOverAggregator(const PredatorPtrVector& preds,
   const IntMatrix& Areas, const LengthGroupDivision* const LgrpDiv)

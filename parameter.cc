@@ -1,8 +1,7 @@
 #include "parameter.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 Parameter::Parameter(const Parameter& p) {
   if (p.name == NULL)  {

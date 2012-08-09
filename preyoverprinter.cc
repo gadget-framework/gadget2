@@ -11,8 +11,6 @@
 #include "runid.h"
 #include "global.h"
 
-extern ErrorHandler handle;
-
 PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(PREYOVERPRINTER), preyLgrpDiv(0), aggregator(0), dptr(0) {
 

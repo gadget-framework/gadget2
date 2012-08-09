@@ -9,8 +9,7 @@
 #include "mathfunc.h"
 #include "stockprey.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 StockDistribution::StockDistribution(CommentStream& infile,
   const AreaClass* const Area, const TimeClass* const TimeInfo,

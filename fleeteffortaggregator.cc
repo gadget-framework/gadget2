@@ -5,8 +5,7 @@
 #include "poppredator.h"
 #include "fleet.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 FleetEffortAggregator::FleetEffortAggregator(const FleetPtrVector& Fleets,
   const StockPtrVector& Stocks, const IntMatrix& Areas)

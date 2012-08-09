@@ -7,8 +7,7 @@
 #include "readword.h"
 #include "readaggregation.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivision* const lgrpdiv,
   const IntVector& Areas, const AreaClass* const Area, const TimeClass* const TimeInfo,

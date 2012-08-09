@@ -1,8 +1,7 @@
 #include "optinfo.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 OptInfoSimann::OptInfoSimann()
   : OptInfo(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0), cs(2.0),

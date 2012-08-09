@@ -12,8 +12,6 @@
 #include "runid.h"
 #include "global.h"
 
-extern ErrorHandler handle;
-
 StockPreyPrinter::StockPreyPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(STOCKPREYPRINTER), LgrpDiv(0), aggregator(0), alptr(0) {
 

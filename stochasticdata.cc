@@ -2,8 +2,7 @@
 #include "readfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 StochasticData::StochasticData(const char* const filename) {
   netrun = 0;
@@ -21,9 +20,24 @@ StochasticData::StochasticData(const char* const filename) {
     handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
 }
 
-StochasticData::StochasticData() {
-  netrun = 1;
-  readInfo = NULL;
+StochasticData::StochasticData(const char* const filename, int p) {
+  //netrun = 1;
+  netrun = p;
+  //readInfo = NULL;
+  // Prufa Hér
+  readInfo = new InitialInputFile(filename);
+  readInfo->readFromFile();
+  if (readInfo->isRepeatedValues()) {
+    if (readInfo->numSwitches() > 0)
+      readInfo->getSwitches(switches);
+    readInfo->getValues(values);
+
+  } else
+    readInfo->getVectors(switches, values, lowerbound, upperbound, optimise);
+
+  if ((switches.Size() > 0) && (switches.Size() != values.Size()))
+    handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
+  // Klárast hér.
 #ifdef GADGET_NETWORK
   slave = new SlaveCommunication();
   getdata = 0;

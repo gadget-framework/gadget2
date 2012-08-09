@@ -14,8 +14,6 @@
 #include "runid.h"
 #include "global.h"
 
-extern ErrorHandler handle;
-
 StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(STOCKSTDPRINTER), stockname(0), LgrpDiv(0), saggregator(0), paggregator(0), salptr(0), palptr(0) {
 

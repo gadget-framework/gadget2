@@ -2,8 +2,7 @@
 #include "mathfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 double Multinomial::calcLogLikelihood(const DoubleVector& data, const DoubleVector& dist) {
 

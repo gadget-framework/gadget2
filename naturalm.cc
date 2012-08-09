@@ -5,8 +5,7 @@
 #include "keeper.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 NaturalMortality::NaturalMortality(CommentStream& infile, int minage, int numage,
   const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper)

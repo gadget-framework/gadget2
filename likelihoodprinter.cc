@@ -7,8 +7,6 @@
 #include "runid.h"
 #include "global.h"
 
-extern ErrorHandler handle;
-
 LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(LIKELIHOODPRINTER) {
 

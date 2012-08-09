@@ -2,8 +2,7 @@
 #include "actionattimes.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const TimeInfo) {
 

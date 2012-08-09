@@ -8,8 +8,7 @@
 #include "stock.h"
 #include "suitfuncptrvector.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name)

@@ -10,8 +10,7 @@
 #include "readword.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 Fleet::Fleet(CommentStream& infile, const char* givenname, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, FleetType ftype)

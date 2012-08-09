@@ -1,8 +1,7 @@
 #include "printinfo.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 PrintInfo::PrintInfo() : printiter(0), printoutput(0), givenPrecision(0) {
 

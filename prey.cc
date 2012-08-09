@@ -5,8 +5,7 @@
 #include "keeper.h"
 #include "mathfunc.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
   : HasName(givenname), LivesOnAreas(Areas), CI(0) {

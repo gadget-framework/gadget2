@@ -11,8 +11,6 @@
 #include "runid.h"
 #include "global.h"
 
-extern ErrorHandler handle;
-
 PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(PREDATOROVERPRINTER), predLgrpDiv(0), aggregator(0), dptr(0) {
 

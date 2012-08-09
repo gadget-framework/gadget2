@@ -2,8 +2,7 @@
 #include "popinfo.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 void PopStatistics::calcStatistics(const PopInfoIndexVector& pop,
   const LengthGroupDivision* const lgrpdiv, int calcweight) {

@@ -4,13 +4,12 @@
 #include "doublematrix.h"
 #include "ecosystem.h"
 #include "gadget.h"
-
+#include "global.h"
 /* JMB this has been modified to work with the gadget object structure   */
 /* This means that the function has been replaced by a call to ecosystem */
 /* object, and we can use the vector objects that have been defined      */
 
 extern Ecosystem* EcoSystem;
-extern ErrorHandler handle;
 
 /* calculate the smallest eigenvalue of a matrix */
 double OptInfoBFGS::getSmallestEigenValue(DoubleMatrix M) {

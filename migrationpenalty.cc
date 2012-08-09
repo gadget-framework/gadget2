@@ -2,8 +2,7 @@
 #include "errorhandler.h"
 #include "readword.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 MigrationPenalty::MigrationPenalty(CommentStream& infile, double weight, const char* name)
   : Likelihood(MIGRATIONPENALTYLIKELIHOOD, weight, name), powercoeffs(2) {

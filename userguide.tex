@@ -3955,6 +3955,136 @@ gadget -s -log gadget.log -loglevel 3
 \end{verbatim}}
 \end{enumerate}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Paramin chapter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Edited by Guðmundur Einarsson %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Summer 2012 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\chapter{Paramin}\label{chap:paramin}
+This chapter describes how to run Gadget with paramin which runs the optimization routines in parallel. The current version of paramin is implemented with MPI, Message passing interface, which handles all the message passing between the master process, paramin, and the slave processes, Gadget instances. The setup is very similar to a normal Gadget run, all the Gadget input files are the same, it's only the execution which differs. 
+
+\section{Installation}\label{sec:paramininstall}
+In order to begin one must first download and install a version of MPI. This version of paramin is made with an implementation of MPI-2 called
+OPEN-MPI, one can download the MPI library and a wrapper compiler called mpic++ from their website www.open-mpi.org. Now before trying to run paramin
+make sure you have the newest version of Gadget downloaded. Now open the Makefile with your favorite text-editor and uncomment the section referring
+to a Gadget Network version and comment out the lines which refer to an install without MPI. Now you should open a console window and navigate to the 
+folder where you saved Gadget. Make sure you have the make utility installed, to check if so you can write the following in the console:
+
+{\small\begin{verbatim}
+which make
+\end{verbatim}}
+If it is installed the console should prompt you with something similar to the following
+
+{\small\begin{verbatim}
+/usr/bin/make
+\end{verbatim}}
+
+Which is the path to the executable, if the console outputs
+{\small\begin{verbatim}
+make: Command not found.
+\end{verbatim}}
+
+The make utility is either not installed or the executable is not found in the PATH global variable, note that make comes with almost all modern UNIX 
+systems. Now you can simply type make in the console and the program should be compiled and you get an executable, let's assume it's called gadget-PARA. Now 
+paramin is dependent on some Gadget objects, so you now need to type the following in the console:
+
+{\small\begin{verbatim}
+make libgadgetinput.a
+\end{verbatim}}
+
+Now you are ready to start compiling paramin. Download the newest version of paramin and open the paramin folder in the console. You need to edit the
+Makefile and add the path to the directory where you installed Gadget as described above. Now you can run the make command to compile paramin and get
+an executable, let's assume it's called paramin.
+
+\section{Running paramin}\label{sec:runparamin}
+To be able to run paramin it's ideal to add the path of the two executables, gadget-PARA and paramin to the global variable PATH. If you're running
+a bash console you can edit the \texttt{.bashrc} to add it, you can also copy the executables to the directory of PATH, but you probably need root 
+access to do that. Now you can call the functions from the console. Here is an example of a typical paramin run:
+
+{\small\begin{verbatim}
+mpirun paramin -i <filename> -opt <filename> -network <filename> 
+	-o <filename> -function gadget-PARA -s -n -i <filename> > <filename>
+\end{verbatim}}
+
+Now because paramin is implemented with MPI we need to call mpirun when we run it. Now there are several files we need to call and a few switches
+we need. The \texttt{-i <filename>} switch tells paramin which file holds the parameters and their initial values, this file is the same as the 
+params.in file used in Gadget (see Parameter Files, chapter~\ref{chap:param}, for more information on the format of this file). The
+\texttt{-i} switch with the same \texttt{<filename>} has to be on Gadget as well.
+\\
+\\
+Next we need to specify the 
+optimization parameters with the \texttt{-opt <filename>} switch, the preceding file contains the information of which type of optimization run to
+perform for more information see Parameter Files, chapter~\ref{chap:param}, it's the same format as the optimization file for Gadget.
+\\
+\\
+The next switch tells paramin how many subprocesses paramin will spawn, this switch is not in Gadget. Note that having at least 8 subprocesses will
+greatly improve the time of the run, but there is no need to let the number of subprocesses exceed the number of parameters, optimally it should be
+best to have as many subprocesses as the number of parameters, but then one should have access to at least that many processing cores. 
+A sample file which tells paramin
+to spawn 30 subprocesses looks like this:
+
+{\small\begin{verbatim}
+;
+;Sample network file
+;
+numproc    30
+\end{verbatim}}
+
+The \texttt{-o <filename>} switch specifies which file to output the optimized parameters. This file will also contain information about the optimization
+run, how much overall time was taken and how much time was taken for each optimizing algorithm. The format of this outputted file is the same
+as the one used as input, so the output can be used as a starting point for later runs.\\
+\\
+The \texttt{-function gadget-PARA} -switch tells paramin the name of the executable it will spawn as it's subprocess, in this case it's the gadget-PARA 
+executable
+we made earlier. The user can also make his own function to optimize with paramin. Now Gadget also needs parameters, we pass to it the \texttt{-s} and
+\texttt{-n} switch to make it go to network mode, then Gadget knows it's running with paramin. Finally we can add \texttt{> <filename>} to specify
+a file for the output of the run, this is not necessary but recommended.
+\subsection{Additional information}
+If you're running a potentially very long run on a remote host it's 
+recommended to use the \texttt{screen} utility, for more information type \texttt{man screen} in the console. It allows you to detach the session
+so it lives after you log out of your SSH session. In short you can type \texttt{screen} at the console to open a new screen session. Now run the
+script or program you want to run and type \texttt{ctrl-a d}, and you detach the session. Now you can safely exit from the remote host. To retrieve
+your session on your next login simply type \texttt{screen -r} and you enter the screen session, then you can close it by typing \texttt{exit} in
+the console. Another option is to run the desired command with the \texttt{nohup} prefix, it makes the command immune to hangups.\\
+\\
+As stated earlier paramin can be used to optimize almost any function which can be defined within the C++ language. The rosenbrock function
+is oftenly used to test nonlinear optimization algorithms because it's quite challenging for methods which do not rely on the gradient of the function.
+A sample rosenbrock function and instruction on how to compile and run it should be available on the MRI website under paramin. This function
+can be used as a template for the optimization of any function definable in the C++ language, future work will be to add a parser and an R interface,
+so paramin can be called from within an R session using an R defined function.\\
+\\
+Paramin was originally written with PVM, but since PVM is no longer supported it was migrated to MPI.
+More information on the migration process from PVM to MPI can be found on the MRI website, there one can also find study on the improvement in time
+relative to the number of processes spawned for each optimization routine.
+\subsection{Running paramin on multiple hosts/cluster}
+As stated above when we run paramin in the console it has to be invoked with the \texttt{mpirun} command. The \texttt{mpirun} command can take
+some optional arguments. First of all it can take the argument \texttt{-np <numproc>} where numproc is the desired number of processes one wants to
+start. This argument is \textbf{not} necessary with paramin because we define the number of subprocesses in the network file and paramin spawns them
+dynamically. The next optional argument we will discuss is the $-$$-$\texttt{hostfile <filename>}. \texttt{<filename>} is a name of a file which holds
+the name of the hosts in the cluster and how many processors are available on each node. The authentication in the execution process is done via
+ssh, so public keys have to be shared to allow for remote login and execution between hosts. The programs desired to run in parallel have to be 
+installed on each host for this to work. For more information see the FAQ entries on the OPEN-MPI webpage, there are more things that need to be taken 
+into consideration. Here is an example hostfile from the open-mpi FAQ:
+
+{\small\begin{verbatim}
+# This is an example hostfile.  Comments begin with #
+#
+# The following node is a single processor machine:
+comp1
+
+# The following node is a dual-processor machine:
+comp2.dualcore slots=2
+
+# The following node is a quad-processor machine, and we absolutely
+# want to disallow over-subscribing it:
+comp3.quadcore slots=4 max-slots=4
+\end{verbatim}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End of Paramin chapter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \chapter{References}\label{chap:reference}
 Anon. 2002. Development of Structurally Detailed Statistically Testable Models of Marine Populations (dst$^{2}$). QLK5-CT1999-01609. Progress Report for 1 January to 31 December 2001. Marine Research Institute Report No. 87, Marine Research Institute, Reykjavik, Iceland.\newline
 

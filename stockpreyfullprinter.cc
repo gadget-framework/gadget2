@@ -10,8 +10,6 @@
 #include "runid.h"
 #include "global.h"
 
-extern ErrorHandler handle;
-
 StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(STOCKPREYFULLPRINTER), preyname(0), LgrpDiv(0) {
 

@@ -1,8 +1,7 @@
 #include "readword.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 void readWordAndVariable(CommentStream& infile, const char* str, double& number) {
   char text[MaxStrLength];

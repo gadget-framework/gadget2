@@ -2,8 +2,7 @@
 #include "readfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 int readAggregation(CommentStream& infile, IntMatrix& agg, CharPtrVector& aggindex) {
   int i, j, tmp;

@@ -7,8 +7,7 @@
 #include "fleet.h"
 #include "stock.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)

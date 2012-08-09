@@ -1,8 +1,7 @@
 #include "readfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 void readRefWeights(CommentStream& infile, DoubleMatrix& M) {
   //Check the number of columns in the inputfile

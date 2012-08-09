@@ -5,8 +5,7 @@
 #include "errorhandler.h"
 #include "readfunc.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 Predator::Predator(const char* givenname, const IntVector& Areas)
   : HasName(givenname), LivesOnAreas(Areas), suitable(0) {

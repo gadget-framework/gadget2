@@ -4,8 +4,7 @@
 #include "readword.h"
 #include "mathfunc.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 void InitialCond::readNormalConditionData(CommentStream& infile, Keeper* const keeper,
   int numage, int minage, const AreaClass* const Area) {

@@ -16,23 +16,19 @@ GADGET = gadget-PARA
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
-# 1. Linux, or Cygwin, or Solaris, without pvm3, g++ compiler
-CXX = mpic++
+# 1. Linux, or Cygwin, or Solaris, with MPI, mpic++ compiler
+#CXX = mpic++
+#LIBDIRS = -L. -L/usr/local/lib
+#LIBRARIES = -lm
+#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
+#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+##########################################################################
+# 2. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler
+CXX = g++
 LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm
-CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
-OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
-##########################################################################
-# 2. Linux, or Cygwin, or Solaris, with pvm3, g++ compiler
-#CXX = g++
-#PVMDIR = $(PVM_ROOT)
-#PVMINCLUDE = $(PVMDIR)/include
-#PVMLIB = $(PVMDIR)/lib/$(PVM_ARCH)
-#LIBDIRS = -L. -L/usr/local/lib -L$(PVMLIB)
-#LIBRARIES = -lm -lpvm3 -lnsl
-## note that some (older) linux machines also require the -lsocket library
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK -I$(PVMINCLUDE)
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+CXXFLAGS = $(DEFINE_FLAGS)
+OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 ##########################################################################
 # 3. Solaris, without pvm3, using CC compiler
 #CXX = CC

@@ -2,8 +2,7 @@
 #include "errorhandler.h"
 #include "readword.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 TimeVariable::TimeVariable()
   : fromfile(0), usemodelmatrix(0), timeid(1), time(1), lastvalue(-1.0), value(0.0) {

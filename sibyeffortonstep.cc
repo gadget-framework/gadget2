@@ -3,8 +3,7 @@
 #include "mathfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 SIByEffortOnStep::SIByEffortOnStep(CommentStream& infile, const IntMatrix& areas,
   const CharPtrVector& areaindex, const CharPtrVector& fleetindex,

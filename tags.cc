@@ -6,8 +6,7 @@
 #include "stock.h"
 #include "stockprey.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 Tags::Tags(CommentStream& infile, const char* givenname, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, StockPtrVector stockvec)

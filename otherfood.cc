@@ -7,8 +7,7 @@
 #include "popinfo.h"
 #include "popinfovector.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)

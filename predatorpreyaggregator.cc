@@ -5,8 +5,7 @@
 #include "poppredator.h"
 #include "mathfunc.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 PredatorPreyAggregator::PredatorPreyAggregator(const PredatorPtrVector& Predators,
   const PreyPtrVector& Preys, LengthGroupDivision* const Lgrpdiv,

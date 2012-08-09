@@ -10,8 +10,7 @@
 #include "multinomial.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 // ********************************************************
 // Functions for main likelihood component StomachContent

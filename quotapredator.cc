@@ -4,8 +4,7 @@
 #include "mathfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
   const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper, Formula multscaler)

@@ -8,7 +8,6 @@
 #include "global.h"
 
 Ecosystem* EcoSystem;
-ErrorHandler handle;
 
 int main(int aNumber, char* const aVector[]) {
 
@@ -40,14 +39,12 @@ int main(int aNumber, char* const aVector[]) {
     inputdir = workingdir;
   if (chdir(inputdir) != 0)
     handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
-  if (chdir(workingdir) != 0) //JMB change back to where we were ...
-    handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
+  chdir(workingdir);  //JMB change back to where we were ...
 
   main.read(aNumber, aVector);
   main.checkUsage(inputdir, workingdir);
 
-  if (chdir(inputdir) != 0)
-    handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
+  chdir(inputdir);
   EcoSystem = new Ecosystem(main);
 
 #ifdef INTERRUPT_HANDLER
@@ -56,15 +53,14 @@ int main(int aNumber, char* const aVector[]) {
     registerInterrupts(&EcoSystem->interrupted);
 #endif
 
-  if (chdir(workingdir) != 0)
-    handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
+  chdir(workingdir);
   if ((main.getPI()).getPrint())
     EcoSystem->writeInitialInformation((main.getPI()).getOutputFile());
 
   if (main.runStochastic()) {
     if (main.runNetwork()) {
 #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
-      data = new StochasticData();
+      data = new StochasticData(main.getInitialParamFile(),p);
       while (data->getDataFromNetwork()) {
         EcoSystem->Update(data);
         EcoSystem->Simulate(main.runPrint());
@@ -75,12 +71,9 @@ int main(int aNumber, char* const aVector[]) {
 #endif
 
     } else if (main.getInitialParamGiven()) {
-      if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
-	  	handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
+      chdir(inputdir);  //JMB need to change back to inputdir to read the file
       data = new StochasticData(main.getInitialParamFile());
-      if (chdir(workingdir) != 0)
-        handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
-	
+      chdir(workingdir);
 
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
@@ -122,11 +115,9 @@ int main(int aNumber, char* const aVector[]) {
       handle.logMessage(LOGFAIL, "Error - no parameters can be optimised");
 
     if (main.getInitialParamGiven()) {
-      	if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
-	        handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
+      chdir(inputdir);  //JMB need to change back to inputdir to read the file
       data = new StochasticData(main.getInitialParamFile());
-      if (chdir(workingdir) != 0)
-        handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
+      chdir(workingdir);
 
       EcoSystem->Update(data);
       EcoSystem->checkBounds();

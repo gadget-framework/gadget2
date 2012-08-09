@@ -6,8 +6,7 @@
 #include "areatime.h"
 #include "growthcalc.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrpDiv,
   const LengthGroupDivision* const GivenLgrpDiv, const IntVector& Areas,

@@ -9,8 +9,7 @@
 #include "mathfunc.h"
 #include "readaggregation.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)

@@ -7,8 +7,7 @@
 #include "suits.h"
 #include "readword.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 StockPredator::StockPredator(CommentStream& infile, const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv,

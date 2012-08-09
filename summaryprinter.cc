@@ -7,8 +7,6 @@
 #include "runid.h"
 #include "global.h"
 
-extern ErrorHandler handle;
-
 SummaryPrinter::SummaryPrinter(CommentStream& infile)
   : Printer(LIKELIHOODSUMMARYPRINTER) {
 

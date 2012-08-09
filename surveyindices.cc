@@ -11,8 +11,7 @@
 #include "sibyeffortonstep.h"
 #include "sibyacousticonstep.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)

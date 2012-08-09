@@ -1,8 +1,7 @@
 #include "grower.h"
 #include "mathfunc.h"
 #include "errorhandler.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 //Uses the length increase in interpLengthGrowth and mean weight change in
 //interpWeightGrowth to calculate lgrowth and wgrowth.

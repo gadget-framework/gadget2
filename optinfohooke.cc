@@ -1,8 +1,7 @@
 #include "optinfo.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 OptInfoHooke::OptInfoHooke()
   : OptInfo(), hookeiter(1000), rho(0.5), lambda(0.0), hookeeps(1e-4), bndcheck(0.9999) {

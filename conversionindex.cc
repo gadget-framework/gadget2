@@ -1,8 +1,7 @@
 #include "conversionindex.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
   const LengthGroupDivision* const L2, int interp) {

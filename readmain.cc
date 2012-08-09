@@ -25,8 +25,7 @@
 #include "surveydistribution.h"
 #include "readword.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 //
 // A function to read fleet information

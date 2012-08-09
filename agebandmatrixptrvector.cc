@@ -1,8 +1,7 @@
 #include "agebandmatrixptrvector.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 AgeBandMatrixPtrVector::AgeBandMatrixPtrVector(int sz) {
   size = (sz > 0 ? sz : 0);

@@ -5,8 +5,7 @@
 #include "areatime.h"
 #include "predator.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, const char* name)

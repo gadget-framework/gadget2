@@ -2,8 +2,7 @@
 #include "errorhandler.h"
 #include "mathfunc.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 Formula::Formula() {
   value = 0.0;

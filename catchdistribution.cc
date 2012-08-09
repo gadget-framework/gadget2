@@ -11,8 +11,7 @@
 #include "stockprey.h"
 #include "ludecomposition.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, Keeper* const keeper, double weight, const char* name)

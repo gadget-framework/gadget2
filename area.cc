@@ -2,8 +2,7 @@
 #include "readfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 AreaClass::AreaClass(CommentStream& infile,
   Keeper* const keeper, const TimeClass* const TimeInfo) {

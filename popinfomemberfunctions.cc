@@ -5,8 +5,7 @@
 #include "popinfo.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 void PopInfoVector::Sum(const PopInfoVector* const Number, const ConversionIndex& CI) {
   int i;

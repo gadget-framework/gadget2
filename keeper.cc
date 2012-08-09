@@ -4,9 +4,10 @@
 #include "ecosystem.h"
 #include "gadget.h"
 #include "global.h"
+#include "global.h"
 
 extern Ecosystem* EcoSystem;
-extern ErrorHandler handle;
+
 
 Keeper::Keeper() {
   stack = new StrStack();

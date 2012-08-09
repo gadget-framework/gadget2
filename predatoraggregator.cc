@@ -6,8 +6,7 @@
 #include "popinfovector.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 PredatorAggregator::PredatorAggregator(const PredatorPtrVector& Predators,
   const PreyPtrVector& Preys, const IntMatrix& Areas,

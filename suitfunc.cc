@@ -1,8 +1,7 @@
 #include "suitfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 // ********************************************************
 // Functions for base suitability function

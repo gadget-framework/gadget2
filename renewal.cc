@@ -4,8 +4,7 @@
 #include "keeper.h"
 #include "readword.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper,

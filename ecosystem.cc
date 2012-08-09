@@ -2,8 +2,6 @@
 #include "runid.h"
 #include "global.h"
 
-extern ErrorHandler handle;
-
 Ecosystem::Ecosystem(const MainInfo& main) : printinfo(main.getPI()) {
 
   funceval = 0;

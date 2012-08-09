@@ -4,8 +4,7 @@
 #include "readfunc.h"
 #include "readword.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 SIOnStep::~SIOnStep() {
   int i;

@@ -1,8 +1,7 @@
 #include "optinfo.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 OptInfoBFGS::OptInfoBFGS()
   : OptInfo(), bfgsiter(10000), bfgseps(0.01), beta(0.3), sigma(0.01),

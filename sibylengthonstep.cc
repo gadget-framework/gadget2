@@ -4,8 +4,7 @@
 #include "errorhandler.h"
 #include "mathfunc.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 SIByLengthOnStep::SIByLengthOnStep(CommentStream& infile, const IntMatrix& areas,
   const DoubleVector& lengths, const CharPtrVector& areaindex,

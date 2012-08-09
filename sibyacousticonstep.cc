@@ -4,8 +4,7 @@
 #include "mathfunc.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 SIByAcousticOnStep::SIByAcousticOnStep(CommentStream& infile, const IntMatrix& areas,
   const CharPtrVector& areaindex, const CharPtrVector& fleetindex,

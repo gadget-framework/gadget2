@@ -3,8 +3,7 @@
 #include "keeper.h"
 #include "readword.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
   const LengthGroupDivision* const lgrpdiv, const TimeClass* const TimeInfo, Keeper* const keeper)

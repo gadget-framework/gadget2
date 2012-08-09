@@ -3,8 +3,7 @@
 #include "readfunc.h"
 #include "rectangle.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 MigrationArea::MigrationArea(CommentStream& infile, char* name, int id) {
 

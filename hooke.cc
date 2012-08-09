@@ -137,9 +137,10 @@
 #include "intvector.h"
 #include "errorhandler.h"
 #include "ecosystem.h"
+#include "global.h"
 
 extern Ecosystem* EcoSystem;
-extern ErrorHandler handle;
+
 
 /* given a point, look for a better one nearby, one coord at a time */
 double OptInfoHooke::bestNearby(DoubleVector& delta, DoubleVector& point, double prevbest, IntVector& param) {

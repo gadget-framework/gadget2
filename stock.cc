@@ -17,8 +17,7 @@
 #include "readword.h"
 #include "readaggregation.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 Stock::Stock(CommentStream& infile, const char* givenname,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)

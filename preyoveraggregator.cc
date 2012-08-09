@@ -2,8 +2,7 @@
 #include "prey.h"
 #include "errorhandler.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 PreyOverAggregator::PreyOverAggregator(const PreyPtrVector& Preys,
   const IntMatrix& Areas, const LengthGroupDivision* const LgrpDiv)

@@ -10,8 +10,7 @@
 #include "mathfunc.h"
 #include "readaggregation.h"
 #include "gadget.h"
-
-extern ErrorHandler handle;
+#include "global.h"
 
 RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
   const TimeClass* const TimeInfo, double weight, TagPtrVector Tag, const char* name)
