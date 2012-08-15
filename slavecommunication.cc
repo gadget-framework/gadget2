@@ -124,6 +124,7 @@ int SlaveCommunication::sendToMaster(double res)
   	} 
 	else 
 	{
+		//cout << "Slave að skrifa result: " << res << "\n";
     	NetDataResult* sendData = new NetDataResult;
     	sendData->who = myID;
     	sendData->result = res;
@@ -147,6 +148,7 @@ int SlaveCommunication::send(NetDataResult* sendData)
 {
   	int info;
 	MPI_Comm parentcomm;
+	//cout << "Slave að skrifa result: " << sendData->result << "\n";
 	MPI_Comm_get_parent(&parentcomm);
 	MPI_Send(&sendData->tag,1,MPI_INT, 0, pvmConst->getMasterReceiveDataTag(),parentcomm);
 	MPI_Send(&sendData->result,1,MPI_DOUBLE, 0, pvmConst->getMasterReceiveDataTag(),parentcomm);
