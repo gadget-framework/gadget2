@@ -12,7 +12,7 @@ DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O2
 
 ##########################################################################
 # The name of the final executable (eg gadget-paramin or gadget.exe)
-GADGET = gadget-PARA
+GADGET = gadget
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
