@@ -60,8 +60,7 @@ int main(int aNumber, char* const aVector[]) {
   if (main.runStochastic()) {
     if (main.runNetwork()) {
 #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
-      int p = 1;
-      data = new StochasticData(main.getInitialParamFile(),p);
+      data = new StochasticData(main.getInitialParamFile(),1);
       while (data->getDataFromNetwork()) {
         EcoSystem->Update(data);
         EcoSystem->Simulate(main.runPrint());

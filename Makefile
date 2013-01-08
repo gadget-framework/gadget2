@@ -12,23 +12,23 @@ DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O2
 
 ##########################################################################
 # The name of the final executable (eg gadget-paramin or gadget.exe)
-GADGET = gadget
+GADGET = gadget-PARA
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
 # 1. Linux, or Cygwin, or Solaris, with MPI, mpic++ compiler
-#CXX = mpic++
-#LIBDIRS = -L. -L/usr/local/lib
-#LIBRARIES = -lm
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
-##########################################################################
-# 2. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler
-CXX = g++
+CXX = mpic++
 LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm
-CXXFLAGS = $(DEFINE_FLAGS)
-OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
+CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
+OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+##########################################################################
+# 2. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler
+#CXX = g++
+#LIBDIRS = -L. -L/usr/local/lib
+#LIBRARIES = -lm
+#CXXFLAGS = $(DEFINE_FLAGS)
+#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 ##########################################################################
 # 3. Solaris, without pvm3, using CC compiler
 #CXX = CC
