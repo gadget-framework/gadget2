@@ -21,7 +21,7 @@
  *
  * The initial weight for each age-length cell will be set to the reference weight, multiplied by a conditioning factor.
  */
-class InitialCond : protected LivesOnAreas {
+class InitialCond : public HasName, protected LivesOnAreas {
 public:
   /**
    * \brief This is the InitialCond constructor
@@ -29,11 +29,12 @@ public:
    * \param areas is the IntVector of areas that the initial population will be calculated on
    * \param keeper is the Keeper for the current model
    * \param refWeightFile is the name of the reference weight file
+   * \param givenname is the name of the stock for this InitialCond class
    * \param Area is the AreaClass for the current model
    * \param DL is the step length of the length groups of the stock
    */
   InitialCond(CommentStream& infile, const IntVector& areas, Keeper* const keeper,
-     const char* refWeightFile, const AreaClass* const Area, double DL);
+     const char* refWeightFile, const char* givenname, const AreaClass* const Area, double DL);
   /**
    * \brief This is the default InitialCond destructor
    */

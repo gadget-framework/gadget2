@@ -81,9 +81,10 @@ private:
   double calcLikMultinomial();
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a sum of squares function
+   * \param TimeInfo is the TimeClass for the current model
    * \return likelihood score
    */
-  double calcLikSumSquares();
+  double calcLikSumSquares(const TimeClass* const TimeInfo);
   /**
    * \brief This is the DoubleMatrixPtrMatrix used to store age-length distribution information specified in the input file
    * \note The indices for this object are [time][area][stock][id] where id = age+(numage*length)
@@ -147,6 +148,21 @@ private:
    * \brief This is the LengthGroupDivision used to store length information
    */
   LengthGroupDivision* LgrpDiv;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to aggreate the age-length distribution information from the model data over a year, if the likelihood calculation is based on the aggregated data
+   * \note The indices for this object are [area][stock][id] where id = age+(numage*length)
+   */
+  DoubleMatrixPtrVector modelYearData;
+  /**
+   * \brief This is the DoubleMatrixPtrVector used to aggreate the age-length distribution information from the observed data over a year, if the likelihood calculation is based on the aggregated data
+   * \note The indices for this object are [area][stock][id] where id = age+(numage*length)
+   */
+  DoubleMatrixPtrVector obsYearData;
+  /**
+   * \brief This is the flag to denote whether the likelihood calculation should aggregate data over a whole year
+   * \note The default value is 0, which calculates the likelihood score on each timestep
+   */
+  int yearly;
   /**
    * \brief This is the flag to denote whether the likelihood calculation should take overconsumption into account or not
    */

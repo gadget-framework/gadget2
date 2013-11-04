@@ -1,7 +1,8 @@
 #include "lengthprey.h"
 
-LengthPrey::LengthPrey(const DoubleVector& lengths, const IntVector& Areas,
-  double Energy, const char* givenname) : Prey(lengths, Areas, Energy, givenname) {
+LengthPrey::LengthPrey(CommentStream& infile, const char* givenname,
+  const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper)
+  : Prey(infile, givenname, Areas, TimeInfo, keeper) {
 
   type = LENGTHPREY;
 }

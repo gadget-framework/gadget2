@@ -238,6 +238,26 @@ public:
    */
   int numTotalSteps() const { return TimeInfo->numTotalSteps(); };
   /**
+   * \brief This function will return the likelihood components used in the simulation
+   * \return LikelihoodPtrVector containing all the likelihood components used in the simulation
+   */
+  LikelihoodPtrVector& getModelLikelihoodVector() { return likevec; };
+  /**
+   * \brief This function will return the printer components used in the simulation
+   * \return PrinterPtrVector containing all the printer components used in the simulation
+   */
+  PrinterPtrVector& getModelPrinterVector() { return printvec; };
+  /**
+   * \brief This function will return the fleets used in the simulation
+   * \return FleetPtrVector containing all the fleets used in the simulation
+   */
+  FleetPtrVector& getModelFleetVector() { return fleetvec; };
+  /**
+   * \brief This function will return the stocks used in the simulation
+   * \return StockPtrVector containing all the stocks used in the simulation
+   */
+  StockPtrVector& getModelStockVector() { return stockvec; };
+  /**
    * \brief This is the flag used to denote whether the user has interrupted the current model run
    */
   volatile int interrupted;

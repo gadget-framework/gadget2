@@ -21,7 +21,7 @@ void SuitFunc::setPreyLength(double length) {
   handle.logMessage(LOGWARN, "Warning in suitability - trying to set prey length for", this->getName());
 }
 
-const TimeVariableVector& SuitFunc::getConstants() const {
+const ModelVariableVector& SuitFunc::getConstants() const {
   return coeff;
 }
 
@@ -53,7 +53,7 @@ double ExpSuitFuncA::calculate() {
     check = coeff[3] / (1.0 + exp(-(coeff[0] + (coeff[1] * preyLength) + (coeff[2] * predLength))));
 
   if (check != check) { //check for NaN
-    handle.logMessage(LOGWARN, "Warning in suitability - function calculated to be infinity");
+    handle.logMessageNaN(LOGWARN, "exponential suitability function");
     return 0.0;
   }
 
@@ -131,10 +131,10 @@ ExpSuitFuncL50::ExpSuitFuncL50() : SuitFunc("ExponentialL50SuitFunc") {
 }
 
 double ExpSuitFuncL50::calculate() {
-  double check = 1.0 / (1.0 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
+  double check = 1.0 / (1.0 + exp(-1.0 * coeff[0] * (preyLength - coeff[1])));
 
   if (check != check) { //check for NaN
-    handle.logMessage(LOGWARN, "Warning in suitability - function calculated to be infinity");
+    handle.logMessageNaN(LOGWARN, "exponential l50 suitability function");
     return 0.0;
   }
 
@@ -177,7 +177,16 @@ InverseSuitFunc::InverseSuitFunc() : SuitFunc("InverseSuitFunc") {
 }
 
 double InverseSuitFunc::calculate() {
-  double check = 1.0 / (1.0 + exp(-4.0 * coeff[0] * (preyLength - coeff[1])));
+  double check = 1.0 / (1.0 + exp(-1.0 * coeff[0] * (preyLength - coeff[1])));
+
+  if (check != check) { //check for NaN
+    handle.logMessageNaN(LOGWARN, "inverse suitability function");
+    return 0.0;
+  }
+
+  // make this value 1 - check to switch the direction of the slope
+  check = 1.0 - check;
+
   if (check < 0.0) {
     handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;
@@ -230,7 +239,7 @@ double RichardsSuitFunc::calculate() {
     check = pow(coeff[3] / (1.0 + exp(-(coeff[0] + coeff[1] * preyLength + coeff[2] * predLength))), (1.0 / coeff[4]));
 
   if (check != check) { //check for NaN
-    handle.logMessage(LOGWARN, "Warning in suitability - function calculated to be infinity");
+    handle.logMessageNaN(LOGWARN, "richards suitability function");
     return 0.0;
   }
 
@@ -263,10 +272,46 @@ double GammaSuitFunc::calculate() {
   check *= pow(preyLength / ((coeff[0] - 1.0) * coeff[1] * coeff[2]), (coeff[0] - 1.0));
 
   if (check != check) { //check for NaN
-    handle.logMessage(LOGWARN, "Warning in suitability - function calculated to be infinity");
+    handle.logMessageNaN(LOGWARN, "gamma suitability function");
     return 0.0;
   }
 
+  if (check < 0.0) {
+    handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
+    return 0.0;
+  } else if (check > 1.0) {
+    handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
+    return 1.0;
+  } else
+    return check;
+}
+
+// ********************************************************
+// Functions for AndersenFleetSuitFunc suitability function
+// ********************************************************
+AndersenFleetSuitFunc::AndersenFleetSuitFunc() : SuitFunc("AndersenFleetSuitFunc") {
+  coeff.setsize(6);
+  preyLength = -1.0;
+}
+
+double AndersenFleetSuitFunc::calculate() {
+  double l = log(coeff[5] / preyLength);
+  double e, q, check;
+
+  q = 0.0;
+  check = 0.0;
+  if (l > coeff[1])
+    q = coeff[3];
+  else
+    q = coeff[4];
+
+  if (isZero(q))
+    q = 1.0;
+  if (q < 0.0)
+    q = -q;
+
+  e = (l - coeff[1]) * (l - coeff[1]);
+  check = coeff[0] + coeff[2] * exp(-e / q);
   if (check < 0.0) {
     handle.logMessage(LOGWARN, "Warning in suitability - function outside bounds", check);
     return 0.0;

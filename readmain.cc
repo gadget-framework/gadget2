@@ -23,6 +23,7 @@
 #include "catchinkilos.h"
 #include "boundlikelihood.h"
 #include "surveydistribution.h"
+#include "migrationproportion.h"
 #include "readword.h"
 #include "gadget.h"
 #include "global.h"
@@ -253,6 +254,9 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 
     } else if (strcasecmp(type, "recstatistics") == 0) {
       likevec.resize(new RecStatistics(infile, Area, TimeInfo, weight, tagvec, name));
+
+    } else if (strcasecmp(type, "migrationproportion") == 0) {
+      likevec.resize(new MigrationProportion(infile, Area, TimeInfo, weight, name));
 
     } else if (strcasecmp(type, "predatorindices") == 0) {
       handle.logFileMessage(LOGFAIL, "\nThe predatorindices likelihood component is no longer supported\nUse the sibyfleet surveyindices likelihood component instead\nThis is done by setting the sitype to 'fleets' in the likelihood file");

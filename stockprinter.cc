@@ -147,7 +147,7 @@ void StockPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const Are
       handle.logMessage(LOGWARN, "Error in stockprinter - found stock", stocks[i]->getName());
     for (i = 0; i < stocknames.Size(); i++)
       handle.logMessage(LOGWARN, "Error in stockprinter - looking for stock", stocknames[i]);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, ""); //JMB this will exit gadget
   }
 
   for (i = 0; i < stocks.Size(); i++)

@@ -12,12 +12,14 @@ class LengthPrey : public Prey {
 public:
   /**
    * \brief This is the LengthPrey constructor
-   * \param lengths is the DoubleVector of length groups of the prey (only one length group)
-   * \param areas is the IntVector of areas that the prey lives on
-   * \param Energy is the energy content of the prey
+   * \param infile is the CommentStream to read the Prey data from
    * \param givenname is the name of the prey
+   * \param areas is the IntVector of areas that the prey lives on
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
    */
-  LengthPrey(const DoubleVector& lengths, const IntVector& areas, double Energy, const char* givenname);
+  LengthPrey(CommentStream& infile, const char* givenname,
+  const IntVector& areas, const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default LengthPrey destructor
    */

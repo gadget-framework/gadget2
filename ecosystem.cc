@@ -42,10 +42,6 @@ Ecosystem::Ecosystem(const MainInfo& main) : printinfo(main.getPI()) {
     }
   }
 
-  // check and initialise the model
-  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
-  this->Initialise();
-
   if (main.runOptimise())
     handle.logMessage(LOGINFO, "\nFinished reading model data files, starting to run optimisation");
   else

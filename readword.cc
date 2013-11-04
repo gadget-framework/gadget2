@@ -39,14 +39,14 @@ void readWordAndVariable(CommentStream& infile, const char* str, Formula& formul
   infile >> formula >> ws;
 }
 
-void readWordAndTimeVariable(CommentStream& infile, const char* str, TimeVariable& timevariable,
+void readWordAndModelVariable(CommentStream& infile, const char* str, ModelVariable& modelvariable,
   const TimeClass* const TimeInfo, Keeper* const keeper) {
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   infile >> text;
   if (strcasecmp(text, str) != 0)
     handle.logFileUnexpected(LOGFAIL, str, text);
-  timevariable.read(infile, TimeInfo, keeper);
+  modelvariable.read(infile, TimeInfo, keeper);
 }
 
 void readWordAndTwoVariables(CommentStream& infile, const char* str, double& number1, double& number2) {

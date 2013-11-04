@@ -6,8 +6,9 @@
 #include "global.h"
 
 Transition::Transition(CommentStream& infile, const IntVector& areas, int Age,
-  const LengthGroupDivision* const lgrpdiv, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : LivesOnAreas(areas), age(Age) {
+  const LengthGroupDivision* const lgrpdiv, const char* givenname,
+  const TimeClass* const TimeInfo, Keeper* const keeper) 
+  : HasName(givenname), LivesOnAreas(areas), age(Age) {
 
   int i = 0;
   istagged = 0;
@@ -73,7 +74,7 @@ void Transition::setStock(StockPtrVector& stockvec) {
       handle.logMessage(LOGWARN, "Error in transition - found stock", stockvec[i]->getName());
     for (i = 0; i < transitionStockNames.Size(); i++)
       handle.logMessage(LOGWARN, "Error in transition - looking for stock", transitionStockNames[i]);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, ""); //JMB this will exit gadget
   }
 
   //JMB ensure that the ratio vector is indexed in the right order
@@ -208,7 +209,7 @@ void Transition::Reset() {
   }
 
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Reset transition data");
+    handle.logMessage(LOGMESSAGE, "Reset transition data for stock", this->getName());
 }
 
 const StockPtrVector& Transition::getTransitionStocks() {

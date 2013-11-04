@@ -13,7 +13,7 @@
  *
  * This class adds new fish into a stock, usually into the youngest age group.  The total number of the recruits (in units of 10,000 fish) for each specified timestep is given in the input file.  The lengths of the recruits are calculated from a Normal distribution, from a given mean and standard deviation.  The mean weights of these length groups are then calculated from a specified length-weight relationship.
  */
-class RenewalData : protected LivesOnAreas {
+class RenewalData : public HasName, protected LivesOnAreas {
 public:
   /**
    * \brief This is the RenewalData constructor
@@ -23,13 +23,14 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param refWeightFile is the name of the reference weight file
+   * \param givenname is the name of the stock for this RenewalData class
    * \param minage is the minimum age of the stock the renewals will be added to
    * \param maxage is the maximum age of the stock the renewals will be added to
    * \param DL is the step length of the length groups of the stock that the renewals will be added to
    */
   RenewalData(CommentStream& infile, const IntVector& areas, const AreaClass* const Area,
     const TimeClass* const TimeInfo, Keeper* const keeper, const char* refWeightFile,
-    int minage, int maxage, double DL);
+    const char* givenname, int minage, int maxage, double DL);
   /**
    * \brief This is the default RenewalData destructor
    */

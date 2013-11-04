@@ -1,8 +1,9 @@
 #include "stockprey.h"
 
 StockPrey::StockPrey(CommentStream& infile, const IntVector& Areas,
-  const char* givenname, int minage, int numage)
-  : Prey(infile, Areas, givenname) {
+  const char* givenname, int minage, int numage,
+  const TimeClass* const TimeInfo, Keeper* const keeper)
+  : Prey(infile, Areas, givenname, TimeInfo, keeper) {
 
   int i;
   type = STOCKPREY;

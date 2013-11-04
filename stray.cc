@@ -10,8 +10,8 @@
 #include "global.h"
 
 StrayData::StrayData(CommentStream& infile, const LengthGroupDivision* const lgrpdiv,
-  const IntVector& areas, const AreaClass* const Area, const TimeClass* const TimeInfo,
-  Keeper* const keeper) : LivesOnAreas(areas) {
+  const IntVector& areas, const AreaClass* const Area, const char* givenname,
+  const TimeClass* const TimeInfo, Keeper* const keeper) : HasName(givenname), LivesOnAreas(areas) {
 
   keeper->addString("stray");
   int i, tmpint = 0;
@@ -126,7 +126,7 @@ void StrayData::setStock(StockPtrVector& stockvec) {
       handle.logMessage(LOGWARN, "Error in straying data - found stock", stockvec[i]->getName());
     for (i = 0; i < strayStockNames.Size(); i++)
       handle.logMessage(LOGWARN, "Error in straying data - looking for stock", strayStockNames[i]);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, ""); //JMB this will exit gadget
   }
 
   //JMB ensure that the ratio vector is indexed in the right order
@@ -253,21 +253,6 @@ int StrayData::isStrayStepArea(int area, const TimeClass* const TimeInfo) {
 void StrayData::Reset(const TimeClass* const TimeInfo) {
   int i;
 
-  fnProportion->updateConstants(TimeInfo);
-  if (fnProportion->didChange(TimeInfo)) {
-    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-      strayProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
-      if (strayProportion[i] < 0.0) {
-        handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
-        strayProportion[i] = 0.0;
-      }
-      if (strayProportion[i] > 1.0) {
-        handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
-        strayProportion[i] = 1.0;
-      }
-    }
-  }
-
   //JMB check that the sum of the ratios is 1
   if (TimeInfo->getTime() == 1) {
     ratioscale = 0.0;
@@ -285,8 +270,23 @@ void StrayData::Reset(const TimeClass* const TimeInfo) {
     }
   }
 
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Reset straying data");
+  fnProportion->updateConstants(TimeInfo);
+  if (fnProportion->didChange(TimeInfo)) {
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
+      strayProportion[i] = fnProportion->calculate(LgrpDiv->meanLength(i));
+      if (strayProportion[i] < 0.0) {
+        handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
+        strayProportion[i] = 0.0;
+      }
+      if (strayProportion[i] > 1.0) {
+        handle.logMessage(LOGWARN, "Warning in straying - function outside bounds", strayProportion[i]);
+        strayProportion[i] = 1.0;
+      }
+    }
+
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "Reset straying data for stock", this->getName());
+  }
 }
 
 void StrayData::Print(ofstream& outfile) const {

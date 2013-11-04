@@ -16,7 +16,7 @@
  *
  * This class moves a proportion of fish from one stock to the corresponding age-length cell in other stocks.  This is an extension to the Transition class, since it can move fish from more than one age group.  The length groups of the new stocks are checked, and any fish that haven't yet reached the minimum length of the new stock remain in the original stock.
  */
-class StrayData : protected LivesOnAreas {
+class StrayData : public HasName, protected LivesOnAreas {
 public:
   /**
    * \brief This is the StrayData constructor
@@ -24,11 +24,12 @@ public:
    * \param LgrpDiv is the LengthGroupDivision that the straying stock will be calculated on
    * \param areas is the IntVector of areas that the straying stock will be calculated on
    * \param Area is the AreaClass for the current model
+   * \param givenname is the name of the stock for this StrayData class
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
   StrayData(CommentStream& infile, const LengthGroupDivision* const LgrpDiv,
-    const IntVector& areas, const AreaClass* const Area,
+    const IntVector& areas, const AreaClass* const Area, const char* givenname,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default StrayData destructor

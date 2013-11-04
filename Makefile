@@ -7,28 +7,29 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
               -Wuninitialized -W -pedantic 
 
 #DEFINE_FLAGS = -D DEBUG -D INTERRUPT_HANDLER -g -O
-DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O2 
+DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 
 #-s
 
 ##########################################################################
 # The name of the final executable (eg gadget-paramin or gadget.exe)
-GADGET = gadget-PARA
+#GADGET = gadget-paramin
+GADGET = gadget
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
 # 1. Linux, or Cygwin, or Solaris, with MPI, mpic++ compiler
-CXX = mpic++
-LIBDIRS = -L. -L/usr/local/lib
-LIBRARIES = -lm
-CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
-OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
-##########################################################################
-# 2. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler
-#CXX = g++
+#CXX = mpic++
 #LIBDIRS = -L. -L/usr/local/lib
 #LIBRARIES = -lm
-#CXXFLAGS = $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
+#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
+#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+##########################################################################
+# 2. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler
+CXX = g++
+LIBDIRS = -L. -L/usr/local/lib
+LIBRARIES = -lm
+CXXFLAGS = $(DEFINE_FLAGS)
+OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 ##########################################################################
 # 3. Solaris, without pvm3, using CC compiler
 #CXX = CC

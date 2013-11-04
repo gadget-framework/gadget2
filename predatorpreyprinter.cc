@@ -161,7 +161,7 @@ void PredatorPreyPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
       handle.logMessage(LOGWARN, "Error in predatorpreyprinter - found predator", predatorvec[i]->getName());
     for (i = 0; i < predatornames.Size(); i++)
       handle.logMessage(LOGWARN, "Error in predatorpreyprinter - looking for predator", predatornames[i]);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, ""); //JMB this will exit gadget
   }
 
   for (i = 0; i < predators.Size(); i++)
@@ -180,7 +180,7 @@ void PredatorPreyPrinter::setPredAndPrey(PredatorPtrVector& predatorvec,
       handle.logMessage(LOGWARN, "Error in predatorpreyprinter - found prey", preyvec[i]->getName());
     for (i = 0; i < preynames.Size(); i++)
       handle.logMessage(LOGWARN, "Error in predatorpreyprinter - looking for prey", preynames[i]);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, ""); //JMB this will exit gadget
   }
 
   for (i = 0; i < preys.Size(); i++)

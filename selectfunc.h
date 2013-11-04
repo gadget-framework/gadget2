@@ -4,7 +4,7 @@
 #include "commentstream.h"
 #include "hasname.h"
 #include "keeper.h"
-#include "timevariablevector.h"
+#include "modelvariablevector.h"
 
 /**
  * \class SelectFunc
@@ -53,9 +53,9 @@ public:
   int numConstants() { return coeff.Size(); };
 protected:
   /**
-   * \brief This is the TimeVariableVector of the selection function constants
+   * \brief This is the ModelVariableVector of the selection function constants
    */
-  TimeVariableVector coeff;
+  ModelVariableVector coeff;
 };
 
 /**

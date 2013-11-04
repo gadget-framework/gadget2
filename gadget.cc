@@ -9,6 +9,7 @@
 
 Ecosystem* EcoSystem;
 
+
 int main(int aNumber, char* const aVector[]) {
 
   MainInfo main;
@@ -39,12 +40,14 @@ int main(int aNumber, char* const aVector[]) {
     inputdir = workingdir;
   if (chdir(inputdir) != 0)
     handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
-  chdir(workingdir);  //JMB change back to where we were ...
+  if (chdir(workingdir) != 0) //JMB change back to where we were ...
+    handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
 
   main.read(aNumber, aVector);
   main.checkUsage(inputdir, workingdir);
 
-  chdir(inputdir);
+  if (chdir(inputdir) != 0)
+    handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
   EcoSystem = new Ecosystem(main);
 
 #ifdef INTERRUPT_HANDLER
@@ -53,14 +56,16 @@ int main(int aNumber, char* const aVector[]) {
     registerInterrupts(&EcoSystem->interrupted);
 #endif
 
-  chdir(workingdir);
+  if (chdir(workingdir) != 0)
+    handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
   if ((main.getPI()).getPrint())
     EcoSystem->writeInitialInformation((main.getPI()).getOutputFile());
 
   if (main.runStochastic()) {
     if (main.runNetwork()) {
 #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
-      data = new StochasticData(main.getInitialParamFile(),1);
+      EcoSystem->Initialise();
+      data = new StochasticData();
       while (data->getDataFromNetwork()) {
         EcoSystem->Update(data);
         EcoSystem->Simulate(main.runPrint());
@@ -71,13 +76,16 @@ int main(int aNumber, char* const aVector[]) {
 #endif
 
     } else if (main.getInitialParamGiven()) {
-      chdir(inputdir);  //JMB need to change back to inputdir to read the file
+      if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
+        handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
       data = new StochasticData(main.getInitialParamFile());
-      chdir(workingdir);
+      if (chdir(workingdir) != 0)
+        handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
 
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
 
+      EcoSystem->Initialise();
       if (main.printInitial()) {
         EcoSystem->Reset();  //JMB only need to call reset() before the print commands
         EcoSystem->writeStatus(main.getPrintInitialFile());
@@ -86,6 +94,7 @@ int main(int aNumber, char* const aVector[]) {
       EcoSystem->Simulate(main.runPrint());
       if ((main.getPI()).getPrint())
         EcoSystem->writeValues();
+
       while (data->isDataLeft()) {
         data->readNextLine();
         EcoSystem->Update(data);
@@ -100,6 +109,7 @@ int main(int aNumber, char* const aVector[]) {
       if (EcoSystem->numVariables() != 0)
         handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
 
+      EcoSystem->Initialise();
       if (main.printInitial()) {
         EcoSystem->Reset();  //JMB only need to call reset() before the print commands
         EcoSystem->writeStatus(main.getPrintInitialFile());
@@ -115,9 +125,11 @@ int main(int aNumber, char* const aVector[]) {
       handle.logMessage(LOGFAIL, "Error - no parameters can be optimised");
 
     if (main.getInitialParamGiven()) {
-      chdir(inputdir);  //JMB need to change back to inputdir to read the file
+      if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
+        handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
       data = new StochasticData(main.getInitialParamFile());
-      chdir(workingdir);
+      if (chdir(workingdir) != 0)
+        handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
 
       EcoSystem->Update(data);
       EcoSystem->checkBounds();
@@ -125,6 +137,7 @@ int main(int aNumber, char* const aVector[]) {
     } else
       handle.logMessage(LOGFAIL, "Error - no parameter input file specified");
 
+    EcoSystem->Initialise();
     if (main.printInitial()) {
       EcoSystem->Reset();  //JMB only need to call reset() before the print commands
       EcoSystem->writeStatus(main.getPrintInitialFile());

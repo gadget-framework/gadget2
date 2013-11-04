@@ -59,6 +59,7 @@ void SummaryPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
       case UNDERSTOCKINGLIKELIHOOD:
       case BOUNDLIKELIHOOD:
       case MIGRATIONPENALTYLIKELIHOOD:
+      case MIGRATIONPROPORTIONLIKELIHOOD:
         break;
       case TAGLIKELIHOOD:
       case RECSTATISTICSLIKELIHOOD:

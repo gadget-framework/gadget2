@@ -113,8 +113,7 @@ void StockPreyFullPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* cons
     handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - failed to match preys");
     for (i = 0; i < preys.Size(); i++)
       handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - found prey", preys[i]->getName());
-    handle.logMessage(LOGWARN, "Error in stockpreyfullprinter - looking for prey", preyname);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, "Error in stockpreyfullprinter - looking for prey", preyname);
   }
 
   //check that the prey is a stock and not otherfood

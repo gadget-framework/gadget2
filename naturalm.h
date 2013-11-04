@@ -5,7 +5,7 @@
 #include "commentstream.h"
 #include "selectfunc.h"
 #include "livesonareas.h"
-#include "timevariablevector.h"
+#include "modelvariablevector.h"
 #include "keeper.h"
 
 /**
@@ -16,18 +16,19 @@
  *
  * \note This is currently an age-based calculation, and it would be much better to replace this with a length-based calculation, by re-implementing this as a simple predator with a new suitability function to allow for higher levels of 'predation' on both the young/short fish and the old/long fish
  */
-class NaturalMortality : public LivesOnAreas {
+class NaturalMortality : public HasName, public LivesOnAreas {
 public:
   /**
    * \brief This is the NaturalMortality constructor
    * \param infile is the CommentStream to read the NaturalMortality information from
    * \param minage is the minimum age of the stock
    * \param numage is the number of age groups for the stock
+   * \param givenname is the name of the stock for this NaturalMortality class
    * \param Areas is the IntVector of the areas that the stock lives on
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
-  NaturalMortality(CommentStream& infile, int minage, int numage,
+  NaturalMortality(CommentStream& infile, int minage, int numage, const char* givenname,
     const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default NaturalMortality destructor
@@ -51,9 +52,9 @@ public:
   void Print(ofstream& outfile);
 protected:
   /**
-   * \brief This is the TimeVariableVector used to store the mortality of each age group
+   * \brief This is the ModelVariableVector used to store the mortality of each age group
    */
-  TimeVariableVector mortality;
+  ModelVariableVector mortality;
   /**
    * \brief This is the SelectFunc used to calculate of the proportion of each age group of the stock that will die due to natural mortality
    */

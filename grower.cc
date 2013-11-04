@@ -11,8 +11,8 @@
 Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrpDiv,
   const LengthGroupDivision* const GivenLgrpDiv, const IntVector& Areas,
   const TimeClass* const TimeInfo, Keeper* const keeper, const char* refWeight,
-  const AreaClass* const Area, const CharPtrVector& lenindex)
-  : LivesOnAreas(Areas), LgrpDiv(0), CI(0), growthcalc(0) {
+  const char* givenname, const AreaClass* const Area, const CharPtrVector& lenindex)
+  : HasName(givenname), LivesOnAreas(Areas), LgrpDiv(0), CI(0), growthcalc(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
@@ -58,6 +58,12 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   } else if (strcasecmp(text, "weightjonessimple") == 0) {
     functionnumber = 9;
     growthcalc = new GrowthCalcI(infile, areas, TimeInfo, keeper);
+  } else if (strcasecmp(text, "lengthvpsimplet0") == 0) {
+    functionnumber = 10;
+    growthcalc = new GrowthCalcJ(infile, areas, TimeInfo, keeper);
+  } else if (strcasecmp(text, "lengthgompertz") == 0) {
+    functionnumber = 11;
+    growthcalc = new GrowthCalcK(infile, areas, TimeInfo, keeper);
   } else {
     handle.logFileMessage(LOGFAIL, "unrecognised growth function", text);
   }
@@ -163,8 +169,25 @@ void Grower::calcGrowth(int area,
     numGrow[inarea], Area, TimeInfo, FPhi, MaxCon, LgrpDiv);
 
   CI->interpolateLengths(interpLengthGrowth[inarea], calcLengthGrowth[inarea]);
-  if (functionnumber != 8)
-    CI->interpolateLengths(interpWeightGrowth[inarea], calcWeightGrowth[inarea]);
+  switch (functionnumber) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 9:
+      CI->interpolateLengths(interpWeightGrowth[inarea], calcWeightGrowth[inarea]);
+      break;
+    case 8:
+    case 10:
+    case 11:
+      break;
+    default:
+      handle.logMessage(LOGFAIL, "Error in grower - unrecognised growth function", functionnumber);
+      break;
+  }
 }
 
 void Grower::Reset() {
@@ -180,10 +203,26 @@ void Grower::Reset() {
       numGrow[area][i].setToZero();
   }
 
-  if (functionnumber != 8) {
-    interpWeightGrowth.setToZero();
-    for (area = 0; area < areas.Size(); area++)
-      (*wgrowth[area]).setToZero();
+  switch (functionnumber) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 9:
+      interpWeightGrowth.setToZero();
+      for (area = 0; area < areas.Size(); area++)
+        (*wgrowth[area]).setToZero();
+      break;
+    case 8:
+    case 10:
+    case 11:
+      break;
+    default:
+      handle.logMessage(LOGFAIL, "Error in grower - unrecognised growth function", functionnumber);
+      break;
   }
 
   tmpmax = double(maxlengthgroupgrowth);
@@ -209,5 +248,5 @@ void Grower::Reset() {
   part4[0] = 1.0;
 
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Reset grower data");
+    handle.logMessage(LOGMESSAGE, "Reset grower data for stock", this->getName());
 }

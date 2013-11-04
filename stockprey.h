@@ -17,9 +17,12 @@ public:
    * \param givenname is the name of the prey
    * \param minage is the minimum age of the prey
    * \param numage is the number of age groups for the prey
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
    */
   StockPrey(CommentStream& infile, const IntVector& Areas,
-    const char* givenname, int minage, int numage);
+    const char* givenname, int minage, int numage,
+    const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default StockPrey destructor
    */

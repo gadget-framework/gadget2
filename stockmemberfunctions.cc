@@ -284,6 +284,15 @@ double Stock::getTotalStockNumber(int area) const {
   return num;
 }
 
+double Stock::getTotalStockNumberAllAreas() const {
+  int a;
+  double sum = 0.0;
+  for (a = 0; a <= Alkeys.Size(); a++)
+    sum += this->getTotalStockNumber(a);
+
+  return sum;
+}
+
 double Stock::getTotalStockBiomass(int area) const {
   int inarea = this->areaNum(area);
   if (inarea == -1)
@@ -296,4 +305,13 @@ double Stock::getTotalStockBiomass(int area) const {
       kilos += ((Alkeys[inarea])[age][len].N * (Alkeys[inarea])[age][len].W);
 
   return kilos;
+}
+
+double Stock::getTotalStockBiomassAllAreas() const {
+  int a;
+  double sum = 0.0;
+  for (a = 0; a <= Alkeys.Size(); a++)
+    sum += this->getTotalStockBiomass(a);
+
+  return sum;
 }

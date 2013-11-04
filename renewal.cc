@@ -8,8 +8,8 @@
 
 RenewalData::RenewalData(CommentStream& infile, const IntVector& Areas,
   const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper,
-  const char* refWeightFile, int minage, int maxage, double DL)
-  : LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
+  const char* refWeightFile, const char* givenname, int minage, int maxage, double DL)
+  : HasName(givenname), LivesOnAreas(Areas), CI(0), LgrpDiv(0) {
 
   keeper->addString("renewaldata");
   ifstream subfile;
@@ -363,12 +363,12 @@ RenewalData::~RenewalData() {
 
 void RenewalData::setCI(const LengthGroupDivision* const GivenLDiv) {
   if (!checkLengthGroupStructure(GivenLDiv, LgrpDiv))
-    handle.logMessage(LOGFAIL, "Error in renewal - invalid length group structure");
+    handle.logMessage(LOGFAIL, "Error in renewal - invalid length group structure for stock", this->getName());
   //check minimum and maximum lengths
   if (LgrpDiv->minLength() < GivenLDiv->minLength())
-    handle.logMessage(LOGWARN, "Warning in renewal - minimum length less than stock length");
+    handle.logMessage(LOGWARN, "Warning in renewal - minimum length less than stock length for stock", this->getName());
   if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
-    handle.logMessage(LOGWARN, "Warning in renewal - maximum length greater than stock length");
+    handle.logMessage(LOGWARN, "Warning in renewal - maximum length greater than stock length for stock", this->getName());
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
   if (CI->Error())
     handle.logMessage(LOGFAIL, "Error in renewal - error when checking length structure");
@@ -417,9 +417,9 @@ void RenewalData::Reset() {
       } else {
         //JMB check that the mean length is within the length group range
         if (meanLength[i] < LgrpDiv->minLength())
-          handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
+          handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length for stock", this->getName());
         if (meanLength[i] > LgrpDiv->maxLength())
-          handle.logMessage(LOGWARN, "Warning in renewal - mean length is greater than maximum length");
+          handle.logMessage(LOGWARN, "Warning in renewal - mean length is greater than maximum length for stock", this->getName());
 
         sum = 0.0;
         mult = 1.0 / sdevLength[i];
@@ -430,7 +430,7 @@ void RenewalData::Reset() {
         }
 
         if (isZero(sum)) {
-          handle.logMessage(LOGWARN, "Warning in renewal - calculated zero recruits");
+          handle.logMessage(LOGWARN, "Warning in renewal - calculated zero recruits for stock", this->getName());
           for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++)
             renewalDistribution[i][age][l].setToZero();
 
@@ -440,7 +440,7 @@ void RenewalData::Reset() {
             renewalDistribution[i][age][l].N *= sum;
             renewalDistribution[i][age][l].W = refWeight[l] * relCond[i];
             if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
-              handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+              handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight for stock", this->getName());
           }
         }
       }
@@ -462,9 +462,9 @@ void RenewalData::Reset() {
       } else {
         //JMB check that the mean length is within the length group range
         if (meanLength[i] < LgrpDiv->minLength())
-          handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length");
+          handle.logMessage(LOGWARN, "Warning in renewal - mean length is less than minimum length for stock", this->getName());
         if (meanLength[i] > LgrpDiv->maxLength())
-          handle.logMessage(LOGWARN, "Warning in renewal - mean length is greater than maximum length");
+          handle.logMessage(LOGWARN, "Warning in renewal - mean length is greater than maximum length for stock", this->getName());
 
         sum = 0.0;
         mult = 1.0 / sdevLength[i];
@@ -475,7 +475,7 @@ void RenewalData::Reset() {
         }
 
         if (isZero(sum)) {
-          handle.logMessage(LOGWARN, "Warning in renewal - calculated zero recruits");
+          handle.logMessage(LOGWARN, "Warning in renewal - calculated zero recruits for stock", this->getName());
           for (l = renewalDistribution[i].minLength(age); l < renewalDistribution[i].maxLength(age); l++)
             renewalDistribution[i][age][l].setToZero();
 
@@ -485,7 +485,7 @@ void RenewalData::Reset() {
             renewalDistribution[i][age][l].N *= sum;
             renewalDistribution[i][age][l].W = alpha[i] * pow(LgrpDiv->meanLength(l), beta[i]);
             if ((handle.getLogLevel() >= LOGWARN) && (isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
-              handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+              handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight for stock", this->getName());
           }
         }
       }
@@ -501,7 +501,7 @@ void RenewalData::Reset() {
           if (renewalDistribution[i][age][l].N < 0.0)
             handle.logMessage(LOGWARN, "Warning in renewal - negative number of recruits", renewalDistribution[i][age][l].N);
           if ((isZero(renewalDistribution[i][age][l].W)) && (renewalDistribution[i][age][l].N > 0.0))
-            handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight");
+            handle.logMessage(LOGWARN, "Warning in renewal - zero mean weight for stock", this->getName());
         }
       }
     }
@@ -510,7 +510,7 @@ void RenewalData::Reset() {
     handle.logMessage(LOGFAIL, "Error in renewal - unrecognised data format");
 
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Reset renewal data");
+    handle.logMessage(LOGMESSAGE, "Reset renewal data for stock", this->getName());
 }
 
 int RenewalData::isRenewalStepArea(int area, const TimeClass* const TimeInfo) {

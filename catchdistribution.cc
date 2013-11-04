@@ -203,19 +203,20 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   switch (functionnumber) {
     case 2:
     case 3:
+    case 4:
     case 7:
+    case 8:
       for (i = 0; i < numarea; i++) {
         modelYearData.resize(new DoubleMatrix(numage, numlen, 0.0));
         obsYearData.resize(new DoubleMatrix(numage, numlen, 0.0));
       }
       break;
     case 1:
-    case 4:
     case 5:
     case 6:
-    case 8:
       if (yearly)
         handle.logMessage(LOGWARN, "Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
+      yearly = 0;
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
@@ -351,10 +352,11 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelDistribution.Nrow(); i++)
     for (j = 0; j < modelDistribution.Ncol(i); j++)
       (*modelDistribution[i][j]).setToZero();
-  for (i = 0; i < modelYearData.Size(); i++) {
-    (*modelYearData[i]).setToZero();
-    (*obsYearData[i]).setToZero();
-  }
+  if (yearly)
+    for (i = 0; i < modelYearData.Size(); i++) {
+      (*modelYearData[i]).setToZero();
+      (*obsYearData[i]).setToZero();
+    }
 
   switch (functionnumber) {
     case 2:
@@ -571,12 +573,12 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   if (timeindex == -1)
     handle.logMessage(LOGFAIL, "Error in catchdistribution - invalid timestep");
 
-  double l = 0.0;
   aggregator->Sum();
   if ((handle.getLogLevel() >= LOGWARN) && (aggregator->checkCatchData()))
     handle.logMessage(LOGWARN, "Warning in catchdistribution - zero catch found");
   alptr = &aggregator->getSum();
 
+  double l = 0.0;
   switch (functionnumber) {
     case 1:
       l = calcLikMultinomial();
@@ -588,7 +590,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       l = calcLikGamma(TimeInfo);
       break;
     case 4:
-      l = calcLikSumSquares();
+      l = calcLikSumSquares(TimeInfo);
       break;
     case 5:
       l = calcLikMVNormal();
@@ -600,7 +602,7 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       l = calcLikLog(TimeInfo);
       break;
     case 8:
-      l = calcLikStratified();
+      l = calcLikStratified(TimeInfo);
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in catchdistribution - unrecognised function", functionname);
@@ -663,19 +665,11 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
 
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
-    if (TimeInfo->getStep() == 1) { //start of a new year
-      (*modelYearData[area]).setToZero();
-      (*obsYearData[area]).setToZero();
-    }
 
     //JMB - changed to remove the need to store minrow and mincol stuff ...
-    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
         (*modelDistribution[timeindex][area])[age][len] = (*alptr)[area][age][len].N;
-        (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
-        (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
-      }
-    }
 
     if (!yearly) { //calculate likelihood on all steps
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
@@ -691,9 +685,22 @@ double CatchDistribution::calcLikPearson(const TimeClass* const TimeInfo) {
       totallikelihood += likelihoodValues[timeindex][area];
 
     } else { //calculate likelihood on year basis
+
+      if (TimeInfo->getStep() == 1) { //start of a new year
+        (*modelYearData[area]).setToZero();
+        (*obsYearData[area]).setToZero();
+      }
+
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
+          (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
+        }
+      }
+
       if (TimeInfo->getStep() < TimeInfo->numSteps())
         likelihoodValues[timeindex][area] = 0.0;
-      else { //last step in year, is to calc likelihood contribution
+      else { //last step in year, so need to calc likelihood contribution
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
           for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
             likelihoodValues[timeindex][area] +=
@@ -719,19 +726,11 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
 
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
-    if (TimeInfo->getStep() == 1) { //start of a new year
-      (*modelYearData[area]).setToZero();
-      (*obsYearData[area]).setToZero();
-    }
 
     //JMB - changed to remove the need to store minrow and mincol stuff ...
-    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
         (*modelDistribution[timeindex][area])[age][len] = (*alptr)[area][age][len].N;
-        (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
-        (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
-      }
-    }
 
     if (!yearly) { //calculate likelihood on all steps
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
@@ -745,9 +744,22 @@ double CatchDistribution::calcLikGamma(const TimeClass* const TimeInfo) {
       totallikelihood += likelihoodValues[timeindex][area];
 
     } else { //calculate likelihood on year basis
+
+      if (TimeInfo->getStep() == 1) { //start of a new year
+        (*modelYearData[area]).setToZero();
+        (*obsYearData[area]).setToZero();
+      }
+
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
+          (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
+        }
+      }
+
       if (TimeInfo->getStep() < TimeInfo->numSteps())
         likelihoodValues[timeindex][area] = 0.0;
-      else { //last step in year, is to calc likelihood contribution
+      else { //last step in year, so need to calc likelihood contribution
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
           for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
             likelihoodValues[timeindex][area] +=
@@ -774,19 +786,11 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
     likelihoodValues[timeindex][area] = 0.0;
     totalmodel = 0.0;
     totaldata = 0.0;
-    if (TimeInfo->getStep() == 1) { //start of a new year
-      (*modelYearData[area]).setToZero();
-      (*obsYearData[area]).setToZero();
-    }
 
     //JMB - changed to remove the need to store minrow and mincol stuff ...
-    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
-      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
         (*modelDistribution[timeindex][area])[age][len] = (*alptr)[area][age][len].N;
-        (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
-        (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
-      }
-    }
 
     if (!yearly) { //calculate likelihood on all steps
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
@@ -799,9 +803,22 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
       likelihoodValues[timeindex][area] += (ratio * ratio);
 
     } else { //calculate likelihood on year basis
+
+      if (TimeInfo->getStep() == 1) { //start of a new year
+        (*modelYearData[area]).setToZero();
+        (*obsYearData[area]).setToZero();
+      }
+
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
+          (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
+        }
+      }
+
       if (TimeInfo->getStep() < TimeInfo->numSteps())
         likelihoodValues[timeindex][area] = 0.0;
-      else { //last step in year, is to calculate likelihood contribution
+      else { //last step in year, so need to calculate likelihood contribution
         for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
           for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
             totalmodel += (*modelYearData[area])[age][len];
@@ -817,67 +834,27 @@ double CatchDistribution::calcLikLog(const TimeClass* const TimeInfo) {
   return totallikelihood;
 }
 
-double CatchDistribution::calcLikSumSquares() {
+double CatchDistribution::calcLikSumSquares(const TimeClass* const TimeInfo) {
 
-  int numage = ages.Nrow();
-  int numlen = LgrpDiv->numLengthGroups();
   double temp, totallikelihood, totalmodel, totaldata;
   int age, len, area;
 
   totallikelihood = 0.0;
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
+
     for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
       for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
         (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
 
     totalmodel = 0.0;
     totaldata = 0.0;
-    for (age = 0; age < numage; age++) {
-      for (len = 0; len < numlen; len++) {
-        totalmodel += (*modelDistribution[timeindex][area])[age][len];
-        totaldata += (*obsDistribution[timeindex][area])[age][len];
-      }
-    }
-
-    if (!(isZero(totalmodel)))
-      totalmodel = 1.0 / totalmodel;
-    if (!(isZero(totaldata)))
-      totaldata = 1.0 / totaldata;
-
-    for (age = 0; age < numage; age++) {
-      for (len = 0; len < numlen; len++) {
-        temp = (((*obsDistribution[timeindex][area])[age][len] * totaldata)
-          - ((*modelDistribution[timeindex][area])[age][len] * totalmodel));
-        likelihoodValues[timeindex][area] += (temp * temp);
-      }
-    }
-    totallikelihood += likelihoodValues[timeindex][area];
-  }
-  return totallikelihood;
-}
-
-double CatchDistribution::calcLikStratified() {
-
-  int numage = ages.Nrow();
-  int numlen = LgrpDiv->numLengthGroups();
-  double temp, totallikelihood, totalmodel, totaldata;
-  int age, len, area;
-
-  totallikelihood = 0.0;
-  for (area = 0; area < areas.Nrow(); area++) {
-    likelihoodValues[timeindex][area] = 0.0;
-    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
-      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
-        (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
-
-    //calculate an age distribution for each length class
-    for (len = 0; len < numlen; len++) {
-      totalmodel = 0.0;
-      totaldata = 0.0;
-      for (age = 0; age < numage; age++) {
-        totalmodel += (*modelDistribution[timeindex][area])[age][len];
-        totaldata += (*obsDistribution[timeindex][area])[age][len];
+    if (!yearly) { //calculate likelihood on all steps
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          totalmodel += (*modelDistribution[timeindex][area])[age][len];
+          totaldata += (*obsDistribution[timeindex][area])[age][len];
+        }
       }
 
       if (!(isZero(totalmodel)))
@@ -885,13 +862,136 @@ double CatchDistribution::calcLikStratified() {
       if (!(isZero(totaldata)))
         totaldata = 1.0 / totaldata;
 
-      for (age = 0; age < numage; age++) {
-        temp = (((*obsDistribution[timeindex][area])[age][len] * totaldata)
-          - ((*modelDistribution[timeindex][area])[age][len] * totalmodel));
-        likelihoodValues[timeindex][area] += (temp * temp);
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          temp = (((*obsDistribution[timeindex][area])[age][len] * totaldata)
+            - ((*modelDistribution[timeindex][area])[age][len] * totalmodel));
+          likelihoodValues[timeindex][area] += (temp * temp);
+        }
+      }
+      totallikelihood += likelihoodValues[timeindex][area];
+
+    } else { //calculate likelihood on year basis
+
+      if (TimeInfo->getStep() == 1) { //start of a new year
+        (*modelYearData[area]).setToZero();
+        (*obsYearData[area]).setToZero();
+      }
+
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
+          (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
+        }
+      }
+
+      if (TimeInfo->getStep() < TimeInfo->numSteps())
+        likelihoodValues[timeindex][area] = 0.0;
+      else { //last step in year, so need to calculate likelihood contribution
+        for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+          for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+            totalmodel += (*modelYearData[area])[age][len];
+            totaldata += (*obsYearData[area])[age][len];
+          }
+        }
+
+        if (!(isZero(totalmodel)))
+          totalmodel = 1.0 / totalmodel;
+        if (!(isZero(totaldata)))
+          totaldata = 1.0 / totaldata;
+
+        for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+          for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+            temp = (((*obsYearData[area])[age][len] * totaldata)
+              - ((*modelYearData[area])[age][len] * totalmodel));
+            likelihoodValues[timeindex][area] += (temp * temp);
+          }
+        }
+        totallikelihood += likelihoodValues[timeindex][area];
       }
     }
-    totallikelihood += likelihoodValues[timeindex][area];
+  }
+  return totallikelihood;
+}
+
+double CatchDistribution::calcLikStratified(const TimeClass* const TimeInfo) {
+
+  int numage = ages.Nrow();
+  int numlen = LgrpDiv->numLengthGroups();
+  double temp, totallikelihood, totalmodel, totaldata;
+  int age, len, area;
+
+  totallikelihood = 0.0;
+  for (area = 0; area < areas.Nrow(); area++) {
+    likelihoodValues[timeindex][area] = 0.0;
+
+    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
+      for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++)
+        (*modelDistribution[timeindex][area])[age][len] = ((*alptr)[area][age][len]).N;
+
+    if (!yearly) { //calculate likelihood on all steps
+      //calculate an age distribution for each length class
+      for (len = 0; len < numlen; len++) {
+        totalmodel = 0.0;
+        totaldata = 0.0;
+        for (age = 0; age < numage; age++) {
+          totalmodel += (*modelDistribution[timeindex][area])[age][len];
+          totaldata += (*obsDistribution[timeindex][area])[age][len];
+        }
+
+        if (!(isZero(totalmodel)))
+          totalmodel = 1.0 / totalmodel;
+        if (!(isZero(totaldata)))
+          totaldata = 1.0 / totaldata;
+
+        for (age = 0; age < numage; age++) {
+          temp = (((*obsDistribution[timeindex][area])[age][len] * totaldata)
+            - ((*modelDistribution[timeindex][area])[age][len] * totalmodel));
+          likelihoodValues[timeindex][area] += (temp * temp);
+        }
+      }
+      totallikelihood += likelihoodValues[timeindex][area];
+
+    } else { //calculate likelihood on year basis
+
+      if (TimeInfo->getStep() == 1) { //start of a new year
+        (*modelYearData[area]).setToZero();
+        (*obsYearData[area]).setToZero();
+      }
+
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+        for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+          (*modelYearData[area])[age][len] += (*modelDistribution[timeindex][area])[age][len];
+          (*obsYearData[area])[age][len] += (*obsDistribution[timeindex][area])[age][len];
+        }
+      }
+
+      if (TimeInfo->getStep() < TimeInfo->numSteps())
+        likelihoodValues[timeindex][area] = 0.0;
+      else { //last step in year, so need to calculate likelihood contribution
+        //calculate an age distribution for each length class
+        for (len = 0; len < numlen; len++) {
+          totalmodel = 0.0;
+          totaldata = 0.0;
+          for (age = 0; age < numage; age++) {
+            totalmodel += (*modelYearData[area])[age][len];
+            totaldata += (*obsYearData[area])[age][len];
+          }
+
+          if (!(isZero(totalmodel)))
+            totalmodel = 1.0 / totalmodel;
+          if (!(isZero(totaldata)))
+            totaldata = 1.0 / totaldata;
+
+          for (age = 0; age < numage; age++) {
+            temp = (((*obsYearData[area])[age][len] * totaldata)
+              - ((*modelYearData[area])[age][len] * totalmodel));
+            likelihoodValues[timeindex][area] += (temp * temp);
+          }
+        }
+        totallikelihood += likelihoodValues[timeindex][area];
+      }
+    }
   }
   return totallikelihood;
 }

@@ -131,8 +131,7 @@ void StockStdPrinter::setStock(StockPtrVector& stockvec, const AreaClass* const 
     handle.logMessage(LOGWARN, "Error in stockstdprinter - failed to match stocks");
     for (i = 0; i < stocks.Size(); i++)
       handle.logMessage(LOGWARN, "Error in stockstdprinter - found stock", stocks[i]->getName());
-    handle.logMessage(LOGWARN, "Error in stockstdprinter - looking for stock", stockname);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, "Error in stockstdprinter - looking for stock", stockname);
   }
 
   IntVector areas = stocks[0]->getAreas();

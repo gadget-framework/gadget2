@@ -275,8 +275,9 @@ void InitialCond::readNumberData(CommentStream& infile, Keeper* const keeper,
 }
 
 InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
-  Keeper* const keeper, const char* refWeightFile, const AreaClass* const Area, double DL)
-  : LivesOnAreas(Areas), LgrpDiv(0), CI(0) {
+  Keeper* const keeper, const char* refWeightFile,
+  const char* givenname, const AreaClass* const Area, double DL)
+  : HasName(givenname), LivesOnAreas(Areas), LgrpDiv(0), CI(0) {
 
   ifstream subfile;
   CommentStream subcomment(subfile);
@@ -418,15 +419,15 @@ InitialCond::~InitialCond() {
 
 void InitialCond::setCI(const LengthGroupDivision* const GivenLDiv) {
   if (!checkLengthGroupStructure(GivenLDiv, LgrpDiv))
-    handle.logMessage(LOGFAIL, "Error in initial conditions - invalid length group structure");
+    handle.logMessage(LOGFAIL, "Error in initial conditions - invalid length group structure for stock", this->getName());
   //check minimum and maximum lengths
   if (LgrpDiv->minLength() < GivenLDiv->minLength())
-    handle.logMessage(LOGWARN, "Warning in initial conditions - minimum length less than stock length");
+    handle.logMessage(LOGWARN, "Warning in initial conditions - minimum length less than stock length for stock", this->getName());
   if (LgrpDiv->maxLength() > GivenLDiv->maxLength())
-    handle.logMessage(LOGWARN, "Warning in initial conditions - maximum length greater than stock length");
+    handle.logMessage(LOGWARN, "Warning in initial conditions - maximum length greater than stock length for stock"), this->getName();
   CI = new ConversionIndex(LgrpDiv, GivenLDiv);
   if (CI->Error())
-    handle.logMessage(LOGFAIL, "Error in initial conditions - error when checking length structure");
+    handle.logMessage(LOGFAIL, "Error in initial conditions - error when checking length structure for stock", this->getName());
 }
 
 void InitialCond::Print(ofstream& outfile) const {
@@ -476,7 +477,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         //JMB check that the length data is valid
         if (isZero(meanLength[area][age - minage]) || sdevLength[area][age - minage] < 0.04) {
           //JMB the limit has been set at 0.04 to keep the exponential calculation sane
-          handle.logMessage(LOGWARN, "Warning in initial conditions - invalid length data");
+          handle.logMessage(LOGWARN, "Warning in initial conditions - invalid length data for stock", this->getName());
 
           //JMB set the population to zero
           for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++)
@@ -485,9 +486,9 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         } else {
           //JMB check that the mean length is within the length group range
           if (meanLength[area][age - minage] < LgrpDiv->minLength())
-            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
+            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length for stock", this->getName());
           if (meanLength[area][age - minage] > LgrpDiv->maxLength())
-            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is greater than maximum length");
+            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is greater than maximum length for stock", this->getName());
 
           scaler = 0.0;
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
@@ -508,7 +509,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
               initialPop[area][age][l].N *= scaler;
               initialPop[area][age][l].W = refWeight[l] * relCond[area][age - minage];
               if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
-                handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+                handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight for stock", this->getName());
             }
           }
         }
@@ -517,7 +518,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
 
   } else if (readoption == 1) {
     if (isZero(sdevMult))  //JMB this should never happen ...
-      handle.logMessage(LOGFAIL, "Error in initial conditions - multiplier for standard deviation is zero");
+      handle.logMessage(LOGFAIL, "Error in initial conditions - multiplier for standard deviation is zero for stock", this->getName());
 
     for (area = 0; area < areas.Size(); area++) {
       minage = initialPop[area].minAge();
@@ -536,9 +537,9 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
         } else {
           //JMB check that the mean length is within the length group range
           if (meanLength[area][age - minage] < LgrpDiv->minLength())
-            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length");
+            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is less than minimum length for stock", this->getName());
           if (meanLength[area][age - minage] > LgrpDiv->maxLength())
-            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is greater than maximum length");
+            handle.logMessage(LOGWARN, "Warning in initial conditions - mean length is greater than maximum length for stock", this->getName());
 
           scaler = 0.0;
           mult = 1.0 / (sdevLength[area][age - minage] * sdevMult);
@@ -549,7 +550,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
           }
 
           if (isZero(scaler)) {
-            handle.logMessage(LOGWARN, "Warning in initial population - calculated zero population");
+            handle.logMessage(LOGWARN, "Warning in initial population - calculated zero population for stock", this->getName());
             for (l = initialPop[area].minLength(age); l < initialPop[area].maxLength(age); l++)
               initialPop[area][age][l].setToZero();
 
@@ -559,7 +560,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
               initialPop[area][age][l].N *= scaler;
               initialPop[area][age][l].W = alpha[area][age - minage] * pow(LgrpDiv->meanLength(l), beta[area][age - minage]);
               if ((handle.getLogLevel() >= LOGWARN) && (isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
-                handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+                handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight for stock", this->getName());
             }
           }
         }
@@ -575,9 +576,9 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
           initialPop[area][age][l].N = (*initialNumber[area])[age - minage][l];
           if (handle.getLogLevel() >= LOGWARN) {
             if (initialPop[area][age][l].N < 0.0)
-              handle.logMessage(LOGWARN, "Warning in initial conditions - negative initial population");
+              handle.logMessage(LOGWARN, "Warning in initial conditions - negative initial population for stock", this->getName());
             if ((isZero(initialPop[area][age][l].W)) && (initialPop[area][age][l].N > 0.0))
-              handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight");
+              handle.logMessage(LOGWARN, "Warning in initial conditions - zero mean weight for stock", this->getName());
           }
         }
       }
@@ -592,15 +593,15 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
     //check minimum and maximum ages
     if (handle.getLogLevel() >= LOGWARN) {
       if (initialPop[area].minAge() < Alkeys[area].minAge())
-        handle.logMessage(LOGWARN, "Warning in initial conditions - minimum age less than stock age");
+        handle.logMessage(LOGWARN, "Warning in initial conditions - minimum age less than stock age for stock", this->getName());
       if (initialPop[area].maxAge() > Alkeys[area].maxAge())
-        handle.logMessage(LOGWARN, "Warning in initial conditions - maximum age greater than stock age");
+        handle.logMessage(LOGWARN, "Warning in initial conditions - maximum age greater than stock age for stock", this->getName());
     }
 
     minage = max(Alkeys[area].minAge(), initialPop[area].minAge());
     maxage = min(Alkeys[area].maxAge(), initialPop[area].maxAge());
     if (maxage < minage)
-      handle.logMessage(LOGFAIL, "Error in initial conditions - maximum age less than minimum age");
+      handle.logMessage(LOGFAIL, "Error in initial conditions - maximum age less than minimum age for stock", this->getName());
 
     for (age = minage; age <= maxage; age++) {
       if ((readoption == 0) || (readoption == 1))
@@ -614,4 +615,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       Alkeys[area][age].Add(initialPop[area][age], *CI, mult);
     }
   }
+
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Calculated initial condition data for stock", this->getName());
 }

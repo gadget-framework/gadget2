@@ -29,6 +29,7 @@
 #include "stockdistribution.h"
 #include "surveydistribution.h"
 #include "migrationpenalty.h"
+#include "migrationproportion.h"
 #include "catchinkilos.h"
 #include "global.h"
 
@@ -82,13 +83,14 @@ void Ecosystem::Initialise() {
     predvec.resize(fleetvec[i]->getPredator());
 
   //Now we can start initialising things
-  for (i = 0; i < predvec.Size(); i++) {
-    handle.logMessage(LOGMESSAGE, "Initialising predator", predvec[i]->getName());
-    ((PopPredator*)predvec[i])->setPrey(preyvec, keeper);
-  }
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
   for (i = 0; i < stockvec.Size(); i++) {
     handle.logMessage(LOGMESSAGE, "Initialising stock", stockvec[i]->getName());
     stockvec[i]->setStock(stockvec);
+  }
+  for (i = 0; i < predvec.Size(); i++) {
+    handle.logMessage(LOGMESSAGE, "Initialising predator", predvec[i]->getName());
+    ((PopPredator*)predvec[i])->setPrey(preyvec, keeper);
   }
   for (i = 0; i < tagvec.Size(); i++) {
     handle.logMessage(LOGMESSAGE, "Initialising tagging experiment", tagvec[i]->getName());
@@ -147,6 +149,9 @@ void Ecosystem::Initialise() {
         break;
       case SURVEYDISTRIBUTIONLIKELIHOOD:
         ((SurveyDistribution*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
+        break;
+      case MIGRATIONPROPORTIONLIKELIHOOD:
+        ((MigrationProportion*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case BOUNDLIKELIHOOD:
         break;

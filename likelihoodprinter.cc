@@ -7,6 +7,7 @@
 #include "runid.h"
 #include "global.h"
 
+
 LikelihoodPrinter::LikelihoodPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(LIKELIHOODPRINTER) {
 
@@ -82,7 +83,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
       handle.logMessage(LOGWARN, "Error in likelihoodprinter - found component", like[i]->getName());
     for (i = 0; i < likenames.Size(); i++)
       handle.logMessage(LOGWARN, "Error in likelihoodprinter - looking for component", likenames[i]);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, ""); //JMB this will exit gadget
   }
 
   outfile << "; ";
@@ -117,6 +118,9 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         break;
       case RECSTATISTICSLIKELIHOOD:
         outfile << "\n; tagid-year-step-area-number-mean[-stddev]\n";
+        break;
+      case MIGRATIONPROPORTIONLIKELIHOOD:
+        outfile << "\n; year-step-area-ratio\n";
         break;
       case BOUNDLIKELIHOOD:
       case UNDERSTOCKINGLIKELIHOOD:

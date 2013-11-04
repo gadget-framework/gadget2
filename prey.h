@@ -12,6 +12,7 @@
 #include "agebandmatrix.h"
 #include "keeper.h"
 #include "gadget.h"
+#include "modelvariable.h"
 
 enum PreyType { STOCKPREY = 1, LENGTHPREY };
 
@@ -30,18 +31,23 @@ public:
    * \param infile is the CommentStream to read the Prey data from
    * \param areas is the IntVector of areas that the prey lives on
    * \param givenname is the name of the prey
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
    * \note This constructor is used when creating dynamic prey (ie. StockPrey class)
    */
-  Prey(CommentStream& infile, const IntVector& areas, const char* givenname);
+  Prey(CommentStream& infile, const IntVector& areas, const char* givenname,
+  const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the Prey constructor for a prey with a given length group
-   * \param lengths is the DoubleVector of length groups of the prey
-   * \param areas is the IntVector of areas that the prey lives on
-   * \param Energy is the energy content of the prey
+   * \param infile is the CommentStream to read the Prey data from
    * \param givenname is the name of the prey
+   * \param areas is the IntVector of areas that the prey lives on
+   * \param TimeInfo is the TimeClass for the current model
+   * \param keeper is the Keeper for the current model
    * \note This constructor is used when creating non-dynamic prey (ie. OtherFood class)
    */
-  Prey(const DoubleVector& lengths, const IntVector& areas, double Energy, const char* givenname);
+  Prey(CommentStream& infile, const char* givenname, const IntVector& areas,
+  const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default Prey destructor
    */
@@ -62,8 +68,9 @@ public:
   virtual void Sum(const PopInfoVector& NumberInArea, int area) {};
   /**
    * \brief This will reset the consumption information for the current model run
+   * \param TimeInfo is the TimeClass for the current model
    */
-  virtual void Reset();
+  virtual void Reset(const TimeClass* const TimeInfo);
   /**
    * \brief This function will print the consumption data
    * \param outfile is the ofstream that all the model information gets sent to
@@ -196,9 +203,9 @@ protected:
    */
   PopInfoMatrix preynumber;
   /**
-   * \brief This is the energy content of the prey (in kilojoules per kilogramme)
+   * \brief This is the ModelVariable used to store the energy content of the prey (in kilojoules per kilogramme)
    */
-  double energy;
+  ModelVariable energy;
   /**
    * \brief This is the DoubleMatrix used to store information on the biomass of the prey that is available for the predators to consume on the current timestep
    * \note The indices for this object are [area][prey length]

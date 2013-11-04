@@ -2,7 +2,7 @@
 #define readword_h
 
 #include "commentstream.h"
-#include "timevariable.h"
+#include "modelvariable.h"
 #include "formula.h"
 
 /**
@@ -27,14 +27,14 @@ void readWordAndVariable(CommentStream& infile, const char* str, double& number)
  */
 void readWordAndVariable(CommentStream& infile, const char* str, Formula& formula);
 /**
- * \brief This is the function that will read a text string from file, compare this text to a label and if it matches what is expected will then read and store a TimeVariable
+ * \brief This is the function that will read a text string from file, compare this text to a label and if it matches what is expected will then read and store a ModelVariable
  * \param infile is the CommentStream to read from
  * \param str is the char* that the text label will be compared to
- * \param timevariable is the TimeVariable that will store the value that has been read
+ * \param modelvariable is the ModelVariable that will store the value that has been read
  * \param TimeInfo is the TimeClass for the current model
  * \param keeper is the Keeper for the current model
  */
-void readWordAndTimeVariable(CommentStream& infile, const char* str, TimeVariable& timevariable,
+void readWordAndModelVariable(CommentStream& infile, const char* str, ModelVariable& modelvariable,
   const TimeClass* const TimeInfo, Keeper* const keeper);
 /**
  * \brief This is the function that will read a text string from file, compare this text to a label and if it matches what is expected will then read and store a second string

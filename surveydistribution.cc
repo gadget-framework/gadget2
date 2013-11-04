@@ -106,19 +106,19 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
   suit.resize(LgrpDiv->numLengthGroups(), 0.0);
   infile >> text >> ws;
   if ((strcasecmp(text, "function") == 0)) {
-    infile >> text;
+    //read suitability function
+    infile >> text >> ws;
     SuitFuncPtrVector tempsuitfunc;
-    if (tempsuitfunc.readSuitFunction(infile, text, TimeInfo, keeper)) {
-      suitfunction = tempsuitfunc[0];
-      if (suitfunction->usesPredLength())
-        suitfunction->setPredLength(0.0);
+    tempsuitfunc.readSuitFunction(infile, text, TimeInfo, keeper);
+    suitfunction = tempsuitfunc[0];
+    if (suitfunction->usesPredLength())
+      suitfunction->setPredLength(0.0);
 
-      for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
-        if (suitfunction->usesPreyLength())
-          suitfunction->setPreyLength(LgrpDiv->meanLength(i));
+    for (i = 0; i < LgrpDiv->numLengthGroups(); i++) {
+      if (suitfunction->usesPreyLength())
+        suitfunction->setPreyLength(LgrpDiv->meanLength(i));
 
-        suit[i] = suitfunction->calculate();
-      }
+      suit[i] = suitfunction->calculate();
     }
 
   } else if (strcasecmp(text, "suitfile") == 0) {

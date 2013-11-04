@@ -123,7 +123,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   tmpPopulation.AddRows(areas.Size(), LgrpDiv->numLengthGroups(), nullpop);
   readWordAndVariable(infile, "doesgrow", doesgrow);
   if (doesgrow) {
-    grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, Area, grlenindex);
+    grower = new Grower(infile, LgrpDiv, GrowLgrpDiv, areas, TimeInfo, keeper, refweight, this->getName(), Area, grlenindex);
 
   } else
     grower = 0;
@@ -133,13 +133,13 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   infile >> text;
   if (strcasecmp(text, "naturalmortality") != 0)
     handle.logFileUnexpected(LOGFAIL, "naturalmortality", text);
-  naturalm = new NaturalMortality(infile, minage, numage, areas, TimeInfo, keeper);
+  naturalm = new NaturalMortality(infile, minage, numage, this->getName(), areas, TimeInfo, keeper);
   handle.logMessage(LOGMESSAGE, "Read natural mortality data for stock", this->getName());
 
   //read the prey data
   readWordAndVariable(infile, "iseaten", iseaten);
   if (iseaten) {
-    prey = new StockPrey(infile, areas, this->getName(), minage, numage);
+    prey = new StockPrey(infile, areas, this->getName(), minage, numage, TimeInfo, keeper);
 
   } else
     prey = 0;
@@ -159,7 +159,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   infile >> text;
   if (strcasecmp(text, "initialconditions") != 0)
     handle.logFileUnexpected(LOGFAIL, "initialconditions", text);
-  initial = new InitialCond(infile, areas, keeper, refweight, Area, dl);
+  initial = new InitialCond(infile, areas, keeper, refweight, this->getName(), Area, dl);
   handle.logMessage(LOGMESSAGE, "Read initial conditions data for stock", this->getName());
 
   //read the migration data
@@ -170,10 +170,10 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     c = infile.peek();
     if ((c == 'y') || (c == 'Y')) {
       //about to read the word yearstepfile
-      migration = new MigrationNumbers(infile, areas, Area, TimeInfo, keeper);
+      migration = new MigrationNumbers(infile, areas, Area, TimeInfo, this->getName(), keeper);
     } else if ((c == 'd') || (c == 'D')) {
       //about to read the word diffusion
-      migration = new MigrationFunction(infile, areas, Area, TimeInfo, keeper);
+      migration = new MigrationFunction(infile, areas, Area, TimeInfo, this->getName(), keeper);
     } else {
       infile >> text >> ws;
       handle.logFileUnexpected(LOGFAIL, "migrationnumbers or migrationfunction", text);
@@ -194,18 +194,29 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
 
-    if (strcasecmp(text, "continuous") == 0)
-      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, numage, areas, LgrpDiv);
-    else if (strcasecmp(text, "fixedlength") == 0)
-      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, numage, areas, LgrpDiv);
-    else if (strcasecmp(text, "constant") == 0)
-      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, numage, areas, LgrpDiv, 4);
-    else if (strcasecmp(text, "constantweight") == 0)
-      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, numage, areas, LgrpDiv, 6, refweight);
-    else if (strcasecmp(text, "ageandlength") == 0)
-      handle.logFileMessage(LOGFAIL, "\nThe ageandlength maturity function is no longer supported");
-    else
-      handle.logFileMessage(LOGFAIL, "unrecognised maturity function", text);
+    if (strcasecmp(text, "continuous") == 0) {
+      maturity = new MaturityA(subcomment, TimeInfo, keeper, minage, numage, areas, this->getName(), LgrpDiv);
+
+    } else if (strcasecmp(text, "fixedlength") == 0) {
+      maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, numage, areas, this->getName(), LgrpDiv);
+
+    } else if (strcasecmp(text, "newconstant") == 0) {
+      maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, numage, areas, this->getName(), LgrpDiv, 4);
+
+    } else if (strcasecmp(text, "newconstantweight") == 0) {
+      maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, numage, areas, this->getName(), LgrpDiv, 6, refweight);
+
+    } else if (strcasecmp(text, "ageandlength") == 0) {
+      handle.logMessage(LOGFAIL, "\nThe ageandlength maturity function is no longer supported");
+
+    } else if (strcasecmp(text, "constant") == 0) {
+      handle.logMessage(LOGFAIL, "\nThe constant maturity function is no longer supported\nUse the newconstant maturity function instead\nNote that this function has had a factor of 4 removed from the source code");
+
+    } else if (strcasecmp(text, "constantweight") == 0) {
+      handle.logMessage(LOGFAIL, "\nThe constantweight maturity function is no longer supported\nUse the newconstantweight maturity function instead\nNote that this function has had a factor of 4 removed from the source code");
+
+    } else
+      handle.logMessage(LOGFAIL, "unrecognised maturity function", text);
 
     handle.Close();
     subfile.close();
@@ -222,7 +233,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   readWordAndVariable(infile, "doesmove", doesmove);
   if (doesmove) {
     //transition handles the movements of the age group maxage
-    transition = new Transition(infile, areas, maxage, LgrpDiv, TimeInfo, keeper);
+    transition = new Transition(infile, areas, maxage, LgrpDiv, this->getName(), TimeInfo, keeper);
 
   } else
     transition = 0;
@@ -231,7 +242,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   //read the renewal data
   readWordAndVariable(infile, "doesrenew", doesrenew);
   if (doesrenew) {
-    renewal = new RenewalData(infile, areas, Area, TimeInfo, keeper, refweight, minage, maxage, dl);
+    renewal = new RenewalData(infile, areas, Area, TimeInfo, keeper, refweight, this->getName(), minage, maxage, dl);
 
   } else
     renewal = 0;
@@ -246,7 +257,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
-    spawner = new SpawnData(subcomment, maxage, LgrpDiv, areas, Area, TimeInfo, keeper);
+    spawner = new SpawnData(subcomment, maxage, LgrpDiv, areas, Area, this->getName(), TimeInfo, keeper);
     handle.Close();
     subfile.close();
     subfile.clear();
@@ -266,7 +277,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
       CommentStream subcomment(subfile);
       handle.checkIfFailure(subfile, filename);
       handle.Open(filename);
-      stray = new StrayData(subcomment, LgrpDiv, areas, Area, TimeInfo, keeper);
+      stray = new StrayData(subcomment, LgrpDiv, areas, Area, this->getName(), TimeInfo, keeper);
       handle.Close();
       subfile.close();
       subfile.clear();
@@ -332,7 +343,7 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
   if (doesstray)
     stray->Reset(TimeInfo);
   if (iseaten)
-    prey->Reset();
+    prey->Reset(TimeInfo);
 
   if (TimeInfo->getTime() == 1) {
     initial->Initialise(Alkeys);
@@ -344,12 +355,25 @@ void Stock::Reset(const TimeClass* const TimeInfo) {
       migration->Reset();
     if (doesmove)
       transition->Reset();
-    if (handle.getLogLevel() >= LOGMESSAGE)
-      handle.logMessage(LOGMESSAGE, "Reset stock data for stock", this->getName());
   }
+
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Reset stock data for stock", this->getName());
 }
 
 void Stock::setStock(StockPtrVector& stockvec) {
+
+  initial->setCI(LgrpDiv);
+  if (iseaten)
+    prey->setCI(LgrpDiv);
+  if (doesrenew)
+    renewal->setCI(LgrpDiv);
+
+  //JMB for the stock variable stuff to work we need to initialise the population
+  //very early in the simulation so we do it here and then do it again in the
+  //reset() function that gets called later (as part of the optimisation runs)
+  initial->Initialise(Alkeys);
+
   int i;
   StockPtrVector tmpStockVector;
   if (doesmature) {
@@ -375,12 +399,6 @@ void Stock::setStock(StockPtrVector& stockvec) {
   }
   if (doesspawn)
     spawner->setStock(stockvec);
-  //JMB moved the CI stuff here
-  initial->setCI(LgrpDiv);
-  if (iseaten)
-    prey->setCI(LgrpDiv);
-  if (doesrenew)
-    renewal->setCI(LgrpDiv);
 }
 
 void Stock::setTagged() {

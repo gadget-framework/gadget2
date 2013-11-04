@@ -189,7 +189,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     if (isEqual(preference[prey], 1.0))
       check = 1;
 
-    if (this->getPrey(prey)->isPreyArea(area)) {
+    if ((this->getPrey(prey)->isPreyArea(area)) && (!(isZero(this->getPrey(prey)->getEnergy())))) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++) {
           tmp = this->getSuitability(prey)[predl][preyl] * this->getPrey(prey)->getEnergy()
@@ -235,7 +235,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 
   //Distributing the total consumption on the preys and converting to biomass
   for (prey = 0; prey < this->numPreys(); prey++) {
-    if (this->getPrey(prey)->isPreyArea(area)) {
+    if ((this->getPrey(prey)->isPreyArea(area)) && (!(isZero(this->getPrey(prey)->getEnergy())))) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         if (!(isZero(Phi[inarea][predl]))) {
           tmp = totalcons[inarea][predl] / (Phi[inarea][predl] * this->getPrey(prey)->getEnergy());

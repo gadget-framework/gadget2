@@ -1,7 +1,6 @@
 #include "ludecomposition.h"
 #include "errorhandler.h"
 #include "global.h"
-
 LUDecomposition::LUDecomposition(const DoubleMatrix& A) {
   if (A.Ncol() != A.Nrow())
     handle.logMessage(LOGFAIL, "Error in ludecomposition - matrix not rectangular");

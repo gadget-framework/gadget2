@@ -3,7 +3,6 @@
 
 #include "formulavector.h"
 #include "areatime.h"
-#include "doublematrix.h"
 #include "commentstream.h"
 
 /**
@@ -15,7 +14,7 @@ public:
   /**
    * \brief This is the default TimeVariable constructor
    */
-  TimeVariable();
+  TimeVariable() { value = 0.0; lastvalue = -1.0; };
   /**
    * \brief This is the default TimeVariable destructor
    */
@@ -28,10 +27,10 @@ public:
    */
   void read(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
-   * \brief This operator will return the value of the TimeVariable
+   * \brief This function will return the value of the TimeVariable
    * \return the value of the TimeVariable
    */
-  operator double() const { return value; };
+  double getValue() const { return value; };
   /**
    * \brief This function will swap the TimeVariable value for a new value
    * \param newTV is the new TimeVariable value
@@ -56,21 +55,6 @@ public:
   int didChange(const TimeClass* const TimeInfo);
 private:
   /**
-   * \brief This function will read TimeVariable data from a separate input file
-   * \param infile is the CommentStream to read the time data from
-   * \param TimeInfo is the TimeClass for the current model
-   * \param keeper is the Keeper for the current model
-   */
-  void readFromFile(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper);
-  /**
-   * \brief This is the flag used to denote whether parameters have been read from a file or not
-   */
-  int fromfile;
-  /**
-   * \brief This is the flag used to denote whether the 'modelmatrix' formulation is used or not
-   */
-  int usemodelmatrix;
-  /**
    * \brief This is the identifier for the last timestep that the value of the TimeVariable changed
    */
   int timeid;
@@ -90,20 +74,6 @@ private:
    * \brief This is the FormulaVector of the values of the TimeVariable
    */
   FormulaVector values;
-  /**
-   * \brief This is the DoubleMatrix of the multiplier values for the TimeVariable
-   * \note This is only used when the the 'modelmatrix' formulation is specified
-   */
-  DoubleMatrix modelmatrix;
-  /**
-   * \brief This is the FormulaVector of the coefficients for the TimeVariable
-   * \note This is only used when the the 'modelmatrix' formulation is specified
-   */
-  FormulaVector coeff;
-  /**
-   * \brief This is the Formula of the initial value of the TimeVariable
-   */
-  Formula init;
   /**
    * \brief This is the last value of the TimeVariable
    */

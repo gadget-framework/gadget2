@@ -8,8 +8,8 @@
 #include "global.h"
 
 NaturalMortality::NaturalMortality(CommentStream& infile, int minage, int numage,
-  const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : LivesOnAreas(Areas) {
+  const char* givenname, const IntVector& Areas, const TimeClass* const TimeInfo,
+  Keeper* const keeper) : HasName(givenname), LivesOnAreas(Areas) {
 
   minStockAge = minage;
   readoption = 0;
@@ -60,6 +60,9 @@ void NaturalMortality::Reset(const TimeClass* const TimeInfo) {
             proportion[i][j] = 1.0; //use mortality rate 0
         }
       }
+
+      if (handle.getLogLevel() >= LOGMESSAGE)
+        handle.logMessage(LOGMESSAGE, "Reset natural mortality data for stock", this->getName());
     }
 
   } else if (readoption == 1) {
@@ -77,6 +80,9 @@ void NaturalMortality::Reset(const TimeClass* const TimeInfo) {
             proportion[i][j] = 1.0; //use mortality rate 0
         }
       }
+
+      if (handle.getLogLevel() >= LOGMESSAGE)
+        handle.logMessage(LOGMESSAGE, "Reset natural mortality data for stock", this->getName());
     }
 
   } else

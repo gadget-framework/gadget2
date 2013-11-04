@@ -10,61 +10,62 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
    *  y1 s1
    *  ...
    *  yN sN
-   * where y1, ..., yN are either a year or the text "all"
-   *   and s1, ..., sN are either a step or the text "all"
+   * where y1, ..., yN are either a year or the text 'all'
+   *   and s1, ..., sN are either a step or the text 'all'
    */
 
-  streampos pos = infile.tellg();
   infile >> ws;
-  if (infile.fail()) {
-    infile.seekg(pos);
+  if (infile.fail())
     return 0;
-  }
 
-  int error = 0;  //error = 0 no error, 1 error occurred or 2 quit
+  int check = 0;  //check = 0 continue reading, check = 1 quit
   int year, step, column;
   year = step = column = 0;
   IntVector readtext(2, 0);
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  while (!infile.eof() && (error == 0)) {
-    infile >> ws;
+  streampos pos = infile.tellg();
+
+  while (!infile.eof() && (check == 0)) {
+    //update the value of pos
     pos = infile.tellg();
 
-    //first we read from infile
     if (isdigit(infile.peek())) {
+      //OK, we are about to read a number ...
       readtext[column] = 0;
       if (column == 0)
-        infile >> year;
+        infile >> year >> ws;
       else
-        infile >> step;
+        infile >> step >> ws;
+        
     } else {
-      infile >> text;
+      //OK, we are about to read a word that should be 'all'
+      infile >> text >> ws;
       readtext[column] = 1;
-      if ((strcasecmp(text, "all") == 0))
-        pos = infile.tellg();
-      else
-        if (column == 0)
-          error = 2;
-        else
-          error = 1;
+      if (strcasecmp(text, "all") != 0)
+        check = 1; //we want to exit this while loop
     }
 
-    //now we have read from infile if we have read the second column, we keep the data
-    if ((error == 0) && (column == 1)) {
+    //now we have read from infile the second column we store the data
+    if (column == 1) {
       if ((readtext[0]) && (readtext[1])) {
+        //we have read 'all' 'all'
         everyStep = 1;
-        error = 2;   //we want to exit this while loop.
+        //check = 1; //we want to exit this while loop
+
       } else if ((readtext[0]) && !(readtext[1])) {
+        //we have read 'all' step
         if ((TimeInfo->getLastYear() != TimeInfo->getFirstYear()) ||
             (TimeInfo->getFirstStep() <= step && step <= TimeInfo->getLastStep()))
           Steps.resize(1, step);
 
       } else if (!(readtext[0]) && (readtext[1])) {
+        //we have read year 'all''
         if (TimeInfo->getFirstYear() <= year && year <=  TimeInfo->getLastYear())
           Years.resize(1, year);
 
       } else {
+        //we have read year step
         if (TimeInfo->isWithinPeriod(year, step))
           TimeSteps.resize(1, TimeInfo->calcSteps(year, step));
 
@@ -73,9 +74,8 @@ int ActionAtTimes::readFromFile(CommentStream& infile, const TimeClass* const Ti
     column = !column;  //change column to be read
   }
 
-  infile.seekg(pos);
-  if ((error == 1) || (column == 1 && error != 2))
-    return 0;
+  if (!infile.eof())
+    infile.seekg(pos);
   return 1;
 }
 

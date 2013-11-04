@@ -36,23 +36,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
   }
   this->storeAreas(tmpareas);
 
-  //read the length information
-  DoubleVector lengths(2, 0.0);
-  infile >> text >> ws;
-  if (strcasecmp(text, "lengths") != 0)
-    handle.logFileUnexpected(LOGFAIL, "lengths", text);
-  infile >> lengths[0] >> lengths[1] >> ws;
-
-  //read the energy content of this prey
-  double energy;
-  infile >> ws;
-  c = infile.peek();
-  if ((c == 'e') || (c == 'E'))
-    readWordAndVariable(infile, "energycontent", energy);
-  else
-    energy = 1.0;
-
-  prey = new LengthPrey(lengths, areas, energy, this->getName());
+  prey = new LengthPrey(infile, this->getName(), areas, TimeInfo, keeper);
 
   infile >> text >> ws;
   if ((strcasecmp(text, "amount") != 0) && (strcasecmp(text, "amounts") != 0))
@@ -109,7 +93,7 @@ void OtherFood::Print(ofstream& outfile) const {
 
 void OtherFood::Reset(const TimeClass* const TimeInfo) {
   int i;
-  prey->Reset();
+  prey->Reset(TimeInfo);
   for (i = 0; i < tmpPopulation.Nrow(); i++)
     if (this->isOtherFoodStepArea(i, TimeInfo))
       tmpPopulation[this->areaNum(i)][0].N = amount[TimeInfo->getTime()][this->areaNum(i)];

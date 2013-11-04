@@ -758,3 +758,85 @@ void GrowthCalcI::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgro
     }
   }
 }
+
+// ********************************************************
+// Functions for GrowthCalcJ
+// ********************************************************
+GrowthCalcJ::GrowthCalcJ(CommentStream& infile, const IntVector& Areas,
+  const TimeClass* const TimeInfo, Keeper* const keeper)
+  : GrowthCalcBase(Areas), numGrowthConstants(5) {
+
+  keeper->addString("GrowthCalcJ");
+  growthPar.resize(numGrowthConstants, keeper);
+
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  infile >> text >> ws;
+  if (strcasecmp(text, "growthparameters") != 0)
+    handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
+  growthPar.read(infile, TimeInfo, keeper);
+  keeper->clearLast();
+}
+
+/* Simplified 2 parameter length based Von Bertalanffy growth function
+ * compare with GrowthCalcC for the more complex weight based version
+ * with a non-zero value for t0 (compare to GrowthCalcH for simpler version */
+void GrowthCalcJ::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
+
+  growthPar.Update(TimeInfo);
+  //JMB - first some error checking
+  if ((handle.getLogLevel() >= LOGWARN) && (growthPar.didChange(TimeInfo))) {
+    if (isZero(growthPar[1]) || isZero(growthPar[2]))
+      handle.logMessage(LOGWARN, "Warning in growth calculation - growth parameter is zero");
+    if (LgrpDiv->maxLength() > growthPar[0])
+      handle.logMessage(LOGWARN, "Warning in growth calculation - length greater than length infinity");
+  }
+
+  double mult = 1.0 - exp(-growthPar[1] * TimeInfo->getTimeStepSize());
+  int i;
+  for (i = 0; i < Lgrowth.Size(); i++)
+    Lgrowth[i] = (growthPar[0] - LgrpDiv->meanLength(i)) * mult;
+}
+
+// ********************************************************
+// Functions for GrowthCalcK
+// ********************************************************
+GrowthCalcK::GrowthCalcK(CommentStream& infile, const IntVector& Areas,
+  const TimeClass* const TimeInfo, Keeper* const keeper)
+  : GrowthCalcBase(Areas), numGrowthConstants(5) {
+
+  keeper->addString("GrowthCalcK");
+  growthPar.resize(numGrowthConstants, keeper);
+
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+  infile >> text >> ws;
+  if (strcasecmp(text, "growthparameters") != 0)
+    handle.logFileUnexpected(LOGFAIL, "growthparameters", text);
+  growthPar.read(infile, TimeInfo, keeper);
+  keeper->clearLast();
+}
+
+/* Simplified length based Gompertz growth function */
+void GrowthCalcK::calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+  const PopInfoVector& numGrow, const AreaClass* const Area,
+  const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+  const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) {
+
+  growthPar.Update(TimeInfo);
+  //JMB - first some error checking
+  if ((handle.getLogLevel() >= LOGWARN) && (growthPar.didChange(TimeInfo))) {
+    if (isZero(growthPar[1]) || isZero(growthPar[2]))
+      handle.logMessage(LOGWARN, "Warning in growth calculation - growth parameter is zero");
+    if (LgrpDiv->maxLength() > growthPar[0])
+      handle.logMessage(LOGWARN, "Warning in growth calculation - length greater than length infinity");
+  }
+
+  double mult = 1.0 - exp(-growthPar[1] * TimeInfo->getTimeStepSize());
+  int i;
+  for (i = 0; i < Lgrowth.Size(); i++)
+    Lgrowth[i] = (growthPar[0] - LgrpDiv->meanLength(i)) * mult;
+}

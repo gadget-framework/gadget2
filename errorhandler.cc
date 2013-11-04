@@ -11,6 +11,7 @@ ErrorHandler::ErrorHandler() {
   uselog = 0;
   numwarn = 0;
   runopt = 0;
+  nanflag = 0;
   loglevel = LOGINFO;
 }
 
@@ -394,6 +395,52 @@ void ErrorHandler::logMessage(LogLevel mlevel, DoubleVector vec) {
         for (i = 0; i < vec.Size(); i++)
           logfile << vec[i] << sep;
         logfile << endl;
+        logfile.flush();
+      }
+      break;
+    default:
+      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      break;
+  }
+}
+
+void ErrorHandler::logMessageNaN(LogLevel mlevel, const char* msg) {
+
+  nanflag = 1;
+  if (mlevel > loglevel)
+    return;
+
+  switch (mlevel) {
+    case LOGNONE:
+      break;
+    case LOGFAIL:
+      if (uselog) {
+        logfile << "Error in model - NaN found" << sep << msg << endl;
+        logfile.flush();
+      }
+      cerr << "Error in model - NaN found" << sep << msg << endl;
+      exit(EXIT_FAILURE);
+      break;
+    case LOGINFO:
+      if (uselog) {
+        logfile << "Error in model - NaN found" << sep << msg << endl;
+        logfile.flush();
+      }
+      cout << "Error in model - NaN found" << sep << msg << endl;
+      break;
+    case LOGWARN:
+      numwarn++;
+      if (uselog) {
+        logfile << "Error in model - NaN found" << sep << msg << endl;
+        logfile.flush();
+      }
+      cerr << "Error in model - NaN found" << sep << msg << endl;
+      break;
+    case LOGDEBUG:
+    case LOGMESSAGE:
+    case LOGDETAIL:
+      if (uselog) {
+        logfile << "Error in model - NaN found" << sep << msg << endl;
         logfile.flush();
       }
       break;

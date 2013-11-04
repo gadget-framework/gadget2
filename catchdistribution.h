@@ -95,9 +95,10 @@ private:
   double calcLikGamma(const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a sum of squares function
+   * \param TimeInfo is the TimeClass for the current model
    * \return likelihood score
    */
-  double calcLikSumSquares();
+  double calcLikSumSquares(const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a multivariate normal function
    * \return likelihood score
@@ -116,9 +117,10 @@ private:
   double calcLikLog(const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a sum of squares function, based on data that has been collected from a stratified sampling scheme
+   * \param TimeInfo is the TimeClass for the current model
    * \return likelihood score
    */
-  double calcLikStratified();
+  double calcLikStratified(const TimeClass* const TimeInfo);
   /**
    * \brief This function will calculate the correlation matrix used for the multivariate normal function
    */

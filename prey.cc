@@ -7,7 +7,8 @@
 #include "gadget.h"
 #include "global.h"
 
-Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
+Prey::Prey(CommentStream& infile, const IntVector& Areas,
+  const char* givenname, const TimeClass* const TimeInfo, Keeper* const keeper)
   : HasName(givenname), LivesOnAreas(Areas), CI(0) {
 
   char text[MaxStrLength];
@@ -39,12 +40,9 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
   infile >> ws;
   char c = infile.peek();
   if ((c == 'e') || (c == 'E'))
-    readWordAndVariable(infile, "energycontent", energy);
+    readWordAndModelVariable(infile, "energycontent", energy, TimeInfo, keeper);
   else
-    energy = 1.0;
-
-  if (isZero(energy))
-    handle.logMessage(LOGFAIL, "Error in prey - energy content must be non-zero");
+    energy.setValue(1.0);
 
   //read from file - initialise things
   int numlen = LgrpDiv->numLengthGroups();
@@ -67,9 +65,19 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas, const char* givenname)
     delete[] preylenindex[i];
 }
 
-Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
-  double Energy, const char* givenname)
-  : HasName(givenname), LivesOnAreas(Areas), energy(Energy) {
+Prey::Prey(CommentStream& infile, const char* givenname,
+  const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper)
+  : HasName(givenname), LivesOnAreas(Areas) {
+
+  char text[MaxStrLength];
+  strncpy(text, "", MaxStrLength);
+
+  //read the length information
+  DoubleVector lengths(2, 0.0);
+  infile >> text >> ws;
+  if (strcasecmp(text, "lengths") != 0)
+    handle.logFileUnexpected(LOGFAIL, "lengths", text);
+  infile >> lengths[0] >> lengths[1] >> ws;
 
   LgrpDiv = new LengthGroupDivision(lengths);
   if (LgrpDiv->Error())
@@ -77,6 +85,14 @@ Prey::Prey(const DoubleVector& lengths, const IntVector& Areas,
   CI = new ConversionIndex(LgrpDiv, LgrpDiv);
   if (CI->Error())
     handle.logMessage(LOGFAIL, "Error in prey - error when checking length structure");
+
+  //read the energy content of this prey
+  infile >> ws;
+  char c = infile.peek();
+  if ((c == 'e') || (c == 'E'))
+    readWordAndModelVariable(infile, "energycontent", energy, TimeInfo, keeper);
+  else
+    energy.setValue(1.0);
 
   int numlen = LgrpDiv->numLengthGroups();
   int numarea = areas.Size();
@@ -210,11 +226,16 @@ void Prey::checkConsumption(int area, const TimeClass* const TimeInfo) {
     isoverconsumption[inarea] = over;
 }
 
-void Prey::Reset() {
+void Prey::Reset(const TimeClass* const TimeInfo) {
   consumption.setToZero();
   overconsumption.setToZero();
   useratio.setToZero();
   isoverconsumption.setToZero();
+
+  energy.Update(TimeInfo);
+  if (isZero(energy))
+    handle.logMessage(LOGWARN, "Warning in prey - energy content should be non-zero");
+
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Reset consumption data for prey", this->getName());
 }

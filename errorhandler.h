@@ -100,6 +100,12 @@ public:
    */
   void logMessage(LogLevel mlevel, DoubleVector vec);
   /**
+   * \brief This function will log a warning message about a NaN found in the model
+   * \param mlevel is the logging level of the message to be logged
+   * \param msg is the message to be logged
+   */
+  void logMessageNaN(LogLevel mlevel, const char* msg);
+  /**
    * \brief This function will log a warning message generated when reading information from file
    * \param mlevel is the logging level of the message to be logged
    * \param msg is the message to be logged
@@ -145,6 +151,7 @@ public:
   void setRunOptimise(int opt) { runopt = opt; };
   /**
    * \brief This function will return the optimise flag for the current model run
+   * \return runopt
    */
   int getRunOptimise() const { return runopt; };
   /**
@@ -154,8 +161,18 @@ public:
   void setLogLevel(int level);
   /**
    * \brief This function will return the level of logging information used for the current model run
+   * \return loglevel
    */
   LogLevel getLogLevel() const { return loglevel; };
+  /**
+   * \brief This function will return the flag denoting whether a NaN error has been rasied or not
+   * \return nanflag
+   */
+  int getNaNFlag() const { return nanflag; };
+  /**
+   * \brief This function will return the flag denoting whether a NaN error has been rasied or not
+   */
+  void setNaNFlag(int flag) { nanflag = flag; };
 protected:
   /**
    * \brief This ofstream is the file that all the logging information will get sent to
@@ -166,6 +183,10 @@ protected:
    */
   StrStack* files;
 private:
+  /**
+   * \brief This is the flag used to denote whether a NaN error has been raised or nont
+   */
+  int nanflag;
   /**
    * \brief This is the flag used to denote whether the current run will optimise the model or not
    */

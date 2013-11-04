@@ -10,8 +10,8 @@
 // ********************************************************
 // Functions for base Migration
 // ********************************************************
-Migration::Migration(const IntVector& Areas)
-  : LivesOnAreas(Areas) {
+Migration::Migration(const IntVector& Areas, const char* givenname)
+  : HasName(givenname), LivesOnAreas(Areas) {
 
   if (areas.Size() == 1)
     handle.logMessage(LOGWARN, "Warning in migration - only one area defined");
@@ -21,8 +21,9 @@ Migration::Migration(const IntVector& Areas)
 // Functions for MigrationNumbers
 // ********************************************************
 MigrationNumbers::MigrationNumbers(CommentStream& infile, const IntVector& Areas,
-  const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : Migration(Areas) {
+  const AreaClass* const Area, const TimeClass* const TimeInfo,
+  const char* givenname, Keeper* const keeper)
+  : Migration(Areas, givenname) {
 
   int i, j;
   ifstream subfile;
@@ -401,7 +402,7 @@ void MigrationNumbers::Reset() {
   }
 
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Reset migration data");
+    handle.logMessage(LOGMESSAGE, "Reset migration data for stock", this->getName());
 }
 
 int MigrationNumbers::useMatrix(char* name) {
@@ -422,8 +423,9 @@ int MigrationNumbers::isMigrationStep(const TimeClass* const TimeInfo) {
 // Functions for MigrationFunction
 // ********************************************************
 MigrationFunction::MigrationFunction(CommentStream& infile, const IntVector& Areas,
-  const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper)
-  : Migration(Areas) {
+  const AreaClass* const Area, const TimeClass* const TimeInfo,
+  const char* givenname, Keeper* const keeper)
+  : Migration(Areas, givenname) {
 
   int i;
   ifstream subfile;
@@ -434,9 +436,9 @@ MigrationFunction::MigrationFunction(CommentStream& infile, const IntVector& Are
   strncpy(filename, "", MaxStrLength);
   keeper->addString("migrationfunction");
 
-  readWordAndTimeVariable(infile, "diffusion", diffusion, TimeInfo, keeper);
-  readWordAndTimeVariable(infile, "driftx", driftx, TimeInfo, keeper);
-  readWordAndTimeVariable(infile, "drifty", drifty, TimeInfo, keeper);
+  readWordAndModelVariable(infile, "diffusion", diffusion, TimeInfo, keeper);
+  readWordAndModelVariable(infile, "driftx", driftx, TimeInfo, keeper);
+  readWordAndModelVariable(infile, "drifty", drifty, TimeInfo, keeper);
   readWordAndVariable(infile, "lambda", lambda);
   delta = TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
 
@@ -575,7 +577,7 @@ void MigrationFunction::Reset() {
   //JMB need to reset the penalty vector
   penalty.Reset();
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Reset migration data");
+    handle.logMessage(LOGMESSAGE, "Reset migration data for stock", this->getName());
 }
 
 int MigrationFunction::isMigrationStep(const TimeClass* const TimeInfo) {

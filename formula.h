@@ -52,11 +52,6 @@ public:
    */
   operator double() const;
   /**
-   * \brief This function will calculate the value of the function
-   * \return function value
-   */
-  double evalFunction() const;
-  /**
    * \brief This function will swap the Formula value for a new value
    * \param newF is the new Formula value
    * \param keeper is the Keeper for the current model
@@ -89,6 +84,11 @@ public:
    */
   FormulaType getType() const { return type; };
 private:
+  /**
+   * \brief This function will calculate the value of the function
+   * \return the value of the function
+   */
+  double evalFunction() const;
   /**
    * \brief This denotes what type of Formula class has been created
    */

@@ -9,7 +9,7 @@
 #include "commentstream.h"
 #include "agebandmatrixptrvector.h"
 #include "agebandmatrixratioptrvector.h"
-#include "timevariablevector.h"
+#include "modelvariablevector.h"
 
 /**
  * \class Maturity
@@ -19,7 +19,7 @@
  *
  * \note This will always be overridden by the derived classes that actually calculate the maturity
  */
-class Maturity: protected LivesOnAreas {
+class Maturity: public HasName, protected LivesOnAreas {
 public:
   /**
    * \brief This is the default Maturity constructor
@@ -31,8 +31,10 @@ public:
    * \param minage is the minimum age of the stock that can mature
    * \param numage is the number of age groups for the stock that can mature
    * \param LgrpDiv is the LengthGroupDivision for the stock
+   * \param givenname is the name of the stock for this Maturity class
    */
-  Maturity(const IntVector& areas, int minage, int numage, const LengthGroupDivision* const LgrpDiv);
+  Maturity(const IntVector& areas, int minage, int numage,
+    const LengthGroupDivision* const LgrpDiv, const char* givenname);
   /**
    * \brief This is the default Maturity destructor
    */
@@ -172,10 +174,12 @@ public:
    * \param minage is the minimum age of the stock that can mature
    * \param numage is the number of age groups for the stock that can mature
    * \param areas is the IntVector of areas that the maturity calculation can take place on
+   * \param givenname is the name of the stock for this MaturityA class
    * \param LgrpDiv is the LengthGroupDivision for the stock
    */
-  MaturityA(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, int numage, const IntVector& areas, const LengthGroupDivision* const LgrpDiv);
+  MaturityA(CommentStream& infile, const TimeClass* const TimeInfo,
+    Keeper* const keeper, int minage, int numage, const IntVector& areas,
+    const char* givenname, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This is the default MaturityA destructor
    */
@@ -216,9 +220,9 @@ protected:
    */
   DoubleMatrix preCalcMaturation;
   /**
-   * \brief This is the TimeVariableVector of maturation parameters
+   * \brief This is the ModelVariableVector of maturation parameters
    */
-  TimeVariableVector maturityParameters;
+  ModelVariableVector maturityParameters;
   /**
    * \brief This is the minimum age of the maturing stock, used as an index for preCalcMaturation
    */
@@ -251,10 +255,12 @@ public:
    * \param minage is the minimum age of the stock that can mature
    * \param numage is the number of age groups for the stock that can mature
    * \param areas is the IntVector of areas that the maturity calculation can take place on
+   * \param givenname is the name of the stock for this MaturityB class
    * \param LgrpDiv is the LengthGroupDivision for the stock
    */
-  MaturityB(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, int numage, const IntVector& areas, const LengthGroupDivision* const LgrpDiv);
+  MaturityB(CommentStream& infile, const TimeClass* const TimeInfo,
+    Keeper* const keeper, int minage, int numage, const IntVector& areas,
+    const char* givenname, const LengthGroupDivision* const LgrpDiv);
   /**
    * \brief This is the default MaturityB destructor
    */
@@ -299,9 +305,9 @@ protected:
    */
   IntVector maturitystep;
   /**
-   * \brief This is the TimeVariableVector of lengths when maturation will take place
+   * \brief This is the ModelVariableVector of lengths when maturation will take place
    */
-  TimeVariableVector maturitylength;
+  ModelVariableVector maturitylength;
 };
 
 /**
@@ -318,11 +324,13 @@ public:
    * \param minage is the minimum age of the stock that can mature
    * \param numage is the number of age groups for the stock that can mature
    * \param areas is the IntVector of areas that the maturity calculation can take place on
+   * \param givenname is the name of the stock for this MaturityC class
    * \param LgrpDiv is the LengthGroupDivision for the stock
    * \param numMatConst is the number of maturation parameters (4)
    */
-  MaturityC(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, int numage, const IntVector& areas, const LengthGroupDivision* const LgrpDiv, int numMatConst);
+  MaturityC(CommentStream& infile, const TimeClass* const TimeInfo,
+    Keeper* const keeper, int minage, int numage, const IntVector& areas,
+    const char* givenname, const LengthGroupDivision* const LgrpDiv, int numMatConst);
   /**
    * \brief This is the default MaturityC destructor
    */
@@ -363,9 +371,9 @@ protected:
    */
   DoubleMatrix preCalcMaturation;
   /**
-   * \brief This is the TimeVariableVector of maturation parameters
+   * \brief This is the ModelVariableVector of maturation parameters
    */
-  TimeVariableVector maturityParameters;
+  ModelVariableVector maturityParameters;
   /**
    * \brief This is the minimum age of the maturing stock, used as an index for preCalcMaturation
    */
@@ -398,13 +406,14 @@ public:
    * \param minage is the minimum age of the stock that can mature
    * \param numage is the number of age groups for the stock that can mature
    * \param areas is the IntVector of areas that the maturity calculation can take place on
+   * \param givenname is the name of the stock for this MaturityD class
    * \param LgrpDiv is the LengthGroupDivision for the stock
    * \param numMatConst is the number of maturation parameters (6)
    * \param refWeightFile is the name of the file to read the reference weight information from
    */
-  MaturityD(CommentStream& infile, const TimeClass* const TimeInfo, Keeper* const keeper,
-    int minage, int numage, const IntVector& areas, const LengthGroupDivision* const LgrpDiv,
-    int numMatConst, const char* refWeightFile);
+  MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
+    Keeper* const keeper, int minage, int numage, const IntVector& areas,
+    const char* givenname, const LengthGroupDivision* const LgrpDiv, int numMatConst, const char* refWeightFile);
   /**
    * \brief This is the default MaturityD destructor
    */

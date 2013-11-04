@@ -146,7 +146,7 @@ void StockPreyPrinter::setPrey(PreyPtrVector& preyvec, const AreaClass* const Ar
       handle.logMessage(LOGWARN, "Error in stockpreyprinter - found prey", preys[i]->getName());
     for (i = 0; i < preynames.Size(); i++)
       handle.logMessage(LOGWARN, "Error in stockpreyprinter - looking for prey", preynames[i]);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, ""); //JMB this will exit gadget
   }
 
   for (i = 0; i < preys.Size(); i++)

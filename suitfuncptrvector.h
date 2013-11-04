@@ -55,9 +55,8 @@ public:
    * \param suitname is the name for the suitability function
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
-   * \return 1 if the suitability function has been read from file, 0 otherwise
    */
-  int readSuitFunction(CommentStream& infile, const char* suitname,
+  void readSuitFunction(CommentStream& infile, const char* suitname,
     const TimeClass* const TimeInfo, Keeper* const keeper);
 protected:
   /**

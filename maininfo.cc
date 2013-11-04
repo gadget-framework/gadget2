@@ -3,7 +3,6 @@
 #include "gadget.h"
 #include "runid.h"
 #include "global.h"
-#include "global.h"
 
 void MainInfo::showCorrectUsage(char* error) {
   RUNID.Print(cerr);
@@ -270,7 +269,8 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
 
   //JMB check to see if we can actually open required files ...
   ifstream tmpin;
-  chdir(inputdir);
+  if (chdir(inputdir) != 0)
+    handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
   if (givenInitialParam) {
     //JMB check to see that the input and output filenames are different
     //Otherwise Gadget will over-write the inputfile with a blank outputfile ...
@@ -289,7 +289,8 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     tmpin.clear();
   }
   ofstream tmpout;
-  chdir(workingdir);
+  if (chdir(workingdir) != 0)
+    handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
   if (printInitialInfo) {
     tmpout.open(strPrintInitialFile, ios::out);
     handle.checkIfFailure(tmpout, strPrintInitialFile);

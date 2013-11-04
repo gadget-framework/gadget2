@@ -135,7 +135,7 @@ void PredatorOverPrinter::setPredator(PredatorPtrVector& predatorvec, const Area
       handle.logMessage(LOGWARN, "Error in predatoroverprinter - found predator", predatorvec[i]->getName());
     for (i = 0; i < predatornames.Size(); i++)
       handle.logMessage(LOGWARN, "Error in predatoroverprinter - looking for predator", predatornames[i]);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, ""); //JMB this will exit gadget
   }
 
   for (i = 0; i < predators.Size(); i++)

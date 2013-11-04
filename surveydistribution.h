@@ -6,7 +6,7 @@
 #include "doublematrixptrmatrix.h"
 #include "actionattimes.h"
 #include "formulavector.h"
-#include "timevariablevector.h"
+#include "modelvariablevector.h"
 #include "suitfunc.h"
 
 /**
@@ -198,9 +198,9 @@ private:
    */
   DoubleVector suit;
   /**
-   * \brief This is the TimeVariableVector used to store the parameters when calculating the survey index
+   * \brief This is the ModelVariableVector used to store the parameters when calculating the survey index
    */
-  TimeVariableVector parameters;
+  ModelVariableVector parameters;
   /**
    * \brief This is the AgeBandMatrixPtrVector used to temporarily store the information returned from the aggregatation function
    */

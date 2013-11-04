@@ -37,20 +37,22 @@ Formula::Formula(FunctionType ft, vector<Formula*> formlist) {
 }
 
 Formula::operator double() const {
-  double v = 0.0;
   switch (type) {
     case CONSTANT:
     case PARAMETER:
-      v = value;
+      return value;
       break;
     case FUNCTION:
+      double v;
       v = this->evalFunction();
+      return v;
       break;
     default:
       handle.logMessage(LOGFAIL, "Error in formula - unrecognised type", type);
       break;
   }
-  return v;
+  // JMB need to return something here even though this never happens
+  return value;
 }
 
 double Formula::evalFunction() const {
@@ -245,18 +247,18 @@ double Formula::evalFunction() const {
       handle.logMessage(LOGFAIL, "Error in formula - unrecognised function type", type);
       break;
   }
+
   return v;
 }
 
 Formula::Formula(const Formula& initial) {
   type = initial.type;
+  value = initial.value;
   functiontype = initial.functiontype;
   switch (type) {
     case CONSTANT:
-      value = initial.value;
       break;
     case PARAMETER:
-      value = initial.value;
       name = initial.name;
       break;
     case FUNCTION:
@@ -280,7 +282,7 @@ void Formula::setValue(double init) {
 
 CommentStream& operator >> (CommentStream& infile, Formula& F) {
   if (F.type != CONSTANT)
-    handle.logFileMessage(LOGFAIL, "failed to read formula data, f.type != const");
+    handle.logFileMessage(LOGFAIL, "failed to read formula data");
 
   if (infile.fail())
     return infile;
@@ -387,7 +389,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       infile >> ws;
       if (infile.eof()) {
         // Something has gone wrong, no closing bracket
-        handle.logFileMessage(LOGFAIL, "failed to read formula data, no closing bracket");
+        handle.logFileMessage(LOGFAIL, "failed to read formula data");
         return infile;
       }
       c = infile.peek();
@@ -408,14 +410,9 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     return infile;
   }
 
-  if (!isdigit(c) && (c != '-')){  //JMB check that we actually have a number to read
-    //    char* tmp;
-    //tmp = new char[strlen(c) + 1];
-    //tmp = strcpy(tmp,c);
-    //cerr << 'hallo' << tmp << '\n';
-    handle.logFileMessage(LOGFAIL,"failed to read formula data, no number to read: ");
-    //delete[] tmp;
-   }
+  if (!isdigit(c) && (c != '-'))  //JMB check that we actually have a number to read
+    handle.logFileMessage(LOGFAIL, "failed to read formula data");
+
   // Read initial value (could be CONSTANT or PARAMETER)
   if (!(infile >> F.value))
     return infile;
@@ -442,7 +439,8 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     return infile;
   }
 
-  handle.logFileMessage(LOGFAIL, "failed to read formula data, no detectable pattern");
+  // If we get to here then things have failed
+  handle.logFileMessage(LOGFAIL, "failed to read formula data");
   return infile;
 }
 
@@ -472,19 +470,18 @@ void Formula::Interchange(Formula& newF, Keeper* keeper) const {
     newF.argList.pop_back();
 
   newF.type = type;
+  newF.value = value;
+  newF.functiontype = functiontype;
   switch (type) {
     case CONSTANT:
-      newF.value = value;
       break;
 
     case PARAMETER:
-      newF.value = value;
       newF.name = name;
       keeper->changeVariable(value, newF.value);
       break;
 
     case FUNCTION:
-      newF.functiontype = functiontype;
       unsigned int i;
       for (i = 0; i < argList.size(); i++) {
         Formula* f = new Formula(*argList[i]);
@@ -521,12 +518,11 @@ void Formula::Delete(Keeper* keeper) const {
 Formula& Formula::operator = (const Formula& F) {
   type = F.type;
   functiontype = F.functiontype;
+  value = F.value;
   switch (type) {
     case CONSTANT:
-      value = F.value;
       break;
     case PARAMETER:
-      value = F.value;
       name = F.name;
       break;
     case FUNCTION:
@@ -545,3 +541,4 @@ Formula& Formula::operator = (const Formula& F) {
   }
   return *this;
 }
+

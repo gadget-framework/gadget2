@@ -29,6 +29,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
   CommentStream subdata(datafile);
 
   timeindex = 0;
+  yearly = 0;
   functionname = new char[MaxStrLength];
   strncpy(functionname, "", MaxStrLength);
   readWordAndValue(infile, "datafile", datafilename);
@@ -36,14 +37,33 @@ StockDistribution::StockDistribution(CommentStream& infile,
   if (strcasecmp(functionname, "multinomial") == 0) {
     MN = Multinomial();
     functionnumber = 1;
-  } else if (strcasecmp(functionname, "sumofsquares") == 0) {
+  } else if ((strcasecmp(functionname, "sumofsquares") == 0) || (strcasecmp(functionname, "stratified") == 0)) {
     functionnumber = 2;
   } else
     handle.logFileMessage(LOGFAIL, "\nError in stockdistribution - unrecognised function", functionname);
 
-  //JMB - changed to make the reading of overconsumption optional
   infile >> ws;
   char c = infile.peek();
+  if ((c == 'a') || (c == 'A')) {
+    //we have found either aggregationlevel or areaaggfile ...
+    streampos pos = infile.tellg();
+
+    infile >> text >> ws;
+    if ((strcasecmp(text, "aggregation_level") == 0) || (strcasecmp(text, "aggregationlevel") == 0))
+      infile >> yearly >> ws;
+    else if (strcasecmp(text, "areaaggfile") == 0)
+      infile.seekg(pos);
+    else
+      handle.logFileUnexpected(LOGFAIL, "areaaggfile", text);
+
+    //JMB - peek at the next char
+    c = infile.peek();
+
+    if (yearly != 0 && yearly != 1)
+      handle.logFileMessage(LOGFAIL, "\nError in stockdistribution - aggregationlevel must be 0 or 1");
+  }
+
+  //JMB - changed to make the reading of overconsumption optional
   if ((c == 'o') || (c == 'O')) {
     readWordAndVariable(infile, "overconsumption", overconsumption);
     infile >> ws;
@@ -146,6 +166,23 @@ StockDistribution::StockDistribution(CommentStream& infile,
   handle.Close();
   datafile.close();
   datafile.clear();
+
+  switch (functionnumber) {
+    case 2:
+      for (i = 0; i < numarea; i++) {
+        modelYearData.resize(new DoubleMatrix(stocknames.Size(), (numage * numlen), 0.0));
+        obsYearData.resize(new DoubleMatrix(stocknames.Size(), (numage * numlen), 0.0));
+      }
+      break;
+    case 1:
+      if (yearly)
+        handle.logMessage(LOGWARN, "Warning in stockdistribution - yearly aggregation is ignored for function", functionname);
+      yearly = 0;
+      break;
+    default:
+      handle.logMessage(LOGWARN, "Warning in stockdistribution - unrecognised function", functionname);
+      break;
+  }
 }
 
 void StockDistribution::readStockData(CommentStream& infile,
@@ -273,11 +310,16 @@ StockDistribution::~StockDistribution() {
     delete[] ageindex[i];
   for (i = 0; i < lenindex.Size(); i++)
     delete[] lenindex[i];
-  for (i = 0; i < obsDistribution.Nrow(); i++)
+  for (i = 0; i < modelYearData.Size(); i++) {
+    delete modelYearData[i];
+    delete obsYearData[i];
+  }
+  for (i = 0; i < obsDistribution.Nrow(); i++) {
     for (j = 0; j < obsDistribution.Ncol(i); j++) {
       delete obsDistribution[i][j];
       delete modelDistribution[i][j];
     }
+  }
 }
 
 void StockDistribution::Reset(const Keeper* const keeper) {
@@ -288,6 +330,11 @@ void StockDistribution::Reset(const Keeper* const keeper) {
   for (i = 0; i < modelDistribution.Nrow(); i++)
     for (j = 0; j < modelDistribution.Ncol(i); j++)
       (*modelDistribution[i][j]).setToZero();
+  if (yearly)
+    for (i = 0; i < modelYearData.Size(); i++) {
+      (*modelYearData[i]).setToZero();
+      (*obsYearData[i]).setToZero();
+    }
 
   switch (functionnumber) {
     case 1:
@@ -434,6 +481,9 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   if ((!(AAT.atCurrentTime(TimeInfo))) || (isZero(weight)))
     return;
 
+  if ((handle.getLogLevel() >= LOGMESSAGE) && ((!yearly) || (TimeInfo->getStep() == TimeInfo->numSteps())))
+    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stockdistribution component", this->getName());
+
   int i;
   timeindex = -1;
   for (i = 0; i < Years.Size(); i++)
@@ -442,8 +492,6 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
   if (timeindex == -1)
     handle.logMessage(LOGFAIL, "Error in stockdistribution - invalid timestep");
 
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Calculating likelihood score for stockdistribution component", this->getName());
   for (i = 0; i < stocknames.Size(); i++) {
     aggregator[i]->Sum();
     if ((handle.getLogLevel() >= LOGWARN) && (aggregator[i]->checkCatchData()))
@@ -456,19 +504,22 @@ void StockDistribution::addLikelihood(const TimeClass* const TimeInfo) {
       l = calcLikMultinomial();
       break;
     case 2:
-      l = calcLikSumSquares();
+      l = calcLikSumSquares(TimeInfo);
       break;
     default:
       handle.logMessage(LOGWARN, "Warning in stockdistribution - unrecognised function", functionname);
       break;
   }
-  likelihood += l;
-  if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
+
+  if ((!yearly) || (TimeInfo->getStep() == TimeInfo->numSteps())) {
+    likelihood += l;
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
+  }
 }
 
 //The code here is probably unnessecarily complicated because
-//is always only one length group with this class.
+//there is always only one length group with this class.
 double StockDistribution::calcLikMultinomial() {
   int age, len, area, s, i;
   //JMB - number of age and length groups is constant for all stocks
@@ -500,7 +551,7 @@ double StockDistribution::calcLikMultinomial() {
   return MN.getLogLikelihood();
 }
 
-double StockDistribution::calcLikSumSquares() {
+double StockDistribution::calcLikSumSquares(const TimeClass* const TimeInfo) {
   double temp, totalmodel, totaldata, totallikelihood;
   int age, len, area, s, i;
   //JMB - number of age and length groups is constant for all stocks
@@ -511,6 +562,7 @@ double StockDistribution::calcLikSumSquares() {
   totallikelihood = 0.0;
   for (area = 0; area < areas.Nrow(); area++) {
     likelihoodValues[timeindex][area] = 0.0;
+
     for (s = 0; s < numstock; s++) {
       alptr = &aggregator[s]->getSum();
       for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++)
@@ -518,26 +570,71 @@ double StockDistribution::calcLikSumSquares() {
           (*modelDistribution[timeindex][area])[s][age + (numage * len)] = ((*alptr)[area][age][len]).N;
     }
 
-    for (i = 0; i < (numage * numlen); i++) {
-      totalmodel = 0.0;
-      totaldata = 0.0;
-      for (s = 0; s < numstock; s++) {
-        totalmodel += (*modelDistribution[timeindex][area])[s][i];
-        totaldata += (*obsDistribution[timeindex][area])[s][i];
+    if (!yearly) { //calculate likelihood on all steps
+      for (i = 0; i < (numage * numlen); i++) {
+        totalmodel = 0.0;
+        totaldata = 0.0;
+        for (s = 0; s < numstock; s++) {
+          totalmodel += (*modelDistribution[timeindex][area])[s][i];
+          totaldata += (*obsDistribution[timeindex][area])[s][i];
+        }
+
+        if (!(isZero(totalmodel)))
+          totalmodel = 1.0 / totalmodel;
+        if (!(isZero(totaldata)))
+          totaldata = 1.0 / totaldata;
+
+        for (s = 0; s < numstock; s++) {
+          temp = (((*obsDistribution[timeindex][area])[s][i] * totaldata)
+            - ((*modelDistribution[timeindex][area])[s][i] * totalmodel));
+          likelihoodValues[timeindex][area] += (temp * temp);
+        }
+      }
+      totallikelihood += likelihoodValues[timeindex][area];
+
+    } else { //calculate likelihood on year basis
+
+      if (TimeInfo->getStep() == 1) { //start of a new year
+        (*modelYearData[area]).setToZero();
+        (*obsYearData[area]).setToZero();
       }
 
-      if (!(isZero(totalmodel)))
-        totalmodel = 1.0 / totalmodel;
-      if (!(isZero(totaldata)))
-        totaldata = 1.0 / totaldata;
-
       for (s = 0; s < numstock; s++) {
-        temp = (((*obsDistribution[timeindex][area])[s][i] * totaldata)
-          - ((*modelDistribution[timeindex][area])[s][i] * totalmodel));
-        likelihoodValues[timeindex][area] += (temp * temp);
+        alptr = &aggregator[s]->getSum();
+        for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+          for (len = (*alptr)[area].minLength(age); len < (*alptr)[area].maxLength(age); len++) {
+            i = age + (numage * len);
+            (*modelYearData[area])[s][i] += (*modelDistribution[timeindex][area])[s][i];
+            (*obsYearData[area])[s][i] += (*obsDistribution[timeindex][area])[s][i];
+          }
+        }
+      }
+
+      if (TimeInfo->getStep() < TimeInfo->numSteps())
+        likelihoodValues[timeindex][area] = 0.0;
+      else { //last step in year, so need to calc likelihood contribution
+        for (i = 0; i < (numage * numlen); i++) {
+          totalmodel = 0.0;
+          totaldata = 0.0;
+          for (s = 0; s < numstock; s++) {
+            totalmodel += (*modelYearData[area])[s][i];
+            totaldata += (*obsYearData[area])[s][i];
+          }
+
+          if (!(isZero(totalmodel)))
+            totalmodel = 1.0 / totalmodel;
+          if (!(isZero(totaldata)))
+            totaldata = 1.0 / totaldata;
+
+          for (s = 0; s < numstock; s++) {
+            temp = (((*obsYearData[area])[s][i] * totaldata)
+              - ((*modelYearData[area])[s][i] * totalmodel));
+            likelihoodValues[timeindex][area] += (temp * temp);
+          }
+        }
+        totallikelihood += likelihoodValues[timeindex][area];
       }
     }
-    totallikelihood += likelihoodValues[timeindex][area];
   }
   return totallikelihood;
 }
@@ -585,13 +682,26 @@ void StockDistribution::printLikelihood(ofstream& outfile, const TimeClass* cons
 void StockDistribution::printSummary(ofstream& outfile) {
   int year, area;
 
-  for (year = 0; year < likelihoodValues.Nrow(); year++)
-    for (area = 0; area < likelihoodValues.Ncol(year); area++)
-      outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
-        << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
-        << setw(smallwidth) << weight << sep << setprecision(largeprecision)
-        << setw(largewidth) << likelihoodValues[year][area] << endl;
-
+  for (year = 0; year < likelihoodValues.Nrow(); year++) {
+    for (area = 0; area < likelihoodValues.Ncol(year); area++) {
+      if (!yearly) {
+        outfile << setw(lowwidth) << Years[year] << sep << setw(lowwidth)
+          << Steps[year] << sep << setw(printwidth) << areaindex[area] << sep
+          << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
+          << setw(smallwidth) << weight << sep << setprecision(largeprecision)
+          << setw(largewidth) << likelihoodValues[year][area] << endl;
+      } else {
+        if (isZero(likelihoodValues[year][area])) {
+          // assume that this isnt the last step for that year and ignore
+        } else {
+          outfile << setw(lowwidth) << Years[year] << "  all "
+            << setw(printwidth) << areaindex[area] << sep
+            << setw(largewidth) << this->getName() << sep << setprecision(smallprecision)
+            << setw(smallwidth) << weight << sep << setprecision(largeprecision)
+            << setw(largewidth) << likelihoodValues[year][area] << endl;
+        }
+      }
+    }
+  }
   outfile.flush();
 }

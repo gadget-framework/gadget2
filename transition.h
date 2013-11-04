@@ -15,7 +15,7 @@
  *
  * This class moves the oldest age group of a young stock up to older stocks.  This is a simpler method than the Maturity classes of moving fish between stocks, and is used to move the fish that haven't matured according to the maturation functions.  The length groups of the older stocks are checked, and any fish that haven't yet reached the minimum length of the older stock remain in the younger stock, effectively as an age-plus group.
  */
-class Transition : protected LivesOnAreas {
+class Transition : public HasName, protected LivesOnAreas {
 public:
   /**
    * \brief This is the Transition constructor
@@ -23,11 +23,12 @@ public:
    * \param areas is the IntVector of areas that the movements will be calculated on
    * \param age is the maximum age for the (young) stock
    * \param lgrpdiv is the LengthGroupDivision for the stock
+   * \param givenname is the name of the stock for this Transition class
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
   Transition(CommentStream& infile, const IntVector& areas, int age,
-    const LengthGroupDivision* const lgrpdiv,
+    const LengthGroupDivision* const lgrpdiv, const char* givenname,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default Transition destructor

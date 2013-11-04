@@ -120,10 +120,8 @@ void Predator::readSuitability(CommentStream& infile,
     infile >> text >> ws;
     if (strcasecmp(text, "function") == 0) {
       infile >> text >> ws;
-      if (suitf.readSuitFunction(infile, text, TimeInfo, keeper))
-        suitable->addPrey(preyname, suitf[i++]);
-      else
-        handle.logFileMessage(LOGFAIL, "unrecognised suitability function", text);
+      suitf.readSuitFunction(infile, text, TimeInfo, keeper);
+      suitable->addPrey(preyname, suitf[i++]);
 
     } else if (strcasecmp(text, "suitfile") == 0) {
       handle.logFileMessage(LOGFAIL, "\nReading suitability values directly from file is no longer supported\nGadget version 2.0.07 was the last version to allow this functionality");
@@ -135,6 +133,31 @@ void Predator::readSuitability(CommentStream& infile,
     keeper->clearLast();
   }
 
+  //JMB check the suitability functions for the various predator types
+  switch (this->getType()) {
+    case STOCKPREDATOR:
+      for (i = 0; i < suitf.Size(); i++) {
+        if (strcasecmp(suitf[i]->getName(), "gammasuitfunc") == 0)
+          handle.logFileMessage(LOGWARN, "Warning in predator - fleet based gamma suitability function used for stock predator", this->getName());
+        if (strcasecmp(suitf[i]->getName(), "andersenfleetsuitfunc") == 0)
+          handle.logFileMessage(LOGWARN, "Warning in predator - fleet based andersen suitability function used for stock predator", this->getName());
+      }
+      break;
+    case TOTALPREDATOR:
+    case LINEARPREDATOR:
+    case NUMBERPREDATOR:
+    case EFFORTPREDATOR:
+    case QUOTAPREDATOR:
+      for (i = 0; i < suitf.Size(); i++) {
+        if (strcasecmp(suitf[i]->getName(), "andersensuitfunc") == 0)
+          handle.logFileMessage(LOGWARN, "Warning in predator - stock based andersen suitability function used for fleet predator", this->getName());
+      }
+      break;
+    default:
+      handle.logFileMessage(LOGFAIL, "Error in predator - unrecognised predator type", this->getType());
+      break;
+  }
+  
   //resize the prey preference vector - used for stockpredators and effortpredators
   preference.resize(suitable->numPreys(), keeper);
 

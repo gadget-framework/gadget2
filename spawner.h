@@ -3,7 +3,7 @@
 
 #include "areatime.h"
 #include "formulavector.h"
-#include "timevariablevector.h"
+#include "modelvariablevector.h"
 #include "commentstream.h"
 #include "agebandmatrix.h"
 #include "intmatrix.h"
@@ -17,7 +17,7 @@
  *
  * This class calculates the proportion of the stock that should be removed from the model due to the spawning process, and the affect that the spawning process has on the remaining stock.  This class can optionally add new recruits into the model due to the spawning process, implementing a closed life cycle model.  For the 'parent' stock, the spawning process can remove a proportion of the stock due to a spawning mortality, and reduce the weight of those that survive.  For the 'child' stock, the spawning process will create a number of recruits based on a recruitment function, and then add these into the model in a similar way to the RenewalData class.
  */
-class SpawnData : protected LivesOnAreas {
+class SpawnData : public HasName, protected LivesOnAreas {
 public:
   /**
    * \brief This is the SpawnData constructor
@@ -26,11 +26,12 @@ public:
    * \param LgrpDiv is the LengthGroupDivision that the spawning stock will be calculated on
    * \param Areas is the IntVector of areas that the spawning stock will be calculated on
    * \param Area is the AreaClass for the current model
+   * \param givenname is the name of the stock for this SpawnData class
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    */
   SpawnData(CommentStream& infile, int maxage, const LengthGroupDivision* const LgrpDiv,
-    const IntVector& Areas, const AreaClass* const Area,
+    const IntVector& Areas, const AreaClass* const Area, const char* givenname,
     const TimeClass* const TimeInfo, Keeper* const keeper);
   /**
    * \brief This is the default SpawnData destructor
@@ -170,13 +171,13 @@ protected:
    */
   DoubleMatrixPtrVector spawnNumbers;
   /**
-   * \brief This is the TimeVariableVector used to store the parameters when calculating the recruitment from the spawning process, if the spawning process is to include the creation of the recruits
+   * \brief This is the ModelVariableVector used to store the parameters when calculating the recruitment from the spawning process, if the spawning process is to include the creation of the recruits
    */
-  TimeVariableVector spawnParameters;
+  ModelVariableVector spawnParameters;
   /**
-   * \brief This is the TimeVariableVector used to store the parameters when calculating the recruits, if the spawning process is to include the creation of the recruits
+   * \brief This is the ModelVariableVector used to store the parameters when calculating the recruits, if the spawning process is to include the creation of the recruits
    */
-  TimeVariableVector stockParameters;
+  ModelVariableVector stockParameters;
   /**
    * \brief This is the flag used to denote whether the spawning process should include the creation of the recruits
    */

@@ -17,7 +17,7 @@
  *
  * This class calculates the growth of the stock, according to the different growth functions derived from the GrowthCalcBase class.  Since the growth calculations can take place on a coarser scale than the stock is defined on, the calculated growth is then interpolated to take the length group of the stock into account.  This growth is then implemented by moving the fish up from the old length groups to the new length groups, taking care to ensure that the fish that would move to beyond the largest length group are kept in the plus group.
  */
-class Grower : protected LivesOnAreas {
+class Grower : public HasName, protected LivesOnAreas {
 public:
   /**
    * \brief This is the Grower constructor
@@ -28,13 +28,14 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    * \param keeper is the Keeper for the current model
    * \param refWeight is the name of the file containing the reference weight information for the stock
+   * \param givenname is the name of the stock for this Grower class
    * \param Area is the AreaClass for the current model
    * \param lenindex is the CharPtrVector of the lengths used for the growth of the stock
    */
   Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrpDiv,
     const LengthGroupDivision* const GivenLgrpDiv, const IntVector& Areas,
     const TimeClass* const TimeInfo, Keeper* const keeper, const char* refWeight,
-    const AreaClass* const Area, const CharPtrVector& lenindex);
+    const char* givenname, const AreaClass* const Area, const CharPtrVector& lenindex);
   /**
    * \brief This is the default Grower destructor
    */

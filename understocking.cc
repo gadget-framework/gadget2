@@ -34,7 +34,7 @@ UnderStocking::UnderStocking(CommentStream& infile, const AreaClass* const Area,
   if (isZero(powercoeff))
     handle.logMessage(LOGWARN, "Warning in understocking - power coefficient set to zero");
 
-  //reading the predator names is optional - defualt to all predators
+  //reading the predator names is optional - default to all predators
   if ((strcasecmp(text, "predatornames") == 0) || (strcasecmp(text, "fleetnames") == 0)) {
     allpredators = 0;
     int i = 0;

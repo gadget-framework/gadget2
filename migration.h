@@ -5,7 +5,7 @@
 #include "actionattimes.h"
 #include "keeper.h"
 #include "intmatrix.h"
-#include "timevariable.h"
+#include "modelvariable.h"
 #include "rectangle.h"
 #include "doublematrixptrvector.h"
 #include "formulamatrixptrvector.h"
@@ -19,13 +19,14 @@
  *
  * \note This will always be overridden by the derived classes that actually calculate the migration
  */
-class Migration : protected LivesOnAreas {
+class Migration : public HasName, protected LivesOnAreas {
 public:
   /**
    * \brief This is the default Migration constructor
    * \param areas is the IntVector of areas that the migration will be calculated on
+   * \param givenname is the name of the stock for this Migration class
    */
-  Migration(const IntVector& areas);
+  Migration(const IntVector& areas, const char* givenname);
   /**
    * \brief This is the default Migration destructor
    */
@@ -75,10 +76,12 @@ public:
    * \param infile is the CommentStream to read the migration data from
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
+   * \param givenname is the name of the stock for this Migration class
    * \param keeper is the Keeper for the current model
    */
   MigrationNumbers(CommentStream& infile, const IntVector& areas,
-    const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper);
+    const AreaClass* const Area, const TimeClass* const TimeInfo,
+    const char* givenname, Keeper* const keeper);
   /**
    * \brief This is the default MigrationNumbers destructor
    */
@@ -177,10 +180,12 @@ public:
    * \param infile is the CommentStream to read the migration data from
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
+   * \param givenname is the name of the stock for this Migration class
    * \param keeper is the Keeper for the current model
    */
   MigrationFunction(CommentStream& infile, const IntVector& areas,
-    const AreaClass* const Area, const TimeClass* const TimeInfo, Keeper* const keeper);
+    const AreaClass* const Area, const TimeClass* const TimeInfo,
+    const char* givenname, Keeper* const keeper);
   /**
    * \brief This is the default MigrationFunction destructor
    */
@@ -223,17 +228,17 @@ private:
   double f2x(double w, double u, double D, double beta);
   DoubleMatrix calcMigration;
   /**
-   * \brief This is the TimeVariable used to store the diffusion parameter
+   * \brief This is the ModelVariable used to store the diffusion parameter
    */
-  TimeVariable diffusion;
+  ModelVariable diffusion;
   /**
-   * \brief This is the TimeVariable used to store the longitude drift parameter
+   * \brief This is the ModelVariable used to store the longitude drift parameter
    */
-  TimeVariable driftx;
+  ModelVariable driftx;
   /**
-   * \brief This is the TimeVariable used to store the latitude drift parameter
+   * \brief This is the ModelVariable used to store the latitude drift parameter
    */
-  TimeVariable drifty;
+  ModelVariable drifty;
   double lambda;
   double delta;
   /**

@@ -286,11 +286,21 @@ public:
    */
   double getTotalStockNumber(int area) const;
   /**
+   * \brief This will return the total population size (in numbers) of the stock across all areas
+   * \return population size
+   */
+  double getTotalStockNumberAllAreas() const;
+  /**
    * \brief This will return the total population biomass of the stock on a given area
    * \param area is the area identifier
    * \return population biomass
    */
   double getTotalStockBiomass(int area) const;
+  /**
+   * \brief This will return the total population biomass of the stock across all areas
+   * \return population biomass
+   */
+  double getTotalStockBiomassAllAreas() const;
   /**
    * \brief This will return the stocks that this stock will mature in to
    * \return maturestocks, a StockPtrVector of the stocks that this stock will mature into

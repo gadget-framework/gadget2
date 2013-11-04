@@ -46,6 +46,7 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
 void BoundLikelihood::Reset(const Keeper* const keeper) {
 
   Likelihood::Reset(keeper);
+  handle.setNaNFlag(0);  // reset the NaN count
   if (isZero(weight))
     handle.logMessage(LOGWARN, "Warning in boundlikelihood - zero weight for", this->getName());
 
@@ -162,11 +163,18 @@ void BoundLikelihood::addLikelihoodKeeper(const TimeClass* const TimeInfo, Keepe
     } else
       likelihoods[i] = 0.0;
   }
-  if (handle.getLogLevel() >= LOGMESSAGE) {
-    handle.logMessage(LOGMESSAGE, "Calculated likelihood score for boundlikelihood component to be", likelihood);
-    if (isZero(likelihood))
-      handle.logMessage(LOGMESSAGE, "For this model simulation, no parameters are outside the bounds");
+
+  if ((handle.getLogLevel() >= LOGMESSAGE) && (isZero(likelihood)))
+    handle.logMessage(LOGMESSAGE, "For this model simulation, no parameters are outside the bounds");
+
+  if (handle.getNaNFlag()) {
+    likelihood += verybig;
+    if (handle.getLogLevel() >= LOGMESSAGE)
+      handle.logMessage(LOGMESSAGE, "For this model simulation, a NaN was found within the model");
   }
+
+  if (handle.getLogLevel() >= LOGMESSAGE)
+    handle.logMessage(LOGMESSAGE, "Calculated likelihood score for boundlikelihood component to be", likelihood);
 }
 
 void BoundLikelihood::printSummary(ofstream& outfile) {

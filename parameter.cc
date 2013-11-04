@@ -54,7 +54,7 @@ Parameter& Parameter::operator = (const Parameter& p) {
 }
 
 int Parameter::isValidName(char* value) {
-  int len = strlen(value);
+  int len = int(strlen(value));
   if (len > MaxStrLength)
     return 0;
   int i;

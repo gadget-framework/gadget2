@@ -4,7 +4,7 @@
 #include "commentstream.h"
 #include "hasname.h"
 #include "keeper.h"
-#include "timevariablevector.h"
+#include "modelvariablevector.h"
 
 /**
  * \class SuitFunc
@@ -24,9 +24,9 @@ public:
   virtual ~SuitFunc() {};
   /**
    * \brief This function will return the value of the selection function parameters
-   * \return v, a TimeVariableVector of the parameters
+   * \return v, a ModelVariableVector of the parameters
    */
-  const TimeVariableVector& getConstants() const;
+  const ModelVariableVector& getConstants() const;
   /**
    * \brief This function will read the value of the suitability function parameters from file
    * \param infile is the CommentStream to read the parameters from
@@ -77,9 +77,9 @@ public:
   int numConstants() { return coeff.Size(); };
 protected:
   /**
-   * \brief This is the TimeVariableVector of suitability function constants
+   * \brief This is the ModelVariableVector of suitability function constants
    */
-  TimeVariableVector coeff;
+  ModelVariableVector coeff;
 };
 
 /**
@@ -441,6 +441,47 @@ public:
    * \brief This is the default GammaSuitFunc destructor
    */
   virtual ~GammaSuitFunc() {};
+  /**
+   * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
+   * \return 0
+   */
+  virtual int usesPredLength() { return 0; };
+  /**
+   * \brief This will return 1 if the suitability function is based on the prey length, 0 otherwise
+   * \return 1
+   */
+  virtual int usesPreyLength() { return 1; };
+  /**
+   * \brief This will set the prey length
+   * \param length is the prey length
+   */
+  virtual void setPreyLength(double length) { preyLength = length; };
+  /**
+   * \brief This will return the suitability value that has been calculated
+   * \return value
+   */
+  virtual double calculate();
+private:
+  /**
+   * \brief This is the length of the prey
+   */
+  double preyLength;
+};
+
+/**
+ * \class AndersenFleetSuitFunc
+ * \brief This is the class used to calculate the suitability based on an Andersen function for fleet based predators
+ */
+class AndersenFleetSuitFunc : public SuitFunc {
+public:
+  /**
+   * \brief This is the AndersenFleetSuitFunc constructor
+   */
+  AndersenFleetSuitFunc();
+  /**
+   * \brief This is the default AndersenFleetSuitFunc destructor
+   */
+  virtual ~AndersenFleetSuitFunc() {};
   /**
    * \brief This will return 1 if the suitability function is based on the predator length, 0 otherwise
    * \return 0

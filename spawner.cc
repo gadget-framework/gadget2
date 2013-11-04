@@ -10,8 +10,8 @@
 #include "global.h"
 
 SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivision* const lgrpdiv,
-  const IntVector& Areas, const AreaClass* const Area, const TimeClass* const TimeInfo,
-  Keeper* const keeper) : LivesOnAreas(Areas) {
+  const IntVector& Areas, const AreaClass* const Area, const char* givenname,
+  const TimeClass* const TimeInfo, Keeper* const keeper) : HasName(givenname), LivesOnAreas(Areas) {
 
   keeper->addString("spawner");
   int i, tmpint = 0;
@@ -215,7 +215,7 @@ void SpawnData::setStock(StockPtrVector& stockvec) {
       handle.logMessage(LOGWARN, "Error in spawner - found stock", stockvec[i]->getName());
     for (i = 0; i < spawnStockNames.Size(); i++)
       handle.logMessage(LOGWARN, "Error in spawner - looking for stock", spawnStockNames[i]);
-    exit(EXIT_FAILURE);
+    handle.logMessage(LOGFAIL, ""); //JMB this will exit gadget
   }
 
   //JMB ensure that the ratio vector is indexed in the right order
@@ -301,11 +301,11 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   stockParameters.Update(TimeInfo);
   if (handle.getLogLevel() >= LOGWARN) {
     if (isZero(stockParameters[1]))
-      handle.logMessage(LOGWARN, "Warning in spawner - invalid standard deviation for spawned stock");
+      handle.logMessage(LOGWARN, "Warning in spawner - invalid standard deviation for spawned stock", this->getName());
     if (stockParameters[0] < spawnLgrpDiv->minLength())
-      handle.logMessage(LOGWARN, "Warning in spawner - mean length is less than minimum length");
+      handle.logMessage(LOGWARN, "Warning in spawner - mean length is less than minimum length for stock", this->getName());
     if (stockParameters[0] > spawnLgrpDiv->maxLength())
-      handle.logMessage(LOGWARN, "Warning in spawner - mean length is greater than maximum length");
+      handle.logMessage(LOGWARN, "Warning in spawner - mean length is greater than maximum length for stock", this->getName());
   }
 
   sum = 0.0;
@@ -412,28 +412,28 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
   }
 
   if (handle.getLogLevel() >= LOGMESSAGE)
-    handle.logMessage(LOGMESSAGE, "Reset spawning data");
+    handle.logMessage(LOGMESSAGE, "Reset spawning data for stock", this->getName());
 }
 
 double SpawnData::calcSpawnNumber(int age, int len, double number, double weight) {
   double temp = 0.0;
-  
+
   switch (functionnumber) {
-  case 1:
-  case 2:
-  case 3:
-    temp = number * weight;
-    break;
+    case 1:
+    case 2:
+    case 3:
+      temp = number * weight;
+      break;
   case 4:
     temp = pow(LgrpDiv->meanLength(len), spawnParameters[1]) * pow(age, spawnParameters[2])
       * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
     break;
   case 5:
     temp = number;
-    break;
+    break;    
   default:
-      handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
-      break;
+    handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
+    break;
   }
 
   return temp;
@@ -448,21 +448,21 @@ double SpawnData::calcRecruitNumber(double temp, int inarea) {
       ssb += (*spawnNumbers[inarea])[age][len];
 
   switch (functionnumber) {
-  case 1:
-  case 4:
-    total = ssb * spawnParameters[0];
-    break;
-  case 2:
-    total = ssb * spawnParameters[0] * exp(-spawnParameters[1] * ssb);
-    break;
-  case 3:
-    total = ssb * spawnParameters[0] / (spawnParameters[1] + ssb);
-    break;
+    case 1:
+    case 4:
+      total = ssb * spawnParameters[0];
+      break;
+    case 2:
+      total = ssb * spawnParameters[0] * exp(-spawnParameters[1] * ssb);
+      break;
+    case 3:
+      total = ssb * spawnParameters[0] / (spawnParameters[1] + ssb);
+      break;
   case 5:
     total = ssb * spawnParameters[0] * 
-      (1 + spawnParameters[1] * (1- pow(ssb / spawnParameters[2],double(spawnParameters[3])))); 
+      max(1 + spawnParameters[1] * (1- pow(ssb / spawnParameters[2],double(spawnParameters[3]))),0.0); 
     break;
-  default:
+    default:
       handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
       break;
   }
