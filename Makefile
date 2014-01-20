@@ -79,7 +79,8 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     baseclassptrvector.o conversionindexptrvector.o likelihoodptrvector.o \
     predatorptrvector.o preyptrvector.o printerptrvector.o stockptrvector.o \
     migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o \
-    tagptrvector.o optinfoptrvector.o errorhandler.o
+    tagptrvector.o optinfoptrvector.o errorhandler.o modelvariablevector.o \
+    stockvariable.o modelvariable.o migrationproportion.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

@@ -156,6 +156,9 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     } else if (strcasecmp(functionname, "baleen") == 0) {
       functionnumber = 5;
       spawnParameters.resize(4, keeper);
+    } else if (strcasecmp(functionname, "hockeystick") == 0) {
+      functionnumber = 6;
+      spawnParameters.resize(2, keeper);
     } else
       handle.logFileMessage(LOGFAIL, "unrecognised recruitment function", functionname);
 
