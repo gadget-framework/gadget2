@@ -4,6 +4,8 @@
 #include "gadget.h"
 #include "global.h"
 
+
+
 StochasticData::StochasticData(const char* const filename) {
   netrun = 0;
   readInfo = new InitialInputFile(filename);
@@ -38,6 +40,18 @@ StochasticData::StochasticData(const char* const filename, int p) {
   if ((switches.Size() > 0) && (switches.Size() != values.Size()))
     handle.logMessage(LOGFAIL, "Error in stochasticdata - failed to read values");
   // Klárast hér.
+#ifdef GADGET_NETWORK
+  slave = new SlaveCommunication();
+  getdata = 0;
+  dataFromMaster = NULL;
+  this->readFromNetwork();
+#endif
+}
+
+
+StochasticData::StochasticData() {
+  netrun = 1;
+  readInfo = NULL;
 #ifdef GADGET_NETWORK
   slave = new SlaveCommunication();
   getdata = 0;

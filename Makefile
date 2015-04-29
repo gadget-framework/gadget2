@@ -26,7 +26,9 @@ GADGET = gadget
 #LIBDIRS = -L. -L/usr/local/lib
 #LIBRARIES = -lm
 #CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+#_OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+_LIBOBJ = $(GADGETINPUT) $(EXTRAINPUT)
+LIBOBJ = $(patsubst %,$(SRC_DIR)/%,$(_LIBOBJ))
 ##########################################################################
 # 2. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler
 CXX = g++
@@ -109,7 +111,7 @@ install	:	$(GADGET)
 # to type "make libgadgetinput.a" *before* you compile paramin
 ##########################################################################
 EXTRAINPUT = optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
-libgadgetinput.a	:	$(GADGETINPUT) $(EXTRAINPUT)
+libgadgetinput.a	:	$(LIBOBJ)
 		ar rs libgadgetinput.a $?
 
 clean	:

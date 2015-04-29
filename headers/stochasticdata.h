@@ -24,6 +24,12 @@ public:
   /**
    * \brief This is the default StochasticData constructor
    */
+  StochasticData();
+  /**
+   * \brief This is the StochasticData constructor specifying a file to read the data from
+   * \param filename is the name of the file to read the data from
+   * \param p is the number of the node
+   */
   StochasticData(const char* const filename, int p);
   /**
    * \brief This is the StochasticData constructor specifying a file to read the data from
