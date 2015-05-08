@@ -72,7 +72,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     if (spawnLastYear > TimeInfo->getLastYear())
       handle.logFileMessage(LOGFAIL, "invalid last spawning year", spawnLastYear);
   }
-  
+
   if (strcasecmp(text, "spawnstocksandratios") == 0) {
     onlyParent = 0;
     i = 0;
@@ -466,8 +466,13 @@ double SpawnData::calcRecruitNumber(double temp, int inarea) {
       total = ssb * spawnParameters[0] / (spawnParameters[1] + ssb);
       break;
     case 5:
-      total = ssb * spawnParameters[0]
-        * max(1.0 + spawnParameters[1] * (1.0 - pow(ssb / spawnParameters[2], spawnParameters[3])), 0.0);
+      if (isZero(spawnParameters[2])) {
+        handle.logMessage(LOGWARN, "Warning in spawner - spawn parameter is zero");
+        total = ssb * spawnParameters[0];
+      } else {
+        total = ssb * spawnParameters[0]
+          * max(1.0 + spawnParameters[1] * (1.0 - pow(ssb / spawnParameters[2], spawnParameters[3])), 0.0);
+      }
       break;
     case 6:
       if (ssb > spawnParameters[1]) {
