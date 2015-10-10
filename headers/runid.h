@@ -39,7 +39,9 @@ protected:
   /**
    * \brief This is the host machine that is running the current model
    */
+#ifdef NOT_WINDOWS
   struct utsname host;
+#endif
   /**
    * \brief This is the time that the current model started the simulation
    */
