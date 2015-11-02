@@ -5,9 +5,21 @@
 
 extern Ecosystem* EcoSystem;
 
+#ifdef _OPENMP
+extern Ecosystem** EcoSystems;
+#endif
+
 void InterruptInterface::printMenu() {
   if (EcoSystem->getFuncEval() != 0)
-    cout << "\nInterrupted after " << EcoSystem->getFuncEval() << " iterations ...";
+  {
+	  int iters = EcoSystem->getFuncEval();
+	  #ifdef _OPENMP
+	    int numThr = omp_get_max_threads ( );
+	      for (int i = 0; i < numThr; i++)
+	    	  iters += EcoSystems[i]->getFuncEval();
+	  #endif
+    cout << "\nInterrupted after a total of " << iters << " iterations ...";
+  }
   cout << "\nInterrupted at year " << EcoSystem->getCurrentYear() << ", step "
     << EcoSystem->getCurrentStep() << " (" << EcoSystem->getCurrentTime()
     << " of " << EcoSystem->numTotalSteps() << " timesteps)\n"

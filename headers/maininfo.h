@@ -144,7 +144,16 @@ public:
    * \brief This function will return the maximum ratio of a stock that can be consumed on any given timestep
    * \return maxratio
    */
-  double getMaxRatio() const { return maxratio; };
+  double getMaxRatio() const {
+	  return maxratio;
+  }
+  /**
+   * \brief This function will return seeds used in SA
+   * \return seed array of unsigned int with the seeds used in SA
+   */
+  unsigned* getSeed() const {return seed;};
+
+
 private:
   /**
    * \brief This function will read input from a file instead of the command line
@@ -219,6 +228,12 @@ private:
    * \brief This is the maximum ratio of a stock that can be consumed on any given timestep
    */
   double maxratio;
+  /**
+   * \brief vector with the seeds used in SA
+   * \note see[0] = seed | see[1] = seedM | see[2] = seedP
+   */
+  unsigned* seed;
 };
 
 #endif
+

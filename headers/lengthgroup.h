@@ -35,7 +35,11 @@ public:
    * \param i is the identifier of the length group
    * \return the mean length of the length group
    */
-  double meanLength(int i) const;
+  double meanLength(int i) const {
+	  if (i >= size)
+	    return meanlength[size - 1];
+	  return meanlength[i];
+	};
   /**
    * \brief This function will return the minimum length of a specified length group
    * \param i is the identifier of the length group
@@ -93,6 +97,12 @@ public:
    * \param outfile is the ofstream that the information gets sent to
    */
   void Print(ofstream& outfile) const;
+  /**
+   * \brief This function initialize the meanLength vector
+   * \param maxlengthgroupgrowth max length of the meanLength vector
+   * \param tmpPower the power term of the length
+   */
+  double* const meanlengthvecPow_initilize( int maxlengthgroupgrowth, double tmpPower) const;
 protected:
   /**
    * \brief This is the flag to denote whether an error has occured or not
@@ -122,6 +132,7 @@ protected:
    * \brief This is the DoubleVector of the minimum lengths for each length group
    */
   DoubleVector minlength;
+
 };
 
 /**

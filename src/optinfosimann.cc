@@ -13,16 +13,33 @@ OptInfoSimann::OptInfoSimann()
 void OptInfoSimann::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading Simulated Annealing optimisation parameters");
 
+  unsigned s1 = 0;
+  unsigned s2 = 0;
+  unsigned s3 = 0;
+
   int count = 0;
   while (!infile.eof() && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "seed") == 0) {
-      int seed = 0;
-      infile >> seed >> ws;
-      handle.logMessage(LOGMESSAGE, "Initialising random number generator with", seed);
-      srand(seed);
+      int s = 0;
+      infile >> s >> ws;
+      s1 = s;
+      handle.logMessage(LOGMESSAGE, "Initialising random number generator with", s);
+      srand(s1);
+      // seed for the metropolis acceptance of SA
+	} if (strcasecmp(text, "seedM") == 0) {
+	  int s = 0;
+	  infile >> s >> ws;
+	  s2 = s;
+	  handle.logMessage(LOGMESSAGE, "Initialising random number generator with", s);
+	  // seed for the order if the parameters of SA
+	} if (strcasecmp(text, "seedP") == 0) {
+	  int s = 0;
+      infile >> s >> ws;
+	  s3 = s;
+	  handle.logMessage(LOGMESSAGE, "Initialising random number generator with", s);
 
-    } else if (strcasecmp(text, "simanniter") == 0) {
+		} else if (strcasecmp(text, "simanniter") == 0) {
       infile >> simanniter;
       count++;
 
@@ -75,6 +92,21 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
       infile >> text;  //read and ignore the next entry
     }
     infile >> text;
+  }
+
+  if (s1 != 0) {
+	  seed = s1;
+	  if (s2 == 0)
+		  seedM = s1;
+	  else seedM = s2;
+	  if (s3 == 0)
+		  seedP = s1;
+	  else seedP = s3;
+  } else {
+	  if (s2 != 0)
+		  seedP = s2;
+	  if (s3 != 0)
+		  seedP = s3;
   }
 
   if (count == 0)

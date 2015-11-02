@@ -10,6 +10,7 @@
 #include "formulavector.h"
 #include "keeper.h"
 #include "growthcalc.h"
+#include "matrix.h"
 
 /**
  * \class Grower
@@ -91,13 +92,15 @@ public:
    * \param area is the area that the growth is being calculated on
    * \return lgrowth, a DoubleMatrix containing the length increase
    */
-  const DoubleMatrix& getLengthIncrease(int area) const { return *lgrowth[this->areaNum(area)]; };
+//  const DoubleMatrix& getLengthIncrease(int area) const { return *lgrowth[this->areaNum(area)]; };
+  const Matrix& getLengthIncrease(int area) const { return *lgrowth; };
   /**
    * \brief This function will return the calculated weight increase due to growth on an area
    * \param area is the area that the growth is being calculated on
    * \return wgrowth, a DoubleMatrix containing the weight increase
    */
-  const DoubleMatrix& getWeightIncrease(int area) const { return *wgrowth[this->areaNum(area)]; };
+//  const DoubleMatrix& getWeightIncrease(int area) const { return *wgrowth[this->areaNum(area)]; };
+  const Matrix& getWeightIncrease(int area) const { return *wgrowth; };
   /**
    * \brief This function will return the fixed weight increase due to growth on an area
    * \param area is the area that the growth is being calculated on
@@ -118,6 +121,13 @@ protected:
    * \brief This is the LengthGroupDivision used to store length information
    */
   LengthGroupDivision* LgrpDiv;
+
+  /**
+   * \brief This array of doubles store the raising mean length of all the group to the power term of the length
+   */
+  double * meanlength_vectorPow;
+  int vector_OK;
+
   /**
    * \brief This is the ConversionIndex used to convert from the stock LengthGroupDivision to the LengthGroupDivision used for the growth calculation
    */
@@ -133,25 +143,27 @@ protected:
    */
   DoubleMatrix interpWeightGrowth;
   /**
-   * \brief This is the DoubleMatrix used to store the calculated increase in length on the current timestep
+   * \brief This is the Matrix of doubles used to store the calculated increase in length on the current timestep
    * \note The indices for this object are [area][length]
    */
-  DoubleMatrix calcLengthGrowth;
+  Matrix calcLengthGrowth;
   /**
-   * \brief This is the DoubleMatrix used to store the calculated increase in weight on the current timestep
+   * \brief This is the Matrix of doubles used to store the calculated increase in weight on the current timestep
    * \note The indices for this object are [area][length]
    */
-  DoubleMatrix calcWeightGrowth;
+  Matrix calcWeightGrowth;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the calculated increase in length for each length group on the current timestep
    * \note The indices for this object are [area][change in length][stock length]
    */
-  DoubleMatrixPtrVector lgrowth;
+//  DoubleMatrixPtrVector lgrowth;
+  Matrix* lgrowth;
   /**
    * \brief This is the DoubleMatrixPtrVector used to store the calculated increase in weight for each length group on the current timestep
    * \note The indices for this object are [area][change in length][stock length]
    */
-  DoubleMatrixPtrVector wgrowth;
+//  DoubleMatrixPtrVector wgrowth;
+  Matrix* wgrowth;
   /**
    * \brief This is the dummy DoubleVector used during the growth calculation
    * \note The values of this vector are set to zero, and never used, unless the growth function depends on the feeding level of the stock (ie. growth is based on consumption of preys)

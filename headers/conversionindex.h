@@ -4,6 +4,7 @@
 #include "doublevector.h"
 #include "intvector.h"
 #include "lengthgroup.h"
+#include "matrix.h"
 
 /**
  * \class ConversionIndex
@@ -80,9 +81,9 @@ public:
   /**
    * \brief This function will interpolate values defined for a coarser length division onto a finer length division
    * \param Vf is the DoubleVector that will contain the finer values after the interpolation
-   * \param Vc is the DoubleVector of the coarser values to interpolate from
+   * \param Vc is the array of doubles of the coarser values to interpolate from
    */
-  void interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc);
+  void interpolateLengths(DoubleVector& Vf, const double* Vc, int size);
 protected:
   /**
    * \brief This is the flag to denote whether an error has occured or not

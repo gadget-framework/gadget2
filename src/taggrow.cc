@@ -2,7 +2,7 @@
 #include "agebandmatrixratio.h"
 #include "gadget.h"
 
-void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total) {
+void AgeBandMatrixRatio::Grow(const Matrix& Lgrowth, const AgeBandMatrix& Total) {
 
   int numTagExperiments = this->numTagExperiments();
   int i, lgrp, grow, maxlgrp, tag;
@@ -55,7 +55,7 @@ void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& 
 }
 
 //Same program with certain number of fish made mature.
-void AgeBandMatrixRatio::Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total, Maturity* const Mat, int area) {
+void AgeBandMatrixRatio::Grow(const Matrix& Lgrowth, const AgeBandMatrix& Total, Maturity* const Mat, int area) {
 
   int numTagExperiments = this->numTagExperiments();
   int i, lgrp, grow, maxlgrp, age, tag;

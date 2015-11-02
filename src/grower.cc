@@ -22,6 +22,7 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   fixedweights = 0;
   functionnumber = 0;
   LgrpDiv = new LengthGroupDivision(*GivenLgrpDiv);
+  vector_OK = 0;
   if (LgrpDiv->Error())
     handle.logMessage(LOGFAIL, "Error in grower - failed to create length group");
   CI = new ConversionIndex(OtherLgrpDiv, LgrpDiv, 1);
@@ -104,21 +105,31 @@ Grower::Grower(CommentStream& infile, const LengthGroupDivision* const OtherLgrp
   interpLengthGrowth.AddRows(noareas, otherlen, 0.0);
   interpWeightGrowth.AddRows(noareas, otherlen, 0.0);
   dummyfphi.resize(len, 0.0);
+  lgrowth = new Matrix[noareas];
+  wgrowth = new Matrix[noareas];
   for (i = 0; i < noareas; i++) {
-    lgrowth.resize(new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0));
-    wgrowth.resize(new DoubleMatrix(maxlengthgroupgrowth + 1, otherlen, 0.0));
+	  lgrowth[i].Initialize(maxlengthgroupgrowth + 1, otherlen, 0.0);
+	  wgrowth[i].Initialize(maxlengthgroupgrowth + 1, otherlen, 0.0);
+//	  lgrowth[i] = new Matrix(maxlengthgroupgrowth + 1, otherlen, 0.0);
+//	  wgrowth[i] = new Matrix(maxlengthgroupgrowth + 1, otherlen, 0.0);
   }
 }
 
 Grower::~Grower() {
   int i;
-  for (i = 0; i < lgrowth.Size(); i++) {
-    delete lgrowth[i];
-    delete wgrowth[i];
-  }
+  //int size = sizeof(lgrowth)/sizeof(lgrowth[0]);
+  int size = areas.Size();
+//  for (i = 0; i < size; i++) {
+//    delete (*lgrowth)[i];
+//    delete (*wgrowth)[i];
+//  }
+  delete[] lgrowth;
+  delete[] wgrowth;
   delete CI;
   delete LgrpDiv;
   delete growthcalc;
+  if (vector_OK != 0)
+	  delete[] meanlength_vectorPow;
 }
 
 void Grower::Print(ofstream& outfile) const {
@@ -128,23 +139,23 @@ void Grower::Print(ofstream& outfile) const {
   LgrpDiv->Print(outfile);
   for (area = 0; area < areas.Size(); area++) {
     outfile << "\tLength increase on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < calcLengthGrowth.Ncol(area); i++)
+    for (i = 0; i < calcLengthGrowth.Ncol(); i++)
       outfile << sep << calcLengthGrowth[area][i];
     outfile << "\n\tWeight increase on internal area " << areas[area] << ":\n\t";
-    for (i = 0; i < calcWeightGrowth.Ncol(area); i++)
+    for (i = 0; i < calcWeightGrowth.Ncol(); i++)
       outfile << sep << calcWeightGrowth[area][i];
     outfile << "\n\tDistributed length increase on internal area " << areas[area] << ":\n";
-    for (i = 0; i < lgrowth[area]->Nrow(); i++) {
+    for (i = 0; i < lgrowth[area].Nrow(); i++) {
       outfile << TAB;
-      for (j = 0; j < lgrowth[area]->Ncol(i); j++)
-        outfile << sep << (*lgrowth[area])[i][j];
+      for (j = 0; j < lgrowth[area].Ncol(); j++)
+        outfile << sep << lgrowth[area][i][j];
       outfile << endl;
     }
     outfile << "\tDistributed weight increase on internal area " << areas[area] << ":\n";
-    for (i = 0; i < wgrowth[area]->Nrow(); i++) {
+    for (i = 0; i < wgrowth[area].Nrow(); i++) {
       outfile << TAB;
-      for (j = 0; j < wgrowth[area]->Ncol(i); j++)
-        outfile << sep << (*wgrowth[area])[i][j];
+      for (j = 0; j < wgrowth[area].Ncol(); j++)
+        outfile << sep << wgrowth[area][i][j];
       outfile << endl;
     }
   }
@@ -156,7 +167,6 @@ void Grower::Sum(const PopInfoVector& NumberInArea, int area) {
 
 void Grower::calcGrowth(int area,
   const AreaClass* const Area, const TimeClass* const TimeInfo) {
-
   this->calcGrowth(area, Area, TimeInfo, dummyfphi, dummyfphi);
 }
 
@@ -165,10 +175,11 @@ void Grower::calcGrowth(int area,
   const DoubleVector& FPhi, const DoubleVector& MaxCon) {
 
   int inarea = this->areaNum(area);
-  growthcalc->calcGrowth(area, calcLengthGrowth[inarea], calcWeightGrowth[inarea],
-    numGrow[inarea], Area, TimeInfo, FPhi, MaxCon, LgrpDiv);
 
-  CI->interpolateLengths(interpLengthGrowth[inarea], calcLengthGrowth[inarea]);
+  growthcalc->calcGrowth(area, calcLengthGrowth[inarea], calcWeightGrowth[inarea],
+      numGrow[inarea], Area, TimeInfo, FPhi, MaxCon, LgrpDiv, calcLengthGrowth.Ncol());
+
+  CI->interpolateLengths(interpLengthGrowth[inarea], calcLengthGrowth[inarea], calcLengthGrowth.Ncol());
   switch (functionnumber) {
     case 1:
     case 2:
@@ -178,7 +189,7 @@ void Grower::calcGrowth(int area,
     case 6:
     case 7:
     case 9:
-      CI->interpolateLengths(interpWeightGrowth[inarea], calcWeightGrowth[inarea]);
+    	CI->interpolateLengths(interpWeightGrowth[inarea], calcWeightGrowth[inarea], calcWeightGrowth.Ncol());
       break;
     case 8:
     case 10:
@@ -198,9 +209,14 @@ void Grower::Reset() {
   calcWeightGrowth.setToZero();
   interpLengthGrowth.setToZero();
   for (area = 0; area < areas.Size(); area++) {
-    (*lgrowth[area]).setToZero();
+    (lgrowth[area]).setToZero();
     for (i = 0; i < LgrpDiv->numLengthGroups(); i++)
       numGrow[area][i].setToZero();
+  }
+  if (vector_OK != 0)
+  {
+  	  delete[] meanlength_vectorPow;
+  	  vector_OK = 0;
   }
 
   switch (functionnumber) {
@@ -214,7 +230,7 @@ void Grower::Reset() {
     case 9:
       interpWeightGrowth.setToZero();
       for (area = 0; area < areas.Size(); area++)
-        (*wgrowth[area]).setToZero();
+        (wgrowth[area]).setToZero();
       break;
     case 8:
     case 10:

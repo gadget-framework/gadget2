@@ -14,7 +14,33 @@ void Grower::implementGrowth(int area, const PopInfoVector& NumberInArea,
   double tmpPower = growthcalc->getPower();
   double tmpDl = 1.0 / Lengths->dl();  //JMB no need to check zero here
 
-  for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
+  double pow_L; double aux;
+  int numLenGr = Lengths->numLengthGroups();;
+
+  switch (functionnumber) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 9: break;
+        case 8:
+        case 10:
+        case 11:
+        	if (vector_OK == 0)
+        	{
+        		meanlength_vectorPow = Lengths->meanlengthvecPow_initilize(maxlengthgroupgrowth,tmpPower);
+        		vector_OK = 1;
+        	}
+          break;
+        default: break;
+      }
+
+
+  for (lgroup = 0; lgroup < numLenGr; lgroup++) {
+
     part3 = 1.0;
     growth = interpLengthGrowth[inarea][lgroup] * tmpDl;
     if (growth >= maxlengthgroupgrowth)
@@ -32,7 +58,7 @@ void Grower::implementGrowth(int area, const PopInfoVector& NumberInArea,
         part4[j] = part4[j - 1] * (j - 1 + alpha);
 
     for (j = 0; j <= maxlengthgroupgrowth; j++)
-      (*lgrowth[inarea])[j][lgroup] = part1[j] * part2[j] * tmppart3 * part4[j];
+    	(*lgrowth)[j][lgroup] = part1[j] * part2[j] * tmppart3 * part4[j];
 
     switch (functionnumber) {
       case 1:
@@ -46,20 +72,24 @@ void Grower::implementGrowth(int area, const PopInfoVector& NumberInArea,
         meanw = 0.0;
         tmpweight = (NumberInArea[lgroup].W * tmpPower * Lengths->dl()) / Lengths->meanLength(lgroup);
         for (j = 0; j <= maxlengthgroupgrowth; j++) {
-          (*wgrowth[inarea])[j][lgroup] = tmpweight * j;
-          meanw += (*wgrowth[inarea])[j][lgroup] * (*lgrowth[inarea])[j][lgroup];
+        	(*wgrowth)[j][lgroup] = tmpweight * j;
+          meanw += (*wgrowth)[j][lgroup] * (*lgrowth)[j][lgroup];
         }
 
         tmpweight = interpWeightGrowth[inarea][lgroup] - meanw;
         for (j = 0; j <= maxlengthgroupgrowth; j++)
-          (*wgrowth[inarea])[j][lgroup] += tmpweight;
+        {
+        	aux = (*wgrowth)[j][lgroup];
+        	(*wgrowth)[j][lgroup] =  aux + tmpweight;
+        }
         break;
       case 8:
       case 10:
       case 11:
-        if (lgroup != Lengths->numLengthGroups())
+    	pow_L = meanlength_vectorPow[lgroup];
+        if (lgroup != numLenGr) //FIXME for (lgroup = 0; ¿¿¿lgroup < numLenGr????; lgroup++)
           for (j = 1; j <= maxlengthgroupgrowth; j++)
-            (*wgrowth[inarea])[j][lgroup] = tmpMult * (pow(Lengths->meanLength(lgroup + j), tmpPower) - pow(Lengths->meanLength(lgroup), tmpPower));
+        	  (*wgrowth)[j][lgroup] = tmpMult * (meanlength_vectorPow[lgroup + j] - pow_L);
         break;
       default:
         handle.logMessage(LOGFAIL, "Error in grower - unrecognised growth function", functionnumber);
@@ -93,6 +123,6 @@ void Grower::implementGrowth(int area, const LengthGroupDivision* const Lengths)
         part4[j] = part4[j - 1] * (j - 1 + alpha);
 
     for (j = 0; j <= maxlengthgroupgrowth; j++)
-      (*lgrowth[inarea])[j][lgroup] = part1[j] * part2[j] * tmppart3 * part4[j];
+      (lgrowth[inarea])[j][lgroup] = part1[j] * part2[j] * tmppart3 * part4[j];
   }
 }

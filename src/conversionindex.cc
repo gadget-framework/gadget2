@@ -142,7 +142,7 @@ ConversionIndex::ConversionIndex(const LengthGroupDivision* const L1,
 
 //The function interpolates values calculated on a coarse length distribution
 //Vc to a finer length distribution Vf using the conversionindex CI
-void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& Vc) {
+void ConversionIndex::interpolateLengths(DoubleVector& Vf, const double* Vc, int size) {
 
   if (!interpolate)
     handle.logMessage(LOGFAIL, "Error in conversionindex - cannot interpolate between lengthgroups");
@@ -158,7 +158,7 @@ void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& V
 
     if (maxlength < Vf.Size())
       for (i = maxlength; i < Vf.Size(); i++)
-        Vf[i] = Vc[Vc.Size() - 1];
+        Vf[i] = Vc[size - 1];
 
   } else {
     for (i = 0; i < Vf.Size(); i++) {
@@ -168,4 +168,5 @@ void ConversionIndex::interpolateLengths(DoubleVector& Vf, const DoubleVector& V
         Vf[i] = (Vc[ipos[i]] * (1.0 - iratio[i])) + (Vc[ipos[i] + 1] * iratio[i]);
     }
   }
+
 }

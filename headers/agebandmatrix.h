@@ -5,6 +5,7 @@
 #include "doublematrix.h"
 #include "popinfomatrix.h"
 #include "popinfoindexvector.h"
+#include "matrix.h"
 
 class Maturity;
 
@@ -124,10 +125,11 @@ public:
   void printWeights(ofstream& outfile) const;
   /**
    * \brief This function will increase the length and mean weight of the population stored in the vector, according to values calculated by the GrowthCalc calculations for the population
-   * \param Lgrowth is the DoubleMatrix of the calculated change in length due to the growth
-   * \param Wgrowth is the DoubleMatrix of the calculated change in mean weight due to the growth
+   * \param Lgrowth is the Matrix of doubles of the calculated change in length due to the growth
+   * \param Wgrowth is the Matrix of doubles of the calculated change in mean weight due to the growth
    */
-  void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth);
+  void Grow(const Matrix& Lgrowth, const Matrix& Wgrowth);
+//  void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth);
   /**
    * \brief This function will increase the length and mean weight of the population stored in the vector, according to values calculated by the GrowthCalc and Maturity calculations for the population
    * \param Lgrowth is the DoubleMatrix of the calculated change in length due to the growth
@@ -135,14 +137,14 @@ public:
    * \param Mat is the Maturity used to calculate (and store) the proportion that population that will mature
    * \param area is the identifier for the are used for the maturation process
    */
-  void Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowth, Maturity* const Mat, int area);
+  void Grow(const Matrix& Lgrowth, const Matrix& Wgrowth, Maturity* const Mat, int area);
   /**
    * \brief This function will increase the length of the population stored in the vector, according to values calculated by the GrowthCalc calculations for the population
    * \param Lgrowth is the DoubleMatrix of the calculated change in length due to the growth
    * \param Weight is the DoubleVector of the specified mean weight of the population
    * \note The mean weight of the population is fixed to values specified in the input file for the population
    */
-  void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight);
+  void Grow(const Matrix& Lgrowth, const DoubleVector& Weight);
   /**
    * \brief This function will increase the length and mean weight of the population stored in the vector, according to values calculated by the GrowthCalc and Maturity calculations for the population
    * \param Lgrowth is the DoubleMatrix of the calculated change in length due to the growth
@@ -151,7 +153,7 @@ public:
    * \param area is the identifier for the are used for the maturation process
    * \note The mean weight of the population is fixed to values specified in the input file for the population
    */
-  void Grow(const DoubleMatrix& Lgrowth, const DoubleVector& Weight, Maturity* const Mat, int area);
+  void Grow(const Matrix& Lgrowth, const DoubleVector& Weight, Maturity* const Mat, int area);
   /**
    * \brief This function will add a AgeBandMatrix to the current vector
    * \param Addition is the AgeBandMatrix that will be added to the current vector

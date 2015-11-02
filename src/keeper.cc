@@ -7,6 +7,10 @@
 
 extern Ecosystem* EcoSystem;
 
+#ifdef _OPENMP
+extern Ecosystem** EcoSystems;
+#endif
+
 Keeper::Keeper() {
   stack = new StrStack();
   boundsgiven = 0;
@@ -285,7 +289,13 @@ void Keeper::writeValues(const LikelihoodPtrVector& likevec, int prec) {
     handle.logMessage(LOGFAIL, "Error in keeper - cannot write to output file");
 
   //JMB - print the number of function evaluations at the start of the line
-  outfile << EcoSystem->getFuncEval() << TAB;
+  int iters = EcoSystem->getFuncEval();
+#ifdef _OPENMP
+  int numThr = omp_get_max_threads ( );
+    for (int i = 0; i < numThr; i++)
+  	  iters += EcoSystems[i]->getFuncEval();
+#endif
+  outfile << iters << TAB;
 
   int i, p, w;
   p = prec;
@@ -412,7 +422,13 @@ void Keeper::writeParams(const OptInfoPtrVector& optvec, const char* const filen
   RUNID.Print(paramfile);
 
   if (interrupt) {
-    paramfile << "; Gadget was interrupted after " << EcoSystem->getFuncEval()
+	int iters = EcoSystem->getFuncEval();
+#ifdef _OPENMP
+	int numThr = omp_get_max_threads ( );
+    for (i = 0; i < numThr; i++)
+  	  iters += EcoSystems[i]->getFuncEval();
+#endif
+    paramfile << "; Gadget was interrupted after a total of " << iters
       << " function evaluations\n; the best likelihood value found so far is "
       << setprecision(p) << bestlikelihood << endl;
 

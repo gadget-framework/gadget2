@@ -278,7 +278,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 //
 // A function to read optimisation information
 //
-void Ecosystem::readOptimisation(CommentStream& infile) {
+void Ecosystem::readOptimisation(CommentStream& infile, unsigned* seed) {
   char* text = new char[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   handle.logMessage(LOGMESSAGE, "Reading optimisation information");
@@ -310,6 +310,7 @@ void Ecosystem::readOptimisation(CommentStream& infile) {
 
     if (!infile.eof()) {
       infile >> text;
+      optvec[count]->setSeed(seed);
       optvec[count]->read(infile, text);
     } else
       handle.logMessage(LOGINFO, "Warning - no parameters specified for optimisation algorithm");

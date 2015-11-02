@@ -5,6 +5,7 @@
 #include "doublematrix.h"
 #include "doublevector.h"
 #include "intvector.h"
+#include "seq_optimize_template.h"
 
 enum OptType { OPTHOOKE = 1, OPTSIMANN, OPTBFGS };
 
@@ -41,6 +42,15 @@ public:
    */
   virtual void OptimiseLikelihood() {};
   /**
+   * \brief This is the function used to call the optimisation algorithms parallelized with OpenMP of the reproducible version
+   */
+  virtual void OptimiseLikelihoodOMP() {};
+  /**
+   * \brief This function set the seeds used in SA
+   * \param val array of unsigned int with the seeds
+   */
+  void setSeed(unsigned* val) {seed = val[0]; seedM =  val[1]; seedP = val[2];};
+  /**
    * \brief This will return the type of optimisation class
    * \return type
    */
@@ -62,6 +72,18 @@ protected:
    * \brief This denotes what type of optimisation class has been created
    */
   OptType type;
+  /**
+   * \brief This is the seed used for the calculation of the new value of the parameters
+   */
+  unsigned seed;
+  /**
+   * \brief This is the seed used for the acceptance of the metropolis
+   */
+  unsigned seedM;
+  /**
+   * \brief This is the seed used to change the order of the parameters
+   */
+  unsigned seedP;
 };
 
 /**
@@ -99,6 +121,12 @@ public:
    * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser
    */
   virtual void OptimiseLikelihood();
+#ifdef SPECULATIVE
+  /**
+   * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser parallelized with the reproducible version implemented OpenMP
+   */
+  virtual void OptimiseLikelihoodOMP();
+#endif
 private:
   /**
    * \brief This function will calculate the best point that can be found close to the current point
@@ -109,6 +137,24 @@ private:
    * \return the best function value found from the search
    */
   double bestNearby(DoubleVector& delta, DoubleVector& point, double prevbest, IntVector& param);
+  /**
+   * \brief This function implemented the reproducible version with OpenMP will calculate the best point that can be found close to the current point
+   * \param delta is the DoubleVector of the steps to take when looking for the best point
+   * \param point is the DoubleVector that will contain the parameters corresponding to the best function value found from the search
+   * \param prevbest is the current best point value
+   * \param param is the IntVector containing the order that the parameters should be searched in
+   * \return the best function value found from the search
+   */
+  double bestNearbyRepro(DoubleVector& delta, DoubleVector& point, double prevbest, IntVector& param);
+  /**
+     * \brief This function implemented the speculative version with OpenMP will calculate the best point that can be found close to the current point
+     * \param delta is the DoubleVector of the steps to take when looking for the best point
+     * \param point is the DoubleVector that will contain the parameters corresponding to the best function value found from the search
+     * \param prevbest is the current best point value
+     * \param param is the IntVector containing the order that the parameters should be searched in
+     * \return the best function value found from the search
+     */
+  double bestNearbySpec(DoubleVector& delta, DoubleVector& point, double prevbest, IntVector& param);
   /**
    * \brief This is the maximum number of iterations for the Hooke & Jeeves optimisation
    */
@@ -165,6 +211,25 @@ public:
    * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser
    */
   virtual void OptimiseLikelihood();
+#ifdef SPECULATIVE
+  /**
+   * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser parallelized with the reproducible version implemented OpenMP
+   */
+  virtual void OptimiseLikelihoodOMP();
+#endif
+  /**
+   * \brief This function calculate a new valor for the parameter l
+   * \param nvars the number of variables to be optimised
+   * \param l the parameter to change
+   * \param param IntVector with the order of the parameters
+   * \param trialx DoubleVector that storage the values of the parameters to evaluate during this iteration
+   * \param x DoubleVector that storage the best values of the parameters
+   * \param lowerb DoubleVector with the lower bounds of the variables to be optimised
+   * \param upperb DoubleVector with the upper bounds of the variables to be optimised
+   * \param vm DoubleVector with the value for the maximum step length for each parameter
+   */
+  virtual void newValue(int nvars, int l, IntVector& param, DoubleVector& trialx,
+  		DoubleVector& x, DoubleVector& lowerb, DoubleVector& upperb, DoubleVector& vm);
 private:
   /**
    * \brief This is the temperature reduction factor
@@ -250,6 +315,12 @@ public:
    * \brief This is the function that will calculate the likelihood score using the BFGS optimiser
    */
   virtual void OptimiseLikelihood();
+#ifdef SPECULATIVE
+  /**
+  * \brief This function call the sequential function. BFGS isn't implemented with OpenMP
+  */
+  virtual void OptimiseLikelihoodOMP();
+#endif
 private:
   /**
    * \brief This function will numerically calculate the gradient of the function at the current point

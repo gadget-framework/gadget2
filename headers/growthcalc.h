@@ -9,6 +9,7 @@
 #include "livesonareas.h"
 #include "modelvariablevector.h"
 #include "keeper.h"
+#include "matrix.h"
 
 /**
  * \class GrowthCalcBase
@@ -29,20 +30,21 @@ public:
   /**
    * \brief This is the function that calculates the growth
    * \param area is the area that the growth is being calculated on
-   * \param Lgrowth is the DoubleVector of the mean length increase for each length group of the stock
-   * \param Wgrowth is the DoubleVector of the mean weight increase for each length group of the stock
+   * \param Lgrowth is the Matrix of doubles of the mean length increase for each length group of the stock
+   * \param Wgrowth is the Matrix of doubles of the mean weight increase for each length group of the stock
    * \param numGrow is the PopInfoVector of the current population of the stock
    * \param Area is the AreaClass for the current model
    * \param TimeInfo is the TimeClass for the current model
    * \param Fphi is the DoubleVector of the feeding level of the stock
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
+   * \param size is the number of columns of the Matrix
    * \note This will be overridden by the derived classes that actually calculate the growth
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv) = 0;
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+      const PopInfoVector& numGrow, const AreaClass* const Area,
+      const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+      const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size) = 0;
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return 0 (will be overridden in derived classes)
@@ -86,10 +88,15 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+          const PopInfoVector& numGrow, const AreaClass* const Area,
+          const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+          const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
 protected:
   /**
    * \brief This is the number of growth parameters (set to 9)
@@ -134,10 +141,15 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+          const PopInfoVector& numGrow, const AreaClass* const Area,
+          const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+          const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
 protected:
   /**
    * \brief This is the FormulaMatrixPtrVector of increase in length for each length group
@@ -182,10 +194,15 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+          const PopInfoVector& numGrow, const AreaClass* const Area,
+          const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+          const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return lgrowthPar[7]
@@ -252,10 +269,15 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+          const PopInfoVector& numGrow, const AreaClass* const Area,
+          const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+          const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return lgrowthPar[7]
@@ -322,10 +344,15 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+          const PopInfoVector& numGrow, const AreaClass* const Area,
+          const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+          const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return lgrowthPar[7]
@@ -404,10 +431,15 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+          const PopInfoVector& numGrow, const AreaClass* const Area,
+          const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+          const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
 protected:
   /**
    * \brief This is the number of growth parameters (set to 2)
@@ -456,10 +488,15 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+          const PopInfoVector& numGrow, const AreaClass* const Area,
+          const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+          const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
 protected:
   /**
    * \brief This is the number of growth parameters (set to 2)
@@ -506,10 +543,17 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+      const PopInfoVector& numGrow, const AreaClass* const Area,
+      const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+      const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
+
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return growthPar[3]
@@ -562,10 +606,15 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+        const PopInfoVector& numGrow, const AreaClass* const Area,
+        const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+        const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return growthPar[4]
@@ -618,10 +667,16 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+          const PopInfoVector& numGrow, const AreaClass* const Area,
+          const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+          const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return growthPar[4]
@@ -674,10 +729,15 @@ public:
    * \param MaxCon is the DoubleVector of the maximum consumption of the stock
    * \param LgrpDiv is the LengthGroupDivision of the stock
    */
-  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
-    const PopInfoVector& numGrow, const AreaClass* const Area,
-    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
-    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+//  virtual void calcGrowth(int area, DoubleVector& Lgrowth, DoubleVector& Wgrowth,
+//    const PopInfoVector& numGrow, const AreaClass* const Area,
+//    const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+//    const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv);
+
+  virtual void calcGrowth(int area, double* Lgrowth, double* Wgrowth,
+          const PopInfoVector& numGrow, const AreaClass* const Area,
+          const TimeClass* const TimeInfo, const DoubleVector& Fphi,
+          const DoubleVector& MaxCon, const LengthGroupDivision* const LgrpDiv, int size);
   /**
    * \brief This will return the power term of the length - weight relationship
    * \return growthPar[4]

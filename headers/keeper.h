@@ -202,6 +202,11 @@ public:
    * \return bestlikelihood
    */
   double getBestLikelihoodScore() const { return bestlikelihood; };
+  /**
+   * \brief This function will return the DoubleVector used to store the values of the parameters
+   * \return values
+   */
+  DoubleVector getValues() {return values;}
 protected:
   /**
    * \brief This is the AddressKeeperMatrix used to store information about the value and name of the parameters

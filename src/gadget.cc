@@ -6,14 +6,21 @@
 #include "stochasticdata.h"
 #include "interrupthandler.h"
 #include "global.h"
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 Ecosystem* EcoSystem;
+StochasticData* data = 0;
+Ecosystem** EcoSystems;
 
 
 int main(int aNumber, char* const aVector[]) {
 
   MainInfo main;
-  StochasticData* data = 0;
+
+//  omp_set_num_threads(4);
+
   int check = 0;
 
   //Initialise random number generator with system time [MNAA 02.02.26]
@@ -121,31 +128,42 @@ int main(int aNumber, char* const aVector[]) {
     }
 
   } else if (main.runOptimise()) {
-    if (EcoSystem->numVariables() == 0)
-      handle.logMessage(LOGFAIL, "Error - no parameters can be optimised");
+	  if (EcoSystem->numVariables() == 0)
+		  handle.logMessage(LOGFAIL, "Error - no parameters can be optimised");
 
-    if (main.getInitialParamGiven()) {
-      if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
-        handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
-      data = new StochasticData(main.getInitialParamFile());
-      if (chdir(workingdir) != 0)
-        handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
+	  if (main.getInitialParamGiven()) {
+		  if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
+			handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
+		  data = new StochasticData(main.getInitialParamFile());
+		  if (chdir(workingdir) != 0)
+			handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
 
-      EcoSystem->Update(data);
-      EcoSystem->checkBounds();
-      delete data;
-    } else
-      handle.logMessage(LOGFAIL, "Error - no parameter input file specified");
+		  EcoSystem->Update(data);
+		  EcoSystem->checkBounds();
+		} else
+		  handle.logMessage(LOGFAIL, "Error - no parameter input file specified");
 
-    EcoSystem->Initialise();
-    if (main.printInitial()) {
-      EcoSystem->Reset();  //JMB only need to call reset() before the print commands
-      EcoSystem->writeStatus(main.getPrintInitialFile());
-    }
+	  EcoSystem->Initialise();
+	  if (main.printInitial()) {
+		  EcoSystem->Reset();  //JMB only need to call reset() before the print commands
+		  EcoSystem->writeStatus(main.getPrintInitialFile());
+	  	  }
 
-    EcoSystem->Optimise();
-    if (main.getForcePrint())
-      EcoSystem->Simulate(main.getForcePrint());
+#ifdef _OPENMP
+	  int numThr = omp_get_max_threads ( );
+	  EcoSystems = new Ecosystem*[numThr];
+	  int i;
+	  for (i=0; i<numThr; i++)
+	  {
+		  EcoSystems[i] = new Ecosystem(main);
+		  EcoSystems[i]->Update(data);
+		  EcoSystems[i]->Initialise();
+	  }
+#endif
+	  EcoSystem->Optimise();
+	  delete data;
+	  if (main.getForcePrint())
+		  EcoSystem->Simulate(main.getForcePrint());
   }
 
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file

@@ -101,8 +101,9 @@ void Ecosystem::Simulate(int print) {
     for (j = 0; j < Area->numAreas(); j++)
       this->updatePopulationOneArea(j);
 
-    for (j = 0; j < likevec.Size(); j++)
+    for (j = 0; j < likevec.Size(); j++){
       likevec[j]->addLikelihood(TimeInfo);
+    }
 
     if (print)
       for (j = 0; j < printvec.Size(); j++)

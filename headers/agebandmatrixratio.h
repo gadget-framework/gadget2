@@ -26,8 +26,8 @@ public:
   int minLength(int age) const { return v[age - minage]->minCol(); };
   int maxLength(int age) const { return v[age - minage]->maxCol(); };
   void IncrementAge(const AgeBandMatrix& Total);
-  void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total);
-  void Grow(const DoubleMatrix& Lgrowth, const AgeBandMatrix& Total, Maturity* const Mat, int area);
+  void Grow(const Matrix& Lgrowth, const AgeBandMatrix& Total);
+  void Grow(const Matrix& Lgrowth, const AgeBandMatrix& Total, Maturity* const Mat, int area);
   PopRatioIndexVector& operator [] (int age) { return *(v[age - minage]); };
   const PopRatioIndexVector& operator [] (int age) const { return *(v[age - minage]); };
   void updateRatio(const AgeBandMatrix& Total);

@@ -38,6 +38,17 @@ DoubleVector::~DoubleVector() {
   }
 }
 
+void DoubleVector::Initialize(int sz, double value) {
+  size = (sz > 0 ? sz : 0);
+  int i;
+  if (size > 0) {
+    v = new double[size];
+    for (i = 0; i < size; i++)
+      v[i] = value;
+  } else
+    v = 0;
+}
+
 void DoubleVector::resize(int addsize, double value) {
   if (addsize <= 0)
     return;

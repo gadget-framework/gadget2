@@ -100,7 +100,6 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
       ((StockPredator*)predator)->getMaxConsumption(area));
   else
     grower->calcGrowth(area, Area, TimeInfo);
-
   int inarea = this->areaNum(area);
   if (grower->getFixedWeights()) {
     //Weights at length are fixed to the value in the input file
@@ -114,9 +113,11 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     //New weights at length are calculated
     grower->implementGrowth(area, tmpPopulation[inarea], LgrpDiv);
     if (doesmature && maturity->isMaturationStep(TimeInfo))
-      Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area), maturity, area);
+    {
+    	Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area), maturity, area);
+    }
     else
-      Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area));
+    	Alkeys[inarea].Grow(grower->getLengthIncrease(area), grower->getWeightIncrease(area));
   }
 
   if (istagged && tagAlkeys.numTagExperiments() > 0) {
@@ -125,6 +126,8 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     else
       tagAlkeys[inarea].Grow(grower->getLengthIncrease(area), Alkeys[inarea]);
   }
+
+
 }
 
 //-----------------------------------------------------------------------

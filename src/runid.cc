@@ -9,12 +9,8 @@ RunID::RunID() {
   timestring = new char[MaxStrLength];
   strncpy(timestring, "", MaxStrLength);
 
-#ifdef NOT_WINDOWS
   if (uname(&host) != -1)
     strcpy(hostname, host.nodename);
-#else
-  strcpy(hostname, getenv("COMPUTERNAME"));
-#endif
   if (time(&runtime))
     strcpy(timestring, ctime(&runtime));
 }

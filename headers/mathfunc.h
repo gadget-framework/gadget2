@@ -114,6 +114,18 @@ inline double randomNumber() {
 }
 
 /**
+ * \brief This function will generate a random number in the range 0.0 to 1.0 from a seed
+ * \param seed the seed used to calculate the rando number
+ * \return random number
+ * \note This function generates uniformly-distributed doubles in the range 0.0 to 1.0
+ */
+inline double randomNumber(unsigned* seed) {
+  int r = rand_r(seed);
+  double k = r % 32767;
+  return (k / 32767.0);
+}
+
+/**
  * \brief This function will calculate the calculate the effective annual mortality caused by a given predation on a specified population during a timestep
  * \param pred is the number that is removed from the population by the predation
  * \param pop is the population size (before predation)

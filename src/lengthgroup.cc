@@ -2,6 +2,7 @@
 #include "errorhandler.h"
 #include "gadget.h"
 #include "global.h"
+#include "mathfunc.h"
 //Constructor for length division with even increments
 LengthGroupDivision::LengthGroupDivision(double MinL, double MaxL, double DL) : error(0), Dl(DL) {
   if ((MaxL < MinL) || (MinL < 0.0) || (Dl < verysmall)) {
@@ -88,12 +89,6 @@ int LengthGroupDivision::numLengthGroup(double len) const {
 
   //failed to find length group that matches len
   return -1;
-}
-
-double LengthGroupDivision::meanLength(int i) const {
-  if (i >= size)
-    return meanlength[size - 1];
-  return meanlength[i];
 }
 
 double LengthGroupDivision::minLength(int i) const {
@@ -242,4 +237,20 @@ int checkLengthGroupStructure(const LengthGroupDivision* finer,
     }
   }
   return 1;
+}
+
+// initialize the meanLength vector
+double* const LengthGroupDivision::meanlengthvecPow_initilize(
+		int maxlengthgroupgrowth, double tmpPower) const
+{
+	double * meanlength_vectorPow = new double[size + maxlengthgroupgrowth];
+	double aux;
+	int lgroup;
+	for (lgroup = 0; lgroup < size; lgroup++)
+		meanlength_vectorPow[lgroup] = pow(meanLength(lgroup), tmpPower);
+	aux = meanlength_vectorPow[size-1];
+	for (lgroup = size; lgroup < size+maxlengthgroupgrowth; lgroup++)
+		meanlength_vectorPow[lgroup] = aux;
+
+	return meanlength_vectorPow;
 }

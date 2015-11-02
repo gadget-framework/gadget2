@@ -291,3 +291,10 @@ void OptInfoBFGS::OptimiseLikelihood() {
     }
   }
 }
+
+/* bfgs isn't optimized with OpenMP, this method only call the sequential method*/
+#ifdef SPECULATIVE
+void OptInfoBFGS::OptimiseLikelihoodOMP() {
+	OptimiseLikelihood();
+}
+#endif

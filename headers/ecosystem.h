@@ -82,7 +82,7 @@ public:
    * \brief This function will read in the optimisation parameters from the input file
    * \param infile is the CommentStream to read the optimisation parameters from
    */
-  void readOptimisation(CommentStream& infile);
+  void readOptimisation(CommentStream& infile, unsigned* seed);
   /**
    * \brief This function will write the current model status to file
    * \param filename is the name of the file to write the model information to
@@ -124,6 +124,13 @@ public:
    * \param Stochastic is the StochasticData containing the new values of the parameters
    */
   void Update(const StochasticData* const Stochastic) const { keeper->Update(Stochastic); };
+#ifdef _OPENMP
+  /**
+   * \brief This function will update the store values of the parameters of the Ecosystems used with OpenMP
+   * \param v is the DoubleVector that store the values of the parameters of the main Ecosystem
+   */
+  void Update(const DoubleVector v)const { keeper->Update(v);}
+#endif
   /**
    * \brief This function will reset the Ecosystem information
    */
@@ -257,6 +264,11 @@ public:
    * \return StockPtrVector containing all the stocks used in the simulation
    */
   StockPtrVector& getModelStockVector() { return stockvec; };
+  /**
+   * \brief This function will return the DoubleVector used to store the values of the parameters
+   * \return values the return of the method getValues from Keeper
+   */
+  DoubleVector getValues() {return keeper->getValues();}
   /**
    * \brief This is the flag used to denote whether the user has interrupted the current model run
    */

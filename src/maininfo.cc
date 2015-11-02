@@ -78,6 +78,10 @@ MainInfo::~MainInfo() {
     delete[] strMainGadgetFile;
     strMainGadgetFile = NULL;
   }
+  if (seed != NULL) {
+	  delete[] seed;
+	  seed = NULL;
+  }
 }
 
 void MainInfo::read(int aNumber, char* const aVector[]) {
@@ -87,6 +91,10 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
     return;
   }
 
+  seed = new unsigned[3];
+  seed[0] = 0;
+  seed[1] = 0;
+  seed[2] = 0;
   int k = 1;
   while (k < aNumber) {
     if (strcasecmp(aVector[k], "-l") == 0) {
@@ -100,8 +108,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 #endif
 
     } else if (strcasecmp(aVector[k], "-s") == 0) {
-      runstochastic = 1;
-
+        runstochastic = 1;
     } else if (strcasecmp(aVector[k], "-m") == 0) {
       ifstream infile;
       CommentStream incomment(infile);
@@ -220,7 +227,26 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
       if (k == aNumber - 1)
         this->showCorrectUsage(aVector[k]);
       k++;
-      srand(atoi(aVector[k]));
+      seed[0] = atoi(aVector[k]);
+      srand(seed[0]);
+      //seedM = seed to set the metropolis acceptance in SA
+    } else if (strcasecmp(aVector[k], "-seedM") == 0) {
+        //JMB experimental setting of random number seed from the commandline
+        //if the "seed" is also specified in the optinfo file then that will override
+        //any seed that is specified on the commandline
+        if (k == aNumber - 1)
+          this->showCorrectUsage(aVector[k]);
+        k++;
+        seed[1] = atoi(aVector[k]);
+        //seedP = seed to set the orden of evaluation of the parameter in SA
+    } else if (strcasecmp(aVector[k], "-seedP") == 0) {
+        //JMB experimental setting of random number seed from the commandline
+        //if the "seed" is also specified in the optinfo file then that will override
+        //any seed that is specified on the commandline
+        if (k == aNumber - 1)
+          this->showCorrectUsage(aVector[k]);
+        k++;
+        seed[2] = atoi(aVector[k]);
 
     } else if (strcasecmp(aVector[k], "-maxratio") == 0) {
       //JMB experimental setting of maximum ratio of stock consumed in one timestep
@@ -234,6 +260,23 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 
     k++;
   }
+
+  if (seed[0] == 0) {
+	  seed[0] = unsigned(time(NULL));
+	  if (seed[1] == 0)
+		  seed[1] = unsigned(time(NULL));
+	  if (seed[2] == 0)
+		  seed[2] = unsigned(time(NULL));
+  } else {
+	  if (seed[1] == 0)
+		  seed[1] = seed[0];
+	  if (seed[2] == 0)
+		  seed[2] = seed[0];
+  }
+
+
+
+
 }
 
 void MainInfo::checkUsage(const char* const inputdir, const char* const workingdir) {

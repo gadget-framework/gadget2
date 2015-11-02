@@ -1,6 +1,14 @@
 #include "ecosystem.h"
 #include "runid.h"
 #include "global.h"
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
+#ifdef _OPENMP
+extern Ecosystem** EcoSystems;
+//extern StochasticData* data;
+#endif
 
 Ecosystem::Ecosystem(const MainInfo& main) : printinfo(main.getPI()) {
 
@@ -32,7 +40,9 @@ Ecosystem::Ecosystem(const MainInfo& main) : printinfo(main.getPI()) {
       infile.open(filename, ios::in);
       handle.checkIfFailure(infile, filename);
       handle.Open(filename);
-      this->readOptimisation(commin);
+      unsigned seed;
+      main.getForcePrint();
+      this->readOptimisation(commin, main.getSeed());
       handle.Close();
       infile.close();
       infile.clear();
@@ -101,7 +111,17 @@ void Ecosystem::Reset() {
 void Ecosystem::Optimise() {
   int i;
   for (i = 0; i < optvec.Size(); i++) {
-    optvec[i]->OptimiseLikelihood();
+#ifdef _OPENMP
+	  int j, numThr = omp_get_max_threads ( );
+	  DoubleVector v = this->getValues();
+	  for (j = 0; j < numThr; j++)
+		  EcoSystems[j]->Update(v);
+#endif
+#ifdef SPECULATIVE
+	  optvec[i]->OptimiseLikelihoodOMP();
+#else
+	  optvec[i]->OptimiseLikelihood();
+#endif
     this->writeOptValues();
   }
 }
@@ -148,7 +168,13 @@ void Ecosystem::writeOptValues() {
   for (i = 0; i < likevec.Size(); i++)
     tmpvec[i] = likevec[i]->getUnweightedLikelihood();
 
-  handle.logMessage(LOGINFO, "\nAfter a total of", funceval, "function evaluations the best point found is");
+  int iters = 0;
+#ifdef _OPENMP
+  int numThr = omp_get_max_threads ( );
+    for (i = 0; i < numThr; i++)
+  	  iters += EcoSystems[i]->getFuncEval();
+#endif
+  handle.logMessage(LOGINFO, "\nAfter a total of", funceval+iters, "function evaluations the best point found is");
   keeper->writeBestValues();
   handle.logMessage(LOGINFO, "\nThe scores from each likelihood component are");
   handle.logMessage(LOGINFO, tmpvec);
