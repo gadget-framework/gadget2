@@ -45,7 +45,7 @@ LIBOBJ = $(patsubst %,$(SRC_DIR)/%,$(_LIBOBJ))
 ##########################################################################
 # 2,5. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler and OpenMP Reproducible
 CXX = g++
-LIBDIRS = -L. -L/usr/local/lib
+LIBDIRS = -L. -L/usr/local/lib -I $(INC_DIR)
 LIBRARIES = -lm
 CXXFLAGS = $(DEFINE_FLAGS) -fopenmp
 _OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) 
