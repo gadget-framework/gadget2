@@ -31,7 +31,9 @@ This document is the developers manual for Gadget, and describes the classes, fu
 #include <vector>
 #include <signal.h>
 #include <unistd.h>
+#ifdef NOT_WINDOWS
 #include <sys/utsname.h>
+#endif
 #include <sys/param.h>
 
 /* This is a nasty hack to use the functions in the std namespace */
@@ -50,8 +52,8 @@ using namespace std;
 #endif
 
 /* Also defined are some of the constants used by Gadget */
-const int MaxStrLength = 129;                 /* 128 + 1 */
-const int LongString = 4097;                  /* 4Kb + 1 */
+const int MaxStrLength = 513;                 /* 128 + 1 */
+const int LongString = 8193;                  /* 4Kb + 1 */
 const double verybig = 1e+10;
 const double rathersmall = 1e-10;
 /* machine accuracy for doubles is apparently 2.2204460492503131e-16 */
