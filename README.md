@@ -10,7 +10,7 @@ To compile Gadget one needs a working C++ compiler and a version of Make install
 ## Linux
 This should be install automatically on most distributions but on ubuntu one needs to install build-essentials:
 
-  sudo apt-get install build-essential
+>  sudo apt-get install build-essential
   
 
 ## MacOsX
@@ -22,11 +22,11 @@ Easiest way is to install [Rtools](https://cran.r-project.org/bin/windows/Rtools
 # Compile and install
 Make your way to the source folder and simply type:
   
-  make
+>  make
   
 If you want install for all users of the computer move the resulting gadget executable to a location in the system path. On *nix based system you can simply type:
   
-  sudo make install 
+>  sudo make install 
 
 
 # Acknowledgements
