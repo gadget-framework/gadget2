@@ -151,10 +151,12 @@ There are 2 age aggregation files - one that lists the possible ages individuall
 	;
 	allages    1  2  3  4  5  6  7  8  9  10
 
-### Area Aggregation File Although there is only one area in this
-example, it is still necessary to define a area aggregation file. This
-is because it defines a text label that is to be used when inputting
-and outputting the data for this example.
+### Area Aggregation File
+
+Although there is only one area in this example, it is still necessary
+to define a area aggregation file. This is because it defines a text
+label that is to be used when inputting and outputting the data for
+this example.
 
 	;
 	; Area aggregation file - only one area
@@ -273,20 +275,21 @@ growth of the stock. The growth function used in this example is an
 expanded form of the Von Bertalanffy growth function, split so that
 the increase in weight is calculated first, and then the change in
 weight is used to calculate a change in length, as shown in equation 1
-and equation 4 below:$\displaystyle \Delta W_i = \Delta t q_0
-e^{q_1T}\left(\left( \frac{W_i}{q_2} \right)^{q_4} - \left(
-\frac{W_i}{q_3} \right)^{q_5} \right)$ (1) $\displaystyle r =
-\frac{W - \left( p_{0} + p_{8} \left( p_{1} + p_{2}p_{8} \right)
-\right) W_{ref}}{W}$ (2) $\displaystyle f(x) = \begin{cases}0 &
+and equation 4 below:
+
+* $\Delta W_i = \Delta t q_0 e^{q_1T}\left(\left( \frac{W_i}{q_2}
+\right)^{q_4} - \left(\frac{W_i}{q_3} \right)^{q_5} \right)$
+* $r = \frac{W - \left( p_{0} + p_{8} \left( p_{1} + p_{2}p_{8} \right)
+\right) W_{ref}}{W}$
+* $f(x) = \begin{cases}0 &
 \textrm{if $p_{3} + p_{4}x \leq 0$} \\ p_......$p_{3} + p_{4}x \geq
-p_{5}$} \\ p_{3} + p_{4}x & \textrm{otherwise} \end{cases}$ (3)
-$\displaystyle \Delta L_i = \frac{\Delta W_i} {p_{6} p_{7} l^{p_{7} -
-1}} f(r)$ (4)
+p_{5}$} \\ p_{3} + p_{4}x & \textrm{otherwise} \end{cases}$
+* $\Delta L_i = \frac{\Delta W_i} {p_{6} p_{7} l^{p_{7} -1}} f(r)$ (4)
 
 where:
-< Δt 	 is the length of the timestep
-< T 	 is the temperature
-< Wref 	 is the reference weight
+* < Δt 	 is the length of the timestep
+* < T 	 is the temperature
+* < Wref 	 is the reference weight
 
 For this example, q1 is set to zero, removing the temperature
 dependance from the equation, and q2 is set equal to q3, further
