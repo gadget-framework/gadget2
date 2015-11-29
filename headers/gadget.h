@@ -31,7 +31,9 @@ This document is the developers manual for Gadget, and describes the classes, fu
 #include <vector>
 #include <signal.h>
 #include <unistd.h>
+#ifdef NOT_WINDOWS
 #include <sys/utsname.h>
+#endif
 #include <sys/param.h>
 
 /* This is a nasty hack to use the functions in the std namespace */

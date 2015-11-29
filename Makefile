@@ -7,7 +7,11 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
               -Wuninitialized -W -pedantic 
 
 #DEFINE_FLAGS = -D DEBUG -D INTERRUPT_HANDLER -g -O
-DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -I headers/
+ifeq ($(OS),Windows_NT)
+	DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -I headers/ 
+else
+	DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -I headers/ -D NOT_WINDOWS
+endif
 #-s
 
 INC_DIR = ./headers
