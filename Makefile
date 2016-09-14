@@ -107,6 +107,7 @@ gadget	:	$(OBJECTS)
 install	:	$(GADGET)
 		strip $(GADGET)
 		cp $(GADGET) /usr/local/bin/
+		mkdir -p /usr/local/man/man1/
 		cp gadget.1 /usr/local/man/man1/
 
 ##########################################################################
