@@ -3,12 +3,13 @@
 #include "errorhandler.h"
 #include "gadget.h"
 #include "global.h"
+#include "agebandmatrix.h"
 
 void PopStatistics::calcStatistics(const PopInfoIndexVector& pop,
   const LengthGroupDivision* const lgrpdiv, int calcweight) {
 
   PopInfo sum;
-  int i, offset;
+  int i, offset; 
   double tmp;
 
   if (pop.Size() != lgrpdiv->numLengthGroups())
@@ -42,3 +43,38 @@ void PopStatistics::calcStatistics(const PopInfoIndexVector& pop,
     totalnumber = 0.0;
   }
 }
+
+void PopStatistics::calcStatistics(const AgeBandMatrix& agelenum, int lengr) {
+
+  PopInfo sum;
+  int age;
+  double weig, totn, weigt;
+  
+// loop over the ages to find specific length group else go to next age
+
+  meanweight = totalnumber= 0.0;
+  for (age = agelenum.minAge(); age <= agelenum.maxAge(); age++) {
+    weig <= 0.0;
+    totn <=0.0;
+    weigt <= 0.0;
+
+    if ((handle.getLogLevel() >= LOGWARN))
+      if ((isZero((agelenum[age][lengr]).W)) && (!((agelenum[age][lengr]).N)))
+        handle.logMessage(LOGWARN, "Warning in popstatistics - non-zero population has zero mean weight");
+
+    sum += agelenum[age][lengr];
+    weig = sum.W;
+    
+    totn += (agelenum[age][lengr]).N;
+
+    weigt= weig*totn;
+
+  }
+  meanweight += weigt;
+  totalnumber += totn;
+  meanweight /= totalnumber;
+}
+
+
+
+
