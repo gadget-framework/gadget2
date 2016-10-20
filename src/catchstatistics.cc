@@ -12,14 +12,14 @@
 #include "global.h"
 
 CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const Area,
-  const TimeClass* const TimeInfo, double weight, const char* name)
+				 const TimeClass* const TimeInfo, double weight, const char* name)
   : Likelihood(CATCHSTATISTICSLIKELIHOOD, weight, name), alptr(0) {
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
   int i, j;
-  int numarea = 0, numage = 0;
-
+  int numarea = 0, numage = 0, numlen = 0;
+  
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
   strncpy(datafilename, "", MaxStrLength);
@@ -32,6 +32,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   strncpy(functionname, "", MaxStrLength);
   readWordAndValue(infile, "datafile", datafilename);
   readWordAndValue(infile, "function", functionname);
+
   //JMB - changed to make the reading of overconsumption optional
   infile >> ws;
   char c = infile.peek();
@@ -47,12 +48,16 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     functionnumber = 1;
   else if ((strcasecmp(functionname, "lengthgivenvar") == 0) || (strcasecmp(functionname, "lengthgivenstddev") == 0))
     functionnumber = 2;
-  else if ((strcasecmp(functionname, "weightgivenvar") == 0) || (strcasecmp(functionname, "weightgivenstddev") == 0))
+  else if ((strcasecmp(functionname, "weiguhtgivenvar") == 0) || (strcasecmp(functionname, "weightgivenstddev") == 0))
     functionnumber = 3;
   else if ((strcasecmp(functionname, "weightnovar") == 0) || (strcasecmp(functionname, "weightnostddev") == 0))
     functionnumber = 4;
   else if ((strcasecmp(functionname, "lengthnovar") == 0) || (strcasecmp(functionname, "lengthnostddev") == 0))
     functionnumber = 5;
+  else if ((strcasecmp(functionname, "weightgivenvarlen") == 0) || (strcasecmp(functionname, "weightgivenstddevlen") == 0))
+    functionnumber = 6;
+  else if ((strcasecmp(functionname, "weightnovarlen") == 0) || (strcasecmp(functionname, "weightnostddevlen") == 0))
+    functionnumber = 7;  
   else
     handle.logFileMessage(LOGFAIL, "\nError in catchstatistics - unrecognised function", functionname);
 
@@ -66,6 +71,18 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   datafile.close();
   datafile.clear();
 
+  //read optionally from length aggregation file
+  if ((functionnumber==6) || (functionnumber==7)){
+    readWordAndValue(infile, "lenaggfile", aggfilename);
+    datafile.open(aggfilename, ios::in);
+    handle.checkIfFailure(datafile, aggfilename);
+    handle.Open(aggfilename);
+    numlen = readAggregation(subdata, lengths, lenindex);
+    handle.Close();
+    datafile.close();
+    datafile.clear();
+  } 
+
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
   datafile.open(aggfilename, ios::in);
@@ -75,11 +92,12 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   handle.Close();
   datafile.close();
   datafile.clear();
-
+  
   //Must change from outer areas to inner areas.
   for (i = 0; i < areas.Nrow(); i++)
-    for (j = 0; j < areas.Ncol(i); j++)
+    for (j = 0; j < areas.Ncol(i); j++){
       areas[i][j] = Area->getInnerArea(areas[i][j]);
+    }
 
   //read in the fleetnames
   i = 0;
@@ -113,117 +131,202 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
-  datafile.open(datafilename, ios::in);
-  handle.checkIfFailure(datafile, datafilename);
-  handle.Open(datafilename);
-  readStatisticsData(subdata, TimeInfo, numarea, numage);
-  handle.Close();
-  datafile.close();
-  datafile.clear();
+  //different data names if statistics is by length
+  if ((functionnumber==6) || (functionnumber==7)){
+    datafile.open(datafilename, ios::in);
+    handle.checkIfFailure(datafile, datafilename);
+    handle.Open(datafilename);
+    readStatisticsData(subdata, TimeInfo, numarea, 0, numlen);
+    handle.Close();
+    datafile.close();
+    datafile.clear();
+  } else {
+    datafile.open(datafilename, ios::in);
+    handle.checkIfFailure(datafile, datafilename);
+    handle.Open(datafilename);
+    readStatisticsData(subdata, TimeInfo, numarea, numage, 0);
+    handle.Close();
+    datafile.close();
+    datafile.clear();
+  }
 }
 
 void CatchStatistics::readStatisticsData(CommentStream& infile,
-  const TimeClass* TimeInfo, int numarea, int numage) {
+					 const TimeClass* TimeInfo, int numarea, int numage, int numlen) {
 
   int i, year, step;
   double tmpnumber, tmpmean, tmpstddev;
-  char tmparea[MaxStrLength], tmpage[MaxStrLength];
+  char tmparea[MaxStrLength], tmpage[MaxStrLength], tmplen[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
+  strncpy(tmplen, "", MaxStrLength);
   int keepdata, needvar, readvar;
-  int timeid, ageid, areaid, count, reject;
-
+  int timeid, ageid, lenid, areaid, count, reject;
+  
+  //NK - add cases 6 and 7 (weight at length)
   readvar = 0;
   needvar = 0;
   switch (functionnumber) {
-    case 1:
-      readvar = 0;
-      needvar = 1;
-      break;
-    case 2:
-    case 3:
-      readvar = 1;
-      needvar = 1;
-      break;
-    case 4:
-    case 5:
-      break;
-    default:
-      handle.logMessage(LOGWARN, "Warning in catchstatistics - unrecognised function", functionname);
-      break;
+  case 1:
+    readvar = 0;
+    needvar = 1;
+    break;
+  case 2:
+  case 3:
+  case 6:
+    readvar = 1;
+    needvar = 1;
+    break;
+  case 4:
+  case 5:
+  case 7:
+    break;
+  default:
+    handle.logMessage(LOGWARN, "Warning in catchstatistics 1 - unrecognised function", functionname);
+    break;
   }
 
-  //Check the number of columns in the inputfile
+//Check the number of columns in the inputfile
   infile >> ws;
+
   if ((readvar) && (countColumns(infile) != 7))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 7");
   else if ((!readvar) && (countColumns(infile) != 6))
     handle.logFileMessage(LOGFAIL, "wrong number of columns in inputfile - should be 6");
 
+
   year = step = count = reject = 0;
   while (!infile.eof()) {
-    keepdata = 1;
-    if (readvar)
-      infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> tmpstddev >> ws;
-    else
-      infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> ws;
+   
+    if ((functionnumber==6) || (functionnumber==7)){
+      keepdata = 1;
+      if (readvar)
+	infile >> year >> step >> tmparea >> tmplen >> tmpnumber >> tmpmean >> tmpstddev >> ws;
+      else
+	infile >> year >> step >> tmparea >> tmplen >> tmpnumber >> tmpmean >> ws;
+       
+      //crude check to see if something has gone wrong and avoid infinite loops
+      if (strlen(tmparea) == 0)
+	handle.logFileMessage(LOGFAIL, "failed to read data from file");
 
-    //crude check to see if something has gone wrong and avoid infinite loops
-    if (strlen(tmparea) == 0)
-      handle.logFileMessage(LOGFAIL, "failed to read data from file");
-
-    //if tmparea is in areaindex find areaid, else dont keep the data
-    areaid = -1;
-    for (i = 0; i < areaindex.Size(); i++)
-      if (strcasecmp(areaindex[i], tmparea) == 0)
-        areaid = i;
+      //if tmparea is in areaindex find areaid, else dont keep the data
+      areaid = -1;
+      for (i = 0; i < areaindex.Size(); i++)
+	if (strcasecmp(areaindex[i], tmparea) == 0)
+	  areaid = i;
 
     if (areaid == -1)
-      keepdata = 0;
+	keepdata = 0;
+    
+      //if tmplen is in lenindex find lenid, else dont keep the data
+      lenid = -1;
+      for (i = 0; i < lenindex.Size(); i++)
+	if (strcasecmp(lenindex[i], tmplen) == 0)
+	  lenid = i;
 
-    //if tmpage is in ageindex find ageid, else dont keep the data
-    ageid = -1;
-    for (i = 0; i < ageindex.Size(); i++)
-      if (strcasecmp(ageindex[i], tmpage) == 0)
-        ageid = i;
+      if (lenid == -1)
+	keepdata = 0;
 
-    if (ageid == -1)
-      keepdata = 0;
+      //check if the year and step are in the simulation
+      timeid = -1;
+      if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
+	//if this is a new timestep, resize to store the data
+	for (i = 0; i < Years.Size(); i++)
+	  if ((Years[i] == year) && (Steps[i] == step))
+	    timeid = i;
+
+	if (timeid == -1) {
+	  Years.resize(1, year);
+	  Steps.resize(1, step);
+	  likelihoodValues.AddRows(1, numarea, 0.0);
+	  numbers.resize(new DoubleMatrix(numarea, numlen, 0.0));
+	  obsMean.resize(new DoubleMatrix(numarea, numlen, 0.0));
+	  modelMean.resize(new DoubleMatrix(numarea, numlen, 0.0));
+	  if (readvar)
+	    obsStdDev.resize(new DoubleMatrix(numarea, numlen, 0.0));
+	  if (needvar)
+	    modelStdDev.resize(new DoubleMatrix(numarea, numlen, 0.0));
+	  
+	  timeid = (Years.Size() - 1);
+	}
+
+      } else
+	keepdata = 0;
+      
+      if (keepdata == 1) {
+	//statistics data is required, so store it
+	count++;
+	(*numbers[timeid])[areaid][lenid] = tmpnumber;
+	(*obsMean[timeid])[areaid][lenid] = tmpmean;
+	if (readvar)
+	  (*obsStdDev[timeid])[areaid][lenid] = tmpstddev;
+      } else
+	reject++;  //count number of rejected data points read from file
+
+    }else{
+      keepdata = 1;
+      if (readvar)
+	infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> tmpstddev >> ws;
+      else
+	infile >> year >> step >> tmparea >> tmpage >> tmpnumber >> tmpmean >> ws;
+
+      //crude check to see if something has gone wrong and avoid infinite loops
+      if (strlen(tmparea) == 0)
+	handle.logFileMessage(LOGFAIL, "failed to read data from file");
+      
+      //if tmparea is in areaindex find areaid, else dont keep the data
+      areaid = -1;
+      for (i = 0; i < areaindex.Size(); i++)
+	if (strcasecmp(areaindex[i], tmparea) == 0)
+	  areaid = i;
+
+      if (areaid == -1)
+	keepdata = 0;
+
+      //if tmpage is in ageindex find ageid, else dont keep the data
+      ageid = -1;
+      for (i = 0; i < ageindex.Size(); i++)
+	if (strcasecmp(ageindex[i], tmpage) == 0)
+	  ageid = i;
+      
+      if (ageid == -1)
+	keepdata = 0;
 
     //check if the year and step are in the simulation
-    timeid = -1;
-    if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
-      //if this is a new timestep, resize to store the data
-      for (i = 0; i < Years.Size(); i++)
-        if ((Years[i] == year) && (Steps[i] == step))
-          timeid = i;
+      timeid = -1;
+      if ((TimeInfo->isWithinPeriod(year, step)) && (keepdata == 1)) {
+	//if this is a new timestep, resize to store the data
+	for (i = 0; i < Years.Size(); i++)
+	  if ((Years[i] == year) && (Steps[i] == step))
+	    timeid = i;
 
-      if (timeid == -1) {
-        Years.resize(1, year);
-        Steps.resize(1, step);
-        likelihoodValues.AddRows(1, numarea, 0.0);
-        numbers.resize(new DoubleMatrix(numarea, numage, 0.0));
-        obsMean.resize(new DoubleMatrix(numarea, numage, 0.0));
-        modelMean.resize(new DoubleMatrix(numarea, numage, 0.0));
-        if (readvar)
-          obsStdDev.resize(new DoubleMatrix(numarea, numage, 0.0));
-        if (needvar)
-          modelStdDev.resize(new DoubleMatrix(numarea, numage, 0.0));
-        timeid = (Years.Size() - 1);
-      }
+	if (timeid == -1) {
+	  Years.resize(1, year);
+	  Steps.resize(1, step);
+	  likelihoodValues.AddRows(1, numarea, 0.0);
+	  numbers.resize(new DoubleMatrix(numarea, numage, 0.0));
+	  obsMean.resize(new DoubleMatrix(numarea, numage, 0.0));
+	  modelMean.resize(new DoubleMatrix(numarea, numage, 0.0));
+	  if (readvar)
+	    obsStdDev.resize(new DoubleMatrix(numarea, numage, 0.0));
+	  if (needvar)
+	    modelStdDev.resize(new DoubleMatrix(numarea, numage, 0.0));
+	  timeid = (Years.Size() - 1);
+	}
 
-    } else
-      keepdata = 0;
-
-    if (keepdata == 1) {
-      //statistics data is required, so store it
-      count++;
-      (*numbers[timeid])[areaid][ageid] = tmpnumber;
-      (*obsMean[timeid])[areaid][ageid] = tmpmean;
-      if (readvar)
-        (*obsStdDev[timeid])[areaid][ageid] = tmpstddev;
-    } else
-      reject++;  //count number of rejected data points read from file
+      } else
+	keepdata = 0;
+      
+      if (keepdata == 1) {
+	//statistics data is required, so store it
+	count++;
+	(*numbers[timeid])[areaid][ageid] = tmpnumber;
+	(*obsMean[timeid])[areaid][ageid] = tmpmean;
+	if (readvar)
+	  (*obsStdDev[timeid])[areaid][ageid] = tmpstddev;
+      } else
+	reject++;  //count number of rejected data points read from file
+    }
   }
 
   AAT.addActions(Years, Steps, TimeInfo);
@@ -242,6 +345,8 @@ CatchStatistics::~CatchStatistics() {
     delete[] fleetnames[i];
   for (i = 0; i < areaindex.Size(); i++)
     delete[] areaindex[i];
+  for (i = 0; i < lenindex.Size(); i++)
+    delete[] lenindex[i];
   for (i = 0; i < ageindex.Size(); i++)
     delete[] ageindex[i];
   delete aggregator;
@@ -256,6 +361,7 @@ CatchStatistics::~CatchStatistics() {
     delete modelStdDev[i];
   delete[] functionname;
   delete LgrpDiv;
+
 }
 
 void CatchStatistics::Reset(const Keeper* const keeper) {
@@ -396,6 +502,7 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
   aggregator = new FleetPreyAggregator(fleets, stocks, LgrpDiv, areas, ages, overconsumption);
 }
 
+
 void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
 
   if ((!(AAT.atCurrentTime(TimeInfo))) || (isZero(weight)))
@@ -409,6 +516,7 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   if (timeindex == -1)
     handle.logMessage(LOGFAIL, "Error in catchstatistics - invalid timestep");
 
+
   double l = 0.0;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "Calculating likelihood score for catchstatistics component", this->getName());
@@ -420,60 +528,97 @@ void CatchStatistics::addLikelihood(const TimeClass* const TimeInfo) {
   likelihood += l;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "The likelihood score for this component on this timestep is", l);
+
 }
 
 double CatchStatistics::calcLikSumSquares() {
-
-  int area, age;
+  int area, age, lengr;
+  int numlen = LgrpDiv->numLengthGroups();
   double lik, total, simvar, simdiff;
 
   lik = total = simvar = simdiff = 0.0;
   alptr = &aggregator->getSum();
-  for (area = 0; area < areas.Nrow(); area++) {
-    likelihoodValues[timeindex][area] = 0.0;
-    for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
 
-      switch (functionnumber) {
-        case 1:
-          ps.calcStatistics((*alptr)[area][age], LgrpDiv, 0);
-          (*modelMean[timeindex])[area][age] = ps.meanLength();
-          simvar = ps.sdevLength() * ps.sdevLength();
-          (*modelStdDev[timeindex])[area][age] = ps.sdevLength();
+  if ((functionnumber==6) || (functionnumber==7)){
+    for (area = 0; area < areas.Nrow(); area++) {
+      likelihoodValues[timeindex][area] = 0.0;
+
+      for (lengr = 0; lengr < numlen; lengr++) {
+	switch (functionnumber) {
+	case 6:
+          ps.calcStatistics((*alptr)[area], lengr);
+	  (*modelMean[timeindex])[area][lengr] = ps.meanWeight();
+	  simvar = (*obsStdDev[timeindex])[area][lengr] * (*obsStdDev[timeindex])[area][lengr];
           break;
-        case 2:
-          ps.calcStatistics((*alptr)[area][age], LgrpDiv, 0);
-          (*modelMean[timeindex])[area][age] = ps.meanLength();
-          simvar = (*obsStdDev[timeindex])[area][age] * (*obsStdDev[timeindex])[area][age];
-          break;
-        case 3:
-          ps.calcStatistics((*alptr)[area][age], LgrpDiv);
-          (*modelMean[timeindex])[area][age] = ps.meanWeight();
-          simvar = (*obsStdDev[timeindex])[area][age] * (*obsStdDev[timeindex])[area][age];
-          break;
-        case 4:
-          ps.calcStatistics((*alptr)[area][age], LgrpDiv);
-          (*modelMean[timeindex])[area][age] = ps.meanWeight();
-          simvar = 1.0;
-          break;
-        case 5:
-          ps.calcStatistics((*alptr)[area][age], LgrpDiv, 0);
-          (*modelMean[timeindex])[area][age] = ps.meanLength();
+        case 7:
+          ps.calcStatistics((*alptr)[area], lengr);
+          (*modelMean[timeindex])[area][lengr] = ps.meanWeight();
           simvar = 1.0;
           break;
         default:
-          handle.logMessage(LOGWARN, "Warning in catchstatistics - unrecognised function", functionname);
+          handle.logMessage(LOGWARN, "Warning in catchstatistics 3 - unrecognised function", functionname);
           break;
+	}
+	
+	if (!(isZero(simvar))) {
+	  simdiff = (*modelMean[timeindex])[area][lengr] - (*obsMean[timeindex])[area][lengr];
+	  lik = simdiff * simdiff * (*numbers[timeindex])[area][lengr] / simvar;
+	  likelihoodValues[timeindex][area] += lik;
+	  
+	}
+  
       }
-
-      if (!(isZero(simvar))) {
-        simdiff = (*modelMean[timeindex])[area][age] - (*obsMean[timeindex])[area][age];
-        lik = simdiff * simdiff * (*numbers[timeindex])[area][age] / simvar;
-        likelihoodValues[timeindex][area] += lik;
-      }
+      total += likelihoodValues[timeindex][area];
     }
-    total += likelihoodValues[timeindex][area];
+
+  } else{
+    for (area = 0; area < areas.Nrow(); area++) {
+      likelihoodValues[timeindex][area] = 0.0;
+      
+      for (age = (*alptr)[area].minAge(); age <= (*alptr)[area].maxAge(); age++) {
+	switch (functionnumber) {
+	case 1:
+	  ps.calcStatistics((*alptr)[area][age], LgrpDiv, 0);
+	  (*modelMean[timeindex])[area][age] = ps.meanLength();
+	  simvar = ps.sdevLength() * ps.sdevLength();
+	  (*modelStdDev[timeindex])[area][age] = ps.sdevLength();
+	  break;
+	case 2:
+	  ps.calcStatistics((*alptr)[area][age], LgrpDiv, 0);
+	  (*modelMean[timeindex])[area][age] = ps.meanLength();
+	  simvar = (*obsStdDev[timeindex])[area][age] * (*obsStdDev[timeindex])[area][age];
+	  break;
+	case 3:
+	  ps.calcStatistics((*alptr)[area][age], LgrpDiv);
+	  (*modelMean[timeindex])[area][age] = ps.meanWeight();
+	  simvar = (*obsStdDev[timeindex])[area][age] * (*obsStdDev[timeindex])[area][age];
+	  break;
+	case 4:
+	  ps.calcStatistics((*alptr)[area][age], LgrpDiv);
+	  (*modelMean[timeindex])[area][age] = ps.meanWeight();
+	  simvar = 1.0;
+	  break;
+	case 5:
+	  ps.calcStatistics((*alptr)[area][age], LgrpDiv, 0);
+	  (*modelMean[timeindex])[area][age] = ps.meanLength();
+	  simvar = 1.0;
+	  break;
+	default:
+	  handle.logMessage(LOGWARN, "Warning in catchstatistics 2 - unrecognised function", functionname);
+	  break;
+	}
+	  
+	if (!(isZero(simvar))) {
+	  simdiff = (*modelMean[timeindex])[area][age] - (*obsMean[timeindex])[area][age];
+	  lik = simdiff * simdiff * (*numbers[timeindex])[area][age] / simvar;
+	  likelihoodValues[timeindex][area] += lik;
+	}
+      }
+      total += likelihoodValues[timeindex][area];
+    }
   }
   return total;
+
 }
 
 void CatchStatistics::printLikelihood(ofstream& outfile, const TimeClass* const TimeInfo) {
@@ -481,7 +626,7 @@ void CatchStatistics::printLikelihood(ofstream& outfile, const TimeClass* const 
   if (!AAT.atCurrentTime(TimeInfo))
     return;
 
-  int i, area, age;
+  int i, area, age, length;
   timeindex = -1;
   for (i = 0; i < Years.Size(); i++)
     if ((Years[i] == TimeInfo->getYear()) && (Steps[i] == TimeInfo->getStep()))
@@ -489,40 +634,73 @@ void CatchStatistics::printLikelihood(ofstream& outfile, const TimeClass* const 
   if (timeindex == -1)
     handle.logMessage(LOGFAIL, "Error in catchstatistics - invalid timestep");
 
-  for (area = 0; area < (*modelMean[timeindex]).Nrow(); area++) {
-    for (age = 0; age < (*modelMean[timeindex]).Ncol(area); age++) {
-      outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
-        << Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
-        << setw(printwidth) << ageindex[age] << sep << setprecision(printprecision)
-        << setw(printwidth) << (*numbers[timeindex])[area][age]
-        << sep << setprecision(largeprecision) << setw(largewidth);
-
-      //JMB crude filter to remove the 'silly' values from the output
-      if ((*modelMean[timeindex])[area][age] < rathersmall)
-        outfile << 0;
-      else
-        outfile << (*modelMean[timeindex])[area][age];
-
-      switch (functionnumber) {
+  if ((functionnumber==6) || (functionnumber==7)){
+    for (area = 0; area < (*modelMean[timeindex]).Nrow(); area++) {
+      for (length = 0; length < (*modelMean[timeindex]).Ncol(area); length++) {
+	outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+		<< Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
+		<< setw(printwidth) << lenindex[length] << sep << setprecision(printprecision)
+		<< setw(printwidth) << (*numbers[timeindex])[area][length]
+		<< sep << setprecision(largeprecision) << setw(largewidth);
+	
+	
+	//JMB crude filter to remove the 'silly' values from the output
+	if ((*modelMean[timeindex])[area][length] < rathersmall)
+	  outfile << 0;
+	else
+	  outfile << (*modelMean[timeindex])[area][length];
+	
+	switch (functionnumber) {
+        case 6:
+          outfile << sep << setprecision(printprecision) << setw(printwidth)
+            << (*obsStdDev[timeindex])[area][length] << endl;
+          break;
+        case 7:
+          outfile << endl;
+          break;
+        default:
+          handle.logMessage(LOGWARN, "Warning in catchstatistics 5 - unrecognised function", functionname);
+          break;
+	}
+      }
+    }
+  }else{
+    for (area = 0; area < (*modelMean[timeindex]).Nrow(); area++) {
+      for (age = 0; age < (*modelMean[timeindex]).Ncol(area); age++) {
+	outfile << setw(lowwidth) << Years[timeindex] << sep << setw(lowwidth)
+		<< Steps[timeindex] << sep << setw(printwidth) << areaindex[area] << sep
+		<< setw(printwidth) << ageindex[age] << sep << setprecision(printprecision)
+		<< setw(printwidth) << (*numbers[timeindex])[area][age]
+		<< sep << setprecision(largeprecision) << setw(largewidth);
+	
+	//JMB crude filter to remove the 'silly' values from the output
+	if ((*modelMean[timeindex])[area][age] < rathersmall)
+	  outfile << 0;
+	else
+	  outfile << (*modelMean[timeindex])[area][age];
+	
+	switch (functionnumber) {
         case 1:
           outfile << sep << setprecision(printprecision) << setw(printwidth)
-            << (*modelStdDev[timeindex])[area][age] << endl;
+		  << (*modelStdDev[timeindex])[area][age] << endl;
           break;
         case 2:
         case 3:
           outfile << sep << setprecision(printprecision) << setw(printwidth)
-            << (*obsStdDev[timeindex])[area][age] << endl;
+		  << (*obsStdDev[timeindex])[area][age] << endl;
           break;
         case 4:
         case 5:
           outfile << endl;
           break;
         default:
-          handle.logMessage(LOGWARN, "Warning in catchstatistics - unrecognised function", functionname);
+          handle.logMessage(LOGWARN, "Warning in catchstatistics 4 - unrecognised function", functionname);
           break;
+	}
       }
     }
   }
+  
 }
 
 void CatchStatistics::printSummary(ofstream& outfile) {
