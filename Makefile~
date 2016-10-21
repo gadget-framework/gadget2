@@ -10,7 +10,7 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
 ifeq ($(OS),Windows_NT)
 	DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -I headers/ 
 else
-	DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -I headers/ -D NOT_WINDOWS
+	DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -g -I headers/ -D NOT_WINDOWS
 endif
 #-s
 

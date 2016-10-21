@@ -2325,6 +2325,7 @@ datafile             <name for the datafile>
 function             <function name>
 overconsumption      <0 or 1> ; 1 to take overconsumption into account
 areaaggfile          <area aggregation file specifying areas>
+lenaggfile			 <length aggregation file specifying lengthes; is optional and used only in weight at length likelihood>
 ageaggfile           <age aggregation file specifying ages>
 fleetnames           <vector of the names of the fleets>
 stocknames           <vector of the names of the stocks>
@@ -2336,14 +2337,16 @@ The optional flag $<$overconsumption$>$ is used to specify whether any over cons
 The $<$fleetnames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  Similarly, the $<$stocknames$>$ vector contains a list of all the stocks to be aggregated into a single pseudo stock.
 
 \bigskip
-The $<$function name$>$ defines what likelihood function is to be used to compare the modelled statistical data to the input statistical data.  Currently, there are 5 likelihood functions defined, and the format of the statistical data given in the file specified by $<$datafile$>$ depends on the likelihood function used.  The valid functions are:
+The $<$function name$>$ defines what likelihood function is to be used to compare the modelled statistical data to the input statistical data.  Currently, there are 7 likelihood functions defined, and the format of the statistical data given in the file specified by $<$datafile$>$ depends on the likelihood function used.  The valid functions are:
 
 \bigskip
 lengthcalcstddev - use a weighted sum of squares of mean length\newline
 lengthgivenstddev - use a weighted sum of squares of mean length with given standard deviation\newline
 weightgivenstddev - use a weighted sum of squares of mean weight with given standard deviation\newline
 weightnostddev - use a unweighted sum of squares of mean weight\newline
-lengthnostddev - use a unweighted sum of squares of mean length
+lengthnostddev - use a unweighted sum of squares of mean length\newline
+weightgivenstddevlen - use a weighted sum of squares of mean weight at length with given standard deviation\newline
+weightnostddevlen - use a unweighted sum of squares of mean weight at length
 
 \subsection{Weighted Sum of Squares of Mean Length}
 This likelihood function calculates the likelihood score based on a weighted sum of squares of the mean length, with the weighting given by calculating the variance of length of the modelled population, as shown in equation~\ref{eq:catchstat1} below:
@@ -2452,6 +2455,50 @@ For this CatchStatistics function, the format of the statistical data required i
 \end{verbatim}}
 
 where $<$number$>$ is the number of samples for the timestep/area/age combination, and $<$mean$>$ is the mean length of these samples.
+
+\subsection{Weighted Sum of Squares of Mean Weight \newline at Length With Given Standard Deviation}
+This likelihood function calculates the likelihood score based on a weighted sum of squares of the mean weight, with the weighting given the variance of weight of the input population, as shown in equation~\ref{eq:catchstat6} below:
+
+\begin{equation}\label{eq:catchstat6}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it lengths} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)
+\end{equation}
+
+where:\newline
+$<$ x $>$ is the sample mean weight from the data\newline
+$<\mu>$ is the mean weight calculated from the model\newline
+$<$ s $>$ is the standard deviation of the weight from the data\newline
+$<$ N $>$ is the sample size
+
+\bigskip
+For this CatchStatistics function, the format of the statistical data required in the file specified by $<$datafile$>$ is given below:
+
+{\small\begin{verbatim}
+<year>  <step>  <area>  <length>  <number>  <mean>  <stddev>
+\end{verbatim}}
+
+where $<$number$>$ is the number of samples for the timestep/area/length combination, $<$mean$>$ is the mean weight of these samples and $<$stddev$>$ is the standard deviation of the weight of these samples.
+
+\subsection{Unweighted Sum of Squares of Mean Weight at Length}
+This likelihood function calculates the likelihood score based on a unweighted sum of squares of the mean weight, with the variance of the weight of the population assumed to be 1, as shown in equation~\ref{eq:catchstat7} below:
+
+\begin{equation}\label{eq:catchstat7}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it lengths} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)
+\end{equation}
+
+where:\newline
+$<$ x $>$ is the sample mean weight from the data\newline
+$<\mu>$ is the mean weight calculated from the model\newline
+$<$ N $>$ is the sample size
+
+\bigskip
+For this CatchStatistics function, the format of the statistical data required in the file specified by $<$datafile$>$ is given below:
+
+{\small\begin{verbatim}
+<year>  <step>  <area>  <length>  <number>  <mean>
+\end{verbatim}}
+
+where $<$number$>$ is the number of samples for the timestep/area/age combination, and $<$mean$>$ is the mean weight of these samples.
+
 
 \section{StockDistribution}\label{sec:stockdist}
 The StockDistribution likelihood component is used to compare distribution data sampled from the model with distribution data sampled from landings or surveys for different stocks within the Gadget model.  This is typically used to compare Gadget stocks that are based on the same species, but have differing biological properties (eg. immature and mature fish).  The distribution data can either be aggregated into age groups (giving a distribution of length groups for each age), length groups (giving a distribution of age groups for each length) or into age-length groups.  The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the landings.
