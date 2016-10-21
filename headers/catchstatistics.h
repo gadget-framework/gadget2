@@ -73,7 +73,7 @@ private:
    * \param numlen is the number of length groups that the likelihood data covers
    */
   void readStatisticsData(CommentStream& infile, const TimeClass* TimeInfo,
-			  int numarea, int numage, int numlen);
+                          int numarea, int numage, int numlen);
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a sum of squares function
    * \return likelihood score
@@ -134,11 +134,11 @@ private:
    */
   IntMatrix ages;
   /**
-   * \brief This is the CharPtrVector of the names of the areas
+   * \brief This is the IntMatrix used to store length information
    */
   IntMatrix lengths;
   /**
-   * \brief This is the CharPtrVector of the names of the length
+   * \brief This is the CharPtrVector of the names of the areas
    */
   CharPtrVector areaindex;
   /**
@@ -146,11 +146,11 @@ private:
    */
   CharPtrVector ageindex;
   /**
-   * \brief This is the flag to denote whether the likelihood calculation should take overconsumption into account or not
+   * \brief This is the CharPtrVector of the names of the length groups
    */
   CharPtrVector lenindex;
   /**
-   * \brief the names of the length groups
+   * \brief This is the flag to denote whether the likelihood calculation should take overconsumption into account or not
    */
   int overconsumption;
   /**
