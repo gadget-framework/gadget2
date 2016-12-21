@@ -431,8 +431,9 @@ void CatchStatistics::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector&
       if ((strcasecmp(stocks[i]->getName(), stocks[j]->getName()) == 0) && (i != j))
         handle.logMessage(LOGFAIL, "Error in catchstatistics - repeated stock", stocks[i]->getName());
 
-  LgrpDiv = new LengthGroupDivision(*(stocks[0]->getPrey()->getLengthGroupDiv()));
-  for (i = 1; i < stocks.Size(); i++)
+  for (i = 0; i < stocks.Size(); i++)
+    LgrpDiv = new LengthGroupDivision(*(stocks[i]->getPrey()->getLengthGroupDiv()));
+  for (i = 0; i < stocks.Size(); i++)
     if (!LgrpDiv->Combine(stocks[i]->getPrey()->getLengthGroupDiv()))
       handle.logMessage(LOGFAIL, "Error in catchstatistics - length groups for preys not compatible");
 
