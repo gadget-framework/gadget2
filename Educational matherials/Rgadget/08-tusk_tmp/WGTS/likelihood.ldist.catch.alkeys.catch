@@ -1,0 +1,105 @@
+; Likelihood file - created in Rgadget
+; WGTS/likelihood.ldist.catch.alkeys.catch - 2015-05-27
+[component]
+name		alkeys.catch
+weight		0.847457627118644
+type		catchdistribution
+datafile		Data/catchalkeys.dat
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/age.agg
+lenaggfile		AggFiles/len2.agg
+fleetnames		comm
+stocknames		tusk
+;
+[component]
+name		alkeys.survey
+weight		0.000118934348239772
+type		catchdistribution
+datafile		Data/surveyalkeys.dat
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/age.agg
+lenaggfile		AggFiles/len2.agg
+fleetnames		survey
+stocknames		tusk
+;
+[component]
+name		ldist.catch
+weight		0.147232037691402
+type		catchdistribution
+datafile		Data/catchledist.dat
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/allage.agg
+lenaggfile		AggFiles/len2.agg
+fleetnames		comm
+stocknames		tusk
+;
+[component]
+name		ldist.survey
+weight		3.97614314115308e-06
+type		catchdistribution
+datafile		Data/surveyledist.dat
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/allage.agg
+lenaggfile		AggFiles/len2.agg
+fleetnames		survey
+stocknames		tusk
+;
+[component]
+name		si2039
+weight		0.087719298245614
+type		surveyindices
+datafile		Data/surveyindices.dat
+sitype		lengths
+areaaggfile		AggFiles/allarea.agg
+lenaggfile		AggFiles/si2039len.agg
+stocknames		tusk
+fittype		fixedslopeloglinearfit
+slope		1
+;
+[component]
+name		si4069
+weight		0.113340133741358
+type		surveyindices
+datafile		Data/surveyindices.dat
+sitype		lengths
+areaaggfile		AggFiles/allarea.agg
+lenaggfile		AggFiles/si4069len.agg
+stocknames		tusk
+fittype		fixedslopeloglinearfit
+slope		1
+;
+[component]
+name		si70110
+weight		0.0436681222707424
+type		surveyindices
+datafile		Data/surveyindices.dat
+sitype		lengths
+areaaggfile		AggFiles/allarea.agg
+lenaggfile		AggFiles/si70110len.agg
+stocknames		tusk
+fittype		fixedslopeloglinearfit
+slope		1
+;
+[component]
+name		understocking
+weight		1
+type		understocking
+;
+[component]
+name		bounds
+weight		10
+type		penalty
+datafile		penaltyfile
+;

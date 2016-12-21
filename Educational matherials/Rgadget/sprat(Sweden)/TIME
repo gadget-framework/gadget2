@@ -1,0 +1,7 @@
+; Time file for the SPRAT example
+;
+firstyear       1974
+firststep       1
+lastyear        2013
+laststep        4
+notimesteps     4 3 3 3 3

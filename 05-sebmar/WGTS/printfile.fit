@@ -1,0 +1,77 @@
+; gadget printfile, created in 2014-12-03
+[component]
+type	likelihoodsummaryprinter
+printfile	WGTS/out.fit/likelihoodsummary
+;
+[component]
+type	likelihoodprinter
+likelihood	meanl.sur
+printfile	WGTS/out.fit/meanl.sur
+;
+[component]
+type	likelihoodprinter
+likelihood	meanl.catch
+printfile	WGTS/out.fit/meanl.catch
+;
+[component]
+type	likelihoodprinter
+likelihood	alkeys.catch
+printfile	WGTS/out.fit/alkeys.catch
+;
+[component]
+type	likelihoodprinter
+likelihood	alkeys.sur
+printfile	WGTS/out.fit/alkeys.sur
+;
+[component]
+type	likelihoodprinter
+likelihood	Ice.CommLD
+printfile	WGTS/out.fit/Ice.CommLD
+;
+[component]
+type	likelihoodprinter
+likelihood	Green.CommLD
+printfile	WGTS/out.fit/Green.CommLD
+;
+[component]
+type	likelihoodprinter
+likelihood	Far.CommLD
+printfile	WGTS/out.fit/Far.CommLD
+;
+[component]
+type	likelihoodprinter
+likelihood	IceSurMar.LD
+printfile	WGTS/out.fit/IceSurMar.LD
+;
+[component]
+type	likelihoodprinter
+likelihood	si1924
+printfile	WGTS/out.fit/si1924
+;
+[component]
+type	likelihoodprinter
+likelihood	si2548
+printfile	WGTS/out.fit/si2548
+;
+[component]
+type	stockstdprinter
+stockname	sebmar
+printfile	WGTS/out.fit/sebmar.std
+yearsandsteps	 all 1
+[component]
+type	stockprinter
+stocknames	sebmar
+areaaggfile	WGTS/print.aggfiles/sebmar.area.agg
+ageaggfile	WGTS/print.aggfiles/sebmar.allages.agg
+lenaggfile	WGTS/print.aggfiles/sebmar.len.agg
+printfile	WGTS/out.fit/sebmar.full
+yearsandsteps	 all 1
+[component]
+type	predatorpreyprinter
+predatornames	Iceland Greenland Faroe IcelandMarchSurvey future
+preynames	sebmar
+areaaggfile	WGTS/print.aggfiles/sebmar.area.agg
+ageaggfile	WGTS/print.aggfiles/sebmar.age.agg
+lenaggfile	WGTS/print.aggfiles/sebmar.alllen.agg
+printfile	WGTS/out.fit/sebmar.prey
+yearsandsteps	all all

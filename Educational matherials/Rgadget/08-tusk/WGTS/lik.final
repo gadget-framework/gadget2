@@ -1,0 +1,68 @@
+; Gadget version 2.2.00-BETA running on hafgeimur.hafro.is Tue Sep 16 15:00:36 2014
+; Listing of the switches used in the current Gadget run
+Linf	tuskgrowergrowthcalcHmodelvariable	
+k	tuskgrowergrowthcalcHmodelvariable	
+bbeta	tuskgrower	
+ic03	tuskinitialcondmeandata	
+ic04	tuskinitialcondmeandata	
+ic05	tuskinitialcondmeandata	
+ic06	tuskinitialcondmeandata	
+ic07	tuskinitialcondmeandata	
+ic08	tuskinitialcondmeandata	
+ic09	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	
+rec1980	tuskrenewaldata	
+recl	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	
+recsdev	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	
+rec1981	tuskrenewaldata	
+rec1982	tuskrenewaldata	
+rec1983	tuskrenewaldata	
+rec1984	tuskrenewaldata	
+rec1985	tuskrenewaldata	
+rec1986	tuskrenewaldata	
+rec1987	tuskrenewaldata	
+rec1988	tuskrenewaldata	
+rec1989	tuskrenewaldata	
+rec1990	tuskrenewaldata	
+rec1991	tuskrenewaldata	
+rec1992	tuskrenewaldata	
+rec1993	tuskrenewaldata	
+rec1994	tuskrenewaldata	
+rec1995	tuskrenewaldata	
+rec1996	tuskrenewaldata	
+rec1997	tuskrenewaldata	
+rec1998	tuskrenewaldata	
+rec1999	tuskrenewaldata	
+rec2000	tuskrenewaldata	
+rec2001	tuskrenewaldata	
+rec2002	tuskrenewaldata	
+rec2003	tuskrenewaldata	
+rec2004	tuskrenewaldata	
+rec2005	tuskrenewaldata	
+rec2006	tuskrenewaldata	
+rec2007	tuskrenewaldata	
+rec2008	tuskrenewaldata	
+rec2009	tuskrenewaldata	
+rec2010	tuskrenewaldata	
+rec2011	tuskrenewaldata	
+recfuture	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	
+L50comm	fleetcommpredatorcommsuitabilityfortuskmodelvariable	
+alphacomm	fleetcommpredatorcommsuitabilityfortuskmodelvariable	fleetcommpredatorcommsuitabilityfortuskmodelvariable	
+L50sur	fleetsurveypredatorsurveysuitabilityfortuskmodelvariable	
+alphasur	fleetsurveypredatorsurveysuitabilityfortuskmodelvariable	fleetsurveypredatorsurveysuitabilityfortuskmodelvariable	
+;
+; Listing of the likelihood components used in the current Gadget run
+;
+; Component	Type	Weight
+alkeys.catch	3	0.219725
+alkeys.survey	3	0.218244
+ldist.catch	3	0.090494
+ldist.survey	3	0.047069
+si2039	1	32.276
+si4069	1	20.0692
+si70110	1	3.26761
+understocking	2	1
+bounds	8	10
+;
+; Listing of the output from the likelihood components for the current Gadget run
+;
+0	       120    70.5101    0.21759    1.58267    1.64681    1.29585   0.748378    0.34376   0.483949   0.249557    1.92985    13.8548    3.34572    2.09998    1.45903    1.20989   0.898467   0.665436     1.9065    1.26584    1.72505     2.2178    1.89959    1.44516    1.15555   0.977303   0.838183   0.561023    1.57741    1.74917     1.3293    1.31371    1.43995    1.72876    1.93686    2.23145    2.47142    2.52036    2.30036    1.89657    1.79063    1.17423   0.591774   0.319013          1     46.256   0.325187    22.6084  0.0994407 		    7676     4993 2.248e+04 1.595e+04    2.641    4.817    21.03        0        0 		   5811.77190062085

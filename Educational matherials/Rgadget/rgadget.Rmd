@@ -1,0 +1,327 @@
+---
+title: "Rgadget"
+author: "Bjarki Þór Elvarsson"
+date: "þri 16.sep 2014"
+output: beamer_presentation
+---
+
+## Interacting with Gadget from R
+- Rgadget (still in development) is a collection of functions that aid in the development of and interact with Gadget models
+- Its core functions are:
+    + gadget.iterative: an implementation of the iterative refweighting algorithm in R.   
+    + gadget.fit: collects output from Gadget and compares to data. 
+    + gadget.ypr: calculates Yield-per-recruit curves for a modeled stock
+    + gadget.forward: projects the state of the modeled ecosystems based on fixed recruitment or with process error.
+    + gadget.boot* : bootstrap variants of functions above
+    + gadget.simulate : independent implementation of Gadget in R (not discussed here)
+
+## Obtaining Rgadget
+- Still under active development and therefor it does not exist in a packaged form.
+- Can be obtained from: 
+    + https://r-forge.r-project.org/projects/rgadget/
+- The package depends on a number of other packages:
+```{r,eval=FALSE}
+install.packages(c('plyr','dplyr','data.table',
+                   'parallel','lubridate',
+                   'stringr','ggplot2',
+                   'gridExtra','reshape2'))
+```
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+source('~/Documents/rgadget/trunk/gadgetFileIO.R')
+source('~/Documents/rgadget/trunk/gadgetfunctions.R')
+source('~/Documents/rgadget/trunk/gadgetClass.R')
+source('~/Documents/rgadget/trunk/gadgetMethods.R')
+source('~/Documents/rgadget/trunk/function.R')
+
+library(plyr)
+library(dplyr)
+library(ggplot2)
+library(grid)
+library(pander)
+setwd('~/Dropbox/gadget-models/08-tusk/')
+```
+## gadget.iterative
+The gadget.iterative functions implements iterative reweighting heuristic for the likelihood components.
+
+The general idea behind the iterative re-weighing is to assign the inverse variance of the fitted residuals as component weights. The variances, and hence the final weights, are calculated according the following algorithm:
+
+- Calculate the initial SS given the initial
+  parametrization. Assign the inverse SS as the initial weight for all
+  likelihood components. 
+- For each likelihood component, do an optimization run with
+  the initial score for that component set to 10000. Then estimate the
+  residual variance using the resulting SS of that component divided
+  by the degrees of freedom ($df^*$), i.e. $\hat{\sigma}^2 = \frac{SS}{df^*}$.
+-  After the optimization set the final weight for that all
+  components as the inverse of the estimated variance from the step above
+  (weight $=1/\hat{\sigma}^2$). 
+
+## gadget.iterative (cont.)
+The effective number of data-points ($df^{*}$) is used as a proxy
+for the degrees of freedom determined from the number of non-zero
+data-points.
+
+- Viewed as satisfactory proxy when the data-set is
+large
+- For smaller data-sets this could be a gross overestimate.
+
+In particular, if the survey indices are weighed on their own while the
+yearly recruitment is estimated they could be over-fitted.  In general 
+problem such as these can
+be solved with component grouping, that is in step 2 the likelihood
+components that should behave similarly, such as survey indices, should
+be heavily weighted and optimized together.
+
+
+
+## Tusk example 
+```{r,eval=FALSE}
+tmp <- 
+  gadget.iterative(rew.sI = TRUE,
+     grouping = list(sind = c('si2039','si4069',
+                              'si70110'),                          
+                     survey = c('ldist.survey',
+                                'alkeys.survey'),                                          
+                     catch = c('ldist.catch',
+                               'alkeys.catch')),                                          
+     params.file = 'params.base',
+     optinfofile = 'optinfofile',
+     wgts = 'WGTS')
+```
+
+
+## gadget.fit
+Gadget-models can produce output by a number of dimensions.
+
+- Specialised "printers" are implemented (see chapter 9 of the userguide)
+- Output can be aggregated using agg files
+- Digesting the output can be an excercise in bookkeeping. 
+- Enter 'gadget.fit':
+    + collects all observation data referred to in the likelihood file
+    + requests predictions/model fit from Gadget based on the dimensions in of the observations
+    + merges the observations and model fit 
+
+## Tusk example (cont.)
+
+```{r,warning=FALSE}
+setwd('~/Dropbox/gadget-models/08-tusk')
+fit <- gadget.fit(mat.par = c(-8.6512,0.1403))
+```
+
+## Tusk -- fit statistics
+```{r,results='asis',echo=FALSE}
+resTable <- fit$resTable[tail(head(names(fit$resTable),-2),-1)]
+names(resTable) <- c('ALKc','ALKs','LDc','LDs','SI 20-39',
+                     'SI 40-69','SI 70-110')
+rownames(resTable) <- c('Catch','Survey','Sind','Final')
+pandoc.table(resTable,
+             split.tables=Inf)
+```
+
+## Tusk -- likelihood summary
+
+```{r,echo=FALSE}
+summary.plot <-
+  ggplot(subset(fit$likelihoodsummary,
+                year!='all'),
+         aes(as.numeric(year), likelihood.value)) +
+  geom_point() + facet_wrap(~component) +theme_bw()+
+  xlab('Year') + ylab('Score')
+summary.plot
+```
+
+## Tusk -- indices
+
+```{r,echo=FALSE}
+tmp <- rbind.fill(fit$sidat,
+                  ddply(fit$sidat,~year, summarise,
+                        number.x = sum(number.x*0.00000659*lower^3.01721 ),
+                        predict = sum(predict*0.00000659*lower^3.01721 ),
+                        upper = sum(upper*0.00000659*lower^3.01721 ),
+                        lower = sum(lower*0.00000659*lower^3.01721 ),
+                        lower = 110, lower = 180,
+                        length = 'Biomass'))
+
+si.fit.survey <-
+  ggplot(tmp, aes(year,number.x)) +
+  geom_point() +
+  geom_line(aes(year,predict)) +
+  geom_linerange(data=subset(tmp,year==max(year)),
+                 aes(year,ymax=number.x,ymin=predict),col='green')+
+  geom_text(data=mutate(subset(tmp,year==min(year)),y=Inf),
+            aes(year,y,label=length), vjust = 2,hjust = -1)+
+  facet_wrap(~length,scale='free_y',ncol=2) + theme_bw() +
+  ylab('Index') + xlab('Year') +
+  theme (panel.margin = unit(0,'cm'), plot.margin = unit(c(0,0,0,0),'cm'),
+         strip.background = element_blank(), strip.text.x = element_blank())
+
+si.fit.survey
+```
+
+## Tusk -- Length distributions
+```{r,echo=FALSE,warning=FALSE}
+ldist.fit.survey <-
+  ggplot(subset(fit$catchdist.fleets,
+                name == 'ldist.survey' ), #& year == '2012'
+         aes(lower,predicted)) +
+  geom_line(aes(lower,observed),col='gray') +
+  facet_wrap(~year+step) + theme_bw() + geom_line() +
+  geom_text(data=mutate(subset(fit$catchdist.fleets,
+              name == 'ldist.survey' & lower==min(lower)),y=Inf),
+            aes(lower,y,label=year), vjust = 2,hjust = -1)+
+  ylab('Proportion') + xlab('length') +
+  theme (axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+         panel.margin = unit(0,'cm'), plot.margin = unit(c(0,0,0,0),'cm'),
+         strip.background = element_blank(), strip.text.x = element_blank())
+ldist.fit.survey
+```
+
+## Tusk -- Biomass estimates
+```{r,echo=FALSE,warning=FALSE}
+ssb.plot <- 
+  ggplot(fit$res.by.year,aes(year,ssb/1000)) +
+  geom_bar(stat='identity') +
+  ylab("SSB (in tons)") + xlab('Year') +  theme_bw() +
+  theme(legend.position = c(0.25,0.75), legend.title = element_blank(),
+        plot.margin = unit(c(0,0,0,0),'cm'))
+ssb.plot
+```
+
+## Tusk -- parameter estimates
+
+```{r,echo=FALSE,warning=FALSE}
+selection.plot <-
+  ggplot(fit$suitability,
+         aes(l,suit,lty=fleet)) +
+  geom_line() +
+  theme_bw() + ylab('Suitability') + xlab('Length') +
+  theme(legend.position = c(0.8,0.25), legend.title = element_blank(),
+        plot.margin = unit(c(0,0,0,0),'cm')) 
+
+
+gr.plot <-
+  ggplot(fit$stock.growth,
+         aes(age,length)) + 
+  geom_line() +
+  theme_bw() + ylab('Length') + xlab('Age') +
+  theme(legend.position = c(0.25,0.75), legend.title = element_blank(),
+        plot.margin = unit(c(0,0,0,0),'cm'))
+
+
+rec.plot <-
+  ggplot(fit$res.by.year,aes(year,recruitment/1e6)) +
+  geom_bar(stat='identity') +
+  ylab("Recruitment (in millions)") + xlab('Year') +  theme_bw() +
+  theme(legend.position = c(0.25,0.75), legend.title = element_blank(),
+        plot.margin = unit(c(0,0,0,0),'cm'))
+
+library(gridExtra)
+grid.arrange(selection.plot,gr.plot,rec.plot,ncol=2)
+```
+
+## gadget.ypr
+Calculates Yield-per-recruit within the model.
+
+- Tracks a single year class for a set time period
+- Fishing mortality is varied and the biomass caught is measured
+- As this is a length-based model the yield is more conservative
+
+
+```{r}
+setwd('~/Dropbox/gadget-models/08-tusk')
+ypr <- gadget.ypr(params.file='WGTS/params.final',
+                  ypr='WGTS/YPR')
+```
+
+## Tusk example (cont.)
+```{r,echo=FALSE}
+ypr.plot <- 
+  ggplot(ypr$ypr,aes(effort,bio)) +
+  geom_line() +
+  geom_segment(aes(x = effort,xend=effort,y=-Inf,yend=bio),
+               data=subset(ypr$ypr, effort == ypr$fmax)) +
+  geom_segment(aes(x = effort,xend=effort,y=-Inf,yend=bio),
+               data=subset(ypr$ypr, effort == ypr$f0.1$f0.1)) +
+  geom_text(data=subset(ypr$ypr,effort == ypr$fmax),
+            aes(label = sprintf('Fmax = %s',effort),
+                x = effort+0.04,y=0.2,angle=90)) +
+  geom_text(data=subset(ypr$ypr,effort == ypr$f0.1$f0.1),
+            aes(label = sprintf('F0.1 = %s',effort),
+                x = effort+0.04,y=0.2,angle=90)) +
+  theme_bw() +  xlab('Fishing mortality') + ylab('Yield per recruit') +
+  theme(legend.position='none',plot.margin = unit(c(0,0,0,0),'cm'))
+ypr.plot
+```
+
+## gadget.forward
+
+- Projects the stock status forward based on assumptions for recruitment
+    + Recruitment can be fixed to an average of the last years prior 
+    + or stochastic where the recruitment is an auto-regressive process
+- Provides projections of the stock by age and length, and total catches
+- Can project based on a range of F
+
+## Tusk - projections
+
+```{r}
+setwd('~/Dropbox/gadget-models/08-tusk')
+
+prognFmax <-
+  gadget.forward(years=6,
+                 params.file='WGTS/params.final',
+                 pre='WGTS/PROGN', 
+                 stochastic=FALSE,
+                 num.trials=1,
+                 effort=ypr$fmax)
+```
+
+## Tusk -- projected yield
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+mat.par = c(-8.6512,0.1403)
+progn.ssb <-
+  prognFmax$lw %>%
+  filter(step == 1) %>%
+  group_by(year) %>%
+  summarise(ssb = sum(weight*logit(mat.par[1],
+              mat.par[2],length)*
+              number),
+            total.biomass = sum(number*weight))#,
+
+progn.by.year <-
+  left_join(prognFmax$catch %>%
+            group_by(year) %>%
+            summarise(catch=sum(biomass.consumed)),
+            progn.ssb)
+
+
+prog.bio.plot <-
+  ggplot(progn.by.year,aes(year,ssb/1e6)) +
+  geom_rect(aes(xmin=max(fit$res.by.year$year),
+                xmax=Inf,ymin=-Inf,ymax=Inf),
+            fill = 'gray90', alpha=0.1) +
+  geom_line() +
+  theme_bw() + xlab('Year') + ylab('SSB (\'000 tons)') +
+  theme(plot.margin = unit(c(0,0,0,0),'cm'),
+        legend.title = element_blank(),
+        legend.position = c(0.2,0.7))
+
+
+prog.catch.plot <-
+  ggplot(progn.by.year,aes(year,catch/1000)) +
+  geom_rect(aes(xmin=max(fit$res.by.year$year),
+                xmax=Inf,ymin=-Inf,ymax=Inf),
+            fill = 'gray90', alpha=0.1) +
+  geom_line() +
+  theme_bw() + xlab('Year') + ylab('Catch (\'000 tons)') +
+  theme(plot.margin = unit(c(0,0,0,0),'cm'),
+        legend.title = element_blank(),
+        legend.position = c(0.2,0.7)) +
+  ylim(c(0,max(fit$res.by.year$catch/1000)))
+
+prog.rec.plot <- rec.plot + geom_bar(aes(year,10*recruitment),
+                                     data=prognFmax$recruitment,
+                                     fill='red',stat='identity')
+
+grid.arrange(prog.bio.plot,prog.catch.plot,prog.rec.plot,ncol=2)
+```

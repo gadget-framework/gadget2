@@ -1,0 +1,22 @@
+[component]
+type		predatorpreyprinter
+predatornames		comm survey comm.pre
+preynames		tusk
+areaaggfile      WGTS/PROGN/aggfiles/tusk.area.agg
+ageaggfile       WGTS/PROGN/aggfiles/tusk.allages.agg
+lenaggfile       WGTS/PROGN/aggfiles/tusk.alllen.agg
+printfile        WGTS/PROGN/out/catch.tusk.lw
+yearsandsteps    all all
+[component]
+type             stockprinter
+stocknames       tusk
+areaaggfile      WGTS/PROGN/aggfiles/tusk.area.agg
+ageaggfile       WGTS/PROGN/aggfiles/tusk.allages.agg
+lenaggfile       WGTS/PROGN/aggfiles/tusk.len.agg
+printfile        WGTS/PROGN/out/tusk.lw
+printatstart     0
+yearsandsteps    all 1
+;
+[component]
+type	likelihoodsummaryprinter
+printfile	.jnk

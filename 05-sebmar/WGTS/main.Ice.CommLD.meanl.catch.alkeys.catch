@@ -1,0 +1,13 @@
+; main file for gadget - created in Rgadget
+; WGTS/main.Ice.CommLD.meanl.catch.alkeys.catch - Wed Apr 16 08:59:53 2014
+timefile TIME
+areafile AREA
+printfiles WGTS/printfile.Ice.CommLD.meanl.catch.alkeys.catch
+[stock]
+stockfiles SMARINUS
+[tagging]
+[otherfood]
+[fleet]
+fleetfiles FLEET
+[likelihood]
+likelihoodfiles WGTS/likelihood.Ice.CommLD.meanl.catch.alkeys.catch

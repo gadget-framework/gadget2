@@ -1,0 +1,13 @@
+; main file for gadget - created in Rgadget
+; WGTS/YPR/main.ypr - Wed Sep 17 12:51:46 2014
+timefile WGTS/YPR/time.ypr
+areafile WGTS/YPR/area
+printfiles WGTS/YPR/printfile.ypr
+[stock]
+stockfiles WGTS/YPR/tusk
+[tagging]
+[otherfood]
+[fleet]
+fleetfiles WGTS/YPR/fleet
+[likelihood]
+likelihoodfiles ;

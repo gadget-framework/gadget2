@@ -1,0 +1,99 @@
+.TH "Gadget" "1" "2.1.06" "James Begley" ""
+.SH "NAME"
+.LP 
+gadget
+.br 
+\fBG\fRlobally applicable \fBA\fRrea \fBD\fRisaggregated \fBG\fReneral \fBE\fRcosystem \fBT\fRoolbox
+.SH "SYNTAX"
+.LP 
+gadget [\fIoptions\fP]
+.SH "DESCRIPTION"
+.LP 
+Gadget is a flexible and powerful tool for creating ecosystem models.  The program was developed for modelling marine ecosystems in a fisheries management and biology context, however there is nothing in the program that restricts it to fish, and models have been developed to examine marine mammal populations
+
+.LP 
+Gadget can run complicated statistical ecosystem models, which take many features of the ecosystem into account. Gadget works by running an internal model based on many parameters, and then comparing the data from the output of this model to real data to get a goodness\-of\-fit likelihood score.  The parameters can then be adjusted, and the model re\-run, until an optimum is found, which corresponds to the model with the lowest likelihood score.
+
+.LP 
+Gadget allows you to include a number of features into your model: One or more species, each of which may be split into multiple stocks; multiple areas with migration between areas; predation between and within species; maturation; reproduction and recruitment; multiple commercial and survey fleets taking catches from the populations.
+.SH "OPTIONS"
+.LP 
+Options for running Gadget:
+.TP 
+\fB\-l\fR
+perform a likelihood (optimising) model run
+.TP 
+\fB\-s\fR
+perform a single (simulation) model run
+.TP 
+\fB\-n\fR
+perform a network run (using paramin)
+.TP 
+\fB\-v  \-\-version\fR
+display version information and exit
+.TP 
+\fB\-h  \-\-help\fR
+display help screen and exit
+ 
+.LP 
+Options for specifying the input to Gadget models:
+.TP 
+\fB\-i <filename>\fR
+read model parameters from <filename>
+.TP 
+\fB\-opt <filename>\fR
+read optimising parameters from <filename>
+.TP 
+\fB\-main <filename>\fR
+read model information from <filename> (default "main")
+.TP 
+\fB\-m <filename>\fR
+read other commandline parameters from <filename>
+ 
+.LP 
+Options for specifying the output from Gadget models:
+.TP 
+\fB\-p <filename>\fR
+print model parameters to <filename> (default "params.out")
+.TP 
+\fB\-o <filename>\fR
+print likelihood output to <filename>
+.TP 
+\fB\-print <number>\fR
+print \-o output every <number> iterations
+.TP 
+\fB\-precision <number>\fR
+set the precision to <number> in output files
+ 
+.LP 
+Options for debugging Gadget models:
+.TP 
+\fB\-log <filename>\fR
+print logging information to <filename>
+.TP 
+\fB\-printinitial <filename>\fR
+print initial model information to <filename>
+.TP 
+\fB\-printfinal <filename>\fR
+print final model information to <filename>
+ 
+.SH "ENVIRONMENT VARIABLES"
+.LP 
+.TP 
+\fBGADGET_WORKING_DIR\fP
+Specifies the working directory, used for the output from Gadget (defaults to current directory if not specified)
+.TP 
+\fBGADGET_DATA_DIR\fP
+Specifies the data directory, used for the input to Gadget (defaults to current directory if not specified)
+.SH "CONTACT"
+.LP 
+For help on running Gadget, constructing Gadget models and understanding the output contact <gadgethelp@hafro.is>
+.LP 
+There is also a Gadget user mailing list set up <gadgetusers@hafro.is>
+.LP 
+Send software bug reports to James Begley <james@hafro.is>
+.LP 
+Documentation written by James Begley <james@hafro.is>
+.SH "SEE ALSO"
+.LP 
+Gadget web page <http://www.hafro.is/gadget>

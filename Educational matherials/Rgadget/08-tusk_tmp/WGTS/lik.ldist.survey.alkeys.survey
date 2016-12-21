@@ -1,0 +1,68 @@
+; Gadget version 2.2.00-BETA running on nataliia-HP-Compaq-8200-Elite-MT-PC Wed May 27 10:24:07 2015
+; Listing of the switches used in the current Gadget run
+Linf	tuskgrowergrowthcalcHmodelvariable	
+k	tuskgrowergrowthcalcHmodelvariable	
+bbeta	tuskgrower	
+ic03	tuskinitialcondmeandata	
+ic04	tuskinitialcondmeandata	
+ic05	tuskinitialcondmeandata	
+ic06	tuskinitialcondmeandata	
+ic07	tuskinitialcondmeandata	
+ic08	tuskinitialcondmeandata	
+ic09	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	tuskinitialcondmeandata	
+rec1980	tuskrenewaldata	
+recl	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	
+recsdev	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	tuskrenewaldata	
+rec1981	tuskrenewaldata	
+rec1982	tuskrenewaldata	
+rec1983	tuskrenewaldata	
+rec1984	tuskrenewaldata	
+rec1985	tuskrenewaldata	
+rec1986	tuskrenewaldata	
+rec1987	tuskrenewaldata	
+rec1988	tuskrenewaldata	
+rec1989	tuskrenewaldata	
+rec1990	tuskrenewaldata	
+rec1991	tuskrenewaldata	
+rec1992	tuskrenewaldata	
+rec1993	tuskrenewaldata	
+rec1994	tuskrenewaldata	
+rec1995	tuskrenewaldata	
+rec1996	tuskrenewaldata	
+rec1997	tuskrenewaldata	
+rec1998	tuskrenewaldata	
+rec1999	tuskrenewaldata	
+rec2000	tuskrenewaldata	
+rec2001	tuskrenewaldata	
+rec2002	tuskrenewaldata	
+rec2003	tuskrenewaldata	
+rec2004	tuskrenewaldata	
+rec2005	tuskrenewaldata	
+rec2006	tuskrenewaldata	
+rec2007	tuskrenewaldata	
+rec2008	tuskrenewaldata	
+rec2009	tuskrenewaldata	
+rec2010	tuskrenewaldata	
+rec2011	tuskrenewaldata	
+recfuture	tuskrenewaldata	tuskrenewaldata	
+L50comm	fleetcommpredatorcommsuitabilityfortuskmodelvariable	
+alphacomm	fleetcommpredatorcommsuitabilityfortuskmodelvariable	fleetcommpredatorcommsuitabilityfortuskmodelvariable	
+L50sur	fleetsurveypredatorsurveysuitabilityfortuskmodelvariable	
+alphasur	fleetsurveypredatorsurveysuitabilityfortuskmodelvariable	fleetsurveypredatorsurveysuitabilityfortuskmodelvariable	
+;
+; Listing of the likelihood components used in the current Gadget run
+;
+; Component	Type	Weight
+alkeys.catch	3	8.47458e-05
+alkeys.survey	3	1.18934
+ldist.catch	3	1.47232e-05
+ldist.survey	3	0.0397614
+si2039	1	0.0877193
+si4069	1	0.11334
+si70110	1	0.0436681
+understocking	2	1
+bounds	8	10
+;
+; Listing of the output from the likelihood components for the current Gadget run
+;
+0	       120         90        0.1          4          3    0.50462        0.1    1.73014   0.277194 1.00279e-06          2          7          4          2          2          2          2          2          2          2          2          2          2          2    1.19413          2          2          2          2          2          2          2    2.48371          2    2.19087          2          2          2          2          2          2          2          2          2          1    20.0006        0.9         30        0.9 		    9187     6126 1.142e+05 2.369e+05    10.97    9.698    22.15        0        0 		   16712.5668001159

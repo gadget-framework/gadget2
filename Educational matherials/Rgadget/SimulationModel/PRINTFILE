@@ -1,0 +1,29 @@
+;
+; Print file for the TUSK example
+;
+[component]
+type            stockstdprinter
+stockname       tusk              
+printfile       out/tusk.std      
+yearsandsteps   all all          
+;
+[component]
+type		stockprinter
+stocknames 	tusk
+areaaggfile 	AggFiles/allarea.agg
+ageaggfile 	AggFiles/allage.agg
+lenaggfile 	AggFiles/len.agg
+printfile 	out/tusk.lw
+printatstart	0
+yearsandsteps 	all all
+;;
+[component]
+type	          predatorpreyprinter
+predatornames     comm 
+preynames         tusk
+areaaggfile       AggFiles/allarea.agg
+ageaggfile        AggFiles/age.agg
+lenaggfile        AggFiles/alllen.agg 
+printfile         out/Catch-Longline
+printatstart	  0
+yearsandsteps 	  all all

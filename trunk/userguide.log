@@ -1,0 +1,1125 @@
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.28)  15 AUG 2012 10:12
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**userguide.tex
+(./userguide.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, lo
+aded.
+(/usr/share/texlive/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/share/texlive/texmf-dist/tex/latex/base/bk10.clo
+File: bk10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@chapter=\count80
+\c@section=\count81
+\c@subsection=\count82
+\c@subsubsection=\count83
+\c@paragraph=\count84
+\c@subparagraph=\count85
+\c@figure=\count86
+\c@table=\count87
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+(/usr/share/texlive/texmf-dist/tex/latex/a4wide/a4wide.sty
+Package: a4wide 1994/08/30
+
+(/usr/share/texlive/texmf-dist/tex/latex/ntgclass/a4.sty
+Package: a4 2004/04/15 v1.2g A4 based page layout
+))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2000/06/29 v2.01
+
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks14
+\ex@=\dimen103
+))
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen104
+)
+(/usr/share/texlive/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count88
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count89
+\leftroot@=\count90
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count91
+\DOTSCASE@=\count92
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen105
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\macc@depth=\count93
+\c@MaxMatrixCols=\count94
+\dotsspace@=\muskip10
+\c@parentequation=\count95
+\dspbrk@lvl=\count96
+\tag@help=\toks15
+\row@=\count97
+\column@=\count98
+\maxfields@=\count99
+\andhelp@=\toks16
+\eqnshift@=\dimen106
+\alignsep@=\dimen107
+\tagshift@=\dimen108
+\tagwidth@=\dimen109
+\totwidth@=\dimen110
+\lineht@=\dimen111
+\@envbody=\toks17
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks18
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+(/usr/share/texlive/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
+
+(/usr/share/texlive/texmf-dist/tex/latex/base/t1enc.def
+File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
+LaTeX Font Info:    Redeclaring font encoding T1 on input line 43.
+))
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/palatino.sty
+Package: palatino 2005/04/12 PSNFSS-v9.2a (SPQR) 
+)
+(/usr/share/texlive/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+\fancy@headwidth=\skip46
+\f@ncyO@elh=\skip47
+\f@ncyO@erh=\skip48
+\f@ncyO@olh=\skip49
+\f@ncyO@orh=\skip50
+\f@ncyO@elf=\skip51
+\f@ncyO@erf=\skip52
+\f@ncyO@olf=\skip53
+\f@ncyO@orf=\skip54
+)
+No file userguide.aux.
+\openout1 = `userguide.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
+LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Try loading font information for T1+ppl on input line 8.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1ppl.fd
+File: t1ppl.fd 2001/06/04 font definitions for T1/ppl.
+) [1
+
+
+{/usr/share/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2
+
+]
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <24.88> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 36.
+
+No file userguide.toc.
+\tf@toc=\write3
+\openout3 = `userguide.toc'.
+
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <10> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 38.
+[1
+
+] [2
+
+]
+Chapter 1.
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <20.74> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 41.
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <14.4> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 44.
+LaTeX Font Info:    Try loading font information for OMS+ppl on input line 48.
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/omsppl.fd
+File: omsppl.fd 
+)
+LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 48.
+ [1
+
+]
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 70.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/t1pcr.fd
+File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
+) [2]
+Overfull \hbox (15.19916pt too wide) in paragraph at lines 117--118
+[]\T1/ppl/m/n/10 the di-rec-tory spec-i-fied by the Linux en-vi-ron-ment vari-a
+ble called ''GAD-GET_WORKING_DIR'',
+ []
+
+[3]
+
+LaTeX Warning: Reference `chap:print' on page 4 undefined on input line 135.
+
+
+LaTeX Warning: Reference `chap:param' on page 4 undefined on input line 162.
+
+
+LaTeX Warning: Reference `chap:optim' on page 4 undefined on input line 167.
+
+
+LaTeX Warning: Reference `sec:mainfile' on page 4 undefined on input line 172.
+
+[4]
+
+LaTeX Warning: Reference `chap:output' on page 5 undefined on input line 178.
+
+
+LaTeX Warning: Reference `chap:output' on page 5 undefined on input line 183.
+
+
+LaTeX Warning: Reference `sec:logoutput' on page 5 undefined on input line 198.
+
+
+
+LaTeX Warning: Reference `sec:repeat' on page 5 undefined on input line 208.
+
+[5] [6]
+Chapter 2.
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <12> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 266.
+
+Overfull \hbox (3.64015pt too wide) in paragraph at lines 273--274
+[]\T1/ppl/m/n/10 where the $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 numerical part$\O
+ML/cmm/m/it/10 >$ \T1/ppl/m/n/10 con-sists of the (op-tional) ini-tial value fo
+r the switch, and the $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 name$\OML/cmm/m/it/10 
+>$
+ []
+
+[7
+
+]
+
+LaTeX Warning: Reference `chap:param' on page 8 undefined on input line 276.
+
+[8]
+Chapter 3.
+
+Overfull \hbox (20.9344pt too wide) in paragraph at lines 326--327
+\T1/ppl/m/n/10 The main Gad-get in-put file is usu-ally called ''main'', un-les
+s it is spec-i-fied with the ''-main $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 filenam
+e$\OML/cmm/m/it/10 >$\T1/ppl/m/n/10 ''
+ []
+
+[9
+
+] [10] [11] [12]
+Overfull \hbox (11.08015pt too wide) in paragraph at lines 522--523
+[]\T1/ppl/m/n/10 This ex-am-ple shows that the the pa-ram-e-ter ''grow1995'' is
+ to be used for growth in 1995, ''grow1996''
+ []
+
+[13] [14
+
+]
+Chapter 4.
+[15]
+
+LaTeX Warning: Reference `sec:stocknatmort' on page 16 undefined on input line 
+624.
+
+
+LaTeX Warning: Reference `eq:growth1l' on page 16 undefined on input line 645.
+
+
+LaTeX Warning: Reference `eq:growth1w' on page 16 undefined on input line 645.
+
+[16]
+
+LaTeX Warning: Reference `sec:consumption' on page 17 undefined on input line 6
+58.
+
+
+LaTeX Warning: Reference `eq:growth3w' on page 17 undefined on input line 682.
+
+
+LaTeX Warning: Reference `eq:growth3lc' on page 17 undefined on input line 682.
+
+
+
+LaTeX Warning: Reference `eq:growth3la' on page 17 undefined on input line 711.
+
+
+
+LaTeX Warning: Reference `eq:growth3lb' on page 17 undefined on input line 711.
+
+
+
+LaTeX Warning: Reference `eq:growth4w' on page 17 undefined on input line 722.
+
+
+LaTeX Warning: Reference `eq:growth4lc' on page 17 undefined on input line 722.
+
+
+[17]
+
+LaTeX Warning: Reference `sec:consumption' on page 18 undefined on input line 7
+47.
+
+
+LaTeX Warning: Reference `sec:consumption' on page 18 undefined on input line 7
+49.
+
+
+LaTeX Warning: Reference `eq:growth5w' on page 18 undefined on input line 761.
+
+
+LaTeX Warning: Reference `subsec:growth3' on page 18 undefined on input line 76
+1.
+
+
+LaTeX Warning: Reference `eq:growth3lc' on page 18 undefined on input line 761.
+
+
+[18]
+
+LaTeX Warning: Reference `eq:growth6' on page 19 undefined on input line 788.
+
+
+LaTeX Warning: Reference `eq:growth7' on page 19 undefined on input line 812.
+
+
+LaTeX Warning: Reference `eq:growth8l' on page 19 undefined on input line 836.
+
+
+LaTeX Warning: Reference `eq:growth8w' on page 19 undefined on input line 836.
+
+[19]
+
+LaTeX Warning: Reference `eq:growth8l' on page 20 undefined on input line 856.
+
+
+Package amsmath Warning: Foreign command \atopwithdelims;
+(amsmath)                \frac or \genfrac should be used instead
+(amsmath)                 on input line 868.
+
+
+LaTeX Warning: Reference `eq:betabin2' on page 20 undefined on input line 871.
+
+[20]
+
+LaTeX Warning: Reference `eq:betabin3' on page 21 undefined on input line 887.
+
+
+LaTeX Warning: Reference `eq:natmort' on page 21 undefined on input line 893.
+
+
+LaTeX Warning: Reference `sec:stockpredator' on page 21 undefined on input line
+ 916.
+
+[21]
+
+LaTeX Warning: Reference `sec:stockinitial' on page 22 undefined on input line 
+931.
+
+
+LaTeX Warning: Reference `sec:suitability' on page 22 undefined on input line 9
+41.
+
+
+LaTeX Warning: Reference `eq:totalcons' on page 22 undefined on input line 944.
+
+
+
+LaTeX Warning: Reference `sec:stockprey' on page 22 undefined on input line 967
+.
+
+
+LaTeX Warning: Reference `sec:suitability' on page 22 undefined on input line 9
+70.
+
+[22]
+
+LaTeX Warning: Reference `eq:totalcons' on page 23 undefined on input line 975.
+
+
+
+LaTeX Warning: Reference `sec:suitability' on page 23 undefined on input line 9
+75.
+
+
+LaTeX Warning: Reference `eq:preycons' on page 23 undefined on input line 975.
+
+
+LaTeX Warning: Reference `chap:other' on page 23 undefined on input line 975.
+
+
+LaTeX Warning: Reference `eq:preycons' on page 23 undefined on input line 978.
+
+
+LaTeX Warning: Reference `chap:fleet' on page 23 undefined on input line 978.
+
+
+LaTeX Warning: Reference `eq:maxcons' on page 23 undefined on input line 989.
+
+
+LaTeX Warning: Reference `eq:feedlevel' on page 23 undefined on input line 992.
+
+
+[23] [24]
+
+LaTeX Warning: Reference `sec:fleetsuit' on page 25 undefined on input line 111
+4.
+
+[25] [26]
+
+LaTeX Warning: Reference `eq:wlen' on page 27 undefined on input line 1169.
+
+
+LaTeX Warning: Reference `sec:stockmature' on page 27 undefined on input line 1
+207.
+
+[27] [28]
+
+LaTeX Warning: Reference `sec:stockmove' on page 29 undefined on input line 129
+1.
+
+[29]
+
+LaTeX Warning: Reference `eq:mat1a' on page 30 undefined on input line 1314.
+
+
+LaTeX Warning: Reference `eq:mat1b' on page 30 undefined on input line 1314.
+
+
+LaTeX Warning: Reference `eq:mat3' on page 30 undefined on input line 1333.
+
+
+LaTeX Warning: Reference `eq:mat4' on page 30 undefined on input line 1350.
+
+[30]
+
+LaTeX Warning: Reference `eq:mat2' on page 31 undefined on input line 1365.
+
+
+LaTeX Warning: Reference `sec:stockrenew' on page 31 undefined on input line 13
+92.
+
+
+LaTeX Warning: Reference `sec:stockmature' on page 31 undefined on input line 1
+400.
+
+[31]
+
+LaTeX Warning: Reference `sec:stockspawn' on page 32 undefined on input line 14
+09.
+
+
+LaTeX Warning: Reference `sec:stockinitial' on page 32 undefined on input line 
+1422.
+
+[32]
+
+LaTeX Warning: Reference `sec:stockstray' on page 33 undefined on input line 14
+83.
+
+
+LaTeX Warning: Reference `eq:spawn1' on page 33 undefined on input line 1490.
+
+
+LaTeX Warning: Reference `eq:spawn2' on page 33 undefined on input line 1490.
+
+[33]
+
+LaTeX Warning: Reference `eq:spawn1' on page 34 undefined on input line 1509.
+
+
+LaTeX Warning: Reference `eq:spawn2' on page 34 undefined on input line 1509.
+
+
+LaTeX Warning: Reference `sec:stockrenew' on page 34 undefined on input line 15
+25.
+
+
+LaTeX Warning: Reference `sec:stockrenew' on page 34 undefined on input line 15
+28.
+
+
+LaTeX Warning: Reference `eq:wlen' on page 34 undefined on input line 1528.
+
+[34]
+
+LaTeX Warning: Reference `eq:ssb' on page 35 undefined on input line 1582.
+
+
+LaTeX Warning: Reference `eq:ssb' on page 35 undefined on input line 1595.
+
+[35]
+
+LaTeX Warning: Reference `sec:suitability' on page 36 undefined on input line 1
+608.
+
+
+LaTeX Warning: Reference `sec:stockspawn' on page 36 undefined on input line 16
+14.
+
+[36]
+
+LaTeX Warning: Reference `sec:stockmove' on page 37 undefined on input line 167
+6.
+
+[37] [38
+
+]
+Chapter 5.
+
+LaTeX Warning: Reference `sec:recaptures' on page 39 undefined on input line 16
+89.
+
+
+LaTeX Warning: Reference `eq:tagloss' on page 39 undefined on input line 1717.
+
+[39] [40]
+Chapter 6.
+[41
+
+] [42
+
+]
+Chapter 7.
+
+LaTeX Warning: Reference `eq:tcons' on page 43 undefined on input line 1808.
+
+
+LaTeX Warning: Reference `sec:fleetsuit' on page 43 undefined on input line 181
+8.
+
+[43]
+
+LaTeX Warning: Reference `eq:ncons' on page 44 undefined on input line 1838.
+
+
+LaTeX Warning: Reference `sec:fleetsuit' on page 44 undefined on input line 184
+7.
+
+
+LaTeX Warning: Reference `eq:lcons' on page 44 undefined on input line 1867.
+
+[44]
+
+LaTeX Warning: Reference `sec:fleetsuit' on page 45 undefined on input line 187
+8.
+
+
+LaTeX Warning: Reference `eq:econs' on page 45 undefined on input line 1901.
+
+
+LaTeX Warning: Reference `sec:fleetsuit' on page 45 undefined on input line 191
+3.
+
+[45]
+
+LaTeX Warning: Reference `sec:linearfleet' on page 46 undefined on input line 1
+934.
+
+
+LaTeX Warning: Reference `eq:lcons' on page 46 undefined on input line 1946.
+
+
+LaTeX Warning: Reference `sec:linearfleet' on page 46 undefined on input line 1
+946.
+
+[46]
+
+LaTeX Warning: Reference `sec:suitability' on page 47 undefined on input line 1
+989.
+
+[47] [48]
+Chapter 8.
+
+LaTeX Warning: Reference `sec:simann' on page 49 undefined on input line 2048.
+
+
+LaTeX Warning: Reference `sec:hooke' on page 49 undefined on input line 2048.
+
+
+LaTeX Warning: Reference `sec:bfgs' on page 49 undefined on input line 2048.
+
+[49
+
+]
+
+LaTeX Warning: Reference `eq:bound' on page 50 undefined on input line 2061.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 2072--2079
+
+ []
+
+[50] [51]
+
+LaTeX Warning: Reference `eq:catchdist4' on page 52 undefined on input line 218
+5.
+
+[52]
+
+LaTeX Warning: Reference `eq:catchdist4' on page 53 undefined on input line 219
+6.
+
+
+LaTeX Warning: Reference `eq:catchdist1' on page 53 undefined on input line 219
+9.
+
+
+LaTeX Warning: Reference `eq:catchdist2' on page 53 undefined on input line 221
+0.
+
+
+LaTeX Warning: Reference `eq:catchdist3' on page 53 undefined on input line 222
+1.
+
+
+LaTeX Warning: Reference `eq:catchdist7' on page 53 undefined on input line 223
+2.
+
+[53]
+
+LaTeX Warning: Reference `eq:catchdist5' on page 54 undefined on input line 224
+3.
+
+
+LaTeX Warning: Reference `eq:cdsigma1' on page 54 undefined on input line 2255.
+
+
+
+LaTeX Warning: Reference `eq:cdsigma2' on page 54 undefined on input line 2255.
+
+
+
+LaTeX Warning: Reference `eq:cdsigma2' on page 54 undefined on input line 2269.
+
+
+
+LaTeX Warning: Reference `eq:catchdist6a' on page 54 undefined on input line 22
+87.
+
+
+LaTeX Warning: Reference `eq:catchdist6b' on page 54 undefined on input line 22
+87.
+
+[54] [55]
+
+LaTeX Warning: Reference `eq:catchstat1' on page 56 undefined on input line 234
+9.
+
+
+Overfull \hbox (2.72078pt too wide) in paragraph at lines 2368--2369
+[]\T1/ppl/m/n/10 where $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 number$\OML/cmm/m/it/
+10 >$ \T1/ppl/m/n/10 is the num-ber of sam-ples for the timestep/area/age com-b
+i-na-tion, and $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 mean$\OML/cmm/m/it/10 >$
+ []
+
+
+LaTeX Warning: Reference `eq:catchstat2' on page 56 undefined on input line 237
+1.
+
+
+LaTeX Warning: Reference `eq:catchstat3' on page 56 undefined on input line 239
+3.
+
+[56]
+
+LaTeX Warning: Reference `eq:catchstat4' on page 57 undefined on input line 241
+5.
+
+
+Overfull \hbox (2.72078pt too wide) in paragraph at lines 2433--2434
+[]\T1/ppl/m/n/10 where $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 number$\OML/cmm/m/it/
+10 >$ \T1/ppl/m/n/10 is the num-ber of sam-ples for the timestep/area/age com-b
+i-na-tion, and $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 mean$\OML/cmm/m/it/10 >$
+ []
+
+
+LaTeX Warning: Reference `eq:catchstat5' on page 57 undefined on input line 243
+6.
+
+[57]
+Overfull \hbox (2.72078pt too wide) in paragraph at lines 2454--2455
+[]\T1/ppl/m/n/10 where $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 number$\OML/cmm/m/it/
+10 >$ \T1/ppl/m/n/10 is the num-ber of sam-ples for the timestep/area/age com-b
+i-na-tion, and $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 mean$\OML/cmm/m/it/10 >$
+ []
+
+[58]
+
+LaTeX Warning: Reference `eq:stockdist2' on page 59 undefined on input line 250
+3.
+
+
+LaTeX Warning: Reference `eq:stockdist1' on page 59 undefined on input line 251
+4.
+
+
+LaTeX Warning: Reference `eq:surveyindex' on page 59 undefined on input line 25
+25.
+
+[59] [60] [61]
+
+LaTeX Warning: Reference `subsec:sibylength' on page 62 undefined on input line
+ 2702.
+
+[62]
+
+LaTeX Warning: Reference `subsec:sibylength' on page 63 undefined on input line
+ 2732.
+
+
+LaTeX Warning: Reference `subsec:sibylength' on page 63 undefined on input line
+ 2761.
+
+[63]
+
+LaTeX Warning: Reference `subsec:sibylength' on page 64 undefined on input line
+ 2790.
+
+
+LaTeX Warning: Reference `sec:suitability' on page 64 undefined on input line 2
+815.
+
+[64]
+
+LaTeX Warning: Reference `eq:surveydistfit1' on page 65 undefined on input line
+ 2846.
+
+
+LaTeX Warning: Reference `eq:surveydistfit1' on page 65 undefined on input line
+ 2857.
+
+
+LaTeX Warning: Reference `eq:surveydist1' on page 65 undefined on input line 28
+68.
+
+[65]
+
+LaTeX Warning: Reference `eq:surveydist2' on page 66 undefined on input line 28
+79.
+
+
+LaTeX Warning: Reference `eq:surveydist3' on page 66 undefined on input line 28
+90.
+
+
+LaTeX Warning: Reference `eq:surveydist4' on page 66 undefined on input line 29
+01.
+
+[66]
+Overfull \hbox (5.62071pt too wide) in paragraph at lines 2963--2964
+\T1/ppl/m/n/10 timestep/area com-bi-na-tion, where $\OML/cmm/m/it/10 <$\T1/ppl/
+m/n/10 prey$\OML/cmm/m/it/10 >$ \T1/ppl/m/n/10 is de-fined in the prey ag-gre-g
+a-tion file, and $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 predator$\OML/cmm/m/it/10 >
+$
+ []
+
+
+LaTeX Warning: Reference `eq:stomach1' on page 67 undefined on input line 2966.
+
+
+[67]
+
+LaTeX Warning: Reference `eq:recap1' on page 68 undefined on input line 3024.
+
+
+LaTeX Warning: Reference `sec:catchstat' on page 68 undefined on input line 303
+5.
+
+[68]
+
+LaTeX Warning: Reference `eq:recstat1' on page 69 undefined on input line 3062.
+
+
+
+Overfull \hbox (1.19075pt too wide) in paragraph at lines 3081--3082
+[]\T1/ppl/m/n/10 where $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 number$\OML/cmm/m/it/
+10 >$ \T1/ppl/m/n/10 is the num-ber of sam-ples for the tag/timestep/area com-b
+i-na-tion, and $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 mean$\OML/cmm/m/it/10 >$
+ []
+
+
+LaTeX Warning: Reference `eq:recstat2' on page 69 undefined on input line 3084.
+
+
+[69]
+
+LaTeX Warning: Reference `eq:recstat3' on page 70 undefined on input line 3106.
+
+
+
+Overfull \hbox (1.19075pt too wide) in paragraph at lines 3124--3125
+[]\T1/ppl/m/n/10 where $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 number$\OML/cmm/m/it/
+10 >$ \T1/ppl/m/n/10 is the num-ber of sam-ples for the tag/timestep/area com-b
+i-na-tion, and $\OML/cmm/m/it/10 <$\T1/ppl/m/n/10 mean$\OML/cmm/m/it/10 >$
+ []
+
+[70]
+
+LaTeX Warning: Reference `chap:fleet' on page 71 undefined on input line 3151.
+
+[71]
+
+LaTeX Warning: Reference `eq:catchtons' on page 72 undefined on input line 3198
+.
+
+[72]
+Chapter 9.
+[73
+
+]
+
+LaTeX Warning: Reference `chap:order' on page 74 undefined on input line 3262.
+
+[74]
+
+LaTeX Warning: Reference `chap:order' on page 75 undefined on input line 3295.
+
+
+LaTeX Warning: Reference `chap:order' on page 75 undefined on input line 3330.
+
+[75] [76]
+Overfull \hbox (17.93793pt too wide) in paragraph at lines 3404--3405
+[]\T1/ppl/m/n/10 The out-put that is gen-er-ated from this printer type is a fi
+le con-tain-ing the fol-low-ing over-consumption
+ []
+
+
+Overfull \hbox (17.93793pt too wide) in paragraph at lines 3435--3436
+[]\T1/ppl/m/n/10 The out-put that is gen-er-ated from this printer type is a fi
+le con-tain-ing the fol-low-ing over-consumption
+ []
+
+[77] [78] [79]
+
+LaTeX Warning: Reference `sec:catchdist' on page 80 undefined on input line 355
+3.
+
+
+LaTeX Warning: Reference `sec:catchstat' on page 80 undefined on input line 355
+7.
+
+
+LaTeX Warning: Reference `sec:surveyindices' on page 80 undefined on input line
+ 3561.
+
+[80]
+Chapter 10.
+
+LaTeX Warning: Reference `sec:whatdoeshash' on page 81 undefined on input line 
+3588.
+
+[81
+
+] [82
+
+]
+Chapter 11.
+[83] [84]
+
+LaTeX Warning: Reference `eq:metropolis' on page 85 undefined on input line 366
+9.
+
+[85] [86]
+
+LaTeX Warning: Reference `eq:metropolis' on page 87 undefined on input line 372
+3.
+
+[87]
+
+LaTeX Warning: Reference `eq:vm' on page 88 undefined on input line 3744.
+
+[88]
+
+LaTeX Warning: Reference `eq:armijo' on page 89 undefined on input line 3775.
+
+[89]
+
+LaTeX Warning: Reference `eq:armijo' on page 90 undefined on input line 3813.
+
+
+LaTeX Warning: Reference `eq:grad' on page 90 undefined on input line 3821.
+
+[90]
+
+LaTeX Warning: Reference `subsec:hookepar' on page 91 undefined on input line 3
+874.
+
+
+LaTeX Warning: Reference `subsec:simannpar' on page 91 undefined on input line 
+3874.
+
+
+LaTeX Warning: Reference `subsec:bfgspar' on page 91 undefined on input line 38
+74.
+
+[91] [92]
+Chapter 12.
+
+LaTeX Warning: Reference `chap:print' on page 93 undefined on input line 3889.
+
+[93
+
+] [94]
+Chapter 13.
+[95
+
+]
+
+LaTeX Warning: Reference `chap:param' on page 96 undefined on input line 4012.
+
+
+LaTeX Warning: Reference `chap:param' on page 96 undefined on input line 4018.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4010--4026
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4010--4026
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4034--4043
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4044--4060
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4044--4060
+
+ []
+
+[96] [97] [98
+
+]
+Chapter 14.
+
+Underfull \hbox (badness 10000) in paragraph at lines 4089--4090
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4091--4092
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4093--4094
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4095--4096
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4097--4098
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4099--4100
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4101--4102
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4103--4104
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4105--4106
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4107--4108
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4109--4110
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4111--4112
+
+ []
+
+[99]
+Underfull \hbox (badness 10000) in paragraph at lines 4113--4114
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 4115--4116
+
+ []
+
+[100]
+Appendix A.
+
+LaTeX Warning: Reference `sec:stockmigrate' on page 101 undefined on input line
+ 4123.
+
+
+LaTeX Warning: Reference `sec:stockmature' on page 101 undefined on input line 
+4133.
+
+
+LaTeX Warning: Reference `sec:stockstray' on page 101 undefined on input line 4
+137.
+
+[101
+
+]
+
+LaTeX Warning: Reference `sec:stockmove' on page 102 undefined on input line 41
+40.
+
+[102]
+Appendix B.
+
+LaTeX Warning: Reference `chap:fleet' on page 103 undefined on input line 4148.
+
+
+
+LaTeX Warning: Reference `sec:suitability' on page 103 undefined on input line 
+4149.
+
+
+LaTeX Warning: Reference `sec:numberfleet' on page 103 undefined on input line 
+4150.
+
+
+LaTeX Warning: Reference `sec:stockprey' on page 103 undefined on input line 41
+51.
+
+
+LaTeX Warning: Reference `chap:other' on page 103 undefined on input line 4151.
+
+
+
+LaTeX Warning: Reference `sec:stockmigrate' on page 103 undefined on input line
+ 4156.
+
+
+LaTeX Warning: Reference `sec:consumption' on page 103 undefined on input line 
+4157.
+
+
+LaTeX Warning: Reference `sec:foodamounts' on page 103 undefined on input line 
+4162.
+
+
+LaTeX Warning: Reference `sec:effortfleet' on page 103 undefined on input line 
+4163.
+
+
+LaTeX Warning: Reference `sec:stockpreyprinter' on page 103 undefined on input 
+line 4164.
+
+
+LaTeX Warning: Reference `sec:predatorpreyprinter' on page 103 undefined on inp
+ut line 4165.
+
+
+LaTeX Warning: Reference `sec:understocking' on page 103 undefined on input lin
+e 4170.
+
+[103
+
+]
+
+LaTeX Warning: Reference `sec:quotafleet' on page 104 undefined on input line 4
+175.
+
+
+LaTeX Warning: Reference `subsec:sibyacoustic' on page 104 undefined on input l
+ine 4176.
+
+
+LaTeX Warning: Reference `subsec:sibyeffort' on page 104 undefined on input lin
+e 4177.
+
+
+LaTeX Warning: Reference `sec:likelihoodprinter' on page 104 undefined on input
+ line 4178.
+
+
+LaTeX Warning: Reference `sec:consumption' on page 104 undefined on input line 
+4179.
+
+[104] (./userguide.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 1530 strings out of 495063
+ 17592 string characters out of 3182201
+ 67126 words of memory out of 3000000
+ 4725 multiletter control sequences out of 15000+200000
+ 29755 words of font info for 60 fonts, out of 3000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 32i,17n,48p,1415b,420s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy1
+0.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb><
+/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/sh
+are/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></usr/share/tex
+live/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-di
+st/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palat
+ino/uplri8a.pfb>
+Output written on userguide.pdf (108 pages, 407312 bytes).
+PDF statistics:
+ 413 PDF objects out of 1000 (max. 8388607)
+ 285 compressed objects within 3 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

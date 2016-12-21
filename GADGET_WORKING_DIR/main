@@ -1,0 +1,18 @@
+;
+; Main file for the TUSK example
+timefile    TIME 
+areafile    AREA 
+printfile   PRINTFILE 
+;
+[stock]          
+stockfiles       TUSK
+;
+[tagging]        
+;
+[otherfood]      
+;
+[fleet]          
+fleetfiles       FLEET
+;
+[likelihood]     
+likelihoodfiles  LIKELIHOOD

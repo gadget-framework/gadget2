@@ -1,0 +1,23 @@
+[simann]
+simanniter 10000 ; number of simulated annealing iterations
+simanneps 1e-03 ; minimum epsilon, simann halt criteria
+t         30000000   ; simulated annealing initial temperature
+rt        0.85  ; temperature reduction factor
+nt        2     ; number of loops before temperature adjusted
+ns        5     ; number of loops before step length adjusted
+vm        1     ; initial value for the maximum step length
+cstep     2     ; step length adjustment factor
+lratio    0.3   ; lower limit for ratio when adjusting step length
+uratio    0.7   ; upper limit for ratio when adjusting step length
+check     4     ; number of temperature loops to check
+[hooke]
+hookeiter 40000  ; number of hooke & jeeves iterations
+hookeeps  1e-04 ; minimum epsilon, hooke & jeeves halt criteria
+rho       0.5   ; value for the resizing multiplier
+lambda    0     ; initial value for the step length
+[bfgs]
+bfgsiter  10000 ; number of bfgs iterations
+bfgseps   0.01  ; minimum epsilon, bfgs halt criteria
+sigma     0.01  ; armijo convergence criteria
+beta      0.3   ; armijo adjustment factor
+

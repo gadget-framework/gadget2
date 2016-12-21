@@ -1,0 +1,16 @@
+timefile    TIME     
+areafile    AREA     
+printfile   PRINTFILE
+;
+[stock]          
+stockfiles       SMARINUS
+;
+[tagging]
+;       
+[otherfood]
+;     
+[fleet]         
+fleetfiles       FLEET
+;
+[likelihood]
+likelihoodfiles  LIKELIHOOD

@@ -1,0 +1,317 @@
+\documentclass[10pt,twoside]{article}
+\usepackage{a4wide}
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+\usepackage{fancyhdr}
+
+\setlength{\parindent}{0pt}
+
+% set the header and footer styles
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LO,RE]{}
+\fancyhead[LE,RO]{\nouppercase{\leftmark}}
+\fancyfoot[LE,RO]{\textbf{\thepage}}
+\fancyfoot[LO,RE]{}
+% set the header and footer styles for the first page of the chapters
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[LE,RO]{\textbf{\thepage}}\renewcommand{\headrulewidth}{0pt}}
+
+\begin{document}
+
+\title{\Huge{A Brief Guide to a Simple Gadget Example}}
+\author{James Begley}
+\date{}
+\maketitle
+
+\section{Introduction}
+This is a guide to a Gadget model example that is currently available for the Gadget software.  This example is intended to show how the basics of how Gadget works, and as such some elements of the model have been skipped for simplicity.  The stock used in this example is haddock in Icelandic waters, and the data files for this example can be downloaded from the Hafro ftp site, and extracts from these data files are included in this guide.
+
+\bigskip
+It is recommended that this guide is read in conjunction with the Gadget User Guide, which is also available from the Hafro ftp site.  As explained in the user guide, comments in the data files are denoted by a semi-colon '';'', and parameters that can be optimised by Gadget are denoted by a hash ''\#''.  This guide, and the example Gadget model, have been updated to include features introduced in Gadget version 2.1.01. 
+
+\bigskip
+The run this example, the user should ensure that a copy of the Gadget executable has been compiled and placed in the directory containing the model files, and then run Gadget using the following command:
+
+{\small\begin{verbatim}
+gadget -s -i refinputfile
+\end{verbatim}}
+
+\section{Main File}
+The main input file is called ''main''.  This file contains links to other files which make up the Gadget model.  There is no data declared in this file, only links to other files.
+
+{\small \input{main}}
+
+The first 2 lines of the main file for this haddock example list the files that define the timesteps and area to be used for the example.  The next line lists the file that is to be used to specify the printing that is required - that is output from the modelled data, not output from the model parameters.
+
+\bigskip
+In the [stock] section, there is one file listed which describes the haddock stock to be used for this example.  There are then sections for the tagging experiments and the otherfood, which are blank for this example.  The [fleet] section lists the file that is required to define the fleets for this example.  Finally there is the [likelihood] section which lists the file that defines the likelihood components for this example.
+
+\section{Time File}
+The time file defines the timesteps to be used by Gadget for this example.  In this case, Gadget is to run a model from 1978 through to 2006, with 4 equal timesteps in each year.
+
+{\small \input{time}}
+
+\section{Area file}
+The area file defines the area data to be used by Gadget for this example.  In this example, a single area has been defined, with a constant temperature for the duration of the model.
+
+{\small \input{area}}
+
+\section{Aggregation Files}
+There are a number of simple aggregation files that are required for this example.
+
+\subsection{Age Aggregation Files}
+There are 2 age aggregation files - one that lists the possible ages individually (ie. no aggregation) and one that groups all the ages together into one age group.  These age aggregation files also define the text labels that are to be used when inputting and outputting the data for this example.
+
+{\small \input{age.agg}}
+{\small \input{allage.agg}}
+
+\subsection{Area Aggregation File}
+Although there is only one area in this example, it is still necessary to define a area aggregation file.  This is because it defines a text label that is to be used when inputting and outputting the data for this example.
+
+{\small \input{allarea.agg}}
+
+\subsection{Length Aggregation Files}
+There are a total of 8 length aggregation files for this example.  One aggregation file aggregates the stock into 2cm length groups (by combining the 1cm length groups that are declared for the stock), and a second file aggregates all the length groups together into one length group.  There are also 6 aggregation files corresponding to the 6 survey index likelihood components that are declared in the likelihood file, which aggregate the stock into one or more 5cm length groups.
+
+{\small \input{len.agg}}
+{\small \input{alllen.agg}}
+{\small \input{si10len.agg}}
+{\small \input{si15len.agg}}
+{\small \input{si20len.agg}}
+{\small \input{si2545len.agg}}
+{\small \input{si5060len.agg}}
+{\small \input{si6575len.agg}}
+
+\section{Stock File}
+The stock file contains the various parameters that define the stock to be used in the Gadget model.  The first section of this file gives the minimum and maximum age and length of the stock and the location of a reference weight file that specifies a reference weight for each length group for the stock.
+
+\bigskip
+The next section of this file covers the parameters required for the growth of the stock.  The growth function used in this example is an expanded form of the Von Bertalanffy growth function, split so that the increase in weight is calculated first, and then the change in weight is used to calculate a change in length, as shown in equation~\ref{eq:growthwex} and equation~\ref{eq:growthlexc} below:
+
+\begin{equation}\label{eq:growthwex}
+\Delta W_i = \Delta t q_0 e^{q_1T}\left(\left( \frac{W_i}{q_2} \right)^{q_4} - \left( \frac{W_i}{q_3} \right)^{q_5} \right)
+\end{equation}
+
+\begin{equation}\label{eq:growthlexa}
+ r = \frac{W - \left( p_{0} + p_{8} \left( p_{1} + p_{2}p_{8} \right) \right) W_{ref}}{W}
+\end{equation}
+
+\begin{equation}\label{eq:growthlexb}
+f(x) =
+\begin{cases}
+0 & \textrm{if $p_{3} + p_{4}x \leq 0$} \\
+p_{5} & \textrm{if $p_{3} + p_{4}x \geq p_{5}$} \\
+p_{3} + p_{4}x & \textrm{otherwise}
+\end{cases}
+\end{equation}
+
+\begin{equation}\label{eq:growthlexc}
+\Delta L_i = \frac{\Delta W_i} {p_{6} p_{7} l^{p_{7} - 1}} f(r)
+\end{equation}
+
+where:\newline
+$<\Delta t>$ is the length of the timestep\newline
+$<$ T $>$ is the temperature\newline
+$<W_{ref}>$ is the reference weight
+
+\bigskip
+For this example, $q_1$ is set to zero, removing the temperature dependance from the equation, and $q_2$ is set equal to $q_3$, further simplifying the equation.  Equations~\ref{eq:growthlexa} and \ref{eq:growthlexb} introduce the concept of starvation to the Gadget model, by using a function of the weight and the reference weight when calculating the length increase due to the growth.  For this example, $p_0$ is set to one and $p_8$ to zero, which considerably simplifies equation~\ref{eq:growthlexa}.  To simplify the growth function further, it is possible to remove the concept of starvation from equation~\ref{eq:growthlexb} by setting $p_3$ to zero and $p_4$ and $p_5$ to one.  Once Gadget has calculated the mean increase in weight and length, this increase is then distributed amongst the length groups using a beta-binomial distribution that is defined by the parameters beta and maxlengthgroupgrowth.
+
+\bigskip
+The stock file then defines the age based natural mortality that is to be applied to the stock.  The next section of the stock file defines whether the stock acts as a prey or a predator, and specifies the initial conditions, which are used to calculate the stock that exists at the beginning of the first timestep.  There then follows sections used to describe how the stock would migrate, mature, move, recruit, spawn and stray, which are mostly unused for the example.  However, the stock does have recruits to ensure that it doesn't die out, which are defined in the recruitment file.
+
+{\small \input{had}}
+
+\subsection{Reference Weight File}
+The reference weight file gives a reference length-weight relationship for the stock in this example.  This is used to generate the entries in the age-length cells for the initial conditions, and to modify the growth of the stock after starvation (so that the growth results in an increase in weight not length for the underweight fish).  This files simply lists a ''reference'' mean weight for each length group for the stock.
+
+{\small \input{had.refweights}}
+
+\subsection{Initial Conditions File}
+The initial conditions file gives a Normal distribution for each area/age group combination.  This will be used by Gadget to construct an initial population of 10,000 fish in each area/age group, with the length groups specified by a mean length and standard deviation.  The mean weight for the length groups of the initial population is calculated by multiplying the reference weight by the condition factor.  To change from a population with 10,000 fish in each area/age group to the initial population used in the model, each age group is multiplied by an area weighting factor and an age weighting factor, as specified in the initial conditions file.
+
+{\small \input{had.init}}
+
+\subsection{Recruitment File}
+The recruitment file defines the number of the recruits that are to be added to the stock, along with information about the age, length and weight of these recruits.  The number of these recruits is given, for each timestep/area combination, in units of 10,000 fish.  The age is specified as the minimum age of the stock.
+
+\bigskip
+These recruits are defined as a simple length based stock, with a Normal distribution around a mean length and standard deviation of the length given in the input file.  The mean weight of the recruits is then calculated from the standard weight-length relationship, given in equation~\ref{eq:wlenex} below:
+
+\begin{equation}\label{eq:wlenex}
+W = \alpha L ^\beta
+\end{equation}
+
+Note that in this example, the recruits are assumed to have the same weight and length distribution in each year.  The number of recruits for years that there is data available (1978 - 1999) are parameters that the optimiser can adjust to try to get a better fit between the modelled data and the input data, where as for future years when there is no data available it is assumed that there is a constant number of recruits.
+
+{\small \input{had.rec}}
+
+\section{Fleet File}
+The fleet file defines the fleets that are present in the Gadget model.  The fleets are defined by specifying the fleet type, name, area and length groups (which in this example are set to the minimum and maximum lengths of the stock).  The fleets also have a suitability function, that describes how likely it is that the fleet will catch fish of a given length.  The suitability function used is an exponential suitability function, given in equation~\ref{eq:suitex} below:
+
+\begin{equation}\label{eq:suitex}
+S(l,L) = { \frac{\delta}{1 + e^{- \alpha - \beta l - \gamma  L}}}
+\end{equation}
+
+where:\newline
+$<$ l $>$ is the length of the prey\newline
+$<$ L $>$ is the length of the predator
+
+\bigskip
+Note that in this example, $<\gamma>$ is set to 0 which removes any dependance on the length of the predator, and $<\delta>$ is always set to 1.   $<\alpha>$ and $<\beta>$ are parameters that the optimiser can adjust to try to get a better fit between the modelled data and the input data.
+
+\bigskip
+There are 3 fleets defined in this example.  The commercial fleet (''comm'') covers all the commercial fishing activity, and all the available landings data is specified in the data file.  The survey fleet (''survey'') covers all the government survey activity, and this fleet is assumed to land a constant amount of fish for all the years in the model.  The third fleet (''future'') covers all the predicted commercial fishing activity from mid 1999 (when the commercial landing data stops being available) to the end of the models timesteps.
+
+{\small \input{fleet}}
+
+\subsection{Fleet Data Files}
+The 2 fleet data files contain details of the landings made in each timestep/area/fleet combination for the fleets that have been declared in the main fleet file.  The first data file is a list of the total weight of the landing data currently available (ie. all the survey data and the commercial landings data up to the first timestep of 1999) for each timestep/area/fleet combination.  The second data file contains a list of the ratios to be used when calculating the amount that the fleet will catch, for the timestep/area combinations when commercial fleet effort is required in the future and no landings data is available (ie. from the second timestep of 1999).
+
+{\small \input{fleet.data}}
+{\small \input{fleet.predict}}
+
+\section{Likelihood File}
+The likelihood file defines the various likelihood components that will be used to compare the data from within the Gadget model with external data.  Each likelihood component calculates a ''goodness of fit'' between the 2 sets of data to give a a likelihood score, and there is then a weighted sum of these likelihood scores to give an overall likelihood score, which can be minimised if Gadget is performing an optimising run.
+
+\bigskip
+In this example, there are a total of 14 likelihood components defined to test the goodness of fit between the 2 sets of data.  These are ''BoundLikelihood'', ''Understocking'', 2 ''CatchStatistics'', 4 ''CatchDistribution'' and 6 ''SurveyIndices'' components.
+
+\bigskip
+{\bf BoundLikelihood}\newline
+The BoundLikelihood component is used to apply a penalty weight to any parameter that goes outside the bounds during the optimising process.  Applying this penalty weight will force the parameter away from the bounds and back into the range of numbers that have been specified in the parameter file.
+
+\bigskip
+{\bf Understocking}\newline
+The Understocking component is used to apply a penalty whenever there has been overconsumption by predators (in this case the fleets), and there is insufficient stock for the predator to consume.  In this example this penalty is the sum of squares of the understocking that has occurred in the model.
+
+\bigskip
+{\bf CatchStatistics}\newline
+The CatchStatistics components are used to compare biological data sampled from the model with that sampled from landings data for the fleets.  In this example there are 2 comparisons, one for data from the commercial fleet and one for the survey fleet.  In each case a weighted sum of squares of the mean length at age is used to calculate the goodness of fit between the 2 sets of data.  The data which will be compared to the results from within the Gadget model are given in the 2 data files that are specified.
+
+\bigskip
+{\bf CatchDistribution}\newline
+The CatchDistribution components are used to compare distribution data sampled from the model with that sampled from landings data for the fleets.  In this example there are 2 comparisons (one for the commercial fleet, one for the survey fleet) with the data aggregated into length groups and a further 2 comparisons with the data aggregated into age-length groups.  In each case a multinomial function is used to calculate the goodness of fit between the 2 sets of data.  The data which will be compared to the results from within the Gadget model are given in the 4 data files that are specified.
+
+\bigskip
+{\bf SurveyIndices}\newline
+The SurveyIndices components are used to compare stock indices calculated within the Gadget model to indices calculated from a standardized survey for that stock.  In this example the survey indices calculated are based on a length group survey, and there are 6 comparisons for 6 different length group aggregations, defined in the various length aggregation files.  The index calculated in the model will be compared to the index that is specified in the data file, using a log linear regression line with the slope fixed and the intercept estimated within the model.
+
+{\small \input{likelihood}}
+
+\subsection{Penalty File}
+The penalty file contains the likelihood penalty that is to be applied when any of the parameters goes outside its bound, defined in the parameter input file.  For this example, only a default setting is given which will be applied to each parameter that goes outside a bound.
+
+{\small \input{penaltyfile}}
+
+\subsection{Mean Length Files}
+The 2 mean length data files contain the number of samples, and the mean length and standard deviation of the length for these samples, in each timestep/area/age combination for the 2 fleets.  For this likelihood component there is no area or age aggregation, as defined by the aggregation files declared in the main likelihood file.
+
+\bigskip
+The likelihood function that is used to compare the data from these files with the corresponding data from the model is a weighted sum of squares of the mean length, given in equation~\ref{eq:catchstatex} below:
+
+\begin{equation}\label{eq:catchstatex}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x-\mu)^2} {s^2} N\Big)
+\end{equation}
+
+where:\newline
+$<$ x $>$ is the sample mean length from the data\newline
+$<\mu>$ is the mean length calculated from the model\newline
+$<$ s $>$ is the standard deviation of the length from the data\newline
+$<$ N $>$ is the sample size
+
+{\small \input{had.meanle.sur}}
+{\small \input{had.meanle.catch}}
+
+\subsection{Length Distribution Files}\label{sec:ldist}
+The 2 length distribution data files contain the number of samples in each timestep/ area/age/length group combination for the 2 fleets.  For this likelihood component, there is no area aggregation, all the age groups have been aggregated together into one age group, and the length groups have been aggregated into 2cm length groups, as defined by the aggregation files declared in the main likelihood file.
+
+\bigskip
+The likelihood function that is used to compare the data from these files with the corresponding data from the model is a multinomial function, given in equation~\ref{eq:catchdistex} below:
+
+\begin{equation}\label{eq:catchdistex}
+\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it age} \Bigg( \log N_{tra}! - \sum_{\it length} \log N_{tral}! + \sum_{\it length} \Big( N_{tral} \log {\frac{\pi_{tral}}{\sum \pi_{tral}}} \Big)\Bigg)
+\end{equation}
+
+where:\newline
+$<\pi>$ is the model sample size for that time/area/age/length combination\newline
+$<$ N $>$ is the data sample size for that time/area/age/length combination
+
+{\small \input{had.ldist.sur}}
+{\small \input{had.ldist.catch}}
+
+\subsection{Age-length Distribution Files}
+The 2 age-length distribution data files contain the number of samples in each timestep/area/age/length group combination for the 2 fleets.  For this likelihood component, there is no area or age group aggregation, and the length groups have been aggregated into 2cm length groups, as defined by the aggregation files declared in the main likelihood file.
+
+\bigskip
+The only difference between the age-length distribution data files and the length distribution data files is the age aggregation that takes place for the length distribution.  The likelihood function that is used to compare the data from these files with the corresponding data from the model is a multinomial function, given in equation~\ref{eq:catchdistex} above.
+
+{\small \input{had.alkeys.sur}}
+{\small \input{had.alkeys.catch}}
+
+\subsection{Survey Index File}
+The survey index data file contains the number of samples in each timestep/area/length group combination for the 6 survey indices defined in the main likelihood file.  For this likelihood component, there is no area or age group aggregation, and the length groups have been aggregated into 5cm length groups, as defined by the various length aggregation files declared in the main likelihood file.
+
+\bigskip
+The likelihood function that is used to compare the data from these files with the corresponding data from the model is a log linear regression function.  For the regression line (specified in the main likelihood file), the slope is fixed and the intercept calculated by Gadget.  This is given in equation~\ref{eq:surveyindexex} below:
+
+\begin{equation}\label{eq:surveyindexex}
+\ell = \sum_{\it time}\Big(I_{t} - (\alpha + \beta N_{t})\Big)^2
+\end{equation}
+
+where:\newline
+$<$ I $>$ is the survey index\newline
+$<$ N $>$ is the corresponding index calculated in the Gadget model\newline
+$<\alpha>$ is the intercept of the regression line\newline
+$<\beta>$ is the slope of the regression line (which has been set to 1)
+
+{\small \input{had.surveyindex}}
+
+\section{Print File}
+The printfile defines the content of the output files that will be generated when a stochastic run of Gadget is performed (by specifying the ''-s'' command line option when Gadget is started).  This output is defined by specifying details of the stock, area, age and length groups and the name of the output file that is to be generated.
+
+\bigskip
+In this example there are 6 output files to be generated.  The first file (created by ''StockStdPrinter'') contains an age-based summary of the stock, giving details of the number, length, mean weight and consumption for each timestep/area/age group combination.  The next two files (created by ''StockPrinter'' and ''StockFullPrinter'') give details of the number and mean weight for each timestep/area/age group/length group combination - the difference being the amount of aggregation that takes place.  The 4th file (created by ''PredatorPrinter'') contains information about the predator/prey combination (with the predator being the fleets) and gives details of the biomass consumed for each timestep/area/predator length group/prey length group combination.
+
+\bigskip
+The final two files deal with the output from the likelihood components that have been used to compare this modelled population to observed data.  The first file (created by ''LikelihoodPrinter'') gives detailed information on the modelled data compared to the data specified for the 'ldist.sur' likelihood component, as defined in the likelihood file.  The second file (created by ''LikelihoodSummaryPrinter'') gives a summary of the likelihood information from each timestep in the model.
+
+{\small \input{printfile}}
+
+\subsection{StockStdPrinter Output}
+The output file that is generated by the stockstdprinter printer class is given below.  This class summarises the data available for the stock, giving the number, mean length, mean weight, standard deviation of the length, number consumed and biomass consumed for each timestep/area/age group combination.
+
+{\small \input{had.std}}
+
+\subsection{StockPrinter Output}
+The output file that is generated by the stockprinter printer class is given below.  This class gives a more detailed view of the information available for the stock, giving the number and mean weight for each timestep/area/age group/length group combination specified in the aggregation files.  The labels displayed for the area, age group and length group come from those given in the aggregation files.
+
+{\small \input{had.print}}
+
+\subsection{StockFullPrinter Output}
+The output file that is generated by the stockfullprinter printer class is given below.  This class gives a more detailed view of the information available for the stock, giving the number and mean weight for each timestep/area/age group/length group combination with no aggregation.
+
+{\small \input{had.stock}}
+
+\subsection{PredatorPrinter Output}
+The output file that is generated by the predatorprinter printer class is given below.  This class gives a detailed view of the information available for the predator/prey combination specified in the printfile, giving the biomass consumed for each timestep/area/predator length group/prey length group combination specified in the aggregation files.  The labels displayed for the area, predator length group and prey length group come from those given in the aggregation files.  Note that there is only one predator length group in this example, since the predator is a combination of the commercial fleet and the future fleet.
+
+{\small \input{had.fleet}}
+
+\subsection{LikelihoodPrinter Output}
+The output file that is generated by the likelihoodprinter printer class is given below.  This class gives a detailed view of the internal model information used when calculating the likelihood score for the likelihood component, in the same format as the data in the input file.  The likelihood component that has been used for this example print file is ''ldist.sur'', which is a 'CatchDistribution' likelihood component, so the output here is in the same format as the Length Distribution Files (see section\ref{sec:ldist}).
+
+{\small \input{ldist.sur}}
+
+\subsection{LikelihoodSummaryPrinter Output}
+The output file that is generated by the likelihoodsummaryprinter printer class is given below.  This class gives a summary view of the scores on each timestep from each of the likelihood components that have been specified for the current model.
+
+{\small \input{summary.txt}}
+
+\section{Parameter File}
+The parameter file is used to specify the initial values for the switches that are to be used in the Gadget model.  This file is specified by a ''-i $<$filename$>$'' command line option when Gadget is started, and  contains a list of all the switches, their initial value, the lower and upper bounds and a flag to note whether the optimiser should optimise that switch or not.
+
+{\small \input{refinputfile}}
+
+\end{document}

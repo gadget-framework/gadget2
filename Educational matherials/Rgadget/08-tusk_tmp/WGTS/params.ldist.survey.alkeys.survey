@@ -1,0 +1,60 @@
+; Gadget version 2.2.00-BETA running on nataliia-HP-Compaq-8200-Elite-MT-PC Wed May 27 10:14:43 2015
+; Simulated Annealing algorithm ran for 10001 function evaluations
+; and stopped when the likelihood value was 16712.568
+; because the maximum number of function evaluations was reached
+; Hooke & Jeeves algorithm ran for 201 function evaluations
+; and stopped when the likelihood value was 16712.567
+; because the convergence criteria were met
+; BFGS algorithm ran for 456 function evaluations
+; and stopped when the likelihood value was 16712.567
+; because the accuracy limit for the gradient calculation was reached
+switch	value		lower	upper	optimise
+Linf	         120	      50      200        0
+k	          90	     0.1     1000        0
+bbeta	         0.1	   0.001       15        0
+ic03	           4	   0.001       15        0
+ic04	           3	   0.001       15        0
+ic05	   0.5046196	   0.001       25        1
+ic06	  0.10000007	   0.001       15        0
+ic07	   1.7301384	   1e-05       15        0
+ic08	  0.27719361	   1e-05       10        0
+ic09	1.0027922e-06	   1e-06       20        1
+rec1980	           2	   0.001       10        0
+recl	   7.0000003	       7       40        1
+recsdev	           4	    0.01       15        0
+rec1981	           2	   0.001       10        0
+rec1982	           2	   0.001       10        0
+rec1983	           2	   0.004       10        0
+rec1984	           2	   0.004       10        0
+rec1985	           2	   0.004       10        0
+rec1986	           2	   0.004       10        0
+rec1987	           2	   0.004       10        0
+rec1988	           2	   0.004       10        0
+rec1989	           2	   0.004       10        0
+rec1990	           2	   0.004       10        0
+rec1991	           2	   0.004       10        0
+rec1992	   1.1941263	   0.004       10        1
+rec1993	           2	   0.004       10        0
+rec1994	           2	   0.004       10        0
+rec1995	           2	   0.004       10        0
+rec1996	           2	   0.004       10        0
+rec1997	           2	   0.004       10        0
+rec1998	           2	   0.004       10        0
+rec1999	           2	   0.004       10        0
+rec2000	   2.4837066	   0.004       10        1
+rec2001	           2	   0.004       10        0
+rec2002	   2.1908699	   0.004       10        1
+rec2003	           2	   0.004       10        0
+rec2004	           2	   0.004       10        0
+rec2005	           2	   0.004       10        0
+rec2006	           2	   0.004       10        0
+rec2007	           2	   0.004       10        0
+rec2008	           2	   0.004       10        0
+rec2009	           2	   0.004       10        0
+rec2010	           2	   0.004       10        0
+rec2011	           2	   0.004       10        0
+recfuture	           1	   0.004       10        0
+L50comm	   20.000629	      20       50        1
+alphacomm	         0.9	   0.001        2        0
+L50sur	          30	      10      100        0
+alphasur	         0.9	   0.001        2        0

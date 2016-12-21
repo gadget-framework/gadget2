@@ -1,0 +1,43 @@
+;
+; TUSK stock file
+;
+stockname       tusk
+livesonareas    1
+minage          2
+maxage          20
+minlength       6.5
+maxlength       110.5
+dl              1
+refweightfile   Data/tuskrefw.dat
+;
+growthandeatlengths   AggFiles/len.agg
+doesgrow              1
+growthfunction 	lengthvbsimple
+; growthparameters    	linf     	k  	a		b    
+growthparameters    	#Linf  ( * 0.001 #k) 0.00000659    2.2721
+beta                  (* 50 #bbeta)
+maxlengthgroupgrowth  15
+naturalmortality 0.2 0.2 0.2 0.2 0.2 0.15 0.15 0.15 0.15 0.15 0.10 0.10 0.10 0.10 0.10 0.10 0.10 0.10 0.10
+;
+iseaten           1 
+preylengths       AggFiles/len.agg
+doeseat           0
+;
+initialconditions
+numbers
+minage            3
+maxage            20
+minlength         6.5
+maxlength         110.5
+dl                1
+;
+initstockfile     InitFiles/tusk.init
+doesmigrate       0
+doesmature        0
+doesmove          0
+; Recruitment
+doesrenew         1
+minlength         6.5
+maxlength         35.5
+normalparamfile   InitFiles/tusk.rec
+doesspawn         0

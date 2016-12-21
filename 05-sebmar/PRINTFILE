@@ -1,0 +1,60 @@
+[component]
+type            stockstdprinter
+stockname       sebmar             
+printfile       out/sebmar.std   
+yearsandsteps   all all          
+;
+[component]
+type            likelihoodsummaryprinter
+printfile       out/likelihoodsummary     
+;
+[component]
+type 	        likelihoodprinter
+likelihood      alkeys.catch
+printfile       out/AlkCatch.likPrint		
+;
+[component]
+type 	        likelihoodprinter
+likelihood      alkeys.sur
+printfile       out/AlkSur.likPrint		
+;
+[component]
+type	        stockprinter
+stocknames      sebmar
+areaaggfile     AggFiles/allarea.agg
+ageaggfile      AggFiles/allage.agg
+lenaggfile      AggFiles/lengths.agg
+printfile       out/sebmar.lw
+printatstart	0
+yearsandsteps 	all all
+;
+;
+[component]
+type            likelihoodprinter
+likelihood      si2548
+printfile       out/likelihoodsi2548
+
+[component]
+type            likelihoodprinter
+likelihood      si1924
+printfile       out/likelihoodsi1924
+;
+[component]
+type    	likelihoodprinter
+likelihood 	Ice.CommLD
+printfile 	out/lik.IceCommLD
+;
+[component]
+type    	likelihoodprinter
+likelihood 	Green.CommLD
+printfile 	out/lik.GreCommLD
+;
+[component]
+type    	likelihoodprinter
+likelihood 	Far.CommLD
+printfile 	out/lik.FarCommLD
+;
+[component]
+type    	likelihoodprinter
+likelihood 	IceSurMar.LD
+printfile 	out/lik.IceSurMarLD

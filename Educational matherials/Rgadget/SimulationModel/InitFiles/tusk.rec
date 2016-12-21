@@ -1,0 +1,41 @@
+;
+; Recruitment data for the tusk example
+; year  step  area  age  number        meanlen  stddev alpha    beta
+1980    1     1     2   (* 1000 #rec1980)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1981    1     1     2   (* 1000 #rec1981)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1982    1     1     2   (* 1000 #rec1982)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1983    1     1     2   (* 1000 #rec1983)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1984    1     1     2   (* 1000 #rec1984)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1985    1     1     2   (* 1000 #rec1985)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1986    1     1     2   (* 1000 #rec1986)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1987    1     1     2   (* 1000 #rec1987)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1988    1     1     2   (* 1000 #rec1988)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1989    1     1     2   (* 1000 #rec1989)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1990    1     1     2   (* 1000 #rec1990)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1991    1     1     2   (* 1000 #rec1991)   22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1992    1     1     2   (* 1000 #rec1992)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1993    1     1     2   (* 1000 #rec1993)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1994    1     1     2   (* 1000 #rec1994)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1995    1     1     2   (* 1000 #rec1995)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1996    1     1     2   (* 1000 #rec1996)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1997    1     1     2   (* 1000 #rec1997)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1998    1     1     2   (* 1000 #rec1998)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+1999    1     1     2   (* 1000 #rec1999)  22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2000    1     1     2   (* 1000 #rec2000)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2001    1     1     2   (* 1000 #rec2001)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2002    1     1     2   (* 1000 #rec2002)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2003    1     1     2   (* 1000 #rec2003)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2004    1     1     2   (* 1000 #rec2004)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2005    1     1     2   (* 1000 #rec2005)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2006    1     1     2   (* 1000 #rec2006)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2007    1     1     2   (* 1000 #rec2007)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2008    1     1     2   (* 1000 #rec2008)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2009    1     1     2   (* 1000 #rec2009)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2010    1     1     2   (* 500 #rec2007)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2011    1     1     2   (* 500 #rec2007)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2012    1     1     2   (* 500 #rec2007)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2013    1     1     2   (* 500 #rec2007)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2014    1     1     2   (* 500 #rec2007)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2015    1     1     2   (* 500 #rec2007)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2016    1     1     2   (* 500 #rec2007)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078
+2017    1     1     2   (* 500 #rec2007)    22#le.rec    3.8#sdev.rec  0.94e-5  3.078

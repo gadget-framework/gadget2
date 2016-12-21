@@ -1,0 +1,7 @@
+[fleetcomponent]
+linearfleet	Iceland
+livesonareas	1
+multiplicative	1#effort
+suitability
+sebmar	function	ExpsuitfuncL50	( * 4 #IceC.alpha ) ( * 10 #IceCL50 )
+amount	YPR/fleet.ypr

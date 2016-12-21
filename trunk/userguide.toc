@@ -1,0 +1,206 @@
+\contentsline {chapter}{\numberline {1}Introduction to Gadget}{1}
+\contentsline {section}{\numberline {1.1}What is Gadget?}{1}
+\contentsline {section}{\numberline {1.2}Getting Gadget}{2}
+\contentsline {section}{\numberline {1.3}Running Gadget}{3}
+\contentsline {section}{\numberline {1.4}Starting Switches}{4}
+\contentsline {chapter}{\numberline {2}Input Files}{7}
+\contentsline {section}{\numberline {2.1}Comments in Input Files}{7}
+\contentsline {section}{\numberline {2.2}What Does The \# Mean?}{7}
+\contentsline {subsection}{\numberline {2.2.1}Switches}{7}
+\contentsline {subsection}{\numberline {2.2.2}Functions}{8}
+\contentsline {chapter}{\numberline {3}Model Files}{9}
+\contentsline {section}{\numberline {3.1}Main File}{9}
+\contentsline {section}{\numberline {3.2}Time File}{10}
+\contentsline {section}{\numberline {3.3}Area File}{10}
+\contentsline {section}{\numberline {3.4}Other Input Data Files}{10}
+\contentsline {subsection}{\numberline {3.4.1}Aggregation Files}{11}
+\contentsline {subsubsection}{Area Aggregation}{11}
+\contentsline {subsubsection}{Age Aggregation}{11}
+\contentsline {subsubsection}{Length Aggregation}{11}
+\contentsline {subsubsection}{Prey Aggregation}{12}
+\contentsline {subsection}{\numberline {3.4.2}TimeVariable Files}{12}
+\contentsline {subsection}{\numberline {3.4.3}ActionAtTime}{13}
+\contentsline {chapter}{\numberline {4}Stock Files}{15}
+\contentsline {section}{\numberline {4.1}Reference Weight}{15}
+\contentsline {section}{\numberline {4.2}Growth and Eat Lengths}{16}
+\contentsline {section}{\numberline {4.3}Growth}{16}
+\contentsline {subsection}{\numberline {4.3.1}MULTSPEC Growth Function}{17}
+\contentsline {subsection}{\numberline {4.3.2}WeightVB Growth Function}{17}
+\contentsline {subsection}{\numberline {4.3.3}WeightJones Growth Function}{18}
+\contentsline {subsection}{\numberline {4.3.4}WeightVBExpanded Growth Function}{18}
+\contentsline {subsection}{\numberline {4.3.5}LengthVB Growth Function}{19}
+\contentsline {subsection}{\numberline {4.3.6}LengthPower Growth Function}{19}
+\contentsline {subsection}{\numberline {4.3.7}LengthVBSimple Growth Function}{20}
+\contentsline {section}{\numberline {4.4}Growth Implementation}{20}
+\contentsline {subsection}{\numberline {4.4.1}Beta-Binomial}{20}
+\contentsline {section}{\numberline {4.5}Natural Mortality}{21}
+\contentsline {section}{\numberline {4.6}Stock Prey}{21}
+\contentsline {section}{\numberline {4.7}Stock Predator}{22}
+\contentsline {section}{\numberline {4.8}Consumption}{22}
+\contentsline {section}{\numberline {4.9}Suitability}{23}
+\contentsline {subsection}{\numberline {4.9.1}Constant Suitability Function}{24}
+\contentsline {subsection}{\numberline {4.9.2}StraightLine Suitability Function}{24}
+\contentsline {subsection}{\numberline {4.9.3}Exponential Suitability Function}{24}
+\contentsline {subsection}{\numberline {4.9.4}ExponentialL50 Suitability Function}{25}
+\contentsline {subsection}{\numberline {4.9.5}Richards Suitability Function}{25}
+\contentsline {subsection}{\numberline {4.9.6}Andersen Suitability Function}{25}
+\contentsline {subsection}{\numberline {4.9.7}Gamma Suitability Function}{25}
+\contentsline {section}{\numberline {4.10}Initial Conditions}{26}
+\contentsline {subsection}{\numberline {4.10.1}Normal Condition Distribution}{26}
+\contentsline {subsection}{\numberline {4.10.2}Normal Parametric Distribution}{27}
+\contentsline {subsection}{\numberline {4.10.3}Numerical Distribution}{27}
+\contentsline {section}{\numberline {4.11}Migration}{27}
+\contentsline {subsection}{\numberline {4.11.1}Migration Matrices}{28}
+\contentsline {subsection}{\numberline {4.11.2}Migration Ratios}{28}
+\contentsline {section}{\numberline {4.12}Maturation}{29}
+\contentsline {subsection}{\numberline {4.12.1}Continuous Maturity Function}{30}
+\contentsline {subsection}{\numberline {4.12.2}Constant Maturity Function}{30}
+\contentsline {subsection}{\numberline {4.12.3}ConstantWeight Maturity Function}{31}
+\contentsline {subsection}{\numberline {4.12.4}FixedLength Maturity Function}{31}
+\contentsline {section}{\numberline {4.13}Movement (''Transition'')}{31}
+\contentsline {section}{\numberline {4.14}Renewal (''Recruitment'')}{32}
+\contentsline {subsection}{\numberline {4.14.1}Normal Condition Distribution}{32}
+\contentsline {subsection}{\numberline {4.14.2}Normal Parametric Distribution}{33}
+\contentsline {subsection}{\numberline {4.14.3}Numerical Distribution}{33}
+\contentsline {section}{\numberline {4.15}Spawning}{33}
+\contentsline {subsection}{\numberline {4.15.1}Fecundity Recruitment Function}{35}
+\contentsline {subsection}{\numberline {4.15.2}SimpleSSB Recruitment Function}{35}
+\contentsline {subsection}{\numberline {4.15.3}Ricker Recruitment Function}{35}
+\contentsline {subsection}{\numberline {4.15.4}BevertonHolt Recruitment Function}{36}
+\contentsline {section}{\numberline {4.16}Length Selection}{36}
+\contentsline {subsection}{\numberline {4.16.1}Constant Selection Function}{36}
+\contentsline {subsection}{\numberline {4.16.2}StraightLine Selection Function}{36}
+\contentsline {subsection}{\numberline {4.16.3}Exponential Selection Function}{37}
+\contentsline {section}{\numberline {4.17}Straying}{37}
+\contentsline {chapter}{\numberline {5}Tag Files}{39}
+\contentsline {section}{\numberline {5.1}Tagging Numbers}{40}
+\contentsline {chapter}{\numberline {6}Otherfood Files}{41}
+\contentsline {section}{\numberline {6.1}Food Amounts}{41}
+\contentsline {chapter}{\numberline {7}Fleet Files}{43}
+\contentsline {section}{\numberline {7.1}TotalFleet}{43}
+\contentsline {section}{\numberline {7.2}NumberFleet}{44}
+\contentsline {section}{\numberline {7.3}LinearFleet}{45}
+\contentsline {section}{\numberline {7.4}EffortFleet}{45}
+\contentsline {section}{\numberline {7.5}QuotaFleet}{46}
+\contentsline {section}{\numberline {7.6}Fleet Suitability}{47}
+\contentsline {section}{\numberline {7.7}Fleet Amounts}{47}
+\contentsline {chapter}{\numberline {8}Likelihood Files}{49}
+\contentsline {section}{\numberline {8.1}BoundLikelihood (''Penalty'')}{50}
+\contentsline {section}{\numberline {8.2}Understocking}{51}
+\contentsline {section}{\numberline {8.3}CatchDistribution}{51}
+\contentsline {subsection}{\numberline {8.3.1}Sum of Squares Function}{52}
+\contentsline {subsection}{\numberline {8.3.2}Stratified Sum of Squares Function}{53}
+\contentsline {subsection}{\numberline {8.3.3}Multinomial Function}{53}
+\contentsline {subsection}{\numberline {8.3.4}Pearson Function}{53}
+\contentsline {subsection}{\numberline {8.3.5}Gamma Function}{53}
+\contentsline {subsection}{\numberline {8.3.6}Log Function}{53}
+\contentsline {subsection}{\numberline {8.3.7}Multivariate Normal Function}{54}
+\contentsline {subsection}{\numberline {8.3.8}Multivariate Logistic Function}{54}
+\contentsline {section}{\numberline {8.4}CatchStatistics}{55}
+\contentsline {subsection}{\numberline {8.4.1}Weighted Sum of Squares of Mean Length}{56}
+\contentsline {subsection}{\numberline {8.4.2}Weighted Sum of Squares of Mean Length\newline With Given Standard Deviation}{56}
+\contentsline {subsection}{\numberline {8.4.3}Weighted Sum of Squares of Mean Weight\newline With Given Standard Deviation}{57}
+\contentsline {subsection}{\numberline {8.4.4}Unweighted Sum of Squares of Mean Weight}{57}
+\contentsline {subsection}{\numberline {8.4.5}Unweighted Sum of Squares of Mean Length}{57}
+\contentsline {section}{\numberline {8.5}StockDistribution}{58}
+\contentsline {subsection}{\numberline {8.5.1}Sum of Squares Function}{59}
+\contentsline {subsection}{\numberline {8.5.2}Multinomial Function}{59}
+\contentsline {section}{\numberline {8.6}SurveyIndices}{59}
+\contentsline {subsection}{\numberline {8.6.1}SurveyIndices by Length}{60}
+\contentsline {subsubsection}{linear regression, estimating both slope and intercept}{61}
+\contentsline {subsubsection}{log linear regression, estimating both slope and intercept}{61}
+\contentsline {subsubsection}{linear regression, fixing slope and estimating intercept}{61}
+\contentsline {subsubsection}{log linear regression, fixing slope and estimating intercept}{61}
+\contentsline {subsubsection}{linear regression, fixing intercept and estimating slope}{61}
+\contentsline {subsubsection}{log linear regression, fixing intercept and estimating slope}{62}
+\contentsline {subsubsection}{linear regression, fixing both slope and intercept}{62}
+\contentsline {subsubsection}{log linear regression, fixing both slope and intercept}{62}
+\contentsline {subsection}{\numberline {8.6.2}SurveyIndices by Age}{62}
+\contentsline {subsection}{\numberline {8.6.3}SurveyIndices by Fleet}{63}
+\contentsline {subsection}{\numberline {8.6.4}SurveyIndices by Acoustic}{63}
+\contentsline {subsection}{\numberline {8.6.5}SurveyIndices by Effort}{64}
+\contentsline {section}{\numberline {8.7}SurveyDistribution}{64}
+\contentsline {subsection}{\numberline {8.7.1}Linear Fit}{65}
+\contentsline {subsection}{\numberline {8.7.2}Power Fit}{65}
+\contentsline {subsection}{\numberline {8.7.3}Multinomial Function}{66}
+\contentsline {subsection}{\numberline {8.7.4}Pearson Function}{66}
+\contentsline {subsection}{\numberline {8.7.5}Gamma Function}{66}
+\contentsline {subsection}{\numberline {8.7.6}Log Function}{66}
+\contentsline {section}{\numberline {8.8}StomachContent}{66}
+\contentsline {subsection}{\numberline {8.8.1}SCSimple Function}{67}
+\contentsline {section}{\numberline {8.9}Recaptures}{68}
+\contentsline {subsection}{\numberline {8.9.1}Poisson Function}{68}
+\contentsline {section}{\numberline {8.10}RecStatistics}{68}
+\contentsline {subsection}{\numberline {8.10.1}Weighted Sum of Squares of Mean Length}{69}
+\contentsline {subsection}{\numberline {8.10.2}Weighted Sum of Squares of Mean Length\newline With Given Standard Deviation}{69}
+\contentsline {subsection}{\numberline {8.10.3}Unweighted Sum of Squares of Mean Length}{70}
+\contentsline {section}{\numberline {8.11}MigrationPenalty}{70}
+\contentsline {section}{\numberline {8.12}CatchInKilos}{71}
+\contentsline {subsection}{\numberline {8.12.1}Sum of Squares Function}{72}
+\contentsline {chapter}{\numberline {9}Print Files}{73}
+\contentsline {section}{\numberline {9.1}StockStdPrinter}{74}
+\contentsline {section}{\numberline {9.2}StockFullPrinter}{74}
+\contentsline {section}{\numberline {9.3}StockPrinter}{75}
+\contentsline {section}{\numberline {9.4}PredatorPrinter}{76}
+\contentsline {section}{\numberline {9.5}PredatorOverPrinter}{77}
+\contentsline {section}{\numberline {9.6}PreyOverPrinter}{77}
+\contentsline {section}{\numberline {9.7}StockPreyFullPrinter}{78}
+\contentsline {section}{\numberline {9.8}StockPreyPrinter}{78}
+\contentsline {section}{\numberline {9.9}PredatorPreyPrinter}{79}
+\contentsline {section}{\numberline {9.10}LikelihoodPrinter}{80}
+\contentsline {section}{\numberline {9.11}LikelihoodSummaryPrinter}{80}
+\contentsline {chapter}{\numberline {10}Parameter File}{81}
+\contentsline {chapter}{\numberline {11}Optimisation File}{83}
+\contentsline {section}{\numberline {11.1}Hooke \& Jeeves}{83}
+\contentsline {subsection}{\numberline {11.1.1}Overview}{83}
+\contentsline {subsection}{\numberline {11.1.2}File Format}{84}
+\contentsline {subsection}{\numberline {11.1.3}Parameters}{84}
+\contentsline {subsubsection}{hookeiter}{84}
+\contentsline {subsubsection}{hookeeps}{84}
+\contentsline {subsubsection}{rho}{85}
+\contentsline {subsubsection}{lambda}{85}
+\contentsline {section}{\numberline {11.2}Simulated Annealing}{85}
+\contentsline {subsection}{\numberline {11.2.1}Overview}{85}
+\contentsline {subsection}{\numberline {11.2.2}File Format}{86}
+\contentsline {subsection}{\numberline {11.2.3}Parameters}{86}
+\contentsline {subsubsection}{simanniter}{86}
+\contentsline {subsubsection}{simanneps}{87}
+\contentsline {subsubsection}{t}{87}
+\contentsline {subsubsection}{rt}{87}
+\contentsline {subsubsection}{nt}{87}
+\contentsline {subsubsection}{ns}{87}
+\contentsline {subsubsection}{vm}{88}
+\contentsline {subsubsection}{cstep, lratio and uratio}{88}
+\contentsline {subsubsection}{check}{88}
+\contentsline {section}{\numberline {11.3}BFGS}{88}
+\contentsline {subsection}{\numberline {11.3.1}Overview}{88}
+\contentsline {subsection}{\numberline {11.3.2}File Format}{89}
+\contentsline {subsection}{\numberline {11.3.3}Parameters}{89}
+\contentsline {subsubsection}{bfgsiter}{89}
+\contentsline {subsubsection}{bfgseps}{90}
+\contentsline {subsubsection}{sigma}{90}
+\contentsline {subsubsection}{beta}{90}
+\contentsline {subsubsection}{gradacc, gradstep and gradeps}{90}
+\contentsline {section}{\numberline {11.4}Combining Optimisation Algorithms}{90}
+\contentsline {subsection}{\numberline {11.4.1}Overview}{90}
+\contentsline {subsection}{\numberline {11.4.2}File Format}{91}
+\contentsline {subsection}{\numberline {11.4.3}Parameters}{91}
+\contentsline {section}{\numberline {11.5}Repeatability}{92}
+\contentsline {chapter}{\numberline {12}Output Files}{93}
+\contentsline {section}{\numberline {12.1}Parameter Output}{93}
+\contentsline {section}{\numberline {12.2}Likelihood Output}{93}
+\contentsline {section}{\numberline {12.3}Log Output}{94}
+\contentsline {chapter}{\numberline {13}Paramin}{95}
+\contentsline {section}{\numberline {13.1}Installation}{95}
+\contentsline {section}{\numberline {13.2}Running paramin}{96}
+\contentsline {subsection}{\numberline {13.2.1}Additional information}{96}
+\contentsline {subsection}{\numberline {13.2.2}Running paramin on multiple hosts/cluster}{97}
+\contentsline {chapter}{\numberline {14}References}{99}
+\contentsline {chapter}{\numberline {A}Order of Calculations}{101}
+\contentsline {chapter}{\numberline {B}Recent Changes}{103}
+\contentsline {section}{\numberline {B.1}Gadget version 2.1.01}{103}
+\contentsline {section}{\numberline {B.2}Gadget version 2.1.02}{103}
+\contentsline {section}{\numberline {B.3}Gadget version 2.1.03}{103}
+\contentsline {section}{\numberline {B.4}Gadget version 2.1.04}{104}
+\contentsline {section}{\numberline {B.5}Gadget version 2.1.05}{104}
+\contentsline {section}{\numberline {B.6}Gadget version 2.1.06}{104}

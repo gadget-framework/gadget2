@@ -1,0 +1,101 @@
+; Likelihood file - created in Rgadget
+; WGTS/likelihood.si2039.si4069.si70110 - 2015-09-01
+[component]
+name		alkeys.catch
+weight		0.26868719
+type		catchdistribution
+datafile		Data/catchalkeys.dat
+function		multinomial
+overconsumption		1
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/age.agg
+lenaggfile		AggFiles/len2.agg
+fleetnames		comm
+stocknames		tusk
+;
+[component]
+name		alkeys.survey
+weight		0.22261192
+type		catchdistribution
+datafile		Data/surveyalkeys.dat
+function		multinomial
+overconsumption		1
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/age.agg
+lenaggfile		AggFiles/len2.agg
+fleetnames		survey
+stocknames		tusk
+;
+[component]
+name		ldist.catch
+weight		0.09995866
+type		catchdistribution
+datafile		Data/catchledist.dat
+function		multinomial
+overconsumption		1
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/allage.agg
+lenaggfile		AggFiles/len2.agg
+fleetnames		comm
+stocknames		tusk
+;
+[component]
+name		ldist.survey
+weight		0.0550813
+type		catchdistribution
+datafile		Data/surveyledist.dat
+function		multinomial
+overconsumption		1
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/allage.agg
+lenaggfile		AggFiles/len2.agg
+fleetnames		survey
+stocknames		tusk
+;
+[component]
+name		si2039
+weight		163610.72
+type		surveyindices
+datafile		Data/surveyindices.dat
+sitype		lengths
+areaaggfile		AggFiles/allarea.agg
+lenaggfile		AggFiles/si2039len.agg
+stocknames		tusk
+fittype		fixedslopeloglinearfit
+slope		1
+;
+[component]
+name		si4069
+weight		208883.55
+type		surveyindices
+datafile		Data/surveyindices.dat
+sitype		lengths
+areaaggfile		AggFiles/allarea.agg
+lenaggfile		AggFiles/si4069len.agg
+stocknames		tusk
+fittype		fixedslopeloglinearfit
+slope		1
+;
+[component]
+name		si70110
+weight		32842.58
+type		surveyindices
+datafile		Data/surveyindices.dat
+sitype		lengths
+areaaggfile		AggFiles/allarea.agg
+lenaggfile		AggFiles/si70110len.agg
+stocknames		tusk
+fittype		fixedslopeloglinearfit
+slope		1
+;
+[component]
+name		understocking
+weight		1
+type		understocking
+;
+[component]
+name		bounds
+weight		10
+type		penalty
+datafile		penaltyfile
+;

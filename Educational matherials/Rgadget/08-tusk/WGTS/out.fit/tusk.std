@@ -1,0 +1,4 @@
+; Gadget version 2.2.00-BETA running on nataliia-HP-Compaq-8200-Elite-MT-PC Tue May 26 12:38:31 2015
+; Standard output file for the stock tusk
+; Printing the following information at the end of each timestep
+; year-step-area-age-number-mean length-mean weight-stddev length-number consumed-biomass consumed

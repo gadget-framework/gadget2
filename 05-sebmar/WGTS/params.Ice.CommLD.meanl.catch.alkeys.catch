@@ -1,0 +1,80 @@
+; Gadget version 2.1.06 running on hafstokkur Wed Apr 16 08:59:53 2014
+; Simulated Annealing algorithm ran for 300001 function evaluations
+; and stopped when the likelihood value was 27249.03
+; because the maximum number of function evaluations was reached
+; Hooke & Jeeves algorithm ran for 6572 function evaluations
+; and stopped when the likelihood value was 27238.811
+; because the convergence criteria were met
+; BFGS algorithm ran for 5988 function evaluations
+; and stopped when the likelihood value was 26774.258
+; because the accuracy limit for the gradient calculation was reached
+switch	value		lower	upper	optimise
+grq0	  0.52905775	     0.3        1        1
+grq2	   1.9495549	     1.5        6        1
+bbeta	 0.062869945	    0.03        3        1
+ic03	    7.138148	     0.1       25        1
+ic04	   4.9474746	     0.1       25        1
+ic05	   3.2654853	     0.1       25        1
+ic06	  0.72534533	     0.1       25        1
+ic07	   5.6351016	     0.1       25        1
+ic08	   5.6694041	     0.1       25        1
+ic09	  0.82170554	     0.1       25        1
+ic10	   4.9840365	     0.1       25        1
+ic11	    5.579401	     0.1       25        1
+ic12	   3.2246309	     0.1       25        1
+ic13	 0.080000453	    0.08       30        1
+rec70	   1.1517442	   0.001        5        1
+recl	   17.368523	      10       30        1
+rec71	   1.5372406	   0.001        5        1
+rec72	   1.2702671	   0.001        5        1
+rec73	   2.8199547	   0.001        5        1
+rec74	   1.1351591	   0.001        5        1
+rec75	  0.90185738	   0.001        5        1
+rec76	   1.7177636	   0.001        5        1
+rec77	   1.5353053	   0.001        5        1
+rec78	   1.2196753	   0.001        5        1
+rec79	  0.99384201	   0.001        5        1
+rec80	  0.52685215	   0.001        5        1
+rec81	  0.45542845	   0.001        5        1
+rec82	  0.81288326	   0.001        5        1
+rec83	  0.52154265	   0.001        5        1
+rec84	  0.51505385	   0.001        5        1
+rec85	  0.78439312	   0.001        5        1
+rec86	  0.71173372	   0.001        5        1
+rec87	  0.43305022	   0.001        5        1
+rec88	  0.23250728	   0.001        5        1
+rec89	  0.35270723	   0.001        5        1
+rec90	   1.9423611	   0.001        5        1
+rec91	  0.30352819	   0.001        5        1
+rec92	  0.19021911	   0.001        5        1
+rec93	  0.27732498	   0.001        5        1
+rec94	  0.32750395	   0.001        5        1
+rec95	   1.9621374	   0.001        5        1
+rec96	  0.61141467	   0.001        5        1
+rec97	  0.28180954	   0.001        5        1
+rec98	  0.30259837	   0.001        5        1
+rec99	  0.55140948	   0.001        5        1
+rec2000	  0.35241721	   0.001        5        1
+rec2001	  0.61492502	   0.001        5        1
+recl1	   20.455414	      10       30        1
+rec2002	  0.65778876	   0.001        5        1
+rec2003	  0.74776492	   0.001        5        1
+rec2004	  0.52253246	   0.001        5        1
+rec2005	   0.6201678	   0.001        5        1
+rec2006	  0.65528946	   0.001        5        1
+recl2	   21.085346	      10       30        1
+rec2007	  0.40318484	   0.001        5        1
+rec2008	  0.27898861	   0.001        5        1
+rec2009	   0.2266837	   0.001        5        1
+rec2010	 0.085671521	   0.001        5        1
+rec2011	  0.01466586	   0.001        5        1
+recfuture	           1	   0.001        5        0
+IceC.alpha	  0.15478991	    0.01        2        1
+IceCL50	   3.3667507	       2        5        1
+GreenC.alpha	 0.068610936	    0.01        2        1
+GreenCL50	   2.6518845	       2        5        1
+FarC.alpha	  0.10275821	    0.01        2        1
+FarCL50	   5.2811212	       2        6        1
+survey1	      0.0001	  0.0001      0.5        0
+survey3	   2.4916421	   0.001        5        0
+survey4	  0.46474577	   0.001        3        0

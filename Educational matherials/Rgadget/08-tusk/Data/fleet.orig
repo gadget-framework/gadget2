@@ -1,0 +1,39 @@
+;
+; Fleet data for the tusk example
+;
+; Details for the commercial fleet
+;
+[fleetcomponent]
+totalfleet      comm            ; fleet name
+livesonareas    1               ; areas for the fleet
+; In this example, the length information for the predator is
+; meaningless so set them to min/max length for the prey
+lengths         20 30           ; lengths for this fleet
+multiplicative  1.0             ; scaling factor
+suitability                     ; alpha    beta    
+tusk    function ExpsuitfuncL50    #alphacomm #L50comm 
+amount          fleet.data      ; where the catch data is stored
+;
+; Details for the survey fleet
+;
+[fleetcomponent]
+totalfleet      survey          ; fleet name
+livesonareas    1               ; areas for the fleet
+lengths         20 30           ; lengths for this fleet
+multiplicative  1.0             ; scaling factor
+suitability
+tusk    function ExpsuitfuncL50    #alphasur #L50sur    
+amount          fleet.data      ; where the catch data is stored
+;
+; Details for the predicted fleet
+;
+[fleetcomponent]
+totalfleet     future          ; fleet name
+livesonareas    1               ; areas for the fleet
+lengths         20 30         ; lengths for this fleet
+multiplicative  aaae5             ; scaling factor
+suitability                     ; alpha    beta    
+tusk    function ExpsuitfuncL50    #alphacomm   #L50comm
+amount          fleet.predict   ; where the catch data is stored
+
+

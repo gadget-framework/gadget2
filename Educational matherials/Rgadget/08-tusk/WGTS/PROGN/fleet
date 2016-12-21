@@ -1,0 +1,7 @@
+[fleetcomponent]
+linearfleet	comm.pre
+livesonareas	1
+multiplicative	#rgadget.effort
+suitability
+tusk	function	exponential	( * #L50comm ( * -1 #alphacomm ) ) #alphacomm 0 1
+amount	WGTS/PROGN/fleet.pre

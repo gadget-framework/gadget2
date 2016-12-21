@@ -1,0 +1,8 @@
+;
+; OPT Time file for the redfish example
+;
+firstyear       1970
+firststep       1
+lastyear        2014
+laststep        1
+notimesteps     2 6 6
