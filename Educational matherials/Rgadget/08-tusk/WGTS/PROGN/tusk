@@ -1,0 +1,45 @@
+; stock definition file for tusk created using rgadget
+; at 2014-09-17
+;
+stockname	tusk
+livesonareas	1
+minage	2
+maxage	20
+minlength	6.5
+maxlength	110.5
+dl	1
+refweightfile	WGTS/PROGN/Data/tusk.refweigthfile
+growthandeatlengths	WGTS/PROGN/aggfiles/tusk.len.agg
+doesgrow	1
+growthfunction	lengthvbsimple
+growthparameters	#Linf ( * 0.001 #k ) 0.00000659 3.01721
+beta	( * 50 #bbeta )
+maxlengthgroupgrowth	15
+naturalmortality	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15	0.15
+iseaten	1
+preylengths	WGTS/PROGN/aggfiles/tusk.prey.agg
+energycontent	1
+doeseat	0
+;
+Initialconditions
+minage	3
+maxage	20
+minlength	6.5
+maxlength	110.5
+dl	1
+sdev	1
+normalcondfile	WGTS/PROGN/Data/tusk.normalcond
+doesmigrate	0
+;
+doesmature	0
+;
+doesmove	0
+;
+doesrenew	1
+minlength	6.5
+maxlength	35.5
+normalparamfile	WGTS/PROGN/Data/tusk.rec
+doesspawn	0
+;
+doesstray	0
+;

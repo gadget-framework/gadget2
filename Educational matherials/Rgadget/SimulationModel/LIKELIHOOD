@@ -1,0 +1,14 @@
+; Likelihood file - created in Rgadget
+; WGTS/likelihood.sIw
+[component]
+name bounds
+weight 10
+type penalty
+datafile penaltyfile
+;
+[component]
+name understocking
+weight 1
+type understocking
+;
+

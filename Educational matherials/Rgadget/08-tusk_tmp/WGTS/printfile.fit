@@ -1,0 +1,63 @@
+; gadget printfile, created in 2015-05-27
+[component]
+type	likelihoodsummaryprinter
+printfile	WGTS/out.fit/likelihoodsummary
+;
+[component]
+type	likelihoodprinter
+likelihood	ldist.catch
+printfile	WGTS/out.fit/ldist.catch
+;
+[component]
+type	likelihoodprinter
+likelihood	ldist.survey
+printfile	WGTS/out.fit/ldist.survey
+;
+[component]
+type	likelihoodprinter
+likelihood	alkeys.catch
+printfile	WGTS/out.fit/alkeys.catch
+;
+[component]
+type	likelihoodprinter
+likelihood	alkeys.survey
+printfile	WGTS/out.fit/alkeys.survey
+;
+[component]
+type	likelihoodprinter
+likelihood	si2039
+printfile	WGTS/out.fit/si2039
+;
+[component]
+type	likelihoodprinter
+likelihood	si4069
+printfile	WGTS/out.fit/si4069
+;
+[component]
+type	likelihoodprinter
+likelihood	si70110
+printfile	WGTS/out.fit/si70110
+;
+[component]
+type	stockstdprinter
+stockname	tusk
+printfile	WGTS/out.fit/tusk.std
+yearsandsteps	 all 1
+[component]
+type	stockprinter
+stocknames	tusk
+areaaggfile	WGTS/print.aggfiles/tusk.area.agg
+ageaggfile	WGTS/print.aggfiles/tusk.allages.agg
+lenaggfile	WGTS/print.aggfiles/tusk.len.agg
+printfile	WGTS/out.fit/tusk.full
+yearsandsteps	 all 1
+[component]
+type	predatorpreyprinter
+predatornames	comm survey
+preynames	tusk
+areaaggfile	WGTS/print.aggfiles/tusk.area.agg
+ageaggfile	WGTS/print.aggfiles/tusk.age.agg
+lenaggfile	WGTS/print.aggfiles/tusk.alllen.agg
+printfile	WGTS/out.fit/tusk.prey
+yearsandsteps	all all
+;

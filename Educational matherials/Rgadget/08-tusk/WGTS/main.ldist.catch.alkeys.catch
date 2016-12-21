@@ -1,0 +1,13 @@
+; main file for gadget - created in Rgadget
+; WGTS/main.ldist.catch.alkeys.catch - Tue Sep  1 12:27:14 2015
+timefile TIME
+areafile AREA
+printfiles ; no printfile supplied
+[stock]
+stockfiles TUSK
+[tagging]
+[otherfood]
+[fleet]
+fleetfiles FLEET
+[likelihood]
+likelihoodfiles WGTS/likelihood.ldist.catch.alkeys.catch

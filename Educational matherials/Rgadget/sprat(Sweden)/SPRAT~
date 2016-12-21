@@ -1,0 +1,43 @@
+;
+; SPRAT stock file
+;
+stockname       sprat
+livesonareas    1
+minage          0
+maxage          8
+minlength       4.5
+maxlength       17
+dl              0.5
+refweightfile   InitFiles/spratrefw.dat
+;
+growthandeatlengths   AggFiles/len.agg
+doesgrow              1
+growthfunction 	lengthvbsimple
+; growthparameters    	linf     	k  	a		b    
+growthparameters    	#Linf  ( * 0.001 #k) 0.00004363    2.61115
+beta                  (* 50 #bbeta)
+maxlengthgroupgrowth  10
+naturalmortality 0.44 0.44 0.44 0.44 0.43 0.42 0.42 0.41 0.41
+;
+iseaten           1 
+preylengths       AggFiles/len.agg
+doeseat           0
+;
+initialconditions
+numbers
+minage            1
+maxage            8
+minlength         4.5
+maxlength         17
+dl                0.5
+;
+initstockfile     InitFiles/sprat.init
+doesmigrate       0
+doesmature        0
+doesmove          0
+; Recruitment
+doesrenew         1
+minlength         4.5
+maxlength         11
+normalparamfile   InitFiles/sprat.rec
+doesspawn         0

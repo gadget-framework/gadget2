@@ -1,0 +1,145 @@
+; Likelihood file - created in Rgadget
+; WGTS/likelihood.final - 2014-04-16
+[component]
+name		meanl.catch
+weight		0.272375854891466
+type		catchstatistics
+datafile		DataFiles/sebmar.meanlength.catch
+function		lengthgivenvar
+overconsumption		1
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/age.agg
+fleetnames		Iceland
+stocknames		sebmar
+;
+[component]
+name		meanl.sur
+weight		0.0310924369747899
+type		catchstatistics
+datafile		DataFiles/sebmar.meanlength.surveys
+function		lengthgivenvar
+overconsumption		1
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/age.agg
+fleetnames		IcelandMarchSurvey
+stocknames		sebmar
+;
+[component]
+name		alkeys.catch
+weight		0.170086705202312
+type		catchdistribution
+datafile		DataFiles/sebmar.catch.alkeys
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/age.agg
+lenaggfile		AggFiles/len.agg
+fleetnames		Iceland
+stocknames		sebmar
+;
+[component]
+name		alkeys.sur
+weight		0.16011690647482
+type		catchdistribution
+datafile		DataFiles/sebmar.surveys.alkeys
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/age.agg
+lenaggfile		AggFiles/len.agg
+fleetnames		IcelandMarchSurvey
+stocknames		sebmar
+;
+[component]
+name		Far.CommLD
+weight		0.0620679290652239
+type		catchdistribution
+datafile		DataFiles/FarCommLD.dat
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/allage.agg
+lenaggfile		AggFiles/len.agg
+fleetnames		Faroe
+stocknames		sebmar
+;
+[component]
+name		Green.CommLD
+weight		0.000149520601192019
+type		catchdistribution
+datafile		DataFiles/GreenCommLD.dat
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/allage.agg
+lenaggfile		AggFiles/len.agg
+fleetnames		Greenland
+stocknames		sebmar
+;
+[component]
+name		Ice.CommLD
+weight		0.0379402129402129
+type		catchdistribution
+datafile		DataFiles/IceCommLD.dat
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/allage.agg
+lenaggfile		AggFiles/len.agg
+fleetnames		Iceland
+stocknames		sebmar
+;
+[component]
+name		IceSurMar.LD
+weight		0.000267194458189015
+type		catchdistribution
+datafile		DataFiles/IceMarGrlOctLdr.dat
+function		multinomial
+overconsumption		1
+minimumprobability		20
+areaaggfile		AggFiles/allarea.agg
+ageaggfile		AggFiles/allage.agg
+lenaggfile		AggFiles/len.agg
+fleetnames		IcelandMarchSurvey
+stocknames		sebmar
+;
+[component]
+name		si1924
+weight		26.4007040187738
+type		surveyindices
+datafile		DataFiles/IceMarGrlOctIndices.dat
+sitype		lengths
+areaaggfile		AggFiles/allarea.agg
+lenaggfile		AggFiles/si1924len.agg
+stocknames		sebmar
+fittype		fixedslopeloglinearfit
+slope		1
+;
+[component]
+name		si2548
+weight		10.2998397802701
+type		surveyindices
+datafile		DataFiles/IceMarGrlOctIndices.dat
+sitype		lengths
+areaaggfile		AggFiles/allarea.agg
+lenaggfile		AggFiles/si2548len.agg
+stocknames		sebmar
+fittype		fixedslopeloglinearfit
+slope		1
+;
+[component]
+name		understocking
+weight		10
+type		understocking
+;
+[component]
+name		bounds
+weight		10
+type		penalty
+datafile		penaltyfile
+;

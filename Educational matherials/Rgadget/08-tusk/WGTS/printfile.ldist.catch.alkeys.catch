@@ -1,0 +1,57 @@
+; Printfile for gadget, created by Rgadget
+; WGTS/printfile.ldist.catch.alkeys.catch
+;
+[component]
+type	stockstdprinter
+stockname	tusk
+printfile	WGTS/out.ldist.catch.alkeys.catch/tusk.std
+yearsandsteps	all	all
+;
+[component]
+type	likelihoodsummaryprinter
+printfile	WGTS/out.ldist.catch.alkeys.catch/likelihoodsummary
+;
+[component]
+type	stockprinter
+stocknames	tusk
+areaaggfile	AggFiles/allarea.agg
+ageaggfile	AggFiles/allage.agg
+lenaggfile	AggFiles/len.agg
+printfile	WGTS/out.ldist.catch.alkeys.catch/tusk.lw
+printatstart	0
+yearsandsteps	all	all
+;
+[component]
+type	likelihoodprinter
+likelihood	si2039
+printfile	WGTS/out.ldist.catch.alkeys.catch/likelihoodsi2039
+;
+[component]
+type	likelihoodprinter
+likelihood	si4069
+printfile	WGTS/out.ldist.catch.alkeys.catch/likelihoodsi4069
+;
+[component]
+type	likelihoodprinter
+likelihood	si70110
+printfile	WGTS/out.ldist.catch.alkeys.catch/likelihoodsi70110
+;
+[component]
+type	likelihoodprinter
+likelihood	ldist.survey
+printfile	WGTS/out.ldist.catch.alkeys.catch/likelihoodsLDsurvey
+;
+[component]
+type	likelihoodprinter
+likelihood	ldist.catch
+printfile	WGTS/out.ldist.catch.alkeys.catch/likelihoodsLDcatch
+;
+[component]
+type	likelihoodprinter
+likelihood	alkeys.catch
+printfile	WGTS/out.ldist.catch.alkeys.catch/likelihoodsALKcatch
+;
+[component]
+type	likelihoodprinter
+likelihood	alkeys.survey
+printfile	WGTS/out.ldist.catch.alkeys.catch/likelihoodsALKsurvey

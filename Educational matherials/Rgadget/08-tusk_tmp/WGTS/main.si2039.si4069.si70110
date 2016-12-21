@@ -1,0 +1,13 @@
+; main file for gadget - created in Rgadget
+; WGTS/main.si2039.si4069.si70110 - Wed May 27 10:14:43 2015
+timefile TIME
+areafile AREA
+printfiles WGTS/printfile.si2039.si4069.si70110
+[stock]
+stockfiles TUSK
+[tagging]
+[otherfood]
+[fleet]
+fleetfiles FLEET
+[likelihood]
+likelihoodfiles WGTS/likelihood.si2039.si4069.si70110

@@ -1,0 +1,31 @@
+;
+; options for the Simulated Annealing optimisation
+;
+;[simann]
+;simanniter 2000  ; number of simulated annealing iterations (default 2000)
+;simanneps  1e-04 ; minimum epsilon, simann halt criteria (default 1e-04)
+;t          100   ; simulated annealing temperature (default 100)
+;rt         0.85  ; temperature reduction factor (default 0.85)
+;nt         2     ; number of loops before temperature adjusted (default 2)
+;ns         5     ; number of loops before step length adjusted (default 5)
+;vm         1     ; step length for simulated annealing (default 1)
+;cstep      2     ; step length adjustment factor (default 2)
+;lratio     0.3   ; lower limit for the ratio adjustment (default 0.3)
+;uratio     0.7   ; upper limit for the ratio adjustment (default 0.7)
+;check      4     ; number of fstar values to check (default 4)
+;
+; options for the Hooke & Jeeves optimisation
+;
+;[hooke]
+;hookeiter  1000  ; number of hooke & jeeves iterations (default 1000)
+;hookeeps   1e-04 ; minimum epsilon, hooke halt criteria (default 1e-04)
+;rho        0.5   ; initial value for the resizing multiplier (default 0.5)
+;lambda     0     ; initial value for the step length (default 0)
+;
+; options for the BFGS optimisation
+;
+;[bfgs]
+;bfgsiter   10000 ; number of bfgs iterations (default 10000)
+;bfgseps    0.01  ; minimum epsilon, bfgs halt criteria (default 0.01)
+;beta       0.3   ; armijo adjustment factor (default 0.3)
+;sigma      0.01  ; armijo convergence factor factor (default 0.01)

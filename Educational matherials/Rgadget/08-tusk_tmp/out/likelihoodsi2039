@@ -1,0 +1,64 @@
+; Gadget version 2.2.00-BETA running on nataliia-HP-Compaq-8200-Elite-MT-PC Fri Nov  7 12:13:41 2014
+; Likelihood output file for the likelihood component si2039
+; year-step-area-label-number
+1985    1   allareas   len20-29     12622348
+1985    1   allareas   len30-39     15571823
+1986    1   allareas   len20-29     10188786
+1986    1   allareas   len30-39     12744944
+1987    1   allareas   len20-29     14634689
+1987    1   allareas   len30-39     10409440
+1988    1   allareas   len20-29     16467271
+1988    1   allareas   len30-39     11430896
+1989    1   allareas   len20-29     17966359
+1989    1   allareas   len30-39     13666847
+1990    1   allareas   len20-29     21659505
+1990    1   allareas   len30-39     15281859
+1991    1   allareas   len20-29     22458174
+1991    1   allareas   len30-39     17625570
+1992    1   allareas   len20-29     19482362
+1992    1   allareas   len30-39     19219095
+1993    1   allareas   len20-29     15704826
+1993    1   allareas   len30-39     18217971
+1994    1   allareas   len20-29     12809148
+1994    1   allareas   len30-39     15517350
+1995    1   allareas   len20-29     10691361
+1995    1   allareas   len30-39     12712077
+1996    1   allareas   len20-29    8830080.4
+1996    1   allareas   len30-39     10469213
+1997    1   allareas   len20-29     12599309
+1997    1   allareas   len30-39    8842768.9
+1998    1   allareas   len20-29     17152972
+1998    1   allareas   len30-39    9940470.5
+1999    1   allareas   len20-29     17116306
+1999    1   allareas   len30-39     13169327
+2000    1   allareas   len20-29     15808437
+2000    1   allareas   len30-39     14811513
+2001    1   allareas   len20-29     15992352
+2001    1   allareas   len30-39     14463247
+2002    1   allareas   len20-29     17956796
+2002    1   allareas   len30-39     14239571
+2003    1   allareas   len20-29     20526543
+2003    1   allareas   len30-39     15191548
+2004    1   allareas   len20-29     23441000
+2004    1   allareas   len30-39     17106650
+2005    1   allareas   len20-29     26295107
+2005    1   allareas   len30-39     19523266
+2006    1   allareas   len20-29     27937535
+2006    1   allareas   len30-39     22021826
+2007    1   allareas   len20-29     27273431
+2007    1   allareas   len30-39     23890128
+2008    1   allareas   len20-29     24398451
+2008    1   allareas   len30-39     24237283
+2009    1   allareas   len20-29     21578790
+2009    1   allareas   len30-39     22715855
+2010    1   allareas   len20-29     17135319
+2010    1   allareas   len30-39     20332949
+2011    1   allareas   len20-29     11200935
+2011    1   allareas   len30-39     17016026
+2012    1   allareas   len20-29    6757985.3
+2012    1   allareas   len30-39     12485316
+2013    1   allareas   len20-29    8045392.9
+2013    1   allareas   len30-39    8230205.3
+; Regression information for area allareas
+; len20-29 intercept -9.8937402 slope 1 sse 2.0162086
+; len30-39 intercept -9.5401788 slope 1 sse 0.62437568

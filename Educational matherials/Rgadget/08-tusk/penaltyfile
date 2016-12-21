@@ -1,0 +1,4 @@
+; Penalty file for the TUSK example
+; default setting
+; switch   power  lowerW   upperW
+default    2      10000    10000 

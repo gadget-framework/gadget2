@@ -1,0 +1,67 @@
+; Printfile for gadget, created by Rgadget
+; WGTS/printfile.final
+;
+[component]
+type	stockstdprinter
+stockname	tusk
+printfile	WGTS/out.final/tusk.std
+yearsandsteps	all	all
+;
+[component]
+type	likelihoodsummaryprinter
+printfile	WGTS/out.final/likelihoodsummary
+;
+[component]
+type	stockprinter
+stocknames	tusk
+areaaggfile	AggFiles/allarea.agg
+ageaggfile	AggFiles/allage.agg
+lenaggfile	AggFiles/len.agg
+printfile	WGTS/out.final/tusk.lw
+printatstart	0
+yearsandsteps	all	all
+;
+[component]
+type	stockprinter
+stocknames	tusk
+areaaggfile	AggFiles/allarea.agg
+ageaggfile	AggFiles/allage.agg
+lenaggfile	AggFiles/len10.agg
+printfile	WGTS/out.final/tusk.lw10cm
+printatstart	0
+yearsandsteps	2010	2
+;
+[component]
+type	likelihoodprinter
+likelihood	si2039
+printfile	WGTS/out.final/likelihoodsi2039
+;
+[component]
+type	likelihoodprinter
+likelihood	si4069
+printfile	WGTS/out.final/likelihoodsi4069
+;
+[component]
+type	likelihoodprinter
+likelihood	si70110
+printfile	WGTS/out.final/likelihoodsi70110
+;
+[component]
+type	likelihoodprinter
+likelihood	ldist.survey
+printfile	WGTS/out.final/likelihoodsLDsurvey
+;
+[component]
+type	likelihoodprinter
+likelihood	ldist.catch
+printfile	WGTS/out.final/likelihoodsLDcatch
+;
+[component]
+type	likelihoodprinter
+likelihood	alkeys.catch
+printfile	WGTS/out.final/likelihoodsALKcatch
+;
+[component]
+type	likelihoodprinter
+likelihood	alkeys.survey
+printfile	WGTS/out.final/likelihoodsALKsurvey

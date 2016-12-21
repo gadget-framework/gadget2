@@ -1,0 +1,10 @@
+; Gadget version 2.2.00-BETA running on hafgeimur.hafro.is Wed Dec  3 10:27:14 2014
+; a simulation run was performed giving a likelihood value of 0
+switch	value		lower	upper	optimise
+grq0	  0.46601132	   -9999     9999        1
+grq2	   1.9439352	   -9999     9999        1
+bbeta	  0.06435507	   -9999     9999        1
+recl	   19.699163	   -9999     9999        1
+effort	           1	   -9999     9999        1
+IceC.alpha	  0.16285383	   -9999     9999        1
+IceCL50	    3.344036	   -9999     9999        1

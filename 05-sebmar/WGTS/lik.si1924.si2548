@@ -1,0 +1,91 @@
+; Gadget version 2.1.06 running on hafstokkur Tue Apr 15 23:44:54 2014
+; Listing of the switches used in the current Gadget run
+grq0	sebmargrowergrowthcalcCtimevariable	
+grq2	sebmargrowergrowthcalcCtimevariable	sebmargrowergrowthcalcCtimevariable	
+bbeta	sebmargrower	
+ic03	sebmarinitialcondmeandata	
+ic04	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+ic05	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+ic06	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+ic07	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+ic08	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+ic09	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+ic10	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+ic11	sebmarinitialcondmeandata	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+ic12	sebmarinitialcondmeandata	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+ic13	sebmarinitialcondmeandata	sebmarinitialcondmeandata	sebmarinitialcondmeandata	sebmarinitialcondmeandata	
+rec70	sebmarrenewaldata	
+recl	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	
+rec71	sebmarrenewaldata	
+rec72	sebmarrenewaldata	
+rec73	sebmarrenewaldata	
+rec74	sebmarrenewaldata	
+rec75	sebmarrenewaldata	
+rec76	sebmarrenewaldata	
+rec77	sebmarrenewaldata	
+rec78	sebmarrenewaldata	
+rec79	sebmarrenewaldata	
+rec80	sebmarrenewaldata	
+rec81	sebmarrenewaldata	
+rec82	sebmarrenewaldata	
+rec83	sebmarrenewaldata	
+rec84	sebmarrenewaldata	
+rec85	sebmarrenewaldata	
+rec86	sebmarrenewaldata	
+rec87	sebmarrenewaldata	
+rec88	sebmarrenewaldata	
+rec89	sebmarrenewaldata	
+rec90	sebmarrenewaldata	
+rec91	sebmarrenewaldata	
+rec92	sebmarrenewaldata	
+rec93	sebmarrenewaldata	
+rec94	sebmarrenewaldata	
+rec95	sebmarrenewaldata	
+rec96	sebmarrenewaldata	
+rec97	sebmarrenewaldata	
+rec98	sebmarrenewaldata	
+rec99	sebmarrenewaldata	
+rec2000	sebmarrenewaldata	
+rec2001	sebmarrenewaldata	
+recl1	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	
+rec2002	sebmarrenewaldata	
+rec2003	sebmarrenewaldata	
+rec2004	sebmarrenewaldata	
+rec2005	sebmarrenewaldata	
+rec2006	sebmarrenewaldata	
+recl2	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	
+rec2007	sebmarrenewaldata	
+rec2008	sebmarrenewaldata	
+rec2009	sebmarrenewaldata	
+rec2010	sebmarrenewaldata	
+rec2011	sebmarrenewaldata	
+recfuture	sebmarrenewaldata	sebmarrenewaldata	sebmarrenewaldata	
+IceC.alpha	fleetIcelandpredatorIcelandsuitabilityforsebmartimevariable	fleetfuturepredatorfuturesuitabilityforsebmartimevariable	
+IceCL50	fleetIcelandpredatorIcelandsuitabilityforsebmartimevariable	fleetfuturepredatorfuturesuitabilityforsebmartimevariable	
+GreenC.alpha	fleetGreenlandpredatorGreenlandsuitabilityforsebmartimevariable	
+GreenCL50	fleetGreenlandpredatorGreenlandsuitabilityforsebmartimevariable	
+FarC.alpha	fleetFaroepredatorFaroesuitabilityforsebmartimevariable	
+FarCL50	fleetFaroepredatorFaroesuitabilityforsebmartimevariable	
+survey1	fleetIcelandMarchSurveypredatorIcelandMarchSurveysuitabilityforsebmartimevariable	
+survey3	fleetIcelandMarchSurveypredatorIcelandMarchSurveysuitabilityforsebmartimevariable	
+survey4	fleetIcelandMarchSurveypredatorIcelandMarchSurveysuitabilityforsebmartimevariable	
+;
+; Listing of the likelihood components used in the current Gadget run
+;
+; Component	Type	Weight
+meanl.catch	4	0.000255167
+meanl.sur	4	5.61798e-05
+alkeys.catch	3	3.76506e-05
+alkeys.sur	3	4.67946e-05
+Far.CommLD	3	8.32639e-05
+Green.CommLD	3	2.06996e-07
+Ice.CommLD	3	1.58881e-05
+IceSurMar.LD	3	3.50631e-07
+si1924	1	465.333
+si2548	1	156.006
+understocking	2	10
+bounds	8	10
+;
+; Listing of the output from the likelihood components for the current Gadget run
+;
+0	  0.372196    3.72752  0.0740006     3.2564    11.6665    5.24249    1.40111    13.2833    13.2502   0.921042    7.79024     20.149    1.14548    4.63081   0.151696    20.8668   0.931295    1.09365    3.16069    1.25555   0.169656    1.39028    1.16914   0.671032    1.06576    1.64494   0.994238   0.682251    1.13069    0.71354    1.09703    4.33478   0.391374   0.211194  0.0695717     1.9572    4.91995 0.00100079   0.935446    1.47778   0.503368    3.20875   0.196023 0.00100025    1.86911   0.630324  0.0010001     23.288     1.4134    3.70345   0.429359    1.78697   0.831539    22.9629   0.997065     1.0117   0.559486   0.964272   0.361725          1  0.0407854          2   0.357576    4.55909    1.68821    4.33473     0.0001    2.49164   0.464746 		6.465e+04 4.511e+04  8.1e+04 6.555e+04 7.186e+04 7.195e+07 2.469e+06 6.772e+06    5.207    47.86        0        0 		   9976.58919411859

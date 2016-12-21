@@ -1,0 +1,13 @@
+; main file for gadget - created in Rgadget
+; WGTS/main.alkeys.sur.IceSurMar.LD.meanl.sur - Wed Apr 16 08:59:53 2014
+timefile TIME
+areafile AREA
+printfiles WGTS/printfile.alkeys.sur.IceSurMar.LD.meanl.sur
+[stock]
+stockfiles SMARINUS
+[tagging]
+[otherfood]
+[fleet]
+fleetfiles FLEET
+[likelihood]
+likelihoodfiles WGTS/likelihood.alkeys.sur.IceSurMar.LD.meanl.sur

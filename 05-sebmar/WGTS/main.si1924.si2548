@@ -1,0 +1,13 @@
+; main file for gadget - created in Rgadget
+; WGTS/main.si1924.si2548 - Tue Apr 15 22:38:20 2014
+timefile TIME
+areafile AREA
+printfiles WGTS/printfile.si1924.si2548
+[stock]
+stockfiles SMARINUS
+[tagging]
+[otherfood]
+[fleet]
+fleetfiles FLEET
+[likelihood]
+likelihoodfiles WGTS/likelihood.si1924.si2548

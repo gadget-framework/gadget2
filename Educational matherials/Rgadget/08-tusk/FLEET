@@ -1,0 +1,18 @@
+; Fleet data for the tusk example
+;
+[fleetcomponent]
+totalfleet      	comm         
+livesonareas    	1            
+multiplicative  	1.0
+suitability             
+tusk    		function exponential (* #L50comm (* -1 #alphacomm ))      #alphacomm      0       1
+amount          	Data/fleet.data
+;
+[fleetcomponent]
+totalfleet      	survey        
+livesonareas    	1             
+multiplicative  	1.0           
+suitability
+tusk		function exponential (* #L50sur (* -1 #alphasur ))      #alphasur      0       1	
+amount          	Data/fleet.data
+

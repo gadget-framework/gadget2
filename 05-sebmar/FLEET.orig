@@ -1,0 +1,41 @@
+[fleetcomponent]
+totalfleet      Iceland           
+livesonareas    1                    
+multiplicative  1.0            
+suitability                    
+sebmar          function ExpsuitfuncL50    #IceC.alpha (* 10 #IceCL50)  
+amount          DataFiles/fleet.data     
+;
+[fleetcomponent]
+totalfleet      Greenland           
+livesonareas    1                    
+multiplicative  1.0            
+suitability                    
+sebmar          function ExpsuitfuncL50    #GreenC.alpha (* 10 #GreenCL50)  
+amount          DataFiles/fleet.data     
+;
+[fleetcomponent]
+totalfleet      Faroe           
+livesonareas    1                    
+multiplicative  1.0            
+suitability                    
+sebmar          function ExpsuitfuncL50    #FarC.alpha (* 10 #FarCL50)  
+amount          DataFiles/fleet.data     
+;
+[fleetcomponent]
+totalfleet      IcelandMarchSurvey    
+livesonareas    1         
+multiplicative  1.0       
+suitability
+sebmar          function andersen 0 (* 0.1 #survey1) 1 (* 0.1 #survey3) (* 0.1 #survey4)  
+amount          DataFiles/fleet.data  
+;
+[fleetcomponent]
+linearfleet     future         
+livesonareas    1              
+multiplicative  aaaa           
+suitability                   
+sebmar          function ExpsuitfuncL50    #IceC.alpha  (* 10 #IceCL50)    
+amount          DataFiles/fleet.predict  
+
+

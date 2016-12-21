@@ -1,0 +1,13 @@
+; main file for gadget - created in Rgadget
+; WGTS/main.Far.CommLD.Green.CommLD - Wed Apr 16 08:59:53 2014
+timefile TIME
+areafile AREA
+printfiles WGTS/printfile.Far.CommLD.Green.CommLD
+[stock]
+stockfiles SMARINUS
+[tagging]
+[otherfood]
+[fleet]
+fleetfiles FLEET
+[likelihood]
+likelihoodfiles WGTS/likelihood.Far.CommLD.Green.CommLD

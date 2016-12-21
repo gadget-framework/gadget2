@@ -1,0 +1,40 @@
+rm(list=(ls))
+
+library(Rgadget)
+library(grid)
+library(gridExtra)
+
+tmp <-
+gadget.iterative(rew.sI = TRUE,
+grouping = list(sind = c('si2039','si4069',
+'si70110'),
+survey = c('ldist.survey',
+'alkeys.survey'),
+catch = c('ldist.catch',
+'alkeys.catch')),
+params.file = 'params.base',
+optinfofile = 'optinfofile',
+wgts = 'WGTS')
+
+fit <- gadget.fit(mat.par = c(-8.6512,0.1403))
+summary(fit
+F.plot <-
+  ggplot(head(fit$res.by.year,-1),aes(year,F)) + geom_line() + ylim(c(0,0.7)) +
+  theme_bw()
+
+ssb.plot <-
+  ggplot(fit$res.by.year,aes(year,ssb/1e6)) + geom_line() +
+  theme_bw() + ylab("SSB (in '000 tons)") + xlab('Year')
+
+catch.plot <-
+  ggplot(fit$res.by.year,aes(year,catch/1000)) + geom_bar(stat='identity') +
+  theme_bw() + ylab('Landings (in tons)') + xlab('Year')
+
+rec.plot <-
+  ggplot(fit$res.by.year,aes(year,recruitment/1e6)) +
+  geom_bar(stat='identity') +
+  theme_bw() + ylim(c(0,30)) + ylab('Recruitment (in millions)') +
+  xlab('Year')
+
+
+grid.arrange(catch.plot,rec.plot,F.plot,ssb.plot,ncol=2)

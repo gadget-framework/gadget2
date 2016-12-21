@@ -1,0 +1,13 @@
+; main file for gadget - created in Rgadget
+; WGTS/PROGN/main.pre - Wed Sep 17 12:52:01 2014
+timefile WGTS/PROGN/time.pre
+areafile WGTS/PROGN/area
+printfiles WGTS/PROGN/printfile
+[stock]
+stockfiles WGTS/PROGN/tusk
+[tagging]
+[otherfood]
+[fleet]
+fleetfiles FLEET	WGTS/PROGN/fleet
+[likelihood]
+likelihoodfiles ;

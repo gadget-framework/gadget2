@@ -1,0 +1,69 @@
+;
+; Print file for the TUSK example
+;
+[component]
+type            stockstdprinter
+stockname       tusk              
+printfile       out/tusk.std      
+yearsandsteps   all all          
+;
+[component]
+type            likelihoodsummaryprinter
+printfile       out/likelihoodsummary
+;
+;
+[component]
+type		stockprinter
+stocknames 	tusk
+areaaggfile 	AggFiles/allarea.agg
+ageaggfile 	AggFiles/allage.agg
+lenaggfile 	AggFiles/len.agg
+printfile 	out/tusk.lw
+printatstart	0
+yearsandsteps 	all all
+;
+[component]
+type		stockprinter
+stocknames 	tusk
+areaaggfile 	AggFiles/allarea.agg
+ageaggfile 	AggFiles/allage.agg
+lenaggfile 	AggFiles/len10.agg
+printfile 	out/tusk.lw10cm
+printatstart	0
+yearsandsteps 	2010 2
+;
+[component]
+type      	likelihoodprinter
+likelihood 	si2039 
+printfile 	out/likelihoodsi2039
+;
+[component]
+type    	likelihoodprinter
+likelihood 	si4069 
+printfile 	out/likelihoodsi4069
+;
+[component]
+type    	likelihoodprinter
+likelihood 	si70110 
+printfile 	out/likelihoodsi70110
+;
+[component]
+type    	likelihoodprinter
+likelihood 	ldist.survey
+printfile 	out/likelihoodsLDsurvey
+;
+[component]
+type    	likelihoodprinter
+likelihood 	ldist.catch
+printfile 	out/likelihoodsLDcatch
+;
+[component]
+type    	likelihoodprinter
+likelihood 	alkeys.catch
+printfile 	out/likelihoodsALKcatch
+;
+[component]
+type    	likelihoodprinter
+likelihood 	alkeys.survey
+printfile 	out/likelihoodsALKsurvey
+;

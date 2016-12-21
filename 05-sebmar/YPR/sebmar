@@ -1,0 +1,45 @@
+; stock definition file for sebmar created using rgadget
+; at 2014-12-03
+;
+stockname	sebmar
+livesonareas	1
+minage	5
+maxage	30
+minlength	10.5
+maxlength	68.5
+dl	1
+refweightfile	YPR/Data/sebmar.refweigthfile
+growthandeatlengths	YPR/aggfiles/sebmar.len.agg
+doesgrow	1
+growthfunction	weightvb
+wgrowthparameters	0.1#grq0 0 3#grq2 3#grq2 0.666 1 lgrowthparameters	1 0 0 1 2.2 1.4 8.85e-6 3.0257 0
+beta	( * 50 #bbeta )
+maxlengthgroupgrowth	5
+naturalmortality	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.05	0.1
+iseaten	1
+preylengths	YPR/aggfiles/sebmar.prey.agg
+energycontent	1
+doeseat	0
+;
+Initialconditions
+minage	6
+maxage	30
+minlength	10.5
+maxlength	68.5
+dl	1
+sdev	1
+normalcondfile	YPR/Data/sebmar.normalcond
+doesmigrate	0
+;
+doesmature	0
+;
+doesmove	0
+;
+doesrenew	1
+minlength	10.5
+maxlength	30.5
+normalparamfile	YPR/Data/sebmar.rec
+doesspawn	0
+;
+doesstray	0
+;

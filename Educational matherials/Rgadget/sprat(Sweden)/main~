@@ -1,0 +1,18 @@
+;
+; Main file for the SPRAT
+timefile    TIME 
+areafile    AREA 
+printfile   PRINTFILE 
+;
+[stock]          
+stockfiles       SPRAT
+;
+[tagging]        
+;
+[otherfood]      
+;
+[fleet]          
+fleetfiles       FLEET
+;
+[likelihood]     
+likelihoodfiles  LIKELIHOOD

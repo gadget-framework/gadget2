@@ -1,0 +1,76 @@
+;
+; stock file for the sebastez marinus
+;
+stockname       sebmar
+livesonareas    1
+minage          5
+maxage          30
+minlength       10.5
+maxlength       68.5
+dl              1
+refweightfile   InitFiles/sebrefw.dat
+;
+; the growth and consumption can be calculated on a finer scale
+; so the length groups for this are specified here
+;
+growthandeatlengths   AggFiles/len.agg
+;
+; information about the growth of the stock
+;
+doesgrow              1
+growthfunction        weightvb
+;
+; the parameters required for this growth function are
+;
+wgrowthparameters     0.1#grq0  0  3#grq2  3#grq2  0.666  1
+lgrowthparameters     1  0  0  1  2.2  1.4  8.85e-6  3.0257  0
+;
+beta                  (* 50 #bbeta)
+maxlengthgroupgrowth  5
+;
+; information about the natural mortality of the stock
+naturalmortality 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.1       
+;
+; information about the stock acting as a prey
+;
+iseaten           1 
+preylengths       AggFiles/len.agg
+;
+; information about the stock acting as a predator
+;
+doeseat           0
+;
+; information about the initial conditions of the stock
+;
+initialconditions
+numbers
+minage            6
+maxage            30
+minlength         10.5
+maxlength         68.5
+dl                1
+;
+initstockfile     InitFiles/sebmar.init
+;
+; information about the migration of the stock
+;
+doesmigrate       0
+;
+; information about the maturation of the stock
+;
+doesmature        0
+;
+; information about the movement of the stock
+;
+doesmove          0
+;
+; information about the recruitment to the stock
+;
+doesrenew         1
+minlength 10.5
+maxlength 30.5
+normalparamfile   InitFiles/sebmar.rec
+;
+; information about the spawning of the stock
+;
+doesspawn         0

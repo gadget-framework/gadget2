@@ -1,0 +1,170 @@
+;
+; Likelihood file for this haddock model
+;
+; first specify the likelihood bounds
+[component]
+name               bounds            ; likelihood component name
+weight             10                ; weight for component
+type               penalty           ; type of component
+datafile           penaltyfile       ; data file for this component
+;
+; now specify when to check for understocking
+;
+[component]
+name               understocking     ; likelihood component name
+weight             1e-12             ; weight for component
+type               understocking     ; type of component
+;
+; the mean length statistics data
+;
+[component]
+name               meanl.sur         ; likelihood component name
+weight             2e-6              ; weight for component
+type               catchstatistics   ; type of component
+datafile           had.meanle.sur    ; data file for this component
+function           lengthgivenstddev ; function type
+areaaggfile        allarea.agg       ; area aggregation file
+ageaggfile         age.agg           ; age aggregation file
+fleetnames         survey            ; source of fleet data
+stocknames         had               ; source of stock data
+;
+[component]
+name               meanl.catch       ; likelihood component name
+weight             0.3e-6            ; weight for component
+type               catchstatistics   ; type of component
+datafile           had.meanle.catch  ; data file for this component
+function           lengthgivenstddev ; function type
+areaaggfile        allarea.agg       ; area aggregation file
+ageaggfile         age.agg           ; age aggregation file
+fleetnames         comm              ; source of fleet data
+stocknames         had               ; source of stock data
+;
+; the length distribution data
+;
+[component]
+name               ldist.sur         ; likelihood component name
+weight             0.05e-6           ; weight for component
+type               catchdistribution ; type of component
+datafile           had.ldist.sur     ; data file for this component
+function           multinomial       ; function type
+epsilon            20                ; used when outcome is improbable
+areaaggfile        allarea.agg       ; area aggregation file
+ageaggfile         allage.agg        ; age aggregation file
+lenaggfile         len.agg           ; length aggregation file
+fleetnames         survey            ; source of fleet data
+stocknames         had               ; source of stock data
+;
+[component]
+name               ldist.catch       ; likelihood component name
+weight             3e-6              ; weight for component
+type               catchdistribution ; type of component
+datafile           had.ldist.catch   ; data file for this component
+function           multinomial       ; function type
+epsilon            20                ; used when outcome is improbable
+areaaggfile        allarea.agg       ; area aggregation file
+ageaggfile         allage.agg        ; age aggregation file
+lenaggfile         len.agg           ; length aggregation file
+fleetnames         comm              ; source of fleet data
+stocknames         had               ; source of stock data
+;
+; the age-length distribution data
+;
+[component]
+name               alkeys.sur        ; likelihood component name
+weight             7e-6              ; weight for component
+type               catchdistribution ; type of component
+datafile           had.alkeys.sur    ; data file for this component
+function           multinomial       ; function type
+epsilon            20                ; used when outcome is improbable
+areaaggfile        allarea.agg       ; area aggregation file
+ageaggfile         age.agg           ; age aggregation file
+lenaggfile         len.agg           ; length aggregation file
+fleetnames         survey            ; source of fleet data
+stocknames         had               ; source of stock data
+;
+[component]
+name               alkeys.catch      ; likelihood component name
+weight             2e-6              ; weight for component
+type               catchdistribution ; type of component
+datafile           had.alkeys.catch  ; data file for this component
+function           multinomial       ; function type
+epsilon            20                ; used when outcome is improbable
+areaaggfile        allarea.agg       ; area aggregation file
+ageaggfile         age.agg           ; age aggregation file
+lenaggfile         len.agg           ; length aggregation file
+fleetnames         comm              ; source of fleet data
+stocknames         had               ; source of stock data
+;
+; the survey index data
+;
+[component]
+name          si10                   ; likelihood component name
+weight        70e-4                  ; weight for component
+type          surveyindices          ; type of component
+datafile      had.surveyindex        ; data file for this component
+sitype        lengths                ; survey index type
+areaaggfile   allarea.agg            ; area aggregation file
+lenaggfile    si10len.agg            ; length aggregation file
+stocknames    had                    ; source of stock data
+fittype       fixedslopeloglinearfit ; type of data fit
+slope         1                      ; slope is fixed
+;
+[component]
+name          si15                   ; likelihood component name
+weight        100e-4                 ; weight for component
+type          surveyindices          ; type of component
+datafile      had.surveyindex        ; data file for this component
+sitype        lengths                ; survey index type
+areaaggfile   allarea.agg            ; area aggregation file
+lenaggfile    si15len.agg            ; length aggregation file
+stocknames    had                    ; source of stock data
+fittype       fixedslopeloglinearfit ; type of data fit
+slope         1                      ; slope is fixed
+;
+[component]
+name          si20                   ; likelihood component name
+weight        100e-4                 ; weight for component
+type          surveyindices          ; type of component
+datafile      had.surveyindex        ; data file for this component
+sitype        lengths                ; survey index type
+areaaggfile   allarea.agg            ; area aggregation file
+lenaggfile    si20len.agg            ; length aggregation file
+stocknames    had                    ; source of stock data
+fittype       fixedslopeloglinearfit ; type of data fit
+slope         1                      ; slope is fixed
+;
+[component]
+name          si25to45               ; likelihood component name
+weight        100e-4                 ; weight for component
+type          surveyindices          ; type of component
+datafile      had.surveyindex        ; data file for this component
+sitype        lengths                ; survey index type
+areaaggfile   allarea.agg            ; area aggregation file
+lenaggfile    si2545len.agg          ; length aggregation file
+stocknames    had                    ; source of stock data
+fittype       fixedslopeloglinearfit ; type of data fit
+slope         1                      ; slope is fixed
+;
+[component]
+name          si50to60               ; likelihood component name
+weight        100e-4                 ; weight for component
+type          surveyindices          ; type of component
+datafile      had.surveyindex        ; data file for this component
+sitype        lengths                ; survey index type
+areaaggfile   allarea.agg            ; area aggregation file
+lenaggfile    si5060len.agg          ; length aggregation file
+stocknames    had                    ; source of stock data
+fittype       fixedslopeloglinearfit ; type of data fit
+slope         1                      ; slope is fixed
+;
+[component]
+name          si65to75               ; likelihood component name
+weight        70e-4                  ; weight for component
+type          surveyindices          ; type of component
+datafile      had.surveyindex        ; data file for this component
+sitype        lengths                ; survey index type
+areaaggfile   allarea.agg            ; area aggregation file
+lenaggfile    si6575len.agg          ; length aggregation file
+stocknames    had                    ; source of stock data
+fittype       fixedslopeloglinearfit ; type of data fit
+slope         1                      ; slope is fixed

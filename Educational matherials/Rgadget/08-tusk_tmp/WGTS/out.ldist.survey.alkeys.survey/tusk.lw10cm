@@ -1,0 +1,12 @@
+; Gadget version 2.2.00-BETA running on nataliia-HP-Compaq-8200-Elite-MT-PC Wed May 27 10:24:07 2015
+; Output file for the following stocks tusk
+; Printing the following information at the end of each timestep
+; year-step-area-age-length-number-mean weight
+2010    2   allareas    allages   len10-19     21220813  0.027132065
+2010    2   allareas    allages   len20-29     16956839     0.111092
+2010    2   allareas    allages   len30-39     14806775   0.29586704
+2010    2   allareas    allages   len40-49     12626763   0.62756158
+2010    2   allareas    allages   len50-59     10736697    1.1495023
+2010    2   allareas    allages   len60-69    9143789.7    1.9044446
+2010    2   allareas    allages   len70-79    7498928.8    2.9296149
+2010    2   allareas    allages   len80-89      5525226    4.2648503

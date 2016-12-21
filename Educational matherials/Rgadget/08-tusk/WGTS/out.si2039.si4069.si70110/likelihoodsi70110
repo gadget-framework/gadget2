@@ -1,0 +1,64 @@
+; Gadget version 2.2.00-BETA running on hafgeimur.hafro.is Tue Sep 16 13:50:17 2014
+; Likelihood output file for the likelihood component si70110
+; year-step-area-label-number
+1985    1   allareas   len70-79     14234809
+1985    1   allareas     len80+    7201943.5
+1986    1   allareas   len70-79     15738095
+1986    1   allareas     len80+    9987190.2
+1987    1   allareas   len70-79     16250931
+1987    1   allareas     len80+     12614302
+1988    1   allareas   len70-79     15818529
+1988    1   allareas     len80+     14738560
+1989    1   allareas   len70-79     14898142
+1989    1   allareas     len80+     16392974
+1990    1   allareas   len70-79     13618672
+1990    1   allareas     len80+     17374095
+1991    1   allareas   len70-79     12319298
+1991    1   allareas     len80+     17795755
+1992    1   allareas   len70-79     11181926
+1992    1   allareas     len80+     17775436
+1993    1   allareas   len70-79     10353304
+1993    1   allareas     len80+     17551007
+1994    1   allareas   len70-79      9896224
+1994    1   allareas     len80+     17350254
+1995    1   allareas   len70-79    9607371.3
+1995    1   allareas     len80+     17037409
+1996    1   allareas   len70-79      9381990
+1996    1   allareas     len80+     16682990
+1997    1   allareas   len70-79      9143699
+1997    1   allareas     len80+     16356279
+1998    1   allareas   len70-79    8804982.3
+1998    1   allareas     len80+     16002111
+1999    1   allareas   len70-79    8341347.3
+1999    1   allareas     len80+     15552752
+2000    1   allareas   len70-79    7812286.4
+2000    1   allareas     len80+     14972044
+2001    1   allareas   len70-79    7371372.3
+2001    1   allareas     len80+     14386724
+2002    1   allareas   len70-79    7176895.7
+2002    1   allareas     len80+     14004098
+2003    1   allareas   len70-79    7081345.6
+2003    1   allareas     len80+     13517818
+2004    1   allareas   len70-79    7142084.3
+2004    1   allareas     len80+     13110842
+2005    1   allareas   len70-79    7399253.1
+2005    1   allareas     len80+     12914259
+2006    1   allareas   len70-79    7767670.1
+2006    1   allareas     len80+     12777862
+2007    1   allareas   len70-79    8233216.8
+2007    1   allareas     len80+     12698039
+2008    1   allareas   len70-79    8804114.7
+2008    1   allareas     len80+     12745036
+2009    1   allareas   len70-79    9397843.2
+2009    1   allareas     len80+     12858984
+2010    1   allareas   len70-79     10108499
+2010    1   allareas     len80+     13209004
+2011    1   allareas   len70-79     10751981
+2011    1   allareas     len80+     13608111
+2012    1   allareas   len70-79     11331838
+2012    1   allareas     len80+     14157361
+2013    1   allareas   len70-79     11683914
+2013    1   allareas     len80+     14749217
+; Regression information for area allareas
+; len70-79 intercept -12.513704 slope 1 sse 6.4521045
+; len80+ intercept -13.70584 slope 1 sse 11.30119
