@@ -275,38 +275,34 @@ programming efforts.
 Getting Gadget {#sec:gettinggadget}
 --------------
 
-Gadget is distributed via anonymous ftp from the MRI ftp site, and the
-address of the top level directory of the Gadget distributions is:
+Gadget is distributed via GitHub and can be obtained at:
 
-    ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
+    http://github.com/hafro/gadget
 
-The most recent version of Gadget will be available as a gzipped tarfile
-from this directory. This file will be called
-gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version
-number of Gadget. As a guide, the current version of Gadget is 2.2.00,
-so the file to be downloaded is gadget2.2.00.tar.gz.
+The most recent version of Gadget will be available as a zip file from
+this from this site (select “Clone or download”). As a guide, the
+current version of Gadget is 2.2.00, so the file to be downloaded is
+gadget2.2.00.tar.gz.
 
 Gadget is a program that runs on a Unix computing platform, and is
-regularly tested on machines running versions of Solaris, Linux, Mac OSX
-and Cygwin (a Unix emulator for Microsoft Windows machines). It should
-also run on other versions of Unix, but this may require modifications
-to the makefile in order to do so. Gadget is distributed as a set of
-source code files, which need to be compiled into an executable program
-before it can be run. To allow for various different versions, the
-makefile has a list of supported computing platforms, so the makefile
-should be checked (and if necessary changed) to ensure that the required
-options are available before the source code is compiled. The default
-options in the makefile will compile Gadget for a Linux machine, using
-the GNU C++ compiler. A summary of the commands required to compile
-Gadget, using the default options for a Linux machine from the
-downloaded file are:
+regularly tested on machines running versions of Linux, Mac OSX and
+Windows. It should also run on other versions of Unix, but this may
+require modifications to the makefile in order to do so. Gadget is
+distributed as a set of source code files, which need to be compiled
+into an executable program before it can be run. To allow for various
+different versions, the makefile has a list of supported computing
+platforms, so the makefile should be checked (and if necessary changed)
+to ensure that the required options are available before the source code
+is compiled. The default options in the makefile will compile Gadget for
+a Linux machine, using the GNU C++ compiler. A summary of the commands
+required to compile Gadget, using the default options for a Linux
+machine from the downloaded file are:
 
-    gunzip gadget<version>.tar.gz
-    tar -xvf gadget<version>.tar
-    cd source
+    unzip gadget-master.zip
+    cd gadget-master
     make
 
-The most recent copy of this document will also be placed on the MRI ftp
+The most recent copy of this document will also be placed on the github
 site, along with copies of any example datasets that are available.
 These datasets will be checked so that they run without any problems,
 and will also contain some comments to help the user understand the
@@ -316,7 +312,7 @@ in conjunction with an example dataset.
 A web site has been set up that contains details of the recent changes
 to Gadget, documentation updates and other news. This is also a good
 place to look for more information about Gadget. The address of the
-Gadget web site is <span>http://www.hafro.is/gadget</span>
+Gadget web site is <span>http://www.github.com/hafro/gadget</span>.
 
 Throughout this document any text in $<$angled brackets$>$ should be
 adjusted by the user to make it relevant to the current situation, so
