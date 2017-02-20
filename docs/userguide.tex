@@ -56,7 +56,7 @@ Gadget allows the user to include a number of features of the ecosystem into the
 Like any large piece of code, Gadget is based on previous ideas by several authors.  Conceptually the modelling framework extends earlier multi species programming work such as MSVPA and MULTSPEC into a more generic statistical framework.  Alternatively, Gadget is a conceptual extension of the Stock Synthesis statistical assessment single-species framework into a multi species setting.
 
 \bigskip
-The initial BORMICON code was developed as part of a multi species programme implemented at the Marine Research Institute in Reykjavik, Iceland, starting in 1992 with \'{O}lafur K P\'{a}lsson as project coordinator and Gunnar Stef\'{a}nsson coordinating the modelling work.  Subsequently the code became the basis for Fleksibest at the Institute of Marine Research in Bergen, Norway.  Further development work in 1999-2003 was partly funded by EU grant QLK5-CT1999-01609 (''Development of Structurally Detailed Statistically Testable Models of Marine Populations'').  Development work for 2004-2006 is currently being partly funded by EU grant 502482 (''Critical Interactions Between Species and their Implications for a Precautionary Fisheries Management in a Variable Environment - a Modelling Approach'').
+The initial BORMICON code was developed as part of a multi species programme implemented at the Marine Research Institute in Reykjavik, Iceland, starting in 1992 with \'{O}lafur K P\'{a}lsson as project coordinator and Gunnar Stef\'{a}nsson coordinating the modelling work.  Subsequently the code became the basis for Fleksibest at the Institute of Marine Research in Bergen, Norway.  Further development work in 1999-2003 was partly funded by EU grant QLK5-CT1999-01609 (''Development of Structurally Detailed Statistically Testable Models of Marine Populations'').  Development work for 2004-2006 was partly funded by EU grant 502482 (''Critical Interactions Between Species and their Implications for a Precautionary Fisheries Management in a Variable Environment - a Modelling Approach''). Developement work for 2010-2012 was partly funded by EU project ''Defineit'' under the MariFish ERA-NET (grant ERAC-CT-2006-025989)
 
 \bigskip
 The Gadget code is derived from the original BORMICON code of Halld\'{o}r Narfi Stef\'{a}nsson, H\"{o}skuldur Bj\"{o}rnsson and Hersir Sigurgeirsson.  Subsequent contributions include program additions by Morten Nygaard {\AA}snes and Kristin Fr{\o}ysa to include the Fleksibest model.  The ability to run in parallel across a network of computers using PVM was implemented primarily by Au{\dh}bj\"{o}rg Jakobsd\'{o}ttir with input from several other people, including J\'{o}n Gu{\dh}mundsson who worked on a variant based on Condor.  Several mathematical additions and changes to allow for parallel minimisation on a network were implemented by {\TH}\'{o}rd\'{i}s Linda {\TH}\'{o}rarinsd\'{o}ttir and Kristjana \'{Y}r J\'{o}nsd\'{o}ttir.
@@ -71,7 +71,7 @@ Gadget is distributed via anonymous ftp from the MRI ftp site, and the address o
 ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.1.06, so the file to be downloaded is gadget2.1.06.tar.gz.
+The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.2.00, so the file to be downloaded is gadget2.2.00.tar.gz.
 
 \bigskip
 Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
@@ -89,11 +89,11 @@ The most recent copy of this document will also be placed on the MRI ftp site, a
 A web site has been set up that contains details of the recent changes to Gadget, documentation updates and other news.  This is also a good place to look for more information about Gadget.  The address of the Gadget web site is {\tt http://www.hafro.is/gadget}
 
 \bigskip
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.1.06 on a Linux machine:
+Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.2.00 on a Linux machine:
 
 {\small\begin{verbatim}
-gunzip gadget2.1.06.tar.gz
-tar -xvf gadget2.1.06.tar
+gunzip gadget2.2.00.tar.gz
+tar -xvf gadget2.2.00.tar
 cd source
 make
 \end{verbatim}}
@@ -226,7 +226,7 @@ Starting Gadget with the -printfinal switch will specify a file to which Gadget 
 {\small\begin{verbatim}
 gadget -maxratio <ratio>
 \end{verbatim}}
-Starting Gadget with the -maxratio switch will specify the maximum ratio of prey that is allowed to be ''consumed'' on any one timestep.  This consumption includes both the consumption by other stocks and the catch by any fleets.  The default value is 0.95, which ensures that no mare than 95\% of the available stock biomass is consumed on a single timestep.
+Starting Gadget with the -maxratio switch will specify the maximum ratio of prey that is allowed to be ''consumed'' on any one timestep.  This consumption includes both the consumption by other stocks and the catch by any fleets.  The default value is 0.95, which ensures that no more than 95\% of the available stock biomass is consumed on a single timestep.
 
 %gadget -noprint
 %gadget -forceprint
@@ -398,12 +398,12 @@ temperature
 \end{verbatim}}
 
 \section{Other Input Data Files}\label{sec:otherinputfile}
-There are three other types of input that are important since they are used in other data files to denote a grouping of data.  These are Aggregation files, which are files used to gather data into convenient groups, TimeVariable files, which are files used to denote variables that can vary over time, and ActionAtTime, which is used to define the timesteps that an action takes place within a data file.
+There are four other types of input that are important since they are used in other data files to denote a grouping of data.  These are Aggregation files, which are files used to gather data into convenient groups, TimeVariable files, which are files used to denote variables that can vary over time, StockVariable files, which are files used to denote vairables that can vary with population, and ActionAtTime, which is used to define the timesteps that an action takes place within a data file.
 
 \subsection{Aggregation Files}
 Aggregation files are important since they are used to group the data in convenient groups.  They consist of a text label (used to identify the group in the data) followed by a list of the data that the label represents.  This data will then be read in from an associated data file.  There are aggregation files to group areas, ages, lengths or preys together.  Aggregation files can contain comments and blank lines, to make the format easier to view in a text editor.
 
-\subsubsection{Area Aggregation}
+\subsubsection{Area Aggregation}\label{subsec:areaagg}
 Area aggregation files contain one or more identifying labels and then a list of one or more areas that the label refers to.  The format for this is:
 
 {\small\begin{verbatim}
@@ -419,7 +419,7 @@ south        3  4  5  7
 
 This example shows that for the associated data file, the label ''north'' will be interpreted as applying to areas 1, 2 and 6 and the label ''south'' will be interpreted as applying to areas 3, 4, 5 and 7.
 
-\subsubsection{Age Aggregation}
+\subsubsection{Age Aggregation}\label{subsec:ageagg}
 Age aggregation files contain one or more identifying labels and then a list of one or more ages that the label refers to.  The format for this is:
 
 {\small\begin{verbatim}
@@ -435,7 +435,7 @@ old          5  6  7
 
 This example shows that for the associated data file, the label ''young'' will be interpreted as applying to ages 1 - 4 and the label ''old'' will be interpreted as applying to ages 5 to 7.
 
-\subsubsection{Length Aggregation}
+\subsubsection{Length Aggregation}\label{subsec:lenagg}
 Length aggregation files contain one or more identifying labels and then the minimum and maximum length that the label refers to.  The format for this is:
 
 {\small\begin{verbatim}
@@ -452,7 +452,7 @@ large        55  80
 
 This example shows that for the associated data file, the label ''small'' will be interpreted as applying to lengths 5-25cm, the label ''medium'' will be interpreted as applying to the lengths 25-55cm and the label ''large'' will be interpreted as applying to lengths 55-80cm.
 
-\subsubsection{Prey Aggregation}
+\subsubsection{Prey Aggregation}\label{subsec:preyagg}
 Prey aggregation files contain one or more identifying labels, and then the names of the preys, the minimum and maximum lengths for the preys and the digestion coefficients for the consumption of the preys.  The format for this is:
 
 {\small\begin{verbatim}
@@ -493,15 +493,16 @@ digestioncoefficients    1  0  0
 
 This example shows that for the associated data file, the label ''smallcapelin'' will be interpreted as applying to immature capelin (a stock called immature.capelin) of lengths 5-10cm, the label ''mediumcapelin'' will be interpreted as applying to immature and mature capelin (stocks immature.capelin and mature.capelin) of lengths 10-15cm, and the label ''largecapelin'' will be interpreted as applying to mature capelin (a stock called mature.capelin) of lengths 15-20cm.
 
-\subsection{TimeVariable Files}
+\subsection{TimeVariable Files}\label{subsec:timevar}
 TimeVariable files are used in place of a single variable in the input files, to define variables in the Gadget model that can vary over time.  They are used by specifying the name of the TimeVariable file in place of the value or parameter in the input file.  TimeVariable files can contain comments and blank lines, to make the format easier to view in a text editor.
 
 \bigskip
-TimeVariable files consist of a one word description of the data, followed by the keyword ''data'', and then a list of the timesteps when the value of TimeVariable changes, along with the new value for the TimeVariable.  The values can either be numerical values or a parameter to be optimised.  The first timestep in the TimeVariable file must correspond to the first timestep in the model.  The basic format for this file is shown below:
+TimeVariable files consist of a one word description of the data, followed by an optional multipler value and then the keyword ''timedata'', and then a list of the timesteps when the value of TimeVariable changes, along with the new value for the TimeVariable.  The values can either be numerical values or a parameter to be optimised.  The first timestep in the TimeVariable file must correspond to the first timestep in the model.  The basic format for this file is shown below:
 
 {\small\begin{verbatim}
 <description>          ; one word description of the data
-data
+multipler              <optional multipler> ; default value 1
+timedata
 <year>  <step>  <value>
 \end{verbatim}}
 
@@ -509,7 +510,7 @@ An example of a TimeVariable file is:
 
 {\small\begin{verbatim}
 annualgrowth
-data
+timedata
 ; year  step  value
 1995    1     #grow1995
 1996    1     #grow1996
@@ -519,9 +520,37 @@ data
 2000    1     #grow2000
 \end{verbatim}}
 
-This example shows that the the parameter ''grow1995'' is to be used for growth in 1995, ''grow1996'' is to be used in 1996 and so on through to ''grow2000'' which is to be used from 2000 through to the end of the simulation.  Note that this example assumes that the first timestep of the simulation is the first timestep in 1995.
+This example shows that the value of parameter ''grow1995'' is to be used for growth in 1995, ''grow1996'' is to be used in 1996 and so on through to ''grow2000'' which is to be used from 2000 through to the end of the simulation.  Note that this example assumes that the first timestep of the simulation is the first timestep in 1995.
 
-\subsection{ActionAtTime}
+\subsection{StockVariable Files}\label{subsec:stockvar}
+StockVariable files are used in place of a single variable in the input files, in a similar manner to the TimeVariable files, to define variables in the Gadget model that can vary due to stock populations changes.  They are used by specifying the name of the StockVariable file in place of the value or parameter in the input file.  StockVariable files can contain comments and blank lines, to make the format easier to view in a text editor.
+
+\bigskip
+StockVariable files consist of a one word description of the data, followed by an optional multipler value and then the keyword ''stockdata'', and then a list of the stocks to use when caluclating the value of the StockVariable:
+
+{\small\begin{verbatim}
+<description>          ; one word description of the data
+multipler              <optional multipler> ; default value 1
+stockdata
+biomass                <0 or 1> ; default value 1
+<vector of stock names>
+\end{verbatim}}
+
+The optional flag $<$biomass$>$ is used to specify whether the biomass or the number of the stock population is used when calcualting the value of the StockVariable.   If this is set to 0, then the StockVariable value will be based on the available number of the stock(s). If this line is not specified, then a biomass value of 1 is assumed and the StockVariable value will be based on the available population numbers for the stock(s).
+
+\bigskip
+An example of a StockVariable file is:
+
+{\small\begin{verbatim}
+capelinconsumption
+multipler     (* #param1 #param2)
+stockdata
+immature.capelin mature.capelin
+\end{verbatim}}
+
+This example shows that the value of the StockVariable is to be calculated as the value of ''param1'' times the value of ''param2'' times the total biomass of the stocks ''immature.capelin'' plus ''mature.capelin''.
+
+\subsection{ActionAtTime}\label{subsec:aat}
 ActionAtTime is a simple list of timesteps within a data file that define when a specified action (for example printing) will take place.  The format for this is:
 
 {\small\begin{verbatim}
@@ -788,7 +817,7 @@ Note that the $<$year effect$>$ vector requires one entry for each year, the $<$
 This growth function is a simplified form of the Von Bertalanffy growth equation.  The increase in the length for each length group the stock is given by equation~\ref{eq:growth6}, with the corresponding increase in the weight of the stock read in from a data file:
 
 \begin{equation}\label{eq:growth6}
-\Delta L_{i} = \left( q_{0} - L_{i} \right) \left( 1 - e^{-q_{1} \Delta t} \right)
+\Delta L_{i} = \left( L_{\infty} - L_{i} \right) \left( 1 - e^{-\kappa \Delta t} \right)
 \end{equation}
 
 where:\newline
@@ -798,10 +827,13 @@ $<\Delta t>$ is the length of the timestep
 There are a total of 2 parameters for the equation for increase in length.  These are declared in a single vector, as shown below:
 
 {\small\begin{verbatim}
-growthparameters       <growth parameters vector>
+growthparameters       <linf> <kappa>
 weightgrowthfile       <weight data file>
 \end{verbatim}}
 
+It is important to note that if the value of $L_{\infty}$ is less than the mean length of a length group, then the length increase calculated by equation~\ref{eq:growth6} would be negative for that length group, which will result in Gadget printing a warning message.  To avoid this, the user should ensure that the value of $L_{\infty}$ is always greater than the mean length of the largest length group.
+
+\bigskip
 The weight data file consists of a list of the year, timestep, area  and length group label, followed by the mean increase in weight for that timestep/area/length combination.  The length group label used must match those specified in the growthandeatlengths length aggregation file.  The format of this file is shown below:
 
 {\small\begin{verbatim}
@@ -1008,9 +1040,10 @@ The $<$functionname$>$ defines which suitability function is to be used to calcu
 constant - use the Constant suitabilty function\newline
 straightline - use the StraightLine suitabilty function\newline
 exponential - use the Exponential suitabilty function\newline
-exponentiall50 - use the ExponentialL50 suitabilty function\newline
+newexponentiall50 - use the ExponentialL50 suitabilty function\newline
 richards - use the Richards suitabilty function\newline
 andersen - use the Andersen suitabilty function\newline
+andersenfleet - use the Andersen suitabilty function, modified for fleets\newline
 gamma - use the Gamma suitabilty function
 
 \bigskip
@@ -1059,13 +1092,13 @@ Hence, to specify this suitability function, the file format required is:
 This is a suitability function that has no dependence on the length of the predator, and a logarithmic dependence on the length of the prey as given by the following equation:
 
 \begin{equation}\label{eq:l50suit}
-S(l, L) = { \frac{1}{1 + e^{ -4 \alpha (l - l_{50})}}}
+S(l, L) = { \frac{1}{1 + e^{ -\alpha (l - l_{50})}}}
 \end{equation}
 
 Note that the prey length dependence is actually dependant on the difference between the length of the prey and $l_{50}$, which is the length of the prey with a 50\% probability of predation.  Hence, to specify this suitability function, the file format required is:
 
 {\small\begin{verbatim}
-<preyname>    function exponentiall50 <alpha> <l50>
+<preyname>    function newexponentiall50 <alpha> <l50>
 \end{verbatim}}
 
 \subsection{Richards Suitability Function}
@@ -1096,6 +1129,23 @@ Note that the log of the ratio of the predator/prey lengths is bounded, to ensur
 
 {\small\begin{verbatim}
 <preyname>    function andersen <vector of 5 parameters>
+\end{verbatim}}
+
+\subsection{Andersen Fleet Suitability Function}
+This is a modified version of the Andersen suitability function that is dependant on the ratio of a parameter to the prey length as given by the following equation:
+
+\begin{equation}\label{eq:andersenfleetsuit}
+S(l, L) =
+\begin{cases}
+p_0 + p_2e^{-\frac{(\ln\frac{p_5}{l} - p_1)^2}{p_4}} & \textrm{if $\ln\frac{p_5}{l} \leq p_1$} \\
+p_0 + p_2e^{-\frac{(\ln\frac{p_5}{l} - p_1)^2}{p_3}} & \textrm{if $\ln\frac{p_5}{l} > p_1$}
+\end{cases}
+\end{equation}
+
+Note that the log of the ratio of the fleet parameter/prey length is bounded, to ensure that the suitability function is always well defined.  Compared to the standard Andersen suitability function, the additional parameter is used to replace the predator length and is often used as a proxy for the mesh size used by the fleets.  To specify this suitability function, the file format required is:
+
+{\small\begin{verbatim}
+<preyname>    function andersenfleet <vector of 6 parameters>
 \end{verbatim}}
 
 \subsection{Gamma Suitability Function}
@@ -1299,10 +1349,10 @@ maturityfile           <name of the maturity data file>
 The $<$maturity function$>$ defines the function that is to be used to calculate how the stock will mature.  Currently there are 4 maturity functions defined, and the valid maturity function names are:
 
 \bigskip
-continuous - use the Continuous maturation function\newline
-constant - use the Constant maturation function\newline
-constantweight - use the ConstantWeight maturation function\newline
-fixedlength - use the FixedLength maturation function
+newconstant - use the Constant maturation function\newline
+newconstantweight - use the ConstantWeight maturation function\newline
+fixedlength - use the FixedLength maturation function\newline
+continuous - use the Continuous maturation function
 
 \bigskip
 The format for the data in the maturity data file is dependent on the maturity function that is to be used.  All the maturity functions require the name of the mature stocks that the immature stock will mature into, and the ratio of the maturing part of the immature stock that is to mature into each mature stock.  This allows for part of an immature stock to mature into more than one mature stock, so for example, an immature stock could mature into either a male mature stock or a female mature stock.
@@ -1310,33 +1360,14 @@ The format for the data in the maturity data file is dependent on the maturity f
 \bigskip
 The maturity functions calculate the proportion of the fish in each age-length group that will become mature, and then move these fish from the age-length group for the current stock into the corresponding age-length group for the mature stock.  Note that there is a check to ensure that the corresponding age-length group exists for the mature stock, and if it doesn't then the fish don't become mature and will stay in the immature stock.
 
-\subsection{Continuous Maturity Function}
-This maturity function calculates the proportion of an age-length group of an immature stock that becomes mature according to the maturity equations~\ref{eq:mat1a} and \ref{eq:mat1b} given below:
-
-\begin{equation}\label{eq:mat1a}
-P(l, a) = {\frac{1}{1 - M}}{\frac{dM}{dt}}
-\end{equation}
-
-\begin{equation}\label{eq:mat1b}
-M(l_{t},a_{t}) = \frac{1}{1 + e^{-\alpha(l_{t} - l_{50}) - \beta(a_{t} - a_{50})}}
-\end{equation}
-
-\bigskip
-The maturity term is a function of $l_{50}$ and $a_{50}$, which are the length and age where 50\% of the stock are mature.  This is a continuous process, with the maturity proportion being calculated on every timestep.  The file format for this maturity function is given below:
-
-{\small\begin{verbatim}
-maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
-coefficients                <alpha>  <l50>  <beta>  <a50>
-\end{verbatim}}
-
 \subsection{Constant Maturity Function}
-This maturity function is similar to the Continuous maturity function, with the maturity proportion being calculated according to the maturity equation~\ref{eq:mat3} given below:
+This maturity function calculates the proportion of an age-length group of an immature stock that becomes mature according to the maturity equation~\ref{eq:mat3} given below:
 
 \begin{equation}\label{eq:mat3}
-P(l, a) = \frac{1}{ 1 + e^{-4\alpha(l - l_{50}) -4\beta(a - a_{50})}}
+P(l, a) = \frac{1}{ 1 + e^{-\alpha(l - l_{50}) -\beta(a - a_{50})}}
 \end{equation}
 
-For this maturation function, it is assumed that maturation is an annual event, taking place on the same timesteps in each year.  The file format for this maturity function is the similar to that for the Continuous maturity function, and is shown below:
+The maturity term is a function of $l_{50}$ and $a_{50}$, which are the length and age where 50\% of the stock are mature.  For this maturation function, it is assumed that maturation is an annual event, taking place on the same timesteps in each year.  The file format for this maturity function is the similar to that for the Continuous maturity function, and is shown below:
 
 {\small\begin{verbatim}
 maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
@@ -1350,7 +1381,7 @@ The $<$maturitysteps$>$ vector is a vector of timesteps that the maturation proc
 This maturity function is an extension to the Constant maturity function, with the maturity proportion being calculated according to the maturity equation~\ref{eq:mat4} given below:
 
 \begin{equation}\label{eq:mat4}
-P(l, a) = \frac{1}{ 1 + e^{-4\alpha(l - l_{50}) -4\beta(a - a_{50}) -4\gamma(k - k_{50})}}
+P(l, a) = \frac{1}{ 1 + e^{-\alpha(l - l_{50}) -\beta(a - a_{50}) -\gamma(k - k_{50})}}
 \end{equation}
 
 The maturity function has been extended to include the relative condition of the stock (calculated by dividing the current weight by the reference weight) and $k_{50}$ which is the relative condition where 50\% of the stock is mature.  The file format for this maturity function is the similar to that for the Constant maturity function, and is shown below:
@@ -1381,6 +1412,25 @@ maturitylengths             <vector of lengths>
 \end{verbatim}}
 
 Note that the $<$maturitysteps$>$ and the $<$maturitylengths$>$ vectors need to be the same size.
+
+\subsection{Continuous Maturity Function}
+This maturity function calculates the proportion of an age-length group of an immature stock that becomes mature according to the maturity equations~\ref{eq:mat1a} and \ref{eq:mat1b} given below:
+
+\begin{equation}\label{eq:mat1a}
+P(l, a) = {\frac{1}{1 - M}}{\frac{dM}{dt}}
+\end{equation}
+
+\begin{equation}\label{eq:mat1b}
+M(l_{t},a_{t}) = \frac{1}{1 + e^{-\alpha(l_{t} - l_{50}) - \beta(a_{t} - a_{50})}}
+\end{equation}
+
+\bigskip
+The maturity term is a function of $l_{50}$ and $a_{50}$, which are the length and age where 50\% of the stock are mature.  This is a continuous process, with the maturity proportion being calculated on every timestep.  The file format for this maturity function is given below:
+
+{\small\begin{verbatim}
+maturestocksandratios       <stockname i>  <ratio i> ; for each stock i
+coefficients                <alpha>  <l50>  <beta>  <a50>
+\end{verbatim}}
 
 \section{Movement (''Transition'')}\label{sec:stockmove}
 The movement section of the stock file determines if, and how, the stock will move (into a different stock) in the Gadget model.  This allows for a Gadget model to be set up with different stock files for stock that is the same species, but with differing properties (for instance age or maturity status) and for the entries to move between these stocks when required.  For the current version of Gadget, the only movement between stocks that is valid is for the stock in the oldest age group of one stock to move into a different stock.  The format for the first part of the movement section is given below:
@@ -1489,7 +1539,6 @@ spawnfile              <name of the spawning data file>
 
 The spawning data file defines what happens to the stock as it spawns.  The spawning is length-dependent, and the affect that spawning has on each length group of the mature stock is given by the spawning equations~\ref{eq:spawn1} and \ref{eq:spawn2} below:
 
-\newpage %JMB insert page break
 \begin{equation}\label{eq:spawn1}
 N = N {\left(1 + P {(e^{-m} - 1)}\right)}
 \end{equation}
@@ -1561,6 +1610,7 @@ Hence, to specify this recruitment function, the file format required is:
 recruitment            fecundity  <vector of 5 parameters>
 \end{verbatim}}
 
+\newpage %JMB insert page break
 \subsection{SimpleSSB Recruitment Function}
 This recruitment function calculates the number of recruits to be added to the spawned stock as a simple proportion of the spawning stock biomass, given by the following equations:
 
@@ -1713,7 +1763,7 @@ Each tagging experiment is defined by specifying the name of the tagging experim
 \bigskip
 The optional $<$endyear$>$ value is used to define the end of a tagging experiment, and should be set to the year of the last expected recapture from the tagging experiment.  This can be used to reduce the calculation time.  If this is not specified, then it is assumed that the tagging experiment will run until the end of the simulation.
 
-\bigskip
+\newpage %JMB insert page break
 The $<$tagloss$>$ value is used to remove tagged fish from the model.  For each time step, a number of tags can be lost from the tagging experiment.  The number of tagged fish that remain in the tagging experiment is given by the equation~\ref{eq:tagloss} below:
 
 \begin{equation}\label{eq:tagloss}
@@ -1966,13 +2016,27 @@ The optional $<$multi$>$ value is a multiplicative constant used to scale the da
 The fleets act as a predator, so Gadget also requires a suitability function to be defined for the predation of the stocks in the model.  A scaling factor that can be used when calculating the amount that the fleet will catch is also required, and this is specified in a separate file (although this is usually set to 1, since the scaling factor to be used is multiplied by that calculated using the simple harvest control rule below).
 
 \bigskip
-The simple harvest control rule that is used to calculate the scaling factor to be used to determine the fishing level is defined by the $<$function name$>$ value, along with the $<$biomasslevel$>$ and $<$quotalevel$>$ vectors.  Currently there are 2 quota functions defined, and the valid function names are:
+The simple harvest control rule that is used to calculate the scaling factor to be used to determine the fishing level is defined by the $<$function name$>$ value, along with the $<$biomasslevel$>$ and $<$quotalevel$>$ vectors.  Currently there are 6 quota functions defined, and the valid function names are:
 
 \bigskip
 simple - use a simple harvest control rule, based on the biomass of each stock\newline
-simplesum - use a simple harvest control rule, based on the biomass of all the stocks
+annual - use a annual harvest control rule, based on the biomass of each stock\newline
+simplesum - use a simple harvest control rule, based on the biomass of all the stocks\newline
+annualsum - use a annual harvest control rule, based on the biomass of all the stocks\newline
+simpleselect - use a simple harvest control rule, based on the biomass of selected stocks\newline
+annualselect - use a annual harvest control rule, based on the biomass of selected stocks
 
 \bigskip
+Note that if the $<$function name$>$ value is set to either simpleselect or annualselect, then it is necessary to define which stocks to use to determine the fishing level. This is done be additionally specifying a $<$selectstocks$>$ vector which is a list of the stocks to use, as given in the list below:
+
+{\small\begin{verbatim}
+...
+biomasslevel           <vector of biomass levels>
+quotalevel             <vector of quota levels>
+selectstocks           <vector of stocks to base the quote on>
+amount                 <see Fleet Amounts>
+\end{verbatim}}
+
 The $<$biomasslevel$>$ vector is a list of $n$ biomass points at which the fishing level will change, and the $<$quotalevel$>$ vector is the corresponding list of $n+1$ fishing levels.  Note that the first quotalevel value corresponds to the fishing level that will be used when the biomass is between 0 and the first biomasslevel value, so the quotalevel vector must have one more entry than the biomasslevel vector.
 
 \bigskip
@@ -2042,6 +2106,7 @@ StomachContent\newline
 Recaptures\newline
 RecStatistics\newline
 MigrationPenalty\newline
+MigrationProportion\newline
 CatchInKilos
 
 \section{BoundLikelihood (''Penalty'')}\label{sec:boundlike}
@@ -2337,7 +2402,7 @@ The optional flag $<$overconsumption$>$ is used to specify whether any over cons
 The $<$fleetnames$>$ vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.  Similarly, the $<$stocknames$>$ vector contains a list of all the stocks to be aggregated into a single pseudo stock.
 
 \bigskip
-The $<$function name$>$ defines what likelihood function is to be used to compare the modelled statistical data to the input statistical data.  Currently, there are 7 likelihood functions defined, and the format of the statistical data given in the file specified by $<$datafile$>$ depends on the likelihood function used.  The valid functions are:
+The $<$function name$>$ defines what likelihood function is to be used to compare the modelled statistical data to the input statistical data.  Currently, there are 5 likelihood functions defined, and the format of the statistical data given in the file specified by $<$datafile$>$ depends on the likelihood function used.  The valid functions are:
 
 \bigskip
 lengthcalcstddev - use a weighted sum of squares of mean length\newline
@@ -2456,50 +2521,6 @@ For this CatchStatistics function, the format of the statistical data required i
 
 where $<$number$>$ is the number of samples for the timestep/area/age combination, and $<$mean$>$ is the mean length of these samples.
 
-\subsection{Weighted Sum of Squares of Mean Weight \newline at Length With Given Standard Deviation}
-This likelihood function calculates the likelihood score based on a weighted sum of squares of the mean weight, with the weighting given the variance of weight of the input population, as shown in equation~\ref{eq:catchstat6} below:
-
-\begin{equation}\label{eq:catchstat6}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it lengths} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)
-\end{equation}
-
-where:\newline
-$<$ x $>$ is the sample mean weight from the data\newline
-$<\mu>$ is the mean weight calculated from the model\newline
-$<$ s $>$ is the standard deviation of the weight from the data\newline
-$<$ N $>$ is the sample size
-
-\bigskip
-For this CatchStatistics function, the format of the statistical data required in the file specified by $<$datafile$>$ is given below:
-
-{\small\begin{verbatim}
-<year>  <step>  <area>  <length>  <number>  <mean>  <stddev>
-\end{verbatim}}
-
-where $<$number$>$ is the number of samples for the timestep/area/length combination, $<$mean$>$ is the mean weight of these samples and $<$stddev$>$ is the standard deviation of the weight of these samples.
-
-\subsection{Unweighted Sum of Squares of Mean Weight at Length}
-This likelihood function calculates the likelihood score based on a unweighted sum of squares of the mean weight, with the variance of the weight of the population assumed to be 1, as shown in equation~\ref{eq:catchstat7} below:
-
-\begin{equation}\label{eq:catchstat7}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it lengths} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)
-\end{equation}
-
-where:\newline
-$<$ x $>$ is the sample mean weight from the data\newline
-$<\mu>$ is the mean weight calculated from the model\newline
-$<$ N $>$ is the sample size
-
-\bigskip
-For this CatchStatistics function, the format of the statistical data required in the file specified by $<$datafile$>$ is given below:
-
-{\small\begin{verbatim}
-<year>  <step>  <area>  <length>  <number>  <mean>
-\end{verbatim}}
-
-where $<$number$>$ is the number of samples for the timestep/area/age combination, and $<$mean$>$ is the mean weight of these samples.
-
-
 \section{StockDistribution}\label{sec:stockdist}
 The StockDistribution likelihood component is used to compare distribution data sampled from the model with distribution data sampled from landings or surveys for different stocks within the Gadget model.  This is typically used to compare Gadget stocks that are based on the same species, but have differing biological properties (eg. immature and mature fish).  The distribution data can either be aggregated into age groups (giving a distribution of length groups for each age), length groups (giving a distribution of age groups for each length) or into age-length groups.  The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the landings.
 
@@ -2513,6 +2534,7 @@ weight               <weight for the likelihood component>
 type                 stockdistribution
 datafile             <name for the datafile>
 function             <function name>
+aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
 overconsumption      <0 or 1> ; 1 to take overconsumption into account
 epsilon              <epsilon>
 areaaggfile          <area aggregation file specifying areas>
@@ -2522,6 +2544,9 @@ fleetnames           <vector of the names of the fleets>
 stocknames           <vector of the names of the stocks>
 \end{verbatim}}
 
+The optional flag $<$aggregationlevel$>$ is used to specify whether the distribution data should be aggregated over the whole year (by setting aggregation level to 1) or not aggregated, and calculated for each timestep (by setting aggregation level to 0).  If this line is not specified, then an aggregation level of 0 is assumed, and the distribution data is not aggregated over the whole year.  Note that not all of the functions used to compare the data can aggregate the data over the whole year.
+
+\bigskip
 The optional flag $<$overconsumption$>$ is used to specify whether any over consumption of the stock is to be taken into account when calculating the model distribution.  If this is set to 1, then the model catch data will be adjusted to ensure that the fleets don't catch more stock than is available, by applying a bound to the catch of the fleets.  If this line is not specified, then an overconsumption of 0 is assumed and any understocking that is present in the model is ignored, which can lead to an unrealistic result if the understocking likelihood component is not specified.
 
 \bigskip
@@ -3193,6 +3218,55 @@ powercoeffs          <p0>  <p1>
 \end{verbatim}}
 
 Note that it is not possible to aggregate more than one stock into a single pseudo stock for this likelihood component.
+
+\section{MigrationProportion}\label{sec:migpro}
+The MigrationProportion likelihood component is used to compare population proportion data sampled from the model with population proportion data sampled from landings or surveys.  The populations proportion data gives the proportion of the population is that is present on each area on a given timestep.  The likelihood score that is calculated gives some measure as to how well the migration data from the model fit to the data from the sample catches.
+
+\bigskip
+To specify a MigrationProportion likelihood component, the format required in the main likelihood file is as follows:
+
+{\small\begin{verbatim}
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 migrationproportion
+datafile             <name for the datafile>
+function             <function name>
+biomass              <0 or 1> ; 1 to base migration proportion data on biomass
+areaaggfile          <area aggregation file specifying areas>
+stocknames           <vector of the names of the stocks>
+\end{verbatim}}
+
+The optional flag $<$biomass$>$ is used to specify whether the migration proportion data should be based on the biomass of the stock or on the population numbers for the stock.  If this is set to 0, then the migration proportion data calculated in the model will be based on the available population numbers for the stock.  If this line is not specified, then a biomass value of 1 is assumed and the migration proportion data calculated in the model will be based on the available population biomass of the stock.
+
+\bigskip
+The $<$stocknames$>$ vector contains a list of all the stocks to be aggregated into a single pseudo stock for the purposes of the data comparison.
+
+\bigskip
+The $<$function name$>$ defines what likelihood function is to be used to compare the modelled migration proportion data to the input migration proportion data.  Currently, there is only one likelihood function defined, so the valid function name is:
+
+\bigskip
+sumofsquares - use a simple sum of squares function
+
+\bigskip
+Finally, the file specified by $<$datafile$>$ contains a list of the migration proportion data that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the migration proportions calculated in the model.  The format of this file is given below:
+
+{\small\begin{verbatim}
+<year>  <step>  <area>  <ratio>
+\end{verbatim}}
+
+where $<$ratio$>$ is the proportion of stock that is in area $<$area$>$ for that timestep.
+
+\subsection{Sum of Squares Function}
+The sum of squares function calculates the likelihood component from equation~\ref{eq:migpro1} below:
+
+\begin{equation}\label{eq:migpro1}
+\ell = \sum_{\it time}\sum_{\it areas} \Big( P_{tr} - \pi_{tr} \Big) ^2
+\end{equation}
+
+where:\newline
+$<$ P $>$ is the proportion of the data sample for that time/area combination\newline
+$<\pi>$ is the proportion of the model sample for that time/area combination
 
 \section{CatchInKilos}\label{sec:catchinkilos}
 The CatchInKilos likelihood component is used to compare the overall catch from the modelled fleets with landings data.  This can be done for any fleet that has landings data available, but will give more useful information when used with fleets of type ''LinearFleet'', since the ''TotalFleet'' fleet type will catch the amount specified in the input file (see section~\ref{chap:fleet} for more information on the available fleet types).
@@ -4009,67 +4083,30 @@ gadget -s -log gadget.log -loglevel 3
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Paramin}\label{chap:paramin}
-This chapter describes how to run Gadget with paramin which runs the optimization routines in parallel. The current version of paramin is implemented with MPI, Message passing interface, which handles all the message passing between the master process, paramin, and the slave processes, Gadget instances. The setup is very similar to a normal Gadget run, all the Gadget input files are the same, it's only the execution which differs. 
+This chapter describes how to run Gadget with paramin which runs the optimisation routines in parallel across a network of processors which will result in a much faster optimisation run.  The current version of paramin is implemented with MPI, Message Passing Interface, which handles all the message passing between the master process, paramin, and the slave processes, which are Gadget simulation runs.  The setup is very similar to a normal Gadget run, with all the Gadget input files are the same, it's only the optimisation execution that differs.
 
 \section{Installation}\label{sec:paramininstall}
-In order to begin one must first download and install a version of MPI. This version of paramin is made with an implementation of MPI-2 called
-OPEN-MPI, one can download the MPI library and a wrapper compiler called mpic++ from their website www.open-mpi.org. Now before trying to run paramin
-make sure you have the newest version of Gadget downloaded. Now open the Makefile with your favorite text-editor and uncomment the section referring
-to a Gadget Network version and comment out the lines which refer to an install without MPI. Now you should open a console window and navigate to the 
-folder where you saved Gadget. Make sure you have the make utility installed, to check if so you can write the following in the console:
-
-{\small\begin{verbatim}
-which make
-\end{verbatim}}
-If it is installed the console should prompt you with something similar to the following
-
-{\small\begin{verbatim}
-/usr/bin/make
-\end{verbatim}}
-
-Which is the path to the executable, if the console outputs
-{\small\begin{verbatim}
-make: Command not found.
-\end{verbatim}}
-
-The make utility is either not installed or the executable is not found in the PATH global variable, note that make comes with almost all modern UNIX 
-systems. Now you can simply type make in the console and the program should be compiled and you get an executable, let's assume it's called gadget-PARA. Now 
-paramin is dependent on some Gadget objects, so you now need to type the following in the console:
+In order to begin one must first download and install a version of MPI.  This version of paramin is made with an implementation of MPI-2 called OPEN-MPI, one can download the MPI library and a wrapper compiler called mpic++ from their website www.open-mpi.org.  Now before trying to run paramin make sure you have the newest version of Gadget downloaded.  Now open the Makefile with a text-editor and uncomment the section referring to a Gadget Network version and comment out the lines which refer to an install without MPI.  Now you should open a console window and navigate to the folder where you saved Gadget.  Now you can simply type make in the console and the program should be compiled and you get an executable, let's assume it's called gadget-PARA.  Now paramin is dependent on some Gadget objects, so you now need to type the following in the console:
 
 {\small\begin{verbatim}
 make libgadgetinput.a
 \end{verbatim}}
 
-Now you are ready to start compiling paramin. Download the newest version of paramin and open the paramin folder in the console. You need to edit the
-Makefile and add the path to the directory where you installed Gadget as described above. Now you can run the make command to compile paramin and get
-an executable, let's assume it's called paramin.
+Now you are ready to start compiling paramin.  Download the newest version of paramin and open the paramin folder in the console.  You need to edit the Makefile and add the path to the directory where you installed Gadget as described above.  Now you can run the make command to compile paramin and get an executable, let's assume it's called paramin.
 
 \section{Running paramin}\label{sec:runparamin}
-To be able to run paramin it's ideal to add the path of the two executables, gadget-PARA and paramin to the global variable PATH. If you're running
-a bash console you can edit the \texttt{.bashrc} to add it, you can also copy the executables to the directory of PATH, but you probably need root 
-access to do that. Now you can call the functions from the console. Here is an example of a typical paramin run:
+To be able to run paramin it's ideal to add the path of the two executables, gadget-PARA and paramin to the global variable PATH.  If you're running a bash console you can edit the \texttt{.bashrc} to add it, you can also copy the executables to the directory of PATH, but you probably need root access to do that.  Now you can call the functions from the console.  Here is an example of a typical paramin run:
 
 {\small\begin{verbatim}
 mpirun paramin -i <filename> -opt <filename> -network <filename> 
-	-o <filename> -function gadget-PARA -s -n -i <filename> > <filename>
+    -o <filename> -function gadget-PARA -s -n -i <filename> > <filename>
 \end{verbatim}}
 
-Now because paramin is implemented with MPI we need to call mpirun when we run it. Now there are several files we need to call and a few switches
-we need. The \texttt{-i <filename>} switch tells paramin which file holds the parameters and their initial values, this file is the same as the 
-params.in file used in Gadget (see Parameter Files, chapter~\ref{chap:param}, for more information on the format of this file). The
-\texttt{-i} switch with the same \texttt{<filename>} has to be on Gadget as well.
-\\
-\\
-Next we need to specify the 
-optimization parameters with the \texttt{-opt <filename>} switch, the preceding file contains the information of which type of optimization run to
-perform for more information see Parameter Files, chapter~\ref{chap:param}, it's the same format as the optimization file for Gadget.
-\\
-\\
-The next switch tells paramin how many subprocesses paramin will spawn, this switch is not in Gadget. Note that having at least 8 subprocesses will
-greatly improve the time of the run, but there is no need to let the number of subprocesses exceed the number of parameters, optimally it should be
-best to have as many subprocesses as the number of parameters, but then one should have access to at least that many processing cores. 
-A sample file which tells paramin
-to spawn 30 subprocesses looks like this:
+Now because paramin is implemented with MPI we need to call mpirun when we run it.  Now there are several files we need to call and a few switches we need. The \texttt{-i <filename>} switch tells paramin which file holds the parameters and their initial values, this file is the same as the params.in file used in Gadget (see Parameter Files, chapter~\ref{chap:param}, for more information on the format of this file). The \texttt{-i} switch with the same \texttt{<filename>} has to be on Gadget as well.
+
+Next we need to specify the optimization parameters with the \texttt{-opt <filename>} switch, the preceding file contains the information of which type of optimization run to perform for more information see Parameter Files, chapter~\ref{chap:param}, it's the same format as the optimization file for Gadget.
+
+The next switch tells paramin how many subprocesses paramin will spawn, this switch is not in Gadget.  Note that having at least 8 subprocesses will greatly improve the time of the run, but there is no need to let the number of subprocesses exceed the number of parameters, optimally it should be best to have as many subprocesses as the number of parameters, but then one should have access to at least that many processing cores.  A sample file which tells paramin to spawn 30 subprocesses looks like this:
 
 {\small\begin{verbatim}
 ;
@@ -4078,41 +4115,19 @@ to spawn 30 subprocesses looks like this:
 numproc    30
 \end{verbatim}}
 
-The \texttt{-o <filename>} switch specifies which file to output the optimized parameters. This file will also contain information about the optimization
-run, how much overall time was taken and how much time was taken for each optimizing algorithm. The format of this outputted file is the same
-as the one used as input, so the output can be used as a starting point for later runs.\\
-\\
-The \texttt{-function gadget-PARA} -switch tells paramin the name of the executable it will spawn as it's subprocess, in this case it's the gadget-PARA 
-executable
-we made earlier. The user can also make his own function to optimize with paramin. Now Gadget also needs parameters, we pass to it the \texttt{-s} and
-\texttt{-n} switch to make it go to network mode, then Gadget knows it's running with paramin. Finally we can add \texttt{> <filename>} to specify
-a file for the output of the run, this is not necessary but recommended.
+The \texttt{-o <filename>} switch specifies which file to output the optimized parameters.  This file will also contain information about the optimization run, how much overall time was taken and how much time was taken for each optimizing algorithm.  The format of this outputted file is the same as the one used as input, so the output can be used as a starting point for later runs.
+
+The \texttt{-function gadget-PARA} -switch tells paramin the name of the executable it will spawn as it's subprocess, in this case it's the gadget-PARA executable we made earlier.  The user can also make his own function to optimize with paramin.  Now Gadget also needs parameters, we pass to it the \texttt{-s} and \texttt{-n} switch to make it go to network mode, then Gadget knows it's running with paramin.  Finally we can add \texttt{> <filename>} to specify a file for the output of the run, this is not necessary but recommended.
+
 \subsection{Additional information}
-If you're running a potentially very long run on a remote host it's 
-recommended to use the \texttt{screen} utility, for more information type \texttt{man screen} in the console. It allows you to detach the session
-so it lives after you log out of your SSH session. In short you can type \texttt{screen} at the console to open a new screen session. Now run the
-script or program you want to run and type \texttt{ctrl-a d}, and you detach the session. Now you can safely exit from the remote host. To retrieve
-your session on your next login simply type \texttt{screen -r} and you enter the screen session, then you can close it by typing \texttt{exit} in
-the console. Another option is to run the desired command with the \texttt{nohup} prefix, it makes the command immune to hangups.\\
-\\
-As stated earlier paramin can be used to optimize almost any function which can be defined within the C++ language. The rosenbrock function
-is oftenly used to test nonlinear optimization algorithms because it's quite challenging for methods which do not rely on the gradient of the function.
-A sample rosenbrock function and instruction on how to compile and run it should be available on the MRI website under paramin. This function
-can be used as a template for the optimization of any function definable in the C++ language, future work will be to add a parser and an R interface,
-so paramin can be called from within an R session using an R defined function.\\
-\\
-Paramin was originally written with PVM, but since PVM is no longer supported it was migrated to MPI.
-More information on the migration process from PVM to MPI can be found on the MRI website, there one can also find study on the improvement in time
-relative to the number of processes spawned for each optimization routine.
+If you're running a potentially very long run on a remote host it's recommended to use the \texttt{screen} utility, for more information type \texttt{man screen} in the console.  It allows you to detach the session so it lives after you log out of your SSH session.  In short you can type \texttt{screen} at the console to open a new screen session.  Now run the script or program you want to run and type \texttt{ctrl-a d}, and you detach the session.  Now you can safely exit from the remote host. To retrieve your session on your next login simply type \texttt{screen -r} and you enter the screen session, then you can close it by typing \texttt{exit} in the console. Another option is to run the desired command with the \texttt{nohup} prefix, it makes the command immune to hangups.
+
+As stated earlier paramin can be used to optimize almost any function which can be defined within the C++ language.  The Rosenbrock function is often used to test nonlinear optimization algorithms because it's quite challenging for methods which do not rely on the gradient of the function.  A sample rosenbrock function and instruction on how to compile and run it should be available on the MRI website under paramin. This function can be used as a template for the optimization of any function definable in the C++ language, future work will be to add a parser and an R interface, so paramin can be called from within an R session using an R defined function.
+
+Paramin was originally written with PVM, but since PVM is no longer supported it was migrated to MPI.  More information on the migration process from PVM to MPI can be found on the MRI website, there one can also find study on the improvement in time relative to the number of processes spawned for each optimization routine.
+
 \subsection{Running paramin on multiple hosts/cluster}
-As stated above when we run paramin in the console it has to be invoked with the \texttt{mpirun} command. The \texttt{mpirun} command can take
-some optional arguments. First of all it can take the argument \texttt{-np <numproc>} where numproc is the desired number of processes one wants to
-start. This argument is \textbf{not} necessary with paramin because we define the number of subprocesses in the network file and paramin spawns them
-dynamically. The next optional argument we will discuss is the $-$$-$\texttt{hostfile <filename>}. \texttt{<filename>} is a name of a file which holds
-the name of the hosts in the cluster and how many processors are available on each node. The authentication in the execution process is done via
-ssh, so public keys have to be shared to allow for remote login and execution between hosts. The programs desired to run in parallel have to be 
-installed on each host for this to work. For more information see the FAQ entries on the OPEN-MPI webpage, there are more things that need to be taken 
-into consideration. Here is an example hostfile from the open-mpi FAQ:
+As stated above when we run paramin in the console it has to be invoked with the \texttt{mpirun} command.  The \texttt{mpirun} command can take some optional arguments. First of all it can take the argument \texttt{-np <numproc>} where numproc is the desired number of processes one wants to start.  This argument is \textbf{not} necessary with paramin because we define the number of subprocesses in the network file and paramin spawns them dynamically.  The next optional argument we will discuss is the $-$$-$\texttt{hostfile <filename>}. \texttt{<filename>} is a name of a file which holds the name of the hosts in the cluster and how many processors are available on each node.  The authentication in the execution process is done via ssh, so public keys have to be shared to allow for remote login and execution between hosts.  The programs desired to run in parallel have to be installed on each host for this to work.  For more information see the FAQ entries on the OPEN-MPI webpage, there are more things that need to be taken into consideration.  Here is an example hostfile from the open-mpi FAQ:
 
 {\small\begin{verbatim}
 # This is an example hostfile.  Comments begin with #
@@ -4229,6 +4244,17 @@ A version of this user guide was printed and published as a Marine Research Inst
 \section{Gadget version 2.1.06}\label{sec:v2106}
 \begin{itemize}
 \item this version only contains bug fixes, so there are no changes to the format of the input files
+\end{itemize}
+
+\section{Gadget version 2.2.00}\label{sec:v2200}
+\begin{itemize}
+\item removed the hard-coded factor of 4 from various maturation and suitability functions \newline (see equations \ref{eq:l50suit}, \ref{eq:mat3} and \ref{eq:mat4}) {\bf note} that these functions have been re-named, so using one of these functions will currently generate an error to alert the user of this change
+\item extended the options for a fleet that implements a harvest control rule (see section~\ref{sec:quotafleet})
+\item added an option to aggregate the StockDistribution data (see section~\ref{sec:stockdist})
+\item added the MigrationProportion likelihood component (see section~\ref{sec:migpro})
+\item simplified the TimeVariable component (see section~\ref{subsec:timevar})
+\item added the StockVariable component so some model parameters can be based on the biomass of a stock (see section~\ref{subsec:stockvar})
+\item added a penalty to models with NaN values to ensure that the optimiser chooses a valid minimum value
 \end{itemize}
 
 \end{document}
