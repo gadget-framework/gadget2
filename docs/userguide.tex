@@ -65,31 +65,54 @@ The Gadget code is derived from the original BORMICON code of Halld\'{o}r Narfi 
 More recent changes include the work to use information from tagging experiments, which was implemented primarily by Sigur{\dh}ur Hannesson.  The work on multivariate distributions was implemented by Bjarki {\TH}\'{o}r Elvarsson.  Recent additions including major code cleanups, modifications to the input formats and debugging operations have been led by James Begley, who is the current maintainer of the code and coordinator of all programming efforts.
 
 \section{Getting Gadget}\label{sec:gettinggadget}
-Gadget is distributed via anonymous ftp from the MRI ftp site, and the address of the top level directory of the Gadget distributions is:
+Gadget is distributed via GitHub and can be obtained at:
 
 {\small\begin{verbatim}
-ftp://ftp.hafro.is/pub/reiknid/dst2/gadget/
+http://github.com/hafro/gadget
 \end{verbatim}}
 
-The most recent version of Gadget will be available as a gzipped tarfile from this directory.  This file will be called gadget$<$version$>$.tar.gz, where $<$version$>$ represents the version number of Gadget.  As a guide, the current version of Gadget is 2.2.00, so the file to be downloaded is gadget2.2.00.tar.gz.
+The most recent version of Gadget will be available as a zip file from
+this from this site (select "Clone or download"). As a guide, the
+current version of Gadget is 2.2.00, so the file to be downloaded is
+gadget2.2.00.tar.gz.
 
-\bigskip
-Gadget is a program that runs on a Unix computing platform, and is regularly tested on machines running versions of Solaris, Linux, Mac OSX and Cygwin (a Unix emulator for Microsoft Windows machines).  It should also run on other versions of Unix, but this may require modifications to the makefile in order to do so.  Gadget is distributed as a set of source code files, which need to be compiled into an executable program before it can be run.  To allow for various different versions, the makefile has a list of supported computing platforms, so the makefile should be checked (and if necessary changed) to ensure that the required options are available before the source code is compiled.  The default options in the makefile will compile Gadget for a Linux machine, using the GNU C++ compiler.  A summary of the commands required to compile Gadget, using the default options for a Linux machine from the downloaded file are:
+\bigskip Gadget is a program that runs on a Unix computing platform,
+and is regularly tested on machines running versions of Linux, Mac OSX
+and Windows.  It should also run on other versions of Unix, but this
+may require modifications to the makefile in order to do so.  Gadget
+is distributed as a set of source code files, which need to be
+compiled into an executable program before it can be run.  To allow
+for various different versions, the makefile has a list of supported
+computing platforms, so the makefile should be checked (and if
+necessary changed) to ensure that the required options are available
+before the source code is compiled.  The default options in the
+makefile will compile Gadget for a Linux machine, using the GNU C++
+compiler.  A summary of the commands required to compile Gadget, using
+the default options for a Linux machine from the downloaded file are:
 
 {\small\begin{verbatim}
-gunzip gadget<version>.tar.gz
-tar -xvf gadget<version>.tar
-cd source
+unzip gadget-master.zip
+cd gadget-master
 make
 \end{verbatim}}
 
-The most recent copy of this document will also be placed on the MRI ftp site, along with copies of any example datasets that are available.  These datasets will be checked so that they run without any problems, and will also contain some comments to help the user understand the format of the data files.  It is recommended that this user guide is read in conjunction with an example dataset.
+The most recent copy of this document will also be placed on the
+github site, along with copies of any example datasets that are
+available.  These datasets will be checked so that they run without
+any problems, and will also contain some comments to help the user
+understand the format of the data files.  It is recommended that this
+user guide is read in conjunction with an example dataset.
 
-\bigskip
-A web site has been set up that contains details of the recent changes to Gadget, documentation updates and other news.  This is also a good place to look for more information about Gadget.  The address of the Gadget web site is {\tt http://www.hafro.is/gadget}
+\bigskip A web site has been set up that contains details of the
+recent changes to Gadget, documentation updates and other news.  This
+is also a good place to look for more information about Gadget.  The
+address of the Gadget web site is {\tt
+  http://www.github.com/hafro/gadget}. 
 
-\bigskip
-Throughout this document any text in $<$angled brackets$>$ should be adjusted by the user to make it relevant to the current situation, so for example the text above should be altered to the following to compile Gadget version 2.2.00 on a Linux machine:
+\bigskip Throughout this document any text in $<$angled brackets$>$
+should be adjusted by the user to make it relevant to the current
+situation, so for example the text above should be altered to the
+following to compile Gadget version 2.2.00 on a Linux machine:
 
 {\small\begin{verbatim}
 gunzip gadget2.2.00.tar.gz
@@ -105,29 +128,63 @@ Gadget is a command line program that runs on a Linux computing platform.  To st
 gadget <options>
 \end{verbatim}}
 
-where $<$options$>$ are a combination of the starting switches described in the next section.  Note that this assumes that the Gadget executable has been placed in a directory that is included in the \$PATH, which might not be the case for some Linux distributions.  If this is the case, Gadget should be started by including the path to the Gadget executable, for example by typing {\small{\tt ./gadget}} if the Gadget executable is in the current directory.
+where $<$options$>$ are a combination of the starting switches
+described in the next section.  Note that this assumes that the Gadget
+executable has been placed in a directory that is included in the
+\$PATH, which might not be the case for some Linux distributions.  If
+this is the case, Gadget should be started by including the path to
+the Gadget executable, for example by typing {\small{\tt ./gadget}} if
+the Gadget executable is in the current directory.
 
-\bigskip
-Gadget is not an interactive program, so once it has started there is no need for any further input from the user.  However, if Gadget was started incorrectly (for example, using the wrong input files) then Gadget can be stopped by pressing $<$CTRL$><$C$>$, which will interrupt the calculations, displaying a menu from which it is possible to either store the current calculations to a text file, or to exit (by pressing $<$Q$>$).
+\bigskip Gadget is not an interactive program, so once it has started
+there is no need for any further input from the user.  However, if
+Gadget was started incorrectly (for example, using the wrong input
+files) then Gadget can be stopped by pressing $<$CTRL$><$C$>$, which
+will interrupt the calculations, displaying a menu from which it is
+possible to either store the current calculations to a text file, or
+to exit (by pressing $<$Q$>$).
 
-\bigskip
-When Gadget starts, it will look for a file called ''main'', which contains a list of all the other data files required.  Gadget will search for this file in the following 2 locations:
+\bigskip When Gadget starts, it will look for a file called ''main'',
+which contains a list of all the other data files required.  Gadget
+will search for this file in the following 2 locations:
 
 \begin{enumerate}
-\item the directory specified by the Linux environment variable called ''GADGET\_WORKING\_DIR'', optionally taking data from the directory specified by the Linux environment variable called ''GADGET\_DATA\_DIR''
-\item the current directory (ie. from where Gadget has been started) if these environment variables have not been set (note that this is the default location)
+\item the directory specified by the Linux environment variable called
+  ''GADGET\_WORKING\_DIR'', optionally taking data from the directory
+  specified by the Linux environment variable called
+  ''GADGET\_DATA\_DIR''
+\item the current directory (ie. from where Gadget has been started)
+  if these environment variables have not been set (note that this is
+  the default location)
 \end{enumerate}
 
-When Gadget is reading in the input data files, these files will be checked to ensure that they are in the correct format, and if there is an error in the format Gadget will print an error message and stop.  Note that when Gadget is checking the format of a data file containing a number of columns (eg. the ''area'' file) it will only check the first data line in the file (so, for the case of the ''area'' file it will check that there are 4 entries on the first row and then assume that all the other rows also have 4 entries).  Hopefully, there should be enough information in these error messages to lead the user to the input file that is causing the error.
+When Gadget is reading in the input data files, these files will be
+checked to ensure that they are in the correct format, and if there is
+an error in the format Gadget will print an error message and stop.
+Note that when Gadget is checking the format of a data file containing
+a number of columns (eg. the ''area'' file) it will only check the
+first data line in the file (so, for the case of the ''area'' file it
+will check that there are 4 entries on the first row and then assume
+that all the other rows also have 4 entries).  Hopefully, there should
+be enough information in these error messages to lead the user to the
+input file that is causing the error.
 
-\bigskip
-If all else fails, and the error messages do not lead the user to the source of the error, then there is an email address set up for any difficulties or questions that may arise, or reporting any bugs that get found.  In addition to sorting out any problems that the user may be getting, we can also try to help with interpreting the output.  This email address is {\tt gadgethelp@hafro.is}
+\bigskip If all else fails, and the error messages do not lead the
+user to the source of the error, then there is an email address set up
+for any difficulties or questions that may arise, or reporting any
+bugs that get found.  In addition to sorting out any problems that the
+user may be getting, we can also try to help with interpreting the
+output.  This email address is {\tt gadgethelp@hafro.is}
 
-\bigskip
-Sending an email to this address should get a response within a couple of working days.  This email address can also be used to give us any feedback on the usefulness (or otherwise) of Gadget, so let us know what you think!
+\bigskip Sending an email to this address should get a response within
+a couple of working days.  This email address can also be used to give
+us any feedback on the usefulness (or otherwise) of Gadget, so let us
+know what you think!
 
 \section{Starting Switches}\label{sec:starting}
-The following is a list of the command line switches that Gadget will recognise, together with a brief description of what the switch means to the running of the Gadget model.
+The following is a list of the command line switches that Gadget will
+recognise, together with a brief description of what the switch means
+to the running of the Gadget model.
 
 {\small\begin{verbatim}
 gadget -s

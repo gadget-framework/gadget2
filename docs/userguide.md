@@ -1,3 +1,193 @@
+---
+authors:
+- Edited by James Begley
+...
+
+-   Introduction to Gadget
+    -   What is Gadget?
+    -   Getting Gadget
+    -   Running Gadget
+    -   Starting Switches
+-   Input Files
+    -   Comments in Input Files
+    -   What Does The \# Mean?
+        -   Switches
+        -   Functions
+-   Model Files
+    -   Main File
+    -   Time File
+    -   Area File
+    -   Other Input Data Files
+        -   Aggregation Files
+        -   TimeVariable Files
+        -   StockVariable Files
+        -   ActionAtTime
+-   Stock Files
+    -   Reference Weight
+    -   Growth and Eat Lengths
+    -   Growth
+        -   MULTSPEC Growth Function
+        -   WeightVB Growth Function
+        -   WeightJones Growth Function
+        -   WeightVBExpanded Growth Function
+        -   LengthVB Growth Function
+        -   LengthPower Growth Function
+        -   LengthVBSimple Growth Function
+    -   Growth Implementation
+        -   Beta-Binomial
+    -   Natural Mortality
+    -   Stock Prey
+    -   Stock Predator
+    -   Consumption
+    -   Suitability
+        -   Constant Suitability Function
+        -   StraightLine Suitability Function
+        -   Exponential Suitability Function
+        -   ExponentialL50 Suitability Function
+        -   Richards Suitability Function
+        -   Andersen Suitability Function
+        -   Andersen Fleet Suitability Function
+        -   Gamma Suitability Function
+    -   Initial Conditions
+        -   Normal Condition Distribution
+        -   Normal Parametric Distribution
+        -   Numerical Distribution
+    -   Migration
+        -   Migration Matrices
+        -   Migration Ratios
+    -   Maturation
+        -   Constant Maturity Function
+        -   ConstantWeight Maturity Function
+        -   FixedLength Maturity Function
+        -   Continuous Maturity Function
+    -   Movement (”Transition”)
+    -   Renewal (”Recruitment”)
+        -   Normal Condition Distribution
+        -   Normal Parametric Distribution
+        -   Numerical Distribution
+    -   Spawning
+        -   Fecundity Recruitment Function
+        -   SimpleSSB Recruitment Function
+        -   Ricker Recruitment Function
+        -   BevertonHolt Recruitment Function
+    -   Length Selection
+        -   Constant Selection Function
+        -   StraightLine Selection Function
+        -   Exponential Selection Function
+    -   Straying
+-   Tag Files
+    -   Tagging Numbers
+-   Otherfood Files
+    -   Food Amounts
+-   Fleet Files
+    -   TotalFleet
+    -   NumberFleet
+    -   LinearFleet
+    -   EffortFleet
+    -   QuotaFleet
+    -   Fleet Suitability
+    -   Fleet Amounts
+-   Likelihood Files
+    -   BoundLikelihood (”Penalty”)
+    -   Understocking
+    -   CatchDistribution
+        -   Sum of Squares Function
+        -   Stratified Sum of Squares Function
+        -   Multinomial Function
+        -   Pearson Function
+        -   Gamma Function
+        -   Log Function
+        -   Multivariate Normal Function
+        -   Multivariate Logistic Function
+    -   CatchStatistics
+        -   Weighted Sum of Squares of Mean Length
+        -   Weighted Sum of Squares of Mean LengthWith Given Standard
+            Deviation
+        -   Weighted Sum of Squares of Mean WeightWith Given Standard
+            Deviation
+        -   Unweighted Sum of Squares of Mean Weight
+        -   Unweighted Sum of Squares of Mean Length
+    -   StockDistribution
+        -   Sum of Squares Function
+        -   Multinomial Function
+    -   SurveyIndices
+        -   SurveyIndices by Length
+        -   SurveyIndices by Age
+        -   SurveyIndices by Fleet
+        -   SurveyIndices by Acoustic
+        -   SurveyIndices by Effort
+    -   SurveyDistribution
+        -   Linear Fit
+        -   Power Fit
+        -   Multinomial Function
+        -   Pearson Function
+        -   Gamma Function
+        -   Log Function
+    -   StomachContent
+        -   SCSimple Function
+    -   Recaptures
+        -   Poisson Function
+    -   RecStatistics
+        -   Weighted Sum of Squares of Mean Length
+        -   Weighted Sum of Squares of Mean LengthWith Given Standard
+            Deviation
+        -   Unweighted Sum of Squares of Mean Length
+    -   MigrationPenalty
+    -   MigrationProportion
+        -   Sum of Squares Function
+    -   CatchInKilos
+        -   Sum of Squares Function
+-   Print Files
+    -   StockStdPrinter
+    -   StockFullPrinter
+    -   StockPrinter
+    -   PredatorPrinter
+    -   PredatorOverPrinter
+    -   PreyOverPrinter
+    -   StockPreyFullPrinter
+    -   StockPreyPrinter
+    -   PredatorPreyPrinter
+    -   LikelihoodPrinter
+    -   LikelihoodSummaryPrinter
+-   Parameter File
+-   Optimisation File
+    -   Hooke & Jeeves
+        -   Overview
+        -   File Format
+        -   Parameters
+    -   Simulated Annealing
+        -   Overview
+        -   File Format
+        -   Parameters
+    -   BFGS
+        -   Overview
+        -   File Format
+        -   Parameters
+    -   Combining Optimisation Algorithms
+        -   Overview
+        -   File Format
+        -   Parameters
+    -   Repeatability
+-   Output Files
+    -   Parameter Output
+    -   Likelihood Output
+    -   Log Output
+-   Paramin
+    -   Installation
+    -   Running paramin
+        -   Additional information
+        -   Running paramin on multiple hosts/cluster
+-   References
+-   Order of Calculations
+-   Recent Changes
+    -   Gadget version 2.1.01
+    -   Gadget version 2.1.02
+    -   Gadget version 2.1.03
+    -   Gadget version 2.1.04
+    -   Gadget version 2.1.05
+    -   Gadget version 2.1.06
+    -   Gadget version 2.2.00
+
 Introduction to Gadget {#chap:intro}
 ======================
 
@@ -5927,5 +6117,3 @@ Gadget version 2.2.00 {#sec:v2200}
 
 -   added a penalty to models with NaN values to ensure that the
     optimiser chooses a valid minimum value
-
-
