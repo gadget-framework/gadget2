@@ -13,7 +13,7 @@ class Keeper;
 enum LikelihoodType { SURVEYINDICESLIKELIHOOD = 1, UNDERSTOCKINGLIKELIHOOD,
   CATCHDISTRIBUTIONLIKELIHOOD, CATCHSTATISTICSLIKELIHOOD, STOMACHCONTENTLIKELIHOOD,
   STOCKDISTRIBUTIONLIKELIHOOD, CATCHINKILOSLIKELIHOOD, BOUNDLIKELIHOOD, TAGLIKELIHOOD,
-  MIGRATIONPENALTYLIKELIHOOD, RECSTATISTICSLIKELIHOOD, SURVEYDISTRIBUTIONLIKELIHOOD, MIGRATIONPROPORTIONLIKELIHOOD };
+		      MIGRATIONPENALTYLIKELIHOOD, RECSTATISTICSLIKELIHOOD, SURVEYDISTRIBUTIONLIKELIHOOD, MIGRATIONPROPORTIONLIKELIHOOD ,PROGLIKELIHOOD};
 
 /**
  * \class Likelihood
@@ -53,6 +53,11 @@ public:
    * \param keeper is the Keeper for the current model
    */
   virtual void Reset(const Keeper* const keeper) { likelihood = 0.0; };
+  /**
+   * \brief This function will reset the likelihood information
+   * \param keeper is the Keeper for the current model
+   */
+  virtual void Reset(const TimeClass* const TimeInfo) {};
   /**
    * \brief This function will print the summary likelihood information
    * \param outfile is the ofstream that all the model information gets sent to

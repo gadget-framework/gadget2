@@ -91,7 +91,7 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     predatorptrvector.o preyptrvector.o printerptrvector.o stockptrvector.o \
     migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o \
     tagptrvector.o optinfoptrvector.o errorhandler.o modelvariablevector.o \
-    stockvariable.o modelvariable.o migrationproportion.o
+    stockvariable.o modelvariable.o migrationproportion.o proglikelihood.o
 
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 

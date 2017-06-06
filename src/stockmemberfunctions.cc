@@ -307,11 +307,35 @@ double Stock::getTotalStockBiomass(int area) const {
   return kilos;
 }
 
+double Stock::getWeightedStockBiomass(int area,const FormulaVector & parameters) const {
+  int inarea = this->areaNum(area);
+  if (inarea == -1)
+    return 0.0;
+
+  int age, len;
+  double kilos = 0.0;
+  for (age = Alkeys[inarea].minAge(); age <= Alkeys[inarea].maxAge(); age++)
+    for (len = Alkeys[inarea].minLength(age); len < Alkeys[inarea].maxLength(age); len++)
+      kilos += parameters[2]*((Alkeys[inarea])[age][len].N * (Alkeys[inarea])[age][len].W)/(1.0+exp(-parameters[0]*(parameters[1]-LgrpDiv->meanLength(len))));
+
+  return kilos;
+}
+
+
 double Stock::getTotalStockBiomassAllAreas() const {
   int a;
   double sum = 0.0;
   for (a = 0; a <= Alkeys.Size(); a++)
     sum += this->getTotalStockBiomass(a);
+
+  return sum;
+}
+
+double Stock::getWeightedStockBiomassAllAreas(const FormulaVector & parameters) const {
+  int a;
+  double sum = 0.0;
+  for (a = 0; a <= Alkeys.Size(); a++)
+    sum += this->getWeightedStockBiomass(a,parameters);
 
   return sum;
 }

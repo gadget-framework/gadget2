@@ -1138,26 +1138,28 @@ double SCSimple::calcLikelihood() {
   int a, pred, prey;
   double scale, tmplik, tmpdivide;
   double lik = 0.0;
-
+  
   for (a = 0; a < areas.Nrow(); a++) {
     likelihoodValues[timeindex][a] = 0.0;
     for (pred = 0; pred < obsConsumption[timeindex][a]->Nrow(); pred++) {
       scale = 0.0;
       for (prey = 0; prey < modelConsumption[timeindex][a]->Ncol(pred); prey++)
         scale += (*modelConsumption[timeindex][a])[pred][prey];
-
-      if (!(isZero(scale))) {
+      
+      if (!(isZero(scale))) //{
         tmpdivide = 1.0 / scale;
-        tmplik = 0.0;
-        for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
-          (*modelConsumption[timeindex][a])[pred][prey] *= tmpdivide;
-          tmplik += ((*modelConsumption[timeindex][a])[pred][prey] -
-              (*obsConsumption[timeindex][a])[pred][prey]) *
-              ((*modelConsumption[timeindex][a])[pred][prey] -
-              (*obsConsumption[timeindex][a])[pred][prey]);
-        }
-        likelihoodValues[timeindex][a] += tmplik;
+      else 
+	tmpdivide = 0.0;
+      tmplik = 0.0;
+      for (prey = 0; prey < obsConsumption[timeindex][a]->Ncol(pred); prey++) {
+	(*modelConsumption[timeindex][a])[pred][prey] *= tmpdivide;
+	tmplik += ((*modelConsumption[timeindex][a])[pred][prey] -
+		   (*obsConsumption[timeindex][a])[pred][prey]) *
+	  ((*modelConsumption[timeindex][a])[pred][prey] -
+	   (*obsConsumption[timeindex][a])[pred][prey]);
       }
+      likelihoodValues[timeindex][a] += tmplik;
+      //}
     }
     lik += likelihoodValues[timeindex][a];
   }

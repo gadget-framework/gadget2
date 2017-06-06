@@ -63,7 +63,7 @@ void SuitFuncPtrVector::readSuitFunction(CommentStream& infile,
     tempFunc = new StraightUnboundedSuitFunc();
 
   } else if ((strcasecmp(suitname, "newexponentiall50") == 0) || (strcasecmp(suitname, "expsuitfuncl50") == 0) || (strcasecmp(suitname, "exponentiall50") == 0)){
-    handle.logFileMessage(LOGWARN, "\nNote that this exponentiall50 has had a factor of 4 removed from the source code");
+    //    handle.logFileMessage(LOGWARN, "\nNote that this exponentiall50 has had a factor of 4 removed from the source code");
 
     tempFunc = new ExpSuitFuncL50();
 

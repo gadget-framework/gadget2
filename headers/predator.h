@@ -124,13 +124,18 @@ public:
    */
   virtual const LengthGroupDivision* getLengthGroupDiv() const = 0;
   /**
-   * \brief This will initialise the preys that will be consumed by the predator
+   * \brief This is a multiplier set in lengthpredator.  
    */
-  virtual void Initialise() { suitable->Initialise(this); };
+  virtual void setTimeMultiplier(const TimeClass* const TimeInfo, int quotastep,double value){};
   /**
    * \brief This will return the number of prey stocks that the predator will consume
    * \return number of preys
    */
+  /**
+   * \brief This will initialise the preys that will be consumed by the predator
+   */
+  virtual void Initialise() { suitable->Initialise(this); };
+
   int numPreys() const { return preys.Size(); };
   /**
    * \brief This will return a given prey

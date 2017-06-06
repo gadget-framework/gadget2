@@ -98,7 +98,7 @@ int main(int aNumber, char* const aVector[]) {
       while (data->isDataLeft()) {
         data->readNextLine();
         EcoSystem->Update(data);
-        EcoSystem->checkBounds();
+        //EcoSystem->checkBounds();
         EcoSystem->Simulate(main.runPrint());
         if ((main.getPI()).getPrint())
           EcoSystem->writeValues();

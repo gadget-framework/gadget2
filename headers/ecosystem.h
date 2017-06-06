@@ -123,7 +123,7 @@ public:
    * \brief This function will update the Ecosystem parameters with new values from StochasticData
    * \param Stochastic is the StochasticData containing the new values of the parameters
    */
-  void Update(const StochasticData* const Stochastic) const { keeper->Update(Stochastic); };
+  void Update(const StochasticData* const Stochastic) const {keeper->Update(Stochastic); };
   /**
    * \brief This function will reset the Ecosystem information
    */

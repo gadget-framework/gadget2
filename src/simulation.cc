@@ -80,6 +80,8 @@ void Ecosystem::Simulate(int print) {
 
     // add in any new tagging experiments
     tagvec.updateTags(TimeInfo);
+    for (j = 0; j < likevec.Size(); j++)  //only proglikelihood
+      likevec[j]->Reset(TimeInfo);
 
     if (print)
       for (j = 0; j < printvec.Size(); j++)

@@ -4,6 +4,20 @@ Welcome to the Gadget development repository. This will eventually contain all t
 
 Gadget is a statistical model of marine ecosystems. Gadget models can be both very data- and computationally- intensive. Various scripts have been written to extract data from data warehouses using [mfdb](github.com/mareframe/mfdb/), a specialised R-package, that can handle the complexities of the disparate datasets that can be used by Gadget when estimating model parameters. To speed up processing time, a parallel processing optimiser (called [Paramin](github.com/Hafro/paramin)) has been developed. In addition to these a specialised R-package, [Rgadget](github.com/bthe/rgadget), has been developed to aid in the development of Gadget models by providing tools to estimate likelihood weights, defining model skeletons, and model diagnostics and prognosis.   
 
+# Features
+Gadget is a software tool that can run complicated statistical ecosystem models, which take many features of the ecosystem into account. Gadget works by running an internal model based on many parameters, and then comparing the data from the output of this model to ''real'' data to get a goodness-of-fit likelihood score. These parameters can then be adjusted, and the model re-run, until an optimum is found, which corresponds to the model with the lowest likelihood score.
+
+Gadget allows you to include a number of features into your model: One or more species, each of which may be split into multiple stocks; multiple areas with migration between areas; predation between and within species; maturation; reproduction and recruitment; multiple commercial and survey fleets taking catches from the populations.
+
+An indication of the features that Gadget can model can be given by
+looking at the data input files required shown in the diagram below:
+
+![Features](github.com/docs/features.png)
+
+
+These input data files are in a column-based format, which means that they can easily be generated using simple extraction routines from databases. This means that the construction of a Gadget model can be done reasonably quickly, and the models will be free of any formatting errors in the Gadget input files that could prevent Gadget models from running. The data format is explained in more detail in the [Gadget User Guide](http://www.hafro.is/gadget/userguide/userguide.html).
+
+
 # Prerequisites
 To compile Gadget one needs a working C++ compiler and a version of Make installed on the computer:
 

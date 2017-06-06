@@ -17,7 +17,7 @@ public:
    * \param multscaler is the Formula that can be used to scale the biomass consumed
    */
   LengthPredator(const char* givenname, const IntVector& Areas,
-    Keeper* const keeper, Formula multscaler);
+		 const TimeClass* const TimeInfo,Keeper* const keeper,Formula multscaler);
   /**
    * \brief This is the default LengthPredator destructor
    */
@@ -33,6 +33,7 @@ public:
    * \return multi
    */
   double getMultScaler() const { return multi; };
+  virtual void setTimeMultiplier(const TimeClass* const TimeInfo, int quotastep,double value);  //
   /**
    * \brief This function will reset the predation information
    * \param TimeInfo is the TimeClass for the current model
@@ -43,6 +44,7 @@ protected:
    * \brief This is the multiplicative constant that can be used to scale the biomass consumed
    */
   Formula multi;
+  DoubleVector timeMultiplier; //To be set by the quota class
 };
 
 #endif
