@@ -34,7 +34,7 @@ It should be sufficient to install XCode through the Appstore and through XCode'
 Easiest way is to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) . During the install process allow the installer to append to the system path.
 
 # Compile and install
-To install Gadget you can simply click the "download as a zip file" button (or clone the repository). Unzip this file and make your way to the resulting folder, typically called `gadget-master`, within command prompt/terminal application and simply type:
+To install Gadget you can simply click the "download as a zip file" button (or clone the repository). Unzip this file and within command prompt/terminal application make your way to the resulting folder, typically called `gadget-master`, and simply type:
   
 >  make
   
