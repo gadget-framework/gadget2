@@ -14,6 +14,8 @@ else
 endif
 #-s
 
+
+
 INC_DIR = ./headers
 SRC_DIR = ./src
 OBJ_DIR = .
@@ -22,15 +24,17 @@ OBJ_DIR = .
 # The name of the final executable (eg gadget-paramin or gadget.exe)
 #GADGET = gadget-paramin
 GADGET = gadget
+GADGETPARA = gadget-para
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
 # 1. Linux, or Cygwin, or Solaris, with MPI, mpic++ compiler
-#CXX = mpic++
+#CXXMPI = mpic++
 #LIBDIRS = -L. -L/usr/local/lib
 #LIBRARIES = -lm
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
-#_OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+# CXXFLAGSNET = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
+_OBJECTSNET = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+OBJECTSNET = $(patsubst %,$(SRC_DIR)/%,$(_OBJECTSNET))
 _LIBOBJ = $(GADGETINPUT) $(EXTRAINPUT)
 LIBOBJ = $(patsubst %,$(SRC_DIR)/%,$(_LIBOBJ))
 ##########################################################################
@@ -41,21 +45,7 @@ LIBRARIES = -lm
 CXXFLAGS = $(DEFINE_FLAGS)
 _OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 OBJECTS = $(patsubst %,$(SRC_DIR)/%,$(_OBJECTS))
-##########################################################################
-# 3. Solaris, without pvm3, using CC compiler
-#CXX = CC
-#LIBDIRS = -L. -L/usr/local/lib
-#LIBRARIES = -lm
-#CXXFLAGS = $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
-##########################################################################
-# 4. Linux or Solaris, without pvm3, g++ compiler running CONDOR
-#CXX = condor_compile g++
-#LIBDIRS = -L. -L/usr/local/lib
-#LIBRARIES = -lm
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
-##########################################################################
+###########################################################################
 
 GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
     area.o time.o keeper.o maininfo.o printinfo.o runid.o global.o stochasticdata.o \
@@ -100,6 +90,9 @@ GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 
+
+
+
 gadget	:	$(OBJECTS)
 		$(CXX) -o $(GADGET) $(OBJECTS) $(LDFLAGS) 
 
@@ -119,8 +112,13 @@ EXTRAINPUT = optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
 libgadgetinput.a	:	$(LIBOBJ)
 		ar rs libgadgetinput.a $?
 
+gadgetpara :    CXX = mpic++
+gadgetpara : 	CXXFLAGS = $(DEFINE_FLAGS) -D GADGET_NETWORK
+gadgetpara :    $(OBJECTSNET)
+		$(CXX) -o $(GADGETPARA) $(OBJECTSNET) $(LDFLAGS) 
+
 clean	:
-		rm -f $(OBJECTS) libgadgetinput.a
+		rm -f $(OBJECTS) $(OBJECTSNET) libgadgetinput.a
 
 depend	:
 		$(CXX) -M -MM $(CXXFLAGS) *.cc

@@ -36,7 +36,7 @@ void MainInfo::showUsage() {
     << " -log <filename>              print logging information to <filename>\n"
     << " -printinitial <filename>     print initial model information to <filename>\n"
     << " -printfinal <filename>       print final model information to <filename>\n"
-    << "\nFor more information see the Gadget web page at http://www.hafro.is/gadget\n\n";
+    << "\nFor more information see the Gadget web page at http://www.github.com/hafro/gadget\n\n";
   exit(EXIT_SUCCESS);
 }
 
