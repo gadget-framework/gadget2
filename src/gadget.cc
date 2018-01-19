@@ -104,8 +104,8 @@ int main(int aNumber, char* const aVector[]) {
         data->readNextLine();
         EcoSystem->Update(data);
         //EcoSystem->checkBounds();
-        EcoSystem->Simulate(main.runPrint());
-        if ((main.getPI()).getPrint())
+        EcoSystem->Simulate(_main.runPrint());
+        if ((_main.getPI()).getPrint())
           EcoSystem->writeValues();
       }
       delete data;
