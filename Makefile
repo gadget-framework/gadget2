@@ -107,13 +107,13 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     predatorptrvector.o preyptrvector.o printerptrvector.o stockptrvector.o \
     migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o \
     tagptrvector.o optinfoptrvector.o errorhandler.o modelvariablevector.o \
-    stockvariable.o modelvariable.o migrationproportion.o matrix.o
+    stockvariable.o modelvariable.o migrationproportion.o matrix.o  optinfode.o de.o optinfopso.o pso.o
     
-    GADGETCLASSES = src/agebandmatrixmemberfunctions.cc src/grow.cc src/growermemberfunctions.cc
+ GADGETCLASSES = src/agebandmatrixmemberfunctions.cc src/grow.cc src/growermemberfunctions.cc
 
-SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
+ SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
-GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
+ GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
     commentstream.o parameter.o parametervector.o strstack.o 
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)

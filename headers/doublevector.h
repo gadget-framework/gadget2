@@ -80,6 +80,8 @@ public:
    * \brief This function will set all of the entries of the vector to zero
    */
   void setToZero();
+
+  double* getv();
   /**
    * \brief This operator will calculate the dot product of the vector and an existing DoubleVector
    * \param d is the DoubleVector to copy

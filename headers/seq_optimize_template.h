@@ -9,6 +9,7 @@
 #include <omp.h>
 #endif
 
+
 class Siman {
 	int _nvars;
 	unsigned _seed;
@@ -41,6 +42,8 @@ class Siman {
 	int _scale;
 	int* _converge; //NN
 	double* _score; //NN
+        double _TIME;
+	double _VTR;
 
 public:
 
@@ -77,16 +80,18 @@ public:
 		_scale = 0;
 		_converge =NULL;
 		_score = 0;
+		_TIME= 1000;
+		_VTR=0;
 	}
 
 	Siman(unsigned &seed, unsigned &seedM, unsigned &seedP, int &nvars, int &nt, int &ns, IntVector param, DoubleVector* x,
 			DoubleVector* lowerb, DoubleVector* upperb, DoubleVector vm, double t, double &rt,
 			double nsdiv, int &tempcheck, double &simanneps, DoubleVector fstar,
 			double &lratio, double &uratio, double &cs, DoubleVector* bestx, int &scale, int* converge,
-			double* score):
+			double* score, double TIME, double VTR ):
 			_seed(seed), _seedM(seedM), _seedP(seedP), _l(0), _nvars(nvars), _nt(nt), _NT(0), _ns(ns), _NS(0), _t(t),
 			_rt(rt), _nsdiv(nsdiv), _nacc(1), _tempcheck(tempcheck), _simanneps(simanneps), _lratio(lratio),
-			_uratio(uratio), _cs(cs), _scale(scale){
+			_uratio(uratio), _cs(cs), _scale(scale), _TIME(TIME), _VTR(VTR) {
 		_param = IntVector(param);
 		_x = x;
 		_lowerb = lowerb;
@@ -100,9 +105,11 @@ public:
 		_bestx = bestx;
 		_converge = converge;
 		_score = score;
+		_VTR  = VTR;
+		_TIME = TIME;
 	}
 
-	  //Required Copy constructor    : Params(const Params& other)
+	//Required Copy constructor    : Params(const Params& other)
 	Siman(const Siman& other): _nvars(other._nvars), _seed(other._seed), _seedM(other._seedM), _seedP(other._seedP),
 			_l(other._l), _nt(other._nt), _NT(other._NT), _ns(other._ns), _NS(other._NS), _param(IntVector(other._param)),
 			_x(other._x), _lowerb(other._lowerb),_upperb(other._upperb), _vm(DoubleVector(other._vm)), _t(other._t),
@@ -144,6 +151,8 @@ public:
 		_scale = other._scale;
 		_converge =other._converge;
 		_score = other._score;
+		_VTR = other._VTR;
+		_TIME = other._TIME;
 
 		return *this;
 	}
@@ -284,7 +293,6 @@ class ReproducibleSearch {
 	double optimumValue_;
 	double funcval_;
 	double searchTime_;
-
 	/// Stores an individual item to evaluate and the data to restore the search state
 	/// if it is chosen as new optimum item
 	struct ParalEvalItem_t {
@@ -333,10 +341,10 @@ public:
 //########################################################
 
 
-	void seq_opt(double funcval) {
+	void seq_opt(double funcval, double TIME_, double VTR_) {
 		struct timeval t0, t1, t;
 		reset();
-
+		double timestop;
 		CONTROL_T control_object;
 		gettimeofday(&t0, NULL);
 
@@ -345,6 +353,7 @@ public:
 		funcval_ = funcval;
 		optimumValue_ = funcval_;
 		bool quit = false;
+
 		for (iters_ = 1; iters_ <= maxIters_; ++iters_) {
 			PARAMS_T p = p_;
 
@@ -363,9 +372,20 @@ public:
 
 			control_object.optimum(val, optimumValue_, iters_, p_, initialParams_, seed_);
 
-			if ((quit=control_object.mustTerminate(optimumValue_, funcval_, seed_, iters_))) {
-				break;
-			}
+                	gettimeofday(&t1, NULL);
+        	        timersub(&t1, &t0, &t);
+	                searchTime_ = t.tv_sec + t.tv_usec / 1000000.0;
+
+
+                        if ((searchTime_ > TIME_) || ((optimumValue_*(-1.0)) <= VTR_)) {
+                	   break;
+            	        }
+
+                        if ((quit=control_object.mustTerminate(optimumValue_, funcval_, seed_, iters_))) {
+                                break;
+                        }
+
+
 		}
 
 		control_object.printResult(quit, seed_, iters_);

@@ -2,7 +2,7 @@
 #define runid_h
 
 #include "gadget.h"
-
+#include <time.h>
 /**
  * \class RunID
  * \brief This is the class used to store information about the machine used for, and the time of, the model run
@@ -27,6 +27,8 @@ public:
    * \param o is the ofstream that the model run information will be written to
    */
   void printTime(ostream& o);
+
+  double returnTime();
 protected:
   /**
    * \brief This is the name of the host machine that is running the current model
@@ -44,6 +46,8 @@ protected:
    * \brief This is the time that the current model started the simulation
    */
   time_t runtime;
+
+  double runtime2;  
 };
 
 #endif

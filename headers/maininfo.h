@@ -50,6 +50,12 @@ public:
    * \param filename is the name of the file
    */
   void setPrintFinalFile(char* filename);
+#ifdef _OPENMP
+  /**
+   * \brief This function will store parallel options 
+   */
+  void setParallel(char* filename);
+#endif
   /**
    * \brief This function will store the filename that the initial values for the model parameters will be read from
    * \param filename is the name of the file
@@ -85,6 +91,13 @@ public:
    * \return flag
    */
   int runPrint() const { return runprint; };
+#ifdef _OPENMP
+  /**
+   * \brief This function will return the flag used to determine whether the current simulation should print the model output
+   * \return flag
+   */
+  int runParallel() const { return runparallel; };
+#endif
   /**
    * \brief This function will return the flag used to determine whether the optimisation parameters have been given
    * \return flag
@@ -233,6 +246,11 @@ private:
    * \note see[0] = seed | see[1] = seedM | see[2] = seedP
    */
   unsigned* seed;
+#ifdef _OPENMP
+  /**
+   * \brief This is the flag used to denote whether the likelihood score should be optimised in pararrel   */
+  int runparallel;
+#endif
 };
 
 #endif
