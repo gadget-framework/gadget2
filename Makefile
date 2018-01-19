@@ -14,6 +14,8 @@ else
 endif
 #-s
 
+
+
 INC_DIR = ./headers
 SRC_DIR = ./src
 OBJ_DIR = .
@@ -23,16 +25,17 @@ OBJ_DIR = .
 #GADGET = gadget-paramin
 #GADGET = gadget
 GADGET = gadget
-#GADGET = gadget-ompSpec
+GADGETPARA = gadget-para
 ##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
 # 1. Linux, or Cygwin, or Solaris, with MPI, mpic++ compiler
-#CXX = mpic++
+#CXXMPI = mpic++
 #LIBDIRS = -L. -L/usr/local/lib
 #LIBRARIES = -lm
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+# CXXFLAGSNET = $(GCCWARNINGS) $(DEFINE_FLAGS) -D GADGET_NETWORK
+_OBJECTSNET = $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+OBJECTSNET = $(patsubst %,$(SRC_DIR)/%,$(_OBJECTSNET))
 _LIBOBJ = $(GADGETINPUT) $(EXTRAINPUT)
 LIBOBJ = $(patsubst %,$(SRC_DIR)/%,$(_LIBOBJ))
 ##########################################################################
@@ -50,28 +53,7 @@ LIBRARIES = -lm
 CXXFLAGS = $(DEFINE_FLAGS) -fopenmp
 _OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS) 
 OBJECTS = $(patsubst %,$(SRC_DIR)/%,$(_OBJECTS))
-##########################################################################
-# 2,6. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler and OpenMP Speculative
-#CXX = g++
-#LIBDIRS = -L. -L/usr/local/lib
-#LIBRARIES = -lm
-#CXXFLAGS = $(DEFINE_FLAGS) -fopenmp -DSPECULATIVE
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
-##########################################################################
-# 3. Solaris, without pvm3, using CC compiler
-#CXX = CC
-#LIBDIRS = -L. -L/usr/local/lib
-#LIBRARIES = -lm
-#CXXFLAGS = $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
-##########################################################################
-# 4. Linux or Solaris, without pvm3, g++ compiler running CONDOR
-#CXX = condor_compile g++
-#LIBDIRS = -L. -L/usr/local/lib
-#LIBRARIES = -lm
-#CXXFLAGS = $(GCCWARNINGS) $(DEFINE_FLAGS)
-#OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
-##########################################################################
+###########################################################################
 
 GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
     area.o time.o keeper.o maininfo.o printinfo.o runid.o global.o stochasticdata.o \
@@ -107,19 +89,14 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     predatorptrvector.o preyptrvector.o printerptrvector.o stockptrvector.o \
     migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o \
     tagptrvector.o optinfoptrvector.o errorhandler.o modelvariablevector.o \
-    stockvariable.o modelvariable.o migrationproportion.o matrix.o  optinfode.o de.o optinfopso.o pso.o
+    stockvariable.o modelvariable.o migrationproportion.o matrix.o  optinfode.o de.o optinfopso.o pso.o proglikelihood.o
     
- GADGETCLASSES = src/agebandmatrixmemberfunctions.cc src/grow.cc src/growermemberfunctions.cc
+SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
- SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
-
- GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
+GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
     commentstream.o parameter.o parametervector.o strstack.o 
 
 LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
-
-partial :	$(OBJECTS)
-		$(CXX) -c $(LDFLAGS) $(GADGETCLASSES)
 
 gadget	:	$(OBJECTS)
 		$(CXX) -o $(GADGET) $(OBJECTS) $(LDFLAGS)
@@ -128,6 +105,7 @@ gadget	:	$(OBJECTS)
 install	:	$(GADGET)
 		strip $(GADGET)
 		cp $(GADGET) /usr/local/bin/
+		mkdir -p /usr/local/man/man1/
 		cp gadget.1 /usr/local/man/man1/
 
 ##########################################################################
@@ -139,8 +117,13 @@ EXTRAINPUT = optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
 libgadgetinput.a	:	$(GADGETINPUT) $(EXTRAINPUT)
 		ar rs libgadgetinput.a $?
 
+gadgetpara :    CXX = mpic++
+gadgetpara : 	CXXFLAGS = $(DEFINE_FLAGS) -D GADGET_NETWORK
+gadgetpara :    $(OBJECTSNET)
+		$(CXX) -o $(GADGETPARA) $(OBJECTSNET) $(LDFLAGS) 
+
 clean	:
-		rm -f $(OBJECTS) libgadgetinput.a
+		rm -f $(OBJECTS) $(OBJECTSNET) libgadgetinput.a
 
 depend	:
 		$(CXX) -M -MM $(CXXFLAGS) *.cc

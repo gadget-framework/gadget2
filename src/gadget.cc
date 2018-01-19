@@ -103,9 +103,9 @@ int main(int aNumber, char* const aVector[]) {
       while (data->isDataLeft()) {
         data->readNextLine();
         EcoSystem->Update(data);
-        EcoSystem->checkBounds();
-        EcoSystem->Simulate(_main.runPrint());
-        if ((_main.getPI()).getPrint())
+        //EcoSystem->checkBounds();
+        EcoSystem->Simulate(main.runPrint());
+        if ((main.getPI()).getPrint())
           EcoSystem->writeValues();
       }
       delete data;

@@ -302,6 +302,16 @@ public:
    */
   double getTotalStockBiomassAllAreas() const;
   /**
+   * \brief This will return the selection weighted population biomass
+   * \of the stock in one area return population biomass
+   */
+  double getWeightedStockBiomass(int area,const FormulaVector & parameters) const;
+  /**
+   * \brief This will return the selection weighted population biomass
+   * \of the stock in allareas return population biomass
+   */
+  double getWeightedStockBiomassAllAreas(const FormulaVector & parameters) const;
+ /**
    * \brief This will return the stocks that this stock will mature in to
    * \return maturestocks, a StockPtrVector of the stocks that this stock will mature into
    */

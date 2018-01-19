@@ -27,6 +27,7 @@
 #include "readword.h"
 #include "gadget.h"
 #include "global.h"
+#include "proglikelihood.h"
 
 //
 // A function to read fleet information
@@ -239,6 +240,10 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 
     } else if (strcasecmp(type, "surveydistribution") == 0) {
       likevec.resize(new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name));
+
+    } else if (strcasecmp(type, "proglikelihood") == 0) {
+      likevec.resize(new ProgLikelihood(infile, Area, TimeInfo, keeper, weight, name));
+
 
     } else if (strcasecmp(type, "stomachcontent") == 0) {
       likevec.resize(new StomachContent(infile, Area, TimeInfo, keeper, weight, name));

@@ -70,9 +70,10 @@ private:
    * \param TimeInfo is the TimeClass for the current model
    * \param numarea is the number of areas that the likelihood data covers
    * \param numage is the number of age groups that the likelihood data covers
+   * \param numlen is the number of length groups that the likelihood data covers
    */
   void readStatisticsData(CommentStream& infile, const TimeClass* TimeInfo,
-    int numarea, int numage);
+			  int numarea, int numage, int numlen);
   /**
    * \brief This function will calculate the likelihood score for the current timestep based on a sum of squares function
    * \return likelihood score
@@ -135,6 +136,10 @@ private:
   /**
    * \brief This is the CharPtrVector of the names of the areas
    */
+  IntMatrix lengths;
+  /**
+   * \brief This is the CharPtrVector of the names of the length
+   */
   CharPtrVector areaindex;
   /**
    * \brief This is the CharPtrVector of the names of the age groups
@@ -142,6 +147,10 @@ private:
   CharPtrVector ageindex;
   /**
    * \brief This is the flag to denote whether the likelihood calculation should take overconsumption into account or not
+   */
+  CharPtrVector lenindex;
+  /**
+   * \brief the names of the length groups
    */
   int overconsumption;
   /**

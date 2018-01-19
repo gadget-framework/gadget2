@@ -122,6 +122,8 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
       case MIGRATIONPROPORTIONLIKELIHOOD:
         outfile << "\n; year-step-area-ratio\n";
         break;
+      case PROGLIKELIHOOD:
+	break;
       case BOUNDLIKELIHOOD:
       case UNDERSTOCKINGLIKELIHOOD:
       case MIGRATIONPENALTYLIKELIHOOD:
