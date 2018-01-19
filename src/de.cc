@@ -457,7 +457,7 @@ void OptInfoDE::OptimiseLikelihood() {
 
 #ifdef _OPENMP
 void OptInfoDE::OptimiseLikelihoodREP() {
-    OptimiseLikelihood();
+    OptimiseLikelihoodOMP();
 
 }
 

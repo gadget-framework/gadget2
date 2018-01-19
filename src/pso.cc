@@ -504,7 +504,7 @@ void OptInfoPso::OptimiseLikelihood() {
 
 #ifdef _OPENMP
 void OptInfoPso::OptimiseLikelihoodREP() {
-    OptimiseLikelihood();
+    OptimiseLikelihoodOMP();
 
 }
 
