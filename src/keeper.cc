@@ -291,9 +291,11 @@ void Keeper::writeValues(const LikelihoodPtrVector& likevec, int prec) {
   //JMB - print the number of function evaluations at the start of the line
   int iters = EcoSystem->getFuncEval();
 #ifdef _OPENMP
-  int numThr = omp_get_max_threads ( );
+  if(EcoSystems != NULL) {
+    int numThr = omp_get_max_threads ( );
     for (int i = 0; i < numThr; i++)
-  	  iters += EcoSystems[i]->getFuncEval();
+      iters += EcoSystems[i]->getFuncEval();
+  }
 #endif
   outfile << iters << TAB;
 
@@ -431,7 +433,6 @@ void Keeper::writeParams(const OptInfoPtrVector& optvec, const char* const filen
     paramfile << "; Gadget was interrupted after a total of " << iters
       << " function evaluations\n; the best likelihood value found so far is "
       << setprecision(p) << bestlikelihood << endl;
-
   } else if (EcoSystem->getFuncEval() == 0) {
     paramfile << "; a simulation run was performed giving a likelihood value of "
       << setprecision(p) << EcoSystem->getLikelihood() << endl;

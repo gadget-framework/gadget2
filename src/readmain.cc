@@ -305,8 +305,12 @@ void Ecosystem::readOptimisation(CommentStream& infile, unsigned* seed) {
       optvec.resize(new OptInfoSimann());
     else if (strcasecmp(text, "[bfgs]") == 0)
       optvec.resize(new OptInfoBFGS());
+    else if (strcasecmp(text, "[pso]") == 0)
+      optvec.resize(new OptInfoPso());
+    else if (strcasecmp(text, "[DE]") == 0)
+      optvec.resize(new OptInfoDE());
     else
-      handle.logFileUnexpected(LOGFAIL, "[hooke], [simann], or [bfgs]", text);
+      handle.logFileUnexpected(LOGFAIL, "[hooke], [simann], [bfgs], [DE] or [pso]", text);
 
     if (!infile.eof()) {
       infile >> text;

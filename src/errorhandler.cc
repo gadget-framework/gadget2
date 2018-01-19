@@ -84,7 +84,7 @@ void ErrorHandler::Close() {
 void ErrorHandler::logMessage(LogLevel mlevel, const char* msg) {
   if (mlevel > loglevel)
     return;
-
+#pragma omp critical (logchar)
   switch (mlevel) {
     case LOGNONE:
       break;
@@ -129,6 +129,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, const char* msg
   if (mlevel > loglevel)
     return;
 
+#pragma omp critical (logcharchar)
   switch (mlevel) {
     case LOGNONE:
       break;
@@ -173,6 +174,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, int number) {
   if (mlevel > loglevel)
     return;
 
+#pragma omp critical (logCharInt)
   switch (mlevel) {
     case LOGNONE:
       break;

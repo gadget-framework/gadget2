@@ -2,6 +2,7 @@
 #include "errorhandler.h"
 #include "gadget.h"
 #include "global.h"
+#include <cfloat>
 
 OptInfoHooke::OptInfoHooke()
   : OptInfo(), hookeiter(1000), rho(0.5), lambda(0.0), hookeeps(1e-4), bndcheck(0.9999) {
@@ -13,7 +14,10 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading Hooke & Jeeves optimisation parameters");
 
   int count = 0;
-  while (!infile.eof() && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
+  TIME = DBL_MAX;
+  VTR  = -DBL_MAX;
+
+  while (!infile.eof() && strcasecmp(text,"[pso]")  && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "seed") == 0) {
       int seed = 0;
@@ -39,6 +43,13 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "bndcheck") == 0) {
       infile >> bndcheck;
+      count++;
+
+    } else if (strcasecmp(text, "time") == 0) {
+      infile >> TIME;
+      count++;
+    } else if (strcasecmp(text, "vtr") == 0) {
+      infile >> VTR;
       count++;
 
     } else {

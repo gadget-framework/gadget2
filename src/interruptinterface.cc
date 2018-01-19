@@ -4,9 +4,10 @@
 #include "gadget.h"
 
 extern Ecosystem* EcoSystem;
-
+extern volatile int interrupted;
 #ifdef _OPENMP
 extern Ecosystem** EcoSystems;
+extern MainInfo _main;
 #endif
 
 void InterruptInterface::printMenu() {
@@ -14,9 +15,11 @@ void InterruptInterface::printMenu() {
   {
 	  int iters = EcoSystem->getFuncEval();
 	  #ifdef _OPENMP
+	  if (_main.runParallel()){
 	    int numThr = omp_get_max_threads ( );
 	      for (int i = 0; i < numThr; i++)
 	    	  iters += EcoSystems[i]->getFuncEval();
+	  }
 	  #endif
     cout << "\nInterrupted after a total of " << iters << " iterations ...";
   }
@@ -31,7 +34,7 @@ void InterruptInterface::printMenu() {
 }
 
 int InterruptInterface::menu() {
-
+  interrupted = 0;
   char userinput[MaxStrLength];
   char interruptfile[MaxStrLength];
   strncpy(userinput, "", MaxStrLength);

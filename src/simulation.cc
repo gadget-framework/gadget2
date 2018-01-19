@@ -4,6 +4,13 @@
 #include "interruptinterface.h"
 #include "global.h"
 
+#ifdef INTERRUPT_HANDLER
+extern volatile int interrupted;
+extern volatile int interrupted_print;
+extern Ecosystem* EcoSystem;
+#endif
+
+
 void Ecosystem::updatePredationOneArea(int area) {
   int i;
   // calculate the number of preys and predators in area.
@@ -120,11 +127,12 @@ void Ecosystem::Simulate(int print) {
         char interruptfile[15];
         strncpy(interruptfile, "", 15);
         strcpy(interruptfile, "interrupt.out");
-        this->writeParams(interruptfile, 0);
+        EcoSystem->writeParams(interruptfile, 0);
         handle.logMessage(LOGMESSAGE, "** Gadget interrupted - quitting current simulation **");
         exit(EXIT_SUCCESS);
       }
       interrupted = 0;
+      interrupted_print = 0;
     }
 #endif
 
