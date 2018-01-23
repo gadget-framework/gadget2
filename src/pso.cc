@@ -1039,6 +1039,9 @@ double OptInfoPso::calc_inertia_adapt_dyn(int step) {
 }
 
 
+/**
+ *  * \brief POSITION WITHIN BOUND. Check if the new value is within the range
+ *   */
 void OptInfoPso::position_within_bounds(DoubleMatrix& pos, DoubleMatrix& vel, DoubleVector& lowerb, DoubleVector& upperb, int i, int d) {
                     if (pos[i][d] < lowerb[d]) {
                         pos[i][d] = lowerb[d];
@@ -1058,7 +1061,5 @@ void OptInfoPso::inform_global(IntMatrix& comm, DoubleMatrix& pos_nb, DoubleMatr
 // all particles have the same attractor (gbest)
 // copy the contents of gbest to pos_nb
     for (i = 0; i < size; i++)
-        //memmove((void *)&pos_nb[i][0], &gbest[0],
-//		sizeof(double) * gbest.Size());
         pos_nb[i] = gbest;
 }
