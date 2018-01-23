@@ -6,7 +6,6 @@
  * using openMP.
  */
 
-
 #include "gadget.h"    //All the required standard header files are in here
 #include "optinfo.h"
 #include "mathfunc.h"
@@ -75,6 +74,7 @@ void OptInfoDE::OptimiseLikelihood() {
     double dist;
     double a, b;
     double rho1, rho2; //random numbers (coefficients)
+    double w; //current omega
     int steps = 0; //!= iters?
     ostringstream spos, svel;
     int numThr = 1;
@@ -85,6 +85,7 @@ void OptInfoDE::OptimiseLikelihood() {
 
     F=0.8; CR=0.9;
 	
+    handle.logMessage(LOGINFO, "DE initial inertia ", w, "\n");
     handle.logMessage(LOGINFO, "DE F", F, "\n");
     handle.logMessage(LOGINFO, "DE CR", CR, "\n");
     handle.logMessage(LOGINFO, "DE goal", goal, "\n");
@@ -115,7 +116,7 @@ void OptInfoDE::OptimiseLikelihood() {
     best.index = 0;
 
     if (best.bestf != best.bestf) { //check for NaN
-        handle.logMessage(LOGINFO, "Error starting PSO optimisation with f(x) = infinity");
+        handle.logMessage(LOGINFO, "Error starting DE optimisation with f(x) = infinity");
         converge = -1;
         iters = 1;
         return;
@@ -127,10 +128,9 @@ void OptInfoDE::OptimiseLikelihood() {
 
 // Initialize the particles
     i = 0;
-    handle.logMessage(LOGINFO, "Initialising PSO ", size, "particles\n");
+    handle.logMessage(LOGINFO, "Initialising DE ", size, "particles\n");
 
-// SWARM INITIALIZATION
-//
+
 // Initialize the fist particle with the best known position
     for (d = 0; d < nvars; d++) {
         // generate two numbers within the specified range and around trialx
@@ -153,7 +153,6 @@ void OptInfoDE::OptimiseLikelihood() {
     }
 
 
-    // REPO
     double ***rand;
     rand = (double ***) calloc(size,sizeof(double **));
     for (i = 0; i < size; i++) {
@@ -173,7 +172,6 @@ void OptInfoDE::OptimiseLikelihood() {
 	}
     }
 
-    // REPO
 
     for (i = 1; i < size; i++) {
         ostringstream spos, svel;
@@ -222,7 +220,7 @@ void OptInfoDE::OptimiseLikelihood() {
                  iters = iters + (EcoSystem->getFuncEval());
             iters= iters - offset;
 
-            handle.logMessage(LOGINFO, "Error in PSO optimisation after", iters, "function evaluations, f(x) = 0");
+            handle.logMessage(LOGINFO, "Error in DE optimisation after", iters, "function evaluations, f(x) = 0");
             converge = -1;
             return;
         }
@@ -233,9 +231,9 @@ void OptInfoDE::OptimiseLikelihood() {
                  iters = iters + (EcoSystem->getFuncEval());
 	    iters= iters - offset;
 
-            handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
+            handle.logMessage(LOGINFO, "\nStopping DE optimisation algorithm\n");
             handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
-            handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of PSO steps was reached");
+            handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of DE steps was reached");
             handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
             score = EcoSystem->SimulateAndUpdate(bestx);
@@ -245,25 +243,27 @@ void OptInfoDE::OptimiseLikelihood() {
             EcoSystem->storeVariables(score, bestx);
             return;
         }
-        // update inertia weight
-	F = calc_adapt_parameters(steps);
+		F = calc_adapt_parameters(steps);
+	//}
         // check optimization goal
         if (best.bestf <= goal) {
-            handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
+            handle.logMessage(LOGINFO, "\nStopping DE optimisation algorithm\n");
             handle.logMessage(LOGINFO, "Goal achieved!!! @ step ", steps);
             score = EcoSystem->SimulateAndUpdate(bestx);
             handle.logMessage(LOGINFO, "\nPSO finished with a likelihood score of", score);
             break;
         }
 
+
         improved = 0;
 	
-	// If state var is equal to 3, the algorithm restart its population 	
+	// If state var is equal to 3, the algorithm restart its population
         if (STATE==3){
 		iter_without_improv_global_best=0;
 		improv_with_stack_global_best=0;
 		init_reset = 0;
            	if (growth_popul != 0) {
+           		printf("growth_popul %d\n",growth_popul);
            		pos.AddRows(growth_popul, nvars, 0.0);
 			pos_new.AddRows(growth_popul, nvars, 0.0);
            		pos_b.AddRows(growth_popul, nvars, 0.0);
@@ -320,7 +320,6 @@ void OptInfoDE::OptimiseLikelihood() {
            	growth_popul=0;
 		STATE=0;
 	}
-	// RANDOM NUMBERS
         for (i = 0; i < size; i++) {
 		p1 = (int) (((rand_r(&seed) * 1.0) / RAND_MAX)*size);
 		do  
@@ -392,6 +391,7 @@ void OptInfoDE::OptimiseLikelihood() {
               } 
         }
  
+
 	if (improved == 1) {
 		iter_without_improv_global_best=0;
 		if (((( previous_fbest_fitness - best.bestf ) / previous_fbest_fitness)*100 <= threshold_acept ) &&
@@ -406,14 +406,13 @@ void OptInfoDE::OptimiseLikelihood() {
                 for (d = 0; d < numThr; d++){
                     iters = iters + (EcoSystem->getFuncEval());
 		}
-                iters = iters - offset;
-                handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
-                handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
-		EcoSystem->add_convergence_data( best.bestf, timestop , iters,  ", ");
-                EcoSystem->writeBestValues();
+        iters = iters - offset;
+        handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
+        handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
+        EcoSystem->writeBestValues();
 		previous_fbest_fitness=best.bestf;
 	} else {
-                iter_without_improv_global_best++;
+        iter_without_improv_global_best++;
 		consecutive_iters_global_best=0;
 	}
 	steps++;
@@ -434,7 +433,8 @@ void OptInfoDE::OptimiseLikelihood() {
     	iters = iters + (EcoSystem->getFuncEval());
     
     iters = iters - offset;
-    handle.logMessage(LOGINFO, "Existing PSO after ", iters, "function evaluations ...");
+    timestop = RUNID.returnTime();
+    handle.logMessage(LOGINFO, "Existing DE after ", iters, "function evaluations ...");
     for (d = 0; d < nvars; d++)
         bestx[d] = bestx[d] * init[d];
     EcoSystem->storeVariables(best.bestf, bestx);
@@ -453,7 +453,7 @@ void OptInfoDE::OptimiseLikelihoodREP() {
 }
 
 void OptInfoDE::OptimiseLikelihoodOMP() {
-    handle.logMessage(LOGINFO, "\nStarting ADAPTIVE PARALLEL PSO optimisation algorithm\n");
+    handle.logMessage(LOGINFO, "\nStarting PARALLEL ADAPTIVE MULTIRESTART DE optimisation algorithm\n");
     double tmp;
     int ii, i, j, offset, rchange, rcheck, rnumber, init_reset;
     nvars = EcoSystem->numOptVariables();
@@ -500,6 +500,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     printf("seed %d\n", seed);
     threshold_acept=0.1;
     nrestarts=0;
+//    if (seed == 0) seed = 1234;
 
     handle.logMessage(LOGINFO, "Starting DE with particles ", size, "\n");
 
@@ -553,8 +554,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     i = 0;
     handle.logMessage(LOGINFO, "Initialising DE ", size, "particles\n");
 
-// SWARM INITIALIZATION
-//
 // Initialize the fist particle with the best known position
     for (d = 0; d < nvars; d++) {
         // generate two numbers within the specified range and around trialx
@@ -640,6 +639,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     steps = 0;
 
     while (1) {
+//        handle.logMessage(LOGINFO, "PSO optimisation after", psosteps * size, "\n");
         if (isZero(best.bestf)) {
             iters=0;
             for (d = 0; d < numThr; d++)
@@ -669,8 +669,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
             EcoSystem->storeVariables(score, bestx);
             return;
         }
-        // update inertia weight
-	F = calc_adapt_parameters(steps);
+		F = calc_adapt_parameters(steps);
         // check optimization goal
         if (best.bestf <= goal) {
             handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
@@ -682,12 +681,13 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
 
         improved = 0;
 	
-        // If state var is equal to 3, the algorithm restart its population
+	// If state var is equal to 3, the algorithm restart its population
         if (STATE==3){
 		iter_without_improv_global_best=0;
 		improv_with_stack_global_best=0;
 		init_reset = 0;
            	if (growth_popul != 0) {
+           		printf("growth_popul %d\n",growth_popul);
            		pos.AddRows(growth_popul, nvars, 0.0);
 			pos_new.AddRows(growth_popul, nvars, 0.0);
            		pos_b.AddRows(growth_popul, nvars, 0.0);
@@ -747,7 +747,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
 	}
 	
 
-	// RANDOM NUMBER FOR THE CASE OF PSO
         for (i = 0; i < size; i++) {
 		p1 = (int) (((rand_r(&seed) * 1.0) / RAND_MAX)*size);
 		do  
@@ -842,8 +841,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
                 iters = iters - offset;
                 handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
                 handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
-		EcoSystem->add_convergence_data( best.bestf, timestop , iters,  ", ");
-                EcoSystem->writeBestValues();
+        EcoSystem->writeBestValues();
 		previous_fbest_fitness=best.bestf;
 	} else {
                 iter_without_improv_global_best++;
@@ -960,21 +958,18 @@ double OptInfoDE::calc_adapt_parameters(int step) {
 	        STATE=3; // RESTART
 		
     }
-    // ESTADO DE ATASCO: INTESIFICAR HACIA LA MEJOR SOLUCION CONOCIDA GLOBAL
     else if (( iter_without_improv_global_best % MAX_NO_IMP == (MAX_NO_IMP-1)) ) {
         if (STATE!=1) {
            if (growth_trend_popul == 0) growth_trend_popul=1;
         }
 	STATE=1;
     }
-    // MELLORAS EN SOLUCIONS MOI PRÓXIMAS ENTRE SI: MELLORA DIVERSIFICACION
     else if (( improv_with_stack_global_best % MAX_STUCK    == (MAX_STUCK -1)) ) {  
         if (STATE!=4) {
            if (growth_trend_popul == 1) growth_trend_popul=0;
         }
         STATE=4;
     }
-    // MELLORAS CONSECUTIVAS E RELEVANTES: INTENSIFICAMOS
     else if ( consecutive_iters_global_best >= MAX_IMP ) {
         if (STATE!=4) {
            if (growth_trend_popul == 1) growth_trend_popul=0;
@@ -997,24 +992,9 @@ double OptInfoDE::calc_adapt_parameters(int step) {
         growth_trend_manager();
     }
     
-    // W STATE MANAGER
+    // F STATE MANAGER
     F = F_manager(step);
 
-/*
-    printf("DE STATE %d nvars %d trend %d F %.2lf iter %d stack %d consec %d CR %lf size %d growpop %d thr_acpt %lf gtrend_popul %d \n", 
-	STATE,
-	nvars,
-	growth_trend, 
-	F,  
-	iter_without_improv_global_best, 
-	improv_with_stack_global_best,
-	consecutive_iters_global_best,
-	CR,
-	size,
-	growth_popul,
-	threshold_acept,
-	growth_trend_popul);
-*/
 
     return F;
 }
@@ -1031,3 +1011,4 @@ void OptInfoDE::position_within_bounds(DoubleMatrix& pos, DoubleMatrix& vel, Dou
                         vel[i][d] = 0.0;
                     }
 }
+

@@ -48,10 +48,6 @@ public:
    */
   ~Ecosystem();
 
-   void create_convergence_files();
-   void add_convergence_data( double best, double time, double eval, const char* msg);
-   void delete_convergence_files();
-
   /**
    * \brief This function will read the model data from the main input file
    * \param infile is the CommentStream to read the likelihood data from

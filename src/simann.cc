@@ -504,12 +504,12 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
 
   //funcval is the function value at x
   funcval = EcoSystem->SimulateAndUpdate(x);
-//* CAMBIAR  if (funcval != funcval) { //check for NaN
-//    handle.logMessage(LOGINFO, "Error starting Simulated Annealing optimisation with f(x) = infinity");
-//    converge = -1;
-//    iters = 1;
-//    return;
-//  }
+  if (funcval != funcval) { //check for NaN
+    handle.logMessage(LOGINFO, "Error starting Simulated Annealing optimisation with f(x) = infinity");
+    converge = -1;
+    iters = 1;
+    return;
+  }
 
   //the function is to be minimised so switch the sign of funcval (and trialf)
   funcval = -funcval;
@@ -539,7 +539,6 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
  double res;
   aux=0;
 
-  EcoSystem->add_convergence_data(-fopt , 0e0, 0e0,  " ");
 
   //Start the main loop.  Note that it terminates if
   //(i) the algorithm succesfully optimises the function or
@@ -672,12 +671,12 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
             }
           }
           // JMB added check for really silly values
-// CAMBIART          if (isZero(trialf)) {
-//            handle.logMessage(LOGINFO, "Error in Simulated Annealing optimisation after", iters, "function evaluations, f(x) = 0");
-//            converge = -1;
-//            delete[] storage;
-//            return;
-//          }
+           if (isZero(trialf)) {
+            handle.logMessage(LOGINFO, "Error in Simulated Annealing optimisation after", iters, "function evaluations, f(x) = 0");
+            converge = -1;
+            delete[] storage;
+            return;
+          }
 
           //If greater than any other point, record as new optimum
           if ((trialf > fopt) && (trialf == trialf)) {
@@ -692,18 +691,15 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
             } else
             	EcoSystem->storeVariables(-fopt, bestx);
 
-            //handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
-            //handle.logMessage(LOGINFO, "The likelihood score is", -fopt, "at the point");
-            timestop = RUNID.returnTime();
-	    if (((-fopt - prev_fopt)/-fopt)*100 > 0.1 ) {
-	            EcoSystem->add_convergence_data( -fopt, timestop , iters,  ", ");
-		    prev_fopt=-fopt;
-            }
-            //EcoSystem->writeBestValues();
+            handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
+            handle.logMessage(LOGINFO, "The likelihood score is", -fopt, "at the point");
+            EcoSystem->writeBestValues();
           }
         }
 
+
      }
+
 
     }
 
@@ -714,13 +710,14 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
 
     quit = 0;
     if (fabs(fopt - funcval) < simanneps) {
-// CAMBIAR      quit = 1;
+      quit = 1;
       for (i = 0; i < tempcheck - 1; ++i)
         if (fabs(fstar[i + 1] - fstar[i]) > simanneps)
           quit = 0;
     }
 
     //handle.logMessage(LOGINFO, "Checking convergence criteria after", iters, "function evaluations ...");
+
 
     //Terminate SA if appropriate
     if (quit) {
@@ -900,11 +897,9 @@ struct ControlClass {
 		} else
 		  EcoSystem->storeVariables(-fopt, (*bestx));
 
-		//handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
-		//handle.logMessage(LOGINFO, "The likelihood score is", -fopt, "at the point");
-		//EcoSystem->writeBestValues();
-                timestop = RUNID.returnTime();                            
-                EcoSystem->add_convergence_data( -fopt, timestop , iters,  ", ");
+		handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
+		handle.logMessage(LOGINFO, "The likelihood score is", -fopt, "at the point");
+		EcoSystem->writeBestValues();
 
 		}
 	}
@@ -1187,9 +1182,6 @@ void OptInfoSimann::OptimiseLikelihood() {
 	Siman s(seed, seedM, seedP, nvars, nt, ns, param, &x, &lowerb, &upperb, vm, t, rt, (1.0 / ns),
 			tempcheck, simanneps, fstar, lratio, uratio, cs, &bestx, scale, &converge, &score);
 
-
-        EcoSystem->add_convergence_data( -funcval, 0e0, 0e0,  " ");
-
 	ReproducibleSearch<Siman, DoubleVector, ControlClass, evaluate_f, buildNewParams_f>
 	pa(s, x, simanniter);
 
@@ -1198,6 +1190,9 @@ void OptInfoSimann::OptimiseLikelihood() {
 
 
 	iters = pa.iterations();
+        double timestop;
+        timestop = RUNID.returnTime();
+        printf("END - nvars %d threads 1 fbest %.5lf evals %d time %lf\n", nvars, -funcval, iters, timestop);
 
 }
 

@@ -18,115 +18,6 @@ extern volatile int interrupted_print;
 
 time_t starttime, stoptime;
 
-void Ecosystem::create_convergence_files(){
-	char best[30];
-	char time[30];
-	char eval[30];
-	char conv[30];
-
-	if (runParallel){
-        int numThr = omp_get_max_threads ( );
-        	sprintf(best, "convergence_bestOMP%d_run%d", numThr,rrid);
-        	sprintf(time, "convergence_timeOMP%d_run%d", numThr,rrid);
-        	sprintf(eval, "convergence_evalOMP%d_run%d", numThr,rrid);
-        	sprintf(conv, "convergence_OMP%d_run%d.m", numThr,rrid);
-	}
-	else {
-        	sprintf(best, "convergence_best_run%d",rrid);
-        	sprintf(time, "convergence_time_run%d",rrid);
-        	sprintf(eval, "convergence_eval_run%d",rrid);
-        	sprintf(conv, "convergence_run%d.m",rrid);
- 	}
-  convergence_time.open(time);
-  convergence_eval.open(eval);
-  convergence_best.open(best);
-
-  convergence.open(conv, fstream::app);
-
-  convergence_best <<  "best  = [ ";
-  convergence_time <<  "time  = [ ";
-  convergence_eval <<  "evals = [ ";
-
-}
-
-void Ecosystem::add_convergence_data( double best, double time, double eval,  const char* msg){
-
-  convergence_best << msg << std::setprecision (15) << best ;
-  convergence_time << msg << std::setprecision (15) << time ;
-  convergence_eval << msg << std::setprecision (15) << eval ;
-
-}
-
-void Ecosystem::delete_convergence_files(){
-        char best[30];
-        char time[30];
-        char eval[30];
-        char conv[30];
-	int numThr;
-
-	if (runParallel){
-	        numThr = omp_get_max_threads ( );
-	        sprintf(best, "convergence_bestOMP%d_run%d", numThr,rrid);
-	        sprintf(time, "convergence_timeOMP%d_run%d", numThr,rrid);
-	        sprintf(eval, "convergence_evalOMP%d_run%d", numThr,rrid);
-	        sprintf(conv, "convergence_OMP%d_run%d.m", numThr,rrid);
-	}
-	else {
-	        sprintf(best, "convergence_best_run%d",rrid);
-	        sprintf(time, "convergence_time_run%d",rrid);
-	        sprintf(eval, "convergence_eval_run%d",rrid);
-	        sprintf(conv, "convergence_run%d.m",rrid);
-	}
-
-
-
-  convergence_best <<  "];" << endl;
-  convergence_time <<  "];" << endl;
-  convergence_eval <<  "];" << endl;
-
-  ifstream file1(best) ;
-  ifstream file2(time) ;
-  ifstream file3(eval) ;
-
-  convergence << file1.rdbuf() << file2.rdbuf() << file3.rdbuf();
-  convergence << endl;
-  convergence << endl;
-
-  convergence << "figure();" << endl;
-  convergence << "stairs(time,best,'-k','LineWidth',2,'Markersize',4); hold on;" << endl;
-  convergence << "title('CONVERGENCE CURVE PSO');" << endl;
-  convergence << "xlabel('time(s)','FontSize',12);" << endl;
-  convergence << "ylabel('f(x)','FontSize',12);" << endl;
-  if (runParallel){
-        convergence << "legend('PSO using " << numThr << " threads ',16);" << endl;
-  } else {
-        convergence << "legend('PSO',16);" << endl;
-  }
-  convergence << endl;
-  convergence << endl;
-  convergence << "figure();" << endl;
-  convergence << "stairs(evals,best,'-k','LineWidth',2,'Markersize',4); hold on;" << endl;
-  convergence << "title('CONVERGENCE CURVE PSO');" << endl;
-  convergence << "xlabel('time(s)','FontSize',12);" << endl;
-  convergence << "ylabel('f(x)','FontSize',12);" << endl;
-  if (runParallel){
-  	convergence << "legend('PSO using " << numThr << " threads ',16);" << endl;
-  } else {
-	convergence << "legend('PSO',16);" << endl;
-  }
-  convergence << endl;
-  convergence << endl;  
-
-  convergence_best.close();
-  convergence_time.close();
-  convergence_eval.close();
-  remove(best);
-  remove(time);
-  remove(eval);
-  convergence.close();
-}
-
-
 Ecosystem::Ecosystem(const MainInfo& main) : printinfo(main.getPI()) {
 
   funceval = 0;
@@ -170,7 +61,6 @@ Ecosystem::Ecosystem(const MainInfo& main) : printinfo(main.getPI()) {
   }
 #ifdef _OPENMP
   runParallel=main.runParallel();
-  this->create_convergence_files();
 
   if (!omp_in_parallel()){
   	if (main.runOptimise())
@@ -216,7 +106,6 @@ Ecosystem::~Ecosystem() {
   delete TimeInfo;
   delete keeper;
 
-  delete_convergence_files();
 
 }
 

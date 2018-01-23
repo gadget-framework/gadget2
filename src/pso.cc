@@ -422,7 +422,6 @@ void OptInfoPso::OptimiseLikelihood() {
                 iters = iters - offset;
                 handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
                 handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
-		EcoSystem->add_convergence_data( best.bestf, timestop , iters,  ", ");
                 EcoSystem->writeBestValues();
 		previous_fbest_fitness=best.bestf;
 	} else {
@@ -869,7 +868,6 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
                 iters = iters - offset;
                 handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
                 handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
-		EcoSystem->add_convergence_data( best.bestf, timestop , iters,  ", ");
                 EcoSystem->writeBestValues();
 		previous_fbest_fitness=best.bestf;
 	} else {
@@ -1000,21 +998,18 @@ double OptInfoPso::calc_inertia_adapt_dyn(int step) {
 	        STATE=3; // RESTART
 		
     }
-    // ESTADO DE ATASCO: INTESIFICAR HACIA LA MEJOR SOLUCION CONOCIDA GLOBAL
     else if (( iter_without_improv_global_best % MAX_NO_IMP == (MAX_NO_IMP-1)) ) {
         if (STATE!=1) {
            if (growth_trend_popul == 0) growth_trend_popul=1;
         }
 	STATE=1;
     }
-    // MELLORAS EN SOLUCIONS MOI PRÓXIMAS ENTRE SI: MELLORA DIVERSIFICACION
     else if (( improv_with_stack_global_best % MAX_STUCK    == (MAX_STUCK -1)) ) {  
         if (STATE!=4) {
            if (growth_trend_popul == 1) growth_trend_popul=0;
         }
         STATE=4;
     }
-    // MELLORAS CONSECUTIVAS E RELEVANTES: INTENSIFICAMOS
     else if ( consecutive_iters_global_best >= MAX_IMP ) {
         if (STATE!=4) {
            if (growth_trend_popul == 1) growth_trend_popul=0;
