@@ -1,3 +1,12 @@
+/* PARALLEL ADAPTIVE MULTIRESTART DIFFERENTIAL EVOLUTION 
+ * This method of optimization is self-adaptive, that is, it adjusts its configuration
+ * parameters throughout the execution time. Therefore, it does not need any input argument,
+ * so the user does not spend time customizing the algorithm. In addition, a multi-restart
+ * mechanism was built, to avoid stagnation in local optima, and a parallelization was implemented
+ * using openMP.
+ */
+
+
 #include "gadget.h"    //All the required standard header files are in here
 #include "optinfo.h"
 #include "mathfunc.h"
@@ -6,7 +15,6 @@
 #include "errorhandler.h"
 #include "ecosystem.h"
 #include "global.h"
-//#include "de.h"
 #include <float.h>
 #include "runid.h"
 
@@ -67,7 +75,6 @@ void OptInfoDE::OptimiseLikelihood() {
     double dist;
     double a, b;
     double rho1, rho2; //random numbers (coefficients)
-    double w; //current omega
     int steps = 0; //!= iters?
     ostringstream spos, svel;
     int numThr = 1;
@@ -78,7 +85,6 @@ void OptInfoDE::OptimiseLikelihood() {
 
     F=0.8; CR=0.9;
 	
-    handle.logMessage(LOGINFO, "DE initial inertia ", w, "\n");
     handle.logMessage(LOGINFO, "DE F", F, "\n");
     handle.logMessage(LOGINFO, "DE CR", CR, "\n");
     handle.logMessage(LOGINFO, "DE goal", goal, "\n");
@@ -206,7 +212,6 @@ void OptInfoDE::OptimiseLikelihood() {
 
 
 // RUN ALGORITHM
-    EcoSystem->add_convergence_data( best.bestf, 0e0, 0e0,  " ");
     steps = 0;
 
     while (1) {
@@ -241,9 +246,7 @@ void OptInfoDE::OptimiseLikelihood() {
             return;
         }
         // update inertia weight
-        //if (w_strategy) {
-	w = calc_adapt_parameters(steps);
-	//}
+	F = calc_adapt_parameters(steps);
         // check optimization goal
         if (best.bestf <= goal) {
             handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
@@ -253,19 +256,14 @@ void OptInfoDE::OptimiseLikelihood() {
             break;
         }
 
-        // update pos_nb matrix (find best of neighborhood for all particles)
-        // (this->*inform_fun)(comm, gbest, pos_b, fit_b, bestx, improved);
-	//inform_global(comm, gbest, pos_b, fit_b, bestx, improved);
-        // the value of improved was just used; reset it
         improved = 0;
 	
-// RESTART!!!!	
+	// If state var is equal to 3, the algorithm restart its population 	
         if (STATE==3){
 		iter_without_improv_global_best=0;
 		improv_with_stack_global_best=0;
 		init_reset = 0;
            	if (growth_popul != 0) {
-           		printf("growth_popul %d\n",growth_popul);
            		pos.AddRows(growth_popul, nvars, 0.0);
 			pos_new.AddRows(growth_popul, nvars, 0.0);
            		pos_b.AddRows(growth_popul, nvars, 0.0);
@@ -322,7 +320,7 @@ void OptInfoDE::OptimiseLikelihood() {
            	growth_popul=0;
 		STATE=0;
 	}
-	// RANDOM NUMBER FOR THE CASE OF PSO
+	// RANDOM NUMBERS
         for (i = 0; i < size; i++) {
 		p1 = (int) (((rand_r(&seed) * 1.0) / RAND_MAX)*size);
 		do  
@@ -394,11 +392,6 @@ void OptInfoDE::OptimiseLikelihood() {
               } 
         }
  
-        timestop = RUNID.returnTime();
-        if ((timestop > TIME) || ( best.bestf <= VTR)) {
-                handle.logMessage(LOGINFO, "\nPSO finished. Maximum time achieved");
-                break;
-        }
 	if (improved == 1) {
 		iter_without_improv_global_best=0;
 		if (((( previous_fbest_fitness - best.bestf ) / previous_fbest_fitness)*100 <= threshold_acept ) &&
@@ -417,7 +410,7 @@ void OptInfoDE::OptimiseLikelihood() {
                 handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
                 handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
 		EcoSystem->add_convergence_data( best.bestf, timestop , iters,  ", ");
-//                EcoSystem->writeBestValues();
+                EcoSystem->writeBestValues();
 		previous_fbest_fitness=best.bestf;
 	} else {
                 iter_without_improv_global_best++;
@@ -441,8 +434,6 @@ void OptInfoDE::OptimiseLikelihood() {
     	iters = iters + (EcoSystem->getFuncEval());
     
     iters = iters - offset;
-    timestop = RUNID.returnTime();
-    printf("END - nvars %d size %d threads %d fbest %.5lf evals %d timestop %lf\n", nvars, size, numThr, best.bestf, iters, timestop);
     handle.logMessage(LOGINFO, "Existing PSO after ", iters, "function evaluations ...");
     for (d = 0; d < nvars; d++)
         bestx[d] = bestx[d] * init[d];
@@ -467,13 +458,11 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     int ii, i, j, offset, rchange, rcheck, rnumber, init_reset;
     nvars = EcoSystem->numOptVariables();
     DoubleVector x(nvars);
-//    DoubleVector trialx(nvars);
     DoubleVector bestx(nvars);
     DoubleVector scalex(nvars);
     DoubleVector lowerb(nvars);
     DoubleVector upperb(nvars);
     DoubleVector init(nvars);
-//DoubleVector initialstep(nvars, rho);
     IntVector param(nvars, 0);
     IntVector lbound(nvars, 0);
     IntVector rbounds(nvars, 0);
@@ -511,7 +500,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     printf("seed %d\n", seed);
     threshold_acept=0.1;
     nrestarts=0;
-//    if (seed == 0) seed = 1234;
 
     handle.logMessage(LOGINFO, "Starting DE with particles ", size, "\n");
 
@@ -649,11 +637,9 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
 
 
 // RUN ALGORITHM
-    EcoSystem->add_convergence_data( best.bestf, 0e0, 0e0,  " ");
     steps = 0;
 
     while (1) {
-//        handle.logMessage(LOGINFO, "PSO optimisation after", psosteps * size, "\n");
         if (isZero(best.bestf)) {
             iters=0;
             for (d = 0; d < numThr; d++)
@@ -684,9 +670,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
             return;
         }
         // update inertia weight
-        //if (w_strategy) {
 	F = calc_adapt_parameters(steps);
-	//}
         // check optimization goal
         if (best.bestf <= goal) {
             handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
@@ -696,19 +680,14 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
             break;
         }
 
-        // update pos_nb matrix (find best of neighborhood for all particles)
-        // (this->*inform_fun)(comm, gbest, pos_b, fit_b, bestx, improved);
-	//inform_global(comm, gbest, pos_b, fit_b, bestx, improved);
-        // the value of improved was just used; reset it
         improved = 0;
 	
-// RESTART!!!!	
+        // If state var is equal to 3, the algorithm restart its population
         if (STATE==3){
 		iter_without_improv_global_best=0;
 		improv_with_stack_global_best=0;
 		init_reset = 0;
            	if (growth_popul != 0) {
-           		printf("growth_popul %d\n",growth_popul);
            		pos.AddRows(growth_popul, nvars, 0.0);
 			pos_new.AddRows(growth_popul, nvars, 0.0);
            		pos_b.AddRows(growth_popul, nvars, 0.0);
@@ -846,11 +825,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
               } 
         }
  
-        timestop = RUNID.returnTime();
-        if ((timestop > TIME) || ( best.bestf <= VTR)) {
-                handle.logMessage(LOGINFO, "\nPSO finished. Maximum time achieved");
-                break;
-        }
 	if (improved == 1) {
 		iter_without_improv_global_best=0;
 		if (((( previous_fbest_fitness - best.bestf ) / previous_fbest_fitness)*100 <= threshold_acept ) &&
@@ -869,7 +843,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
                 handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
                 handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
 		EcoSystem->add_convergence_data( best.bestf, timestop , iters,  ", ");
-//                EcoSystem->writeBestValues();
+                EcoSystem->writeBestValues();
 		previous_fbest_fitness=best.bestf;
 	} else {
                 iter_without_improv_global_best++;
@@ -893,8 +867,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     	iters = iters + (EcoSystems[d]->getFuncEval());
     
     iters = iters - offset;
-    timestop = RUNID.returnTime();
-    printf("END - nvars %d size %d threads %d fbest %.5lf evals %d timestop %lf\n", nvars, size, numThr, best.bestf, iters, timestop);
     handle.logMessage(LOGINFO, "Existing DE after ", iters, "function evaluations ...");
     for (d = 0; d < nvars; d++)
         bestx[d] = bestx[d] * init[d];

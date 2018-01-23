@@ -61,8 +61,6 @@ public:
    */
   OptType getType() const { return type; };
 protected:
-  double TIME;
-  double VTR;
   /**
    * \brief This is the flag used to denote whether the optimisation converged or not
    */
@@ -542,15 +540,6 @@ private:
 #ifdef OPENMP
 #pragma omp threadprivate(c1,c2)  
 #endif
- /**
-  * \brief max inertia weight value
-  */
- double w_max;
- 
- /**
-  * \brief min inertia weight value
-  */
- double w_min; 
 
  // ultimo fitness
  double previous_fbest_fitness;
@@ -568,68 +557,14 @@ private:
  int growth_trend_popul;
  int num_restart;
  /**
-  * \brief whether to keep particle position within defined bounds (TRUE) or apply periodic boundary conditions (FALSE)
-  */
- int clamp_pos; 
- 
- /**
-  * \brief neighborhood strategy (see PSO_NHOOD_*)
-  */
- int nhood_strategy;
- 
- /**
-  * \brief neighborhood size
-  */
- int nhood_size;  
- 
- /**
-  * \brief inertia weight strategy (see PSO_W_*)
-  */
- int w_strategy;
-
- /**
     * \brief This is the flag to denote whether the parameters should be scaled or not (default 0, not scale)
     */
  int scale;
-  
-// /**
-//  * \brief seed for the generator
-//  */
-// long seed;
- 
- 
- 
-
- /**
-  * \brief return the swarm size based on dimensionality
-  */
+ double calc_inertia_adapt_dyn(int);
+ void inform_global(IntMatrix& , DoubleMatrix& , DoubleMatrix& , DoubleVector& , DoubleVector& , int );
  void growth_trend_manager();
  double w_manager(int step);
-
- int pso_calc_swarm_size(int dim);
- double calc_inertia_const(int step);
- double calc_inertia_lin_dec(int step);
- double calc_inertia_adapt_dyn(int step);
- 
  void position_within_bounds(DoubleMatrix&, DoubleMatrix&, DoubleVector&, DoubleVector&, int , int );
-
- void inform_global(IntMatrix& comm, DoubleMatrix& pos_nb,
-                   DoubleMatrix& pos_b, DoubleVector& fit_b,
-                   DoubleVector& gbest, int improved);
- void inform_ring(IntMatrix& comm, DoubleMatrix& pos_nb,
-                 DoubleMatrix& pos_b, DoubleVector& fit_b,
-                 DoubleVector& gbest, int improved);
- void inform_random(IntMatrix& comm, DoubleMatrix& pos_nb,
-                   DoubleMatrix& pos_b, DoubleVector& fit_b,
-                   DoubleVector& gbest,  int improved);
- void inform(IntMatrix& comm, DoubleMatrix& pos_nb, DoubleMatrix& pos_b, DoubleVector& fit_b, int improved);
- void init_comm_ring(IntMatrix& comm);
- void init_comm_random(IntMatrix& comm) ;
-
- double coord_transformation(double *, double *, int , double *, double *);
- double calc_euclidean_distance(double *, double *, int , double *, double *);
-
-
  typedef void (OptInfoPso::*Inform_fun)(IntMatrix&, DoubleMatrix&, DoubleMatrix&, DoubleVector&, DoubleVector&,  int); // neighborhood update function
  typedef double (OptInfoPso::*Calc_inertia_fun)(int); // inertia weight update function
 

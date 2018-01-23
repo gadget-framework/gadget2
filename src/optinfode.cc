@@ -14,9 +14,6 @@ OptInfoDE::OptInfoDE()
 void OptInfoDE::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading PSO optimisation parameters");
 
-  TIME = DBL_MAX;
-  VTR  = -DBL_MAX;
-
   int count = 0;
   while (!infile.eof() && strcasecmp(text, "[PSO]") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]") && strcasecmp(text, "[DE]")) {
     infile >> ws;
@@ -31,12 +28,6 @@ void OptInfoDE::read(CommentStream& infile, char* text) {
     } else if (strcasecmp(text, "scale") == 0) {
         infile >> scale;
         count++;
-    } else if (strcasecmp(text, "time") == 0) {
-      infile >> TIME;
-      count++;
-    } else if (strcasecmp(text, "vtr") == 0) {
-      infile >> VTR;
-      count++;
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry

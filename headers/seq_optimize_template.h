@@ -42,8 +42,6 @@ class Siman {
 	int _scale;
 	int* _converge; //NN
 	double* _score; //NN
-        double _TIME;
-	double _VTR;
 
 public:
 
@@ -80,18 +78,16 @@ public:
 		_scale = 0;
 		_converge =NULL;
 		_score = 0;
-		_TIME= 1000;
-		_VTR=0;
 	}
 
 	Siman(unsigned &seed, unsigned &seedM, unsigned &seedP, int &nvars, int &nt, int &ns, IntVector param, DoubleVector* x,
 			DoubleVector* lowerb, DoubleVector* upperb, DoubleVector vm, double t, double &rt,
 			double nsdiv, int &tempcheck, double &simanneps, DoubleVector fstar,
 			double &lratio, double &uratio, double &cs, DoubleVector* bestx, int &scale, int* converge,
-			double* score, double TIME, double VTR ):
+			double* score ):
 			_seed(seed), _seedM(seedM), _seedP(seedP), _l(0), _nvars(nvars), _nt(nt), _NT(0), _ns(ns), _NS(0), _t(t),
 			_rt(rt), _nsdiv(nsdiv), _nacc(1), _tempcheck(tempcheck), _simanneps(simanneps), _lratio(lratio),
-			_uratio(uratio), _cs(cs), _scale(scale), _TIME(TIME), _VTR(VTR) {
+			_uratio(uratio), _cs(cs), _scale(scale) {
 		_param = IntVector(param);
 		_x = x;
 		_lowerb = lowerb;
@@ -105,8 +101,6 @@ public:
 		_bestx = bestx;
 		_converge = converge;
 		_score = score;
-		_VTR  = VTR;
-		_TIME = TIME;
 	}
 
 	//Required Copy constructor    : Params(const Params& other)
@@ -151,8 +145,6 @@ public:
 		_scale = other._scale;
 		_converge =other._converge;
 		_score = other._score;
-		_VTR = other._VTR;
-		_TIME = other._TIME;
 
 		return *this;
 	}
@@ -341,7 +333,7 @@ public:
 //########################################################
 
 
-	void seq_opt(double funcval, double TIME_, double VTR_) {
+	void seq_opt(double funcval) {
 		struct timeval t0, t1, t;
 		reset();
 		double timestop;
@@ -375,11 +367,6 @@ public:
                 	gettimeofday(&t1, NULL);
         	        timersub(&t1, &t0, &t);
 	                searchTime_ = t.tv_sec + t.tv_usec / 1000000.0;
-
-
-                        if ((searchTime_ > TIME_) || ((optimumValue_*(-1.0)) <= VTR_)) {
-                	   break;
-            	        }
 
                         if ((quit=control_object.mustTerminate(optimumValue_, funcval_, seed_, iters_))) {
                                 break;

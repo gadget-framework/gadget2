@@ -703,13 +703,6 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
           }
         }
 
-        timestop = RUNID.returnTime();
-        if ((timestop > TIME) || ( -fopt <= VTR)) {
-                break;
-        }
-     }
-     if ((timestop > TIME) || ( -fopt <= VTR)) {
-           break;
      }
 
     }
@@ -728,11 +721,6 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
     }
 
     //handle.logMessage(LOGINFO, "Checking convergence criteria after", iters, "function evaluations ...");
-
-     if ((timestop > TIME) || ( -fopt <= VTR)) {
-           handle.logMessage(LOGINFO, "\nPSO finished. Maximum time achieved");
-           quit = 1;
-     }
 
     //Terminate SA if appropriate
     if (quit) {
@@ -1117,7 +1105,7 @@ void OptInfoSimann::OptimiseLikelihoodREP() {
 		fstar[i] = funcval;
 
 	Siman s(seed, seedM, seedP, nvars, nt, ns, param, &x, &lowerb, &upperb, vm, t, rt, (1.0 / ns),
-			tempcheck, simanneps, fstar, lratio, uratio, cs, &bestx, scale, &converge, &score, TIME, VTR);
+			tempcheck, simanneps, fstar, lratio, uratio, cs, &bestx, scale, &converge, &score);
 
 	ReproducibleSearch<Siman, DoubleVector, ControlClass, evaluate_par_f, buildNewParams_f>
 	pa(s, x, simanniter);
@@ -1197,7 +1185,7 @@ void OptInfoSimann::OptimiseLikelihood() {
 		fstar[i] = funcval;
 
 	Siman s(seed, seedM, seedP, nvars, nt, ns, param, &x, &lowerb, &upperb, vm, t, rt, (1.0 / ns),
-			tempcheck, simanneps, fstar, lratio, uratio, cs, &bestx, scale, &converge, &score, TIME, VTR);
+			tempcheck, simanneps, fstar, lratio, uratio, cs, &bestx, scale, &converge, &score);
 
 
         EcoSystem->add_convergence_data( -funcval, 0e0, 0e0,  " ");
@@ -1206,13 +1194,10 @@ void OptInfoSimann::OptimiseLikelihood() {
 	pa(s, x, simanniter);
 
 	// sequential code
-	pa.seq_opt(funcval,TIME,VTR);
+	pa.seq_opt(funcval);
 
 
 	iters = pa.iterations();
-        double timestop;
-        timestop = RUNID.returnTime();
-        printf("END - nvars %d threads 1 fbest %.5lf evals %d time %lf\n", nvars, -funcval, iters, timestop);
 
 }
 

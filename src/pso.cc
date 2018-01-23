@@ -1,3 +1,15 @@
+/* PARALLEL ADAPTIVE MULTIRESTART PARTICLE SWARM OPTIMIZATION
+ * This method of optimization is self-adaptive, that is, it adjusts its configuration
+ * parameters throughout the execution time. Therefore, it does not need any input argument, 
+ * so the user does not spend time customizing the algorithm. In addition, a multi-restart
+ * mechanism was built, to avoid stagnation in local optima, and a parallelization was implemented
+ *  using openMP.
+ *
+ * calling sequence:                                               
+ *  int hooke(nvars, startpt, endpt, rho, epsilon, itermax)        
+*/
+
+
 #include "gadget.h"    //All the required standard header files are in here
 #include "optinfo.h"
 #include "mathfunc.h"
@@ -6,7 +18,6 @@
 #include "errorhandler.h"
 #include "ecosystem.h"
 #include "global.h"
-//#include "pso.h"
 #include <float.h>
 #include "runid.h"
 
@@ -18,13 +29,6 @@ extern Ecosystem* EcoSystem;
 #ifdef _OPENMP
 extern Ecosystem** EcoSystems;
 #endif
-
-//==============================================================
-//// calulate swarm size based on dimensionality
-int OptInfoPso::pso_calc_swarm_size(int dim) {
-    int size = 10. + 2. * sqrt(dim);
-    return (size > PSO_MAX_SIZE ? PSO_MAX_SIZE : size);
-}
 
 void OptInfoPso::OptimiseLikelihood() {
     handle.logMessage(LOGINFO, "\nStarting ADAPTIVE SEQUENTIAL PSO optimisation algorithm\n");
@@ -53,10 +57,8 @@ void OptInfoPso::OptimiseLikelihood() {
     growth_trend_popul=1;
 
 // SOLVER
-    printf("w_strategy %d\n", w_strategy);
     printf("SOLVER PSO\n");
  
-    if (size == 0) size = pso_calc_swarm_size(nvars);
     size= (int) (nvars);
     
     DoubleMatrix pos(size, nvars, 0.0);    // position matrix
@@ -83,44 +85,16 @@ void OptInfoPso::OptimiseLikelihood() {
     printf("seed %d\n", seed);
     threshold_acept=0.1;
     nrestarts=0;
-//    if (seed == 0) seed = 1234;
 
     handle.logMessage(LOGINFO, "Starting PSO with particles ", size, "\n");
 
 // SELECT APPROPRIATE NHOOD UPDATE FUNCTION
-    switch (nhood_strategy) {
-        case PSO_NHOOD_GLOBAL:
-            // comm matrix not used
-            handle.logMessage(LOGINFO, "PSO will use global communication\n");
-            inform_fun = &OptInfoPso::inform_global;
-            break;
-        case PSO_NHOOD_RING:
-            handle.logMessage(LOGINFO, "PSO will use ring communication\n");
-            init_comm_ring(comm);
-            inform_fun = &OptInfoPso::inform_ring;
-            break;
-        case PSO_NHOOD_RANDOM:
-            handle.logMessage(LOGINFO, "PSO will use random communication\n");
-            init_comm_random(comm);
-            inform_fun = &OptInfoPso::inform_random;
-            break;
-    }
+    handle.logMessage(LOGINFO, "PSO will use global communication\n");
+    inform_fun = &OptInfoPso::inform_global;
 
 // SELECT APPROPRIATE INERTIA WEIGHT UPDATE FUNCTION
-    switch (w_strategy) {
-        case PSO_W_CONST:
-            handle.logMessage(LOGINFO, "PSO will use constant inertia\n");
-            calc_inertia_fun = &OptInfoPso::calc_inertia_const;
-            break;
-        case PSO_W_LIN_DEC:
-            handle.logMessage(LOGINFO, "PSO will use linear decreasing inertia\n");
-            calc_inertia_fun = &OptInfoPso::calc_inertia_lin_dec;
-            break;
-        case PSO_W_ADAPT:
-            handle.logMessage(LOGINFO, "PSO will use adative dynamic inertia\n");
-            calc_inertia_fun = &OptInfoPso::calc_inertia_adapt_dyn;
-            break;
-    }
+    handle.logMessage(LOGINFO, "PSO will use adative dynamic inertia\n");
+    calc_inertia_fun = &OptInfoPso::calc_inertia_adapt_dyn;
 //
 //initialize omega using standard value
 //
@@ -198,7 +172,6 @@ void OptInfoPso::OptimiseLikelihood() {
         best.index=i;
     }
 
-
     // REPO
     double ***rand;
     rand = (double ***) calloc(size,sizeof(double **));
@@ -259,11 +232,9 @@ void OptInfoPso::OptimiseLikelihood() {
 
 
 // RUN ALGORITHM
-    EcoSystem->add_convergence_data( best.bestf, 0e0, 0e0,  " ");
     psosteps = 0;
 
     while (1) {
-//        handle.logMessage(LOGINFO, "PSO optimisation after", psosteps * size, "\n");
         if (isZero(best.bestf)) {
             iters=0;
             for (d = 0; d < numThr; d++)
@@ -293,11 +264,7 @@ void OptInfoPso::OptimiseLikelihood() {
             EcoSystem->storeVariables(score, bestx);
             return;
         }
-        // update inertia weight
-        //if (w_strategy) {
 	w = calc_inertia_adapt_dyn(psosteps);
-	//}
-        // check optimization goal
         if (best.bestf <= goal) {
             handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
             handle.logMessage(LOGINFO, "Goal achieved!!! @ step ", psosteps);
@@ -307,18 +274,16 @@ void OptInfoPso::OptimiseLikelihood() {
         }
 
         // update pos_nb matrix (find best of neighborhood for all particles)
-        // (this->*inform_fun)(comm, gbest, pos_b, fit_b, bestx, improved);
 	inform_global(comm, gbest, pos_b, fit_b, bestx, improved);
         // the value of improved was just used; reset it
         improved = 0;
 	
-// RESTART!!!!	
+	// If state var is equal to 3, the algorithm restart its population
         if (STATE==3){
 		iter_without_improv_global_best=0;
 		improv_with_stack_global_best=0;
 		init_reset = 0;
            	if (growth_popul != 0) {
-           		printf("growth_popul %d\n",growth_popul);
            		pos.AddRows(growth_popul, nvars, 0.0);
            		gbest.AddRows(growth_popul, nvars, 0.0);
 			pos_new.AddRows(growth_popul, nvars, 0.0);
@@ -400,7 +365,6 @@ void OptInfoPso::OptimiseLikelihood() {
         }
 
         for (i = 0; i < size; i++) {
-//      handle.logMessage(LOGDEBUG, "In parallel",omp_get_thread_num(),"\n");
             ostringstream spos, svel;
             spos << "New position of particle " << i << " [";
             svel << "New velocity of particle " << i << " [";
@@ -441,11 +405,6 @@ void OptInfoPso::OptimiseLikelihood() {
               } 
         }
  
-        timestop = RUNID.returnTime();
-        if ((timestop > TIME) || ( best.bestf <= VTR)) {
-                handle.logMessage(LOGINFO, "\nPSO finished. Maximum time achieved");
-                break;
-        }
 	if (improved == 1) {
 		iter_without_improv_global_best=0;
 		if (((( previous_fbest_fitness - best.bestf ) / previous_fbest_fitness)*100 <= threshold_acept ) &&
@@ -464,7 +423,7 @@ void OptInfoPso::OptimiseLikelihood() {
                 handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
                 handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
 		EcoSystem->add_convergence_data( best.bestf, timestop , iters,  ", ");
-//                EcoSystem->writeBestValues();
+                EcoSystem->writeBestValues();
 		previous_fbest_fitness=best.bestf;
 	} else {
                 iter_without_improv_global_best++;
@@ -489,7 +448,6 @@ void OptInfoPso::OptimiseLikelihood() {
     
     iters = iters - offset;
     timestop = RUNID.returnTime();
-    printf("END - nvars %d size %d threads %d fbest %.5lf evals %d time %lf\n", nvars, size, numThr, best.bestf, iters, timestop);
     handle.logMessage(LOGINFO, "Existing PSO after ", iters, "function evaluations ...");
     for (d = 0; d < nvars; d++)
         bestx[d] = bestx[d] * init[d];
@@ -514,13 +472,11 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
     int ii, i, j, offset, rchange, rcheck, rnumber, init_reset;
     nvars = EcoSystem->numOptVariables();
     DoubleVector x(nvars);
-//    DoubleVector trialx(nvars);
     DoubleVector bestx(nvars);
     DoubleVector scalex(nvars);
     DoubleVector lowerb(nvars);
     DoubleVector upperb(nvars);
     DoubleVector init(nvars);
-//DoubleVector initialstep(nvars, rho);
     IntVector param(nvars, 0);
     IntVector lbound(nvars, 0);
     IntVector rbounds(nvars, 0);
@@ -538,7 +494,6 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
 
 // SOLVER
     printf("SOLVER PSO\n");
-    if (size == 0) size = pso_calc_swarm_size(nvars);
     size= (int) (nvars);
     
     DoubleMatrix pos(size, nvars, 0.0);    // position matrix
@@ -565,44 +520,16 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
     printf("seed %d\n", seed);
     threshold_acept=0.1;
     nrestarts=0;
-//    if (seed == 0) seed = 1234;
 
     handle.logMessage(LOGINFO, "Starting PSO with particles ", size, "\n");
 
 // SELECT APPROPRIATE NHOOD UPDATE FUNCTION
-    switch (nhood_strategy) {
-        case PSO_NHOOD_GLOBAL:
-            // comm matrix not used
-            handle.logMessage(LOGINFO, "PSO will use global communication\n");
-            inform_fun = &OptInfoPso::inform_global;
-            break;
-        case PSO_NHOOD_RING:
-            handle.logMessage(LOGINFO, "PSO will use ring communication\n");
-            init_comm_ring(comm);
-            inform_fun = &OptInfoPso::inform_ring;
-            break;
-        case PSO_NHOOD_RANDOM:
-            handle.logMessage(LOGINFO, "PSO will use random communication\n");
-            init_comm_random(comm);
-            inform_fun = &OptInfoPso::inform_random;
-            break;
-    }
+    handle.logMessage(LOGINFO, "PSO will use global communication\n");
+    inform_fun = &OptInfoPso::inform_global;
 
 // SELECT APPROPRIATE INERTIA WEIGHT UPDATE FUNCTION
-    switch (w_strategy) {
-        case PSO_W_CONST:
-            handle.logMessage(LOGINFO, "PSO will use constant inertia\n");
-            calc_inertia_fun = &OptInfoPso::calc_inertia_const;
-            break;
-        case PSO_W_LIN_DEC:
-            handle.logMessage(LOGINFO, "PSO will use linear decreasing inertia\n");
-            calc_inertia_fun = &OptInfoPso::calc_inertia_lin_dec;
-            break;
-        case PSO_W_ADAPT:
-            handle.logMessage(LOGINFO, "PSO will use adative dynamic inertia\n");
-            calc_inertia_fun = &OptInfoPso::calc_inertia_adapt_dyn;
-            break;
-    }
+    handle.logMessage(LOGINFO, "PSO will use adative dynamic inertia\n");
+    calc_inertia_fun = &OptInfoPso::calc_inertia_adapt_dyn;
 //
 //initialize omega using standard value
 //
@@ -744,11 +671,9 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
 
 
 // RUN ALGORITHM
-    EcoSystem->add_convergence_data( best.bestf, 0e0, 0e0,  " ");
     psosteps = 0;
 
     while (1) {
-//        handle.logMessage(LOGINFO, "PSO optimisation after", psosteps * size, "\n");
         if (isZero(best.bestf)) {
             iters=0;
             for (d = 0; d < numThr; d++)
@@ -779,9 +704,7 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
             return;
         }
         // update inertia weight
-        //if (w_strategy) {
 	w = calc_inertia_adapt_dyn(psosteps);
-	//}
         // check optimization goal
         if (best.bestf <= goal) {
             handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
@@ -792,18 +715,16 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
         }
 
         // update pos_nb matrix (find best of neighborhood for all particles)
-        // (this->*inform_fun)(comm, gbest, pos_b, fit_b, bestx, improved);
 	inform_global(comm, gbest, pos_b, fit_b, bestx, improved);
         // the value of improved was just used; reset it
         improved = 0;
 	
-// RESTART!!!!	
+	// If state var is equal to 3, the algorithm restart its population
         if (STATE==3){
 		iter_without_improv_global_best=0;
 		improv_with_stack_global_best=0;
 		init_reset = 0;
            	if (growth_popul != 0) {
-           		printf("growth_popul %d\n",growth_popul);
            		pos.AddRows(growth_popul, nvars, 0.0);
            		gbest.AddRows(growth_popul, nvars, 0.0);
 			pos_new.AddRows(growth_popul, nvars, 0.0);
@@ -931,11 +852,6 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
               } 
         }
  
-        timestop = RUNID.returnTime();
-        if ((timestop > TIME) || ( best.bestf <= VTR)) {
-                handle.logMessage(LOGINFO, "\nPSO finished. Maximum time achieved");
-                break;
-        }
 	if (improved == 1) {
 		iter_without_improv_global_best=0;
 		if (((( previous_fbest_fitness - best.bestf ) / previous_fbest_fitness)*100 <= threshold_acept ) &&
@@ -954,7 +870,7 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
                 handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
                 handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
 		EcoSystem->add_convergence_data( best.bestf, timestop , iters,  ", ");
-//                EcoSystem->writeBestValues();
+                EcoSystem->writeBestValues();
 		previous_fbest_fitness=best.bestf;
 	} else {
                 iter_without_improv_global_best++;
@@ -979,7 +895,6 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
     
     iters = iters - offset;
     timestop = RUNID.returnTime();
-    printf("END - nvars %d size %d threads %d fbest %.5lf evals %d timestop %lf\n", nvars, size, numThr, best.bestf, iters, timestop);
     handle.logMessage(LOGINFO, "Existing PSO after ", iters, "function evaluations ...");
     for (d = 0; d < nvars; d++)
         bestx[d] = bestx[d] * init[d];
@@ -988,25 +903,6 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
     
 }
 #endif
-
-/**
- * \brief calculate constant  inertia weight equal to w_max
- */
-double OptInfoPso::calc_inertia_const(int step) {
-    return w_max;
-}
-/**
- * \brief calculate linearly decreasing inertia weight
- */
-double OptInfoPso::calc_inertia_lin_dec(int step) {
-    int dec_stage = 3 * psoiter / 4;
-    double W;
-    if (step <= dec_stage)
-        W= w_min + (w_max - w_min) * (dec_stage - step) / dec_stage;
-    else
-        W= w_min;
-    return W;
-}
 
 void OptInfoPso::growth_trend_manager() {
     double MAX_C   = 2.5;
@@ -1144,30 +1040,11 @@ double OptInfoPso::calc_inertia_adapt_dyn(int step) {
     // W STATE MANAGER
     W = w_manager(step);
 
-/*    printf("SOLVER %d STATE %d nvars %d trend %d W/F %.2lf/%.2lf iter %d stack %d consec %d C1 %lf c2 %lf CR %lf size %d growpop %d thr_acpt %lf gtrend_popul %d \n", 
-	solver,
-	STATE,
-	nvars,
-	growth_trend, 
-	W,F,  
-	iter_without_improv_global_best, 
-	improv_with_stack_global_best,
-	consecutive_iters_global_best,
-	c1,
-	c2,
-	CR,
-	size,
-	growth_popul,
-	threshold_acept,
-	growth_trend_popul);
-*/
-
     return W;
 }
 
 
 void OptInfoPso::position_within_bounds(DoubleMatrix& pos, DoubleMatrix& vel, DoubleVector& lowerb, DoubleVector& upperb, int i, int d) {
-//                if (clamp_pos) {
                     if (pos[i][d] < lowerb[d]) {
                         pos[i][d] = lowerb[d];
                         vel[i][d] = 0.0;
@@ -1176,18 +1053,6 @@ void OptInfoPso::position_within_bounds(DoubleMatrix& pos, DoubleMatrix& vel, Do
                         pos[i][d] = upperb[d];
                         vel[i][d] = 0.0;
                     }
-//                }
-//                else {
-//                    if (pos[i][d] < lowerb[d]) {
-//                        pos[i][d] = upperb[d] - fmod(lowerb[d] - pos[i][d], upperb[d] - lowerb[d]);
-//                        vel[i][d] = 0.0;
-//                    }
-//                    else if (pos[i][d] > upperb[d]) {
-//                        pos[i][d] = lowerb[d] + fmod(pos[i][d] - upperb[d], upperb[d] - lowerb[d]);
-//                        vel[i][d] = 0.0;
-//                    }
-//                }
-
 }
 
 /**
@@ -1202,112 +1067,3 @@ void OptInfoPso::inform_global(IntMatrix& comm, DoubleMatrix& pos_nb, DoubleMatr
 //		sizeof(double) * gbest.Size());
         pos_nb[i] = gbest;
 }
-
-/**
- * \brief  general inform function :: according to the connectivity matrix COMM, it copies the best position (from pos_b) of the informers of each particle to the pos_nb matrix
- */
-void OptInfoPso::inform(IntMatrix& comm, DoubleMatrix& pos_nb, DoubleMatrix& pos_b, DoubleVector& fit_b, int improved) {
-    int i, j;
-    int b_n; // best neighbor in terms of fitness
-
-// for each particle
-    for (j = 0; j < size; j++) {
-        b_n = j; // self is best
-// who is the best informer??
-        for (i = 0; i < size; i++)
-            // the i^th particle informs the j^th particle
-            if (comm[i][j] && fit_b[i] < fit_b[b_n])
-            // found a better informer for j^th particle
-                b_n = i;
-// copy pos_b of b_n^th particle to pos_nb[j]
-        pos_nb[j] = pos_b[b_n];
-    }
-}
-
-/**
- * \brief topology initialization :: this is a static (i.e. fixed) topology
- */
-void OptInfoPso::init_comm_ring(IntMatrix& comm) {
-    int i;
-// reset array
-    comm.setToZero();
-
-// choose informers
-    for (i = 0; i < size; i++) {
-// set diagonal to 1
-        comm[i][i] = 1;
-        if (i == 0) {
-// look right
-            comm[i][1] = 1;
-// look left
-            comm[i][size - 1] = 1;
-        }
-        else if (i == size - 1) {
-// look right
-            comm[i][0] = 1;
-// look left
-            comm[i][i - 1] = 1;
-        }
-        else {
-// look right
-            comm[i][i + 1] = 1;
-// look left
-            comm[i][i - 1] = 1;
-        }
-
-    }
-// Print Matrix
-    handle.logMessage(LOGDEBUG, "\nPSO ring communication\n");
-    for (i = 0; i < size; i++) {
-        string message = "[";
-        for (int j = 0; j < size; j++) {
-            std::ostringstream ss;
-            ss << comm[i][j];
-            message = message + " " + ss.str();
-        }
-        message = message + "]\n";
-        handle.logMessage(LOGDEBUG, message.c_str());
-    }
-
-}
-
-void OptInfoPso::inform_ring(IntMatrix& comm, DoubleMatrix& pos_nb, DoubleMatrix& pos_b, DoubleVector& fit_b, DoubleVector& gbest, int improved) {
-
-// update pos_nb matrix
-    inform(comm, pos_nb, pos_b, fit_b, improved);
-    
-}
-
-/**
- * \brief random neighborhood topology
- */
-void OptInfoPso::init_comm_random(IntMatrix& comm) {
-
-    int i, j, k;
-// reset array
-    comm.setToZero();
-
-// choose informers
-    for (i = 0; i < size; i++) {
-// each particle informs itself
-        comm[i][i] = 1;
-// choose kappa (on average) informers for each particle
-        for (k = 0; k < nhood_size; k++) {
-// generate a random index
-//j = gsl_rng_uniform_int(settings->rng, settings->size);
-            j = rand_r(&this->seed) * size / RAND_MAX;
-// particle i informs particle j
-            comm[i][j] = 1;
-        }
-    }
-}
-
-void OptInfoPso::inform_random(IntMatrix& comm, DoubleMatrix& pos_nb, DoubleMatrix& pos_b, DoubleVector& fit_b, DoubleVector& gbest, int improved) {
-// regenerate connectivity??
-    if (!improved) init_comm_random(comm);
-    inform(comm, pos_nb, pos_b, fit_b, improved);
-
-}
-
-
-

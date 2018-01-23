@@ -14,8 +14,6 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading Hooke & Jeeves optimisation parameters");
 
   int count = 0;
-  TIME = DBL_MAX;
-  VTR  = -DBL_MAX;
 
   while (!infile.eof() && strcasecmp(text,"[pso]")  && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
@@ -43,13 +41,6 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
 
     } else if (strcasecmp(text, "bndcheck") == 0) {
       infile >> bndcheck;
-      count++;
-
-    } else if (strcasecmp(text, "time") == 0) {
-      infile >> TIME;
-      count++;
-    } else if (strcasecmp(text, "vtr") == 0) {
-      infile >> VTR;
       count++;
 
     } else {

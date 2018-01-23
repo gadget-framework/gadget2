@@ -5,9 +5,7 @@
 #include <cfloat>
 
 OptInfoPso::OptInfoPso()
-  : OptInfo(),  goal(1e-5), psoiter(100000), c1(1.496), c2(1.496),
-        w_max(PSO_INERTIA), w_min(0.3), clamp_pos(1), nhood_strategy(PSO_NHOOD_RING),
-        nhood_size(5), w_strategy(PSO_W_LIN_DEC), scale(0)
+  : OptInfo(),  goal(1e-5), psoiter(100000), c1(1.496), c2(1.496), scale(0)
      {
   type = OPTPSO;
   handle.logMessage(LOGMESSAGE, "Initialising PSO optimisation algorithm");
@@ -19,8 +17,6 @@ void OptInfoPso::read(CommentStream& infile, char* text) {
 //  unsigned s1 = 0;
 //  unsigned s2 = 0;
 //  unsigned s3 = 0;
-  TIME = DBL_MAX;
-  VTR  = -DBL_MAX;
 
   int count = 0;
   while (!infile.eof() && strcasecmp(text, "[PSO]") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
@@ -48,42 +44,9 @@ void OptInfoPso::read(CommentStream& infile, char* text) {
       infile >> c2;
       count++;
 
-    } else if (strcasecmp(text, "w_max") == 0) {
-      infile >> w_max;
-      count++;
-
-    } else if (strcasecmp(text, "w_min") == 0) {
-      infile >> w_min; 
-      count++;
-
-    } else if (strcasecmp(text, "clamp_pos") == 0) {
-      infile >> clamp_pos;
-      count++;
-    } else if (strcasecmp(text, "nhood_strategy") == 0) {
-      infile >> nhood_strategy;
-      count++;
-
-    } else if (strcasecmp(text, "nhood_size") == 0) {
-      infile >> nhood_size;
-      count++;
-
-    } else if (strcasecmp(text, "w_strategy") == 0) {
-      infile >> w_strategy;
-      count++;
-    } else if (strcasecmp(text, "size") == 0) {
-      infile >> size;
-      count++;
-
     } else if (strcasecmp(text, "scale") == 0) {
         infile >> scale;
         count++;
-
-    } else if (strcasecmp(text, "time") == 0) {
-      infile >> TIME;
-      count++;
-    } else if (strcasecmp(text, "vtr") == 0) {
-      infile >> VTR;
-      count++;
 
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
@@ -94,22 +57,6 @@ void OptInfoPso::read(CommentStream& infile, char* text) {
 
   if (count == 0)
     handle.logMessage(LOGINFO, "Warning - no parameters specified for Simulated Annealing optimisation algorithm");
-
-  //check the values specified in the optinfo file ...
-  if (nhood_strategy!=PSO_NHOOD_GLOBAL &&
-      nhood_strategy!=PSO_NHOOD_RING &&
-      nhood_strategy!=PSO_NHOOD_RANDOM) {
- 	handle.logMessage(LOGINFO, "Warning in optinfofile - Invalid nhood_strategy. Setting to default PSO_NHOOD_RANDOM");
-	nhood_strategy=PSO_NHOOD_RANDOM;
-		
-  } 
-  if (w_strategy!=PSO_W_LIN_DEC &&
-      w_strategy!=PSO_W_CONST &&
-      w_strategy!=PSO_W_ADAPT &&
-      w_strategy!=3 ) {
-  	handle.logMessage(LOGINFO, "Warning in optinfofile - Invalid w_strategy. Setting to default PSO_W_LIN_DEC");
-	w_strategy=PSO_W_LIN_DEC;
-  }
 
   if (scale != 0 && scale != 1) {
       handle.logMessage(LOGINFO, "Warning in optinfofile - value of scale outside bounds", scale);
