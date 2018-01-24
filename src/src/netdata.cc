@@ -6,7 +6,7 @@ NetDataVariables::NetDataVariables(int numVar) {
   x_id = -1;
   if (numVar < 1) {
     cerr << "Error in netdata - number of variables must be positive\n";
-    exit(EXIT_FAILURE);
+    Rcpp::stop(REXIT_FAILURE);
   }
   x = new double[numVar];
 }

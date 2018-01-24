@@ -17,6 +17,6 @@ void PVMConstants::setDataEncode(int dc) {
     dataEncode = dc;
   else {
     cerr << "Error in pvmconstants - invalid value for dataencode\n";
-    exit(EXIT_FAILURE);
+    Rcpp::stop(REXIT_FAILURE);
   }
 }

@@ -51,6 +51,9 @@ using namespace std;
 #define EXIT_FAILURE 1
 #endif
 
+#define REXIT_FAILURE "Failure"
+#define REXIT_SUCCESS "Success"
+
 /* Also defined are some of the constants used by Gadget */
 const int MaxStrLength = 1025;                 /* 128 + 1 */
 const int LongString = 16385;                  /* 16Kb + 1 */

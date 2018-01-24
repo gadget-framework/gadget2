@@ -21,6 +21,8 @@
 #include "optinfo.h"
 #include "gadget.h"
 
+#include <Rcpp.h>
+
 /**
  * \class Ecosystem
  * \brief This is the class used to control the model simulation
@@ -261,6 +263,11 @@ public:
    * \brief This is the flag used to denote whether the user has interrupted the current model run
    */
   volatile int interrupted;
+   /**
+    * \brief IU: For data communication with R
+    */
+  Rcpp::List rdata;
+
 protected:
   /**
    * \brief This is the value of the likelihood score for the current simulation

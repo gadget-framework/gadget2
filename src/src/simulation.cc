@@ -3,6 +3,7 @@
 #include "gadget.h"
 #include "interruptinterface.h"
 #include "global.h"
+#include <Rcpp.h>
 
 void Ecosystem::updatePredationOneArea(int area) {
   int i;
@@ -106,10 +107,15 @@ void Ecosystem::Simulate(int print) {
     for (j = 0; j < likevec.Size(); j++)
       likevec[j]->addLikelihood(TimeInfo);
 
-    if (print)
-      for (j = 0; j < printvec.Size(); j++)
-        printvec[j]->Print(TimeInfo, 0);  //end of timestep, so printtime is 0
+    // IU will it created?
+    rdata =  Rcpp::List::create();
 
+    if (print)
+      for (j = 0; j < printvec.Size(); j++){
+        printvec[j]->Print(TimeInfo, 0);  //end of timestep, so printtime is 0
+	//IU pass to ecosystem
+	rdata.insert(j, clone(printvec[j]->rdata));
+      }
     for (j = 0; j < Area->numAreas(); j++)
       this->updateAgesOneArea(j);
 
@@ -123,7 +129,7 @@ void Ecosystem::Simulate(int print) {
         strcpy(interruptfile, "interrupt.out");
         this->writeParams(interruptfile, 0);
         handle.logMessage(LOGMESSAGE, "** Gadget interrupted - quitting current simulation **");
-        exit(EXIT_SUCCESS);
+        Rcpp::stop(REXIT_SUCCESS);
       }
       interrupted = 0;
     }

@@ -45,9 +45,9 @@ LIBRARIES = -lm
 CXXFLAGS = $(DEFINE_FLAGS)
 _OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 OBJECTS = $(patsubst %,$(SRC_DIR)/%,$(_OBJECTS))
-###########################################################################
+##########################################################################
 
-GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
+GADGETOBJECTS = ../RcppExports.o ../gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
     area.o time.o keeper.o maininfo.o printinfo.o runid.o global.o stochasticdata.o \
     timevariable.o formula.o readaggregation.o readfunc.o readmain.o readword.o \
     actionattimes.o livesonareas.o lengthgroup.o conversionindex.o selectfunc.o \
@@ -94,7 +94,9 @@ LDFLAGS = $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
 
 
 gadget	:	$(OBJECTS)
-		$(CXX) -o $(GADGET) $(OBJECTS) $(LDFLAGS) 
+		ar rcs libgadget.a $(OBJECTS)
+		gcc -shared -o gadgetr.so $(OBJECTS) $(LDFLAGS)
+		#$(CXX) -o $(GADGET) $(OBJECTS) $(LDFLAGS) 
 
 ## you need root permission to be able to do this ...
 install	:	$(GADGET)

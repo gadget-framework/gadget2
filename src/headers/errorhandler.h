@@ -31,7 +31,7 @@ public:
    */
   void Close();
   /**
-   * \brief This function will check to see if an iostream can be opened, and exit Gadget with exit(EXIT_FAILURE) if this check fails
+   * \brief This function will check to see if an iostream can be opened, and exit Gadget with Rcpp::stop(REXIT_FAILURE) if this check fails
    * \param infile is the iostream to be checked
    * \param text is the name of the iostream to be checked
    */

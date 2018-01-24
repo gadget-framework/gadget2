@@ -6,11 +6,24 @@
 #include "stochasticdata.h"
 #include "interrupthandler.h"
 #include "global.h"
+#include <Rcpp.h>
 
 Ecosystem* EcoSystem;
 
+// [[Rcpp::export]]
+Rcpp::List gadget(Rcpp::StringVector args) {
 
-int main(int aNumber, char* const aVector[]) {
+  //Get parameter number 
+  int aNumber = args.size() + 1;
+
+  char** aVector = new char* [255];
+
+  //Convert args to aVector
+  for(int i=0; i<args.size(); i++){
+	char *tmp = new char [args(i).size() + 1]; 
+	strcpy(tmp, Rcpp::as< std::string >(args(i)).c_str());
+	aVector[i+1] = tmp;
+  }
 
   MainInfo main;
   StochasticData* data = 0;
@@ -159,7 +172,10 @@ int main(int aNumber, char* const aVector[]) {
   if (check)
     free(workingdir);
 
+  Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
   delete EcoSystem;
   handle.logFinish();
-  return EXIT_SUCCESS;
+  //return EXIT_SUCCESS;
+  //
+  return z;
 }

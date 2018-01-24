@@ -3,13 +3,14 @@
 #include "gadget.h"
 #include "runid.h"
 #include "global.h"
+#include <Rcpp.h>
 
 void MainInfo::showCorrectUsage(char* error) {
   RUNID.Print(cerr);
   cerr << "\nError in command line value - unrecognised option " << error << endl
     << "Common options are -l or -s, -i <filename> -o <filename>\n"
     << "For more information try running Gadget with the -h switch\n";
-  exit(EXIT_FAILURE);
+  Rcpp::stop(REXIT_FAILURE);
 }
 
 void MainInfo::showUsage() {
@@ -36,8 +37,8 @@ void MainInfo::showUsage() {
     << " -log <filename>              print logging information to <filename>\n"
     << " -printinitial <filename>     print initial model information to <filename>\n"
     << " -printfinal <filename>       print final model information to <filename>\n"
-    << "\nFor more information see the Gadget web page at http://www.github.com/hafro/gadget\n\n";
-  exit(EXIT_SUCCESS);
+    << "\nFor more information see the Gadget web page at https://www.github.com/hafro/gadget\n\n";
+  Rcpp::stop(REXIT_SUCCESS);
 }
 
 MainInfo::MainInfo()
@@ -187,7 +188,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 
     } else if ((strcasecmp(aVector[k], "-v") == 0) || (strcasecmp(aVector[k], "--version") == 0)) {
       RUNID.Print(cout);
-      exit(EXIT_SUCCESS);
+      Rcpp::stop(REXIT_SUCCESS);
 
     } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {
       this->showUsage();
