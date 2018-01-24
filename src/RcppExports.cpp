@@ -5,6 +5,66 @@
 
 using namespace Rcpp;
 
+// wholeSim
+Rcpp::NumericVector wholeSim();
+RcppExport SEXP _gadgetr_wholeSim() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(wholeSim());
+    return rcpp_result_gen;
+END_RCPP
+}
+// initSim
+Rcpp::NumericVector initSim();
+RcppExport SEXP _gadgetr_initSim() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(initSim());
+    return rcpp_result_gen;
+END_RCPP
+}
+// stepSim
+Rcpp::NumericVector stepSim();
+RcppExport SEXP _gadgetr_stepSim() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(stepSim());
+    return rcpp_result_gen;
+END_RCPP
+}
+// yearSim
+Rcpp::NumericVector yearSim();
+RcppExport SEXP _gadgetr_yearSim() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(yearSim());
+    return rcpp_result_gen;
+END_RCPP
+}
+// finalizeSim
+Rcpp::NumericVector finalizeSim();
+RcppExport SEXP _gadgetr_finalizeSim() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(finalizeSim());
+    return rcpp_result_gen;
+END_RCPP
+}
+// finalize
+Rcpp::List finalize();
+RcppExport SEXP _gadgetr_finalize() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(finalize());
+    return rcpp_result_gen;
+END_RCPP
+}
 // gadget
 Rcpp::List gadget(Rcpp::StringVector args);
 RcppExport SEXP _gadgetr_gadget(SEXP argsSEXP) {
@@ -18,6 +78,12 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
+    {"_gadgetr_initSim", (DL_FUNC) &_gadgetr_initSim, 0},
+    {"_gadgetr_stepSim", (DL_FUNC) &_gadgetr_stepSim, 0},
+    {"_gadgetr_yearSim", (DL_FUNC) &_gadgetr_yearSim, 0},
+    {"_gadgetr_finalizeSim", (DL_FUNC) &_gadgetr_finalizeSim, 0},
+    {"_gadgetr_finalize", (DL_FUNC) &_gadgetr_finalize, 0},
     {"_gadgetr_gadget", (DL_FUNC) &_gadgetr_gadget, 1},
     {NULL, NULL, 0}
 };

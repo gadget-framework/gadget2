@@ -155,16 +155,22 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
           << age + minage << sep << setw(lowwidth)
           << LgrpDiv->meanLength(len) << sep;
 
-	//IU Lets try to export to R!
-	Rcpp::NumericVector x =  Rcpp::NumericVector::create( TimeInfo->getYear(), TimeInfo->getStep(), outerareas[a], age + minage, LgrpDiv->meanLength(len));
-	rdata.insert(ri++, clone(x));
+	double rN, rW;
 
         //JMB crude filter to remove the 'silly' values from the output
-        if (((*alptr)[a][age][len].N < rathersmall) || ((*alptr)[a][age][len].W < 0.0))
+        if (((*alptr)[a][age][len].N < rathersmall) || ((*alptr)[a][age][len].W < 0.0)){
           outfile << setw(width) << 0 << sep << setw(width) << 0 << endl;
-        else
+	  rN = rW  = 0;
+        }else{
           outfile << setprecision(precision) << setw(width) << (*alptr)[a][age][len].N << sep
             << setprecision(precision) << setw(width) << (*alptr)[a][age][len].W << endl;
+	  rN = (*alptr)[a][age][len].N;
+	  rW = (*alptr)[a][age][len].W;
+	}
+
+        //IU Lets try to export to R!
+        Rcpp::NumericVector x =  Rcpp::NumericVector::create( TimeInfo->getYear(), TimeInfo->getStep(), outerareas[a], age + minage, LgrpDiv->meanLength(len), rN, rW);
+        rdata.insert(ri++, clone(x));
 
       }
     }

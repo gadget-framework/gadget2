@@ -74,6 +74,9 @@ void Ecosystem::Simulate(int print) {
   for (j = 0; j < tagvec.Size(); j++)
     tagvec[j]->Reset();
 
+  // IU create list for print output
+  rdata =  Rcpp::List::create();
+
   TimeInfo->Reset();
   for (i = 0; i < TimeInfo->numTotalSteps(); i++) {
     for (j = 0; j < basevec.Size(); j++)
@@ -106,9 +109,6 @@ void Ecosystem::Simulate(int print) {
 
     for (j = 0; j < likevec.Size(); j++)
       likevec[j]->addLikelihood(TimeInfo);
-
-    // IU will it created?
-    rdata =  Rcpp::List::create();
 
     if (print)
       for (j = 0; j < printvec.Size(); j++){
@@ -156,3 +156,127 @@ void Ecosystem::Simulate(int print) {
     handle.logMessage(LOGMESSAGE, "\nThe current overall likelihood score is", likelihood);
   }
 }
+
+void Ecosystem::initSimulation() {
+  int j;
+
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
+  for (j = 0; j < likevec.Size(); j++)
+    likevec[j]->Reset(keeper);
+  for (j = 0; j < likevec.Size(); j++)
+    likevec[j]->addLikelihoodKeeper(TimeInfo, keeper);
+
+  for (j = 0; j < tagvec.Size(); j++)
+    tagvec[j]->Reset();
+
+  // IU create list for print output
+  rdata =  Rcpp::List::create();
+
+  TimeInfo->Reset();
+}
+
+int Ecosystem::yearSimulation(int print) {
+  // IU save the the current year
+  int currentYear;
+
+  currentYear = TimeInfo->getYear();
+
+  // IU check whether the next step has reached next year
+  do
+  {
+	// IU run step simulation, if its returning 1 means we're at the last step 
+     if(stepSimulation(print) > 0) return 1;
+  }while(TimeInfo->getYear() == currentYear);
+
+  return 0;
+}
+
+int Ecosystem::stepSimulation(int print) {
+  int j,k;
+
+    for (j = 0; j < basevec.Size(); j++)
+      basevec[j]->Reset(TimeInfo);
+
+    // add in any new tagging experiments
+    tagvec.updateTags(TimeInfo);
+    for (j = 0; j < likevec.Size(); j++)  //only proglikelihood
+      likevec[j]->Reset(TimeInfo);
+
+    if (print)
+      for (j = 0; j < printvec.Size(); j++)
+        printvec[j]->Print(TimeInfo, 1);  //start of timestep, so printtime is 1
+
+    // migration between areas
+    if (Area->numAreas() > 1)    //no migration if there is only one area
+      for (j = 0; j < basevec.Size(); j++)
+        basevec[j]->Migrate(TimeInfo);
+
+    // predation can be split into substeps
+    for (k = 0; k < TimeInfo->numSubSteps(); k++) {
+      for (j = 0; j < Area->numAreas(); j++)
+        this->updatePredationOneArea(j);
+      TimeInfo->IncrementSubstep();
+    }
+
+    // maturation, spawning, recruits etc
+    for (j = 0; j < Area->numAreas(); j++)
+      this->updatePopulationOneArea(j);
+
+    for (j = 0; j < likevec.Size(); j++)
+      likevec[j]->addLikelihood(TimeInfo);
+
+    if (print)
+      for (j = 0; j < printvec.Size(); j++){
+        printvec[j]->Print(TimeInfo, 0);  //end of timestep, so printtime is 0
+	//IU pass to ecosystem
+	rdata.insert(j, clone(printvec[j]->rdata));
+      }
+    for (j = 0; j < Area->numAreas(); j++)
+      this->updateAgesOneArea(j);
+
+#ifdef INTERRUPT_HANDLER
+    if (interrupted) {
+      InterruptInterface ui;
+      if (!ui.menu()) {
+        handle.logMessage(LOGMESSAGE, "\n** Gadget interrupted - quitting current simulation **");
+        char interruptfile[15];
+        strncpy(interruptfile, "", 15);
+        strcpy(interruptfile, "interrupt.out");
+        this->writeParams(interruptfile, 0);
+        handle.logMessage(LOGMESSAGE, "** Gadget interrupted - quitting current simulation **");
+        Rcpp::stop(REXIT_SUCCESS);
+      }
+      interrupted = 0;
+    }
+#endif
+
+    // remove any expired tagging experiments
+    tagvec.deleteTags(TimeInfo);
+
+  if(TimeInfo->getTime() < TimeInfo->numTotalSteps()) {
+    // increase the time in the simulation
+    TimeInfo->IncrementTime();
+    return 0;
+  }else{
+    std::cout << "At the end of time..." << std::endl;
+    return 1;
+  }
+}
+
+void Ecosystem::finalizeSimulation() {
+  int j;
+  // remove all the tagging experiments - they must have expired now
+  tagvec.deleteAllTags();
+
+  likelihood = 0.0;
+  for (j = 0; j < likevec.Size(); j++)
+    likelihood += likevec[j]->getLikelihood();
+
+  if (handle.getLogLevel() >= LOGMESSAGE) {
+    handle.logMessage(LOGMESSAGE, "\nThe current likelihood scores for each component are:");
+    for (j = 0; j < likevec.Size(); j++)
+      handle.logMessage(LOGMESSAGE, likevec[j]->getName(), likevec[j]->getLikelihood());
+    handle.logMessage(LOGMESSAGE, "\nThe current overall likelihood score is", likelihood);
+  }
+}
+

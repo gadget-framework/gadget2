@@ -263,7 +263,16 @@ public:
    * \brief This is the flag used to denote whether the user has interrupted the current model run
    */
   volatile int interrupted;
-   /**
+
+  /**
+    * \brief IU: Decoupling the simulation
+    */
+  void initSimulation();
+  int stepSimulation(int);
+  int yearSimulation(int);
+  void finalizeSimulation();
+
+  /**
     * \brief IU: For data communication with R
     */
   Rcpp::List rdata;

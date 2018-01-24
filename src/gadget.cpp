@@ -9,6 +9,89 @@
 #include <Rcpp.h>
 
 Ecosystem* EcoSystem;
+MainInfo mainGlobal;
+StochasticData* data;
+int check;
+char* workingdir;
+
+// [[Rcpp::export]]
+Rcpp::NumericVector wholeSim(){
+      EcoSystem->Simulate(mainGlobal.runPrint());
+      if ((mainGlobal.getPI()).getPrint())
+        EcoSystem->writeValues();
+
+      while (data->isDataLeft()) {
+        data->readNextLine();
+        EcoSystem->Update(data);
+        //EcoSystem->checkBounds();
+        EcoSystem->Simulate(mainGlobal.runPrint());
+        if ((mainGlobal.getPI()).getPrint())
+          EcoSystem->writeValues();
+      }
+      delete data;
+      return NULL;
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector initSim(){
+   EcoSystem->initSimulation();
+   return NULL;
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector stepSim(){
+   int res;
+   res = EcoSystem->stepSimulation(mainGlobal.runPrint());
+   Rcpp::NumericVector ret {res};
+   return ret;
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector yearSim(){
+   int res;
+   res = EcoSystem->yearSimulation(mainGlobal.runPrint());
+   Rcpp::NumericVector ret {res};
+   return ret;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::NumericVector finalizeSim(){
+   EcoSystem->finalizeSimulation();
+   if ((mainGlobal.getPI()).getPrint())
+        EcoSystem->writeValues();
+   while (data->isDataLeft()) {
+        data->readNextLine();
+        EcoSystem->Update(data);
+        //EcoSystem->checkBounds();
+        EcoSystem->Simulate(mainGlobal.runPrint());
+        if ((mainGlobal.getPI()).getPrint())
+          EcoSystem->writeValues();
+   }
+   delete data;
+   return NULL;
+}
+
+// [[Rcpp::export]]
+Rcpp::List finalize(){
+  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
+  if (mainGlobal.printFinal() && !(mainGlobal.runNetwork()))
+    EcoSystem->writeStatus(mainGlobal.getPrintFinalFile());
+
+  //JMB print final values of parameters
+  if (!(mainGlobal.runNetwork()))
+    EcoSystem->writeParams((mainGlobal.getPI()).getParamOutFile(), (mainGlobal.getPI()).getPrecision());
+
+  if (check)
+    free(workingdir);
+
+  Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
+  delete EcoSystem;
+  handle.logFinish();
+  //return EXIT_SUCCESS;
+  //
+  return z;
+}
 
 // [[Rcpp::export]]
 Rcpp::List gadget(Rcpp::StringVector args) {
@@ -25,9 +108,11 @@ Rcpp::List gadget(Rcpp::StringVector args) {
 	aVector[i+1] = tmp;
   }
 
-  MainInfo main;
-  StochasticData* data = 0;
-  int check = 0;
+  //MainInfo main;
+  //StochasticData* data = 0;
+  //int check = 0;
+  data = 0;
+  check = 0;
 
   //Initialise random number generator with system time [MNAA 02.02.26]
   srand((int)time(NULL));
@@ -37,7 +122,7 @@ Rcpp::List gadget(Rcpp::StringVector args) {
   //-ansi flag lgamma returns an integer value. [MNAA&AJ 05.2001]
   assert(lgamma(1.2) != floor(lgamma(1.2)));
 
-  char* workingdir = getenv("GADGET_WORKING_DIR");
+  workingdir = getenv("GADGET_WORKING_DIR");
   if (workingdir == 0) {
     if ((workingdir = (char*)malloc(LongString)) == NULL)
       handle.logMessage(LOGFAIL, "Error - failed to malloc space for current working directory");
@@ -56,42 +141,42 @@ Rcpp::List gadget(Rcpp::StringVector args) {
   if (chdir(workingdir) != 0) //JMB change back to where we were ...
     handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
 
-  main.read(aNumber, aVector);
-  main.checkUsage(inputdir, workingdir);
+  mainGlobal.read(aNumber, aVector);
+  mainGlobal.checkUsage(inputdir, workingdir);
 
   if (chdir(inputdir) != 0)
     handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
-  EcoSystem = new Ecosystem(main);
+  EcoSystem = new Ecosystem(mainGlobal);
 
 #ifdef INTERRUPT_HANDLER
   //JMB dont register interrupt if doing a network run
-  if (!(main.runNetwork()))
+  if (!(mainGlobal.runNetwork()))
     registerInterrupts(&EcoSystem->interrupted);
 #endif
 
   if (chdir(workingdir) != 0)
     handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
-  if ((main.getPI()).getPrint())
-    EcoSystem->writeInitialInformation((main.getPI()).getOutputFile());
+  if ((mainGlobal.getPI()).getPrint())
+    EcoSystem->writeInitialInformation((mainGlobal.getPI()).getOutputFile());
 
-  if (main.runStochastic()) {
-    if (main.runNetwork()) {
+  if (mainGlobal.runStochastic()) {
+    if (mainGlobal.runNetwork()) {
 #ifdef GADGET_NETWORK //to help compiling when pvm libraries are unavailable
       EcoSystem->Initialise();
       data = new StochasticData();
       while (data->getDataFromNetwork()) {
         EcoSystem->Update(data);
-        EcoSystem->Simulate(main.runPrint());
+        EcoSystem->Simulate(mainGlobal.runPrint());
         data->sendDataToNetwork(EcoSystem->getLikelihood());
         data->readNextLineFromNetwork();
       }
       delete data;
 #endif
 
-    } else if (main.getInitialParamGiven()) {
+    } else if (mainGlobal.getInitialParamGiven()) {
       if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
         handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
-      data = new StochasticData(main.getInitialParamFile());
+      data = new StochasticData(mainGlobal.getInitialParamFile());
       if (chdir(workingdir) != 0)
         handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
 
@@ -99,21 +184,24 @@ Rcpp::List gadget(Rcpp::StringVector args) {
       EcoSystem->checkBounds();
 
       EcoSystem->Initialise();
-      if (main.printInitial()) {
+      if (mainGlobal.printInitial()) {
         EcoSystem->Reset();  //JMB only need to call reset() before the print commands
-        EcoSystem->writeStatus(main.getPrintInitialFile());
+        EcoSystem->writeStatus(mainGlobal.getPrintInitialFile());
       }
 
-      EcoSystem->Simulate(main.runPrint());
-      if ((main.getPI()).getPrint())
+      // IU: Try to exit here
+      return NULL;
+
+      EcoSystem->Simulate(mainGlobal.runPrint());
+      if ((mainGlobal.getPI()).getPrint())
         EcoSystem->writeValues();
 
       while (data->isDataLeft()) {
         data->readNextLine();
         EcoSystem->Update(data);
         //EcoSystem->checkBounds();
-        EcoSystem->Simulate(main.runPrint());
-        if ((main.getPI()).getPrint())
+        EcoSystem->Simulate(mainGlobal.runPrint());
+        if ((mainGlobal.getPI()).getPrint())
           EcoSystem->writeValues();
       }
       delete data;
@@ -123,24 +211,24 @@ Rcpp::List gadget(Rcpp::StringVector args) {
         handle.logMessage(LOGWARN, "Warning - no parameter input file given, using default values");
 
       EcoSystem->Initialise();
-      if (main.printInitial()) {
+      if (mainGlobal.printInitial()) {
         EcoSystem->Reset();  //JMB only need to call reset() before the print commands
-        EcoSystem->writeStatus(main.getPrintInitialFile());
+        EcoSystem->writeStatus(mainGlobal.getPrintInitialFile());
       }
 
-      EcoSystem->Simulate(main.runPrint());
-      if ((main.getPI()).getPrint())
+      EcoSystem->Simulate(mainGlobal.runPrint());
+      if ((mainGlobal.getPI()).getPrint())
         EcoSystem->writeValues();
     }
 
-  } else if (main.runOptimise()) {
+  } else if (mainGlobal.runOptimise()) {
     if (EcoSystem->numVariables() == 0)
       handle.logMessage(LOGFAIL, "Error - no parameters can be optimised");
 
-    if (main.getInitialParamGiven()) {
+    if (mainGlobal.getInitialParamGiven()) {
       if (chdir(inputdir) != 0) //JMB need to change back to inputdir to read the file
         handle.logMessage(LOGFAIL, "Error - failed to change input directory to", inputdir);
-      data = new StochasticData(main.getInitialParamFile());
+      data = new StochasticData(mainGlobal.getInitialParamFile());
       if (chdir(workingdir) != 0)
         handle.logMessage(LOGFAIL, "Error - failed to change working directory to", workingdir);
 
@@ -151,23 +239,23 @@ Rcpp::List gadget(Rcpp::StringVector args) {
       handle.logMessage(LOGFAIL, "Error - no parameter input file specified");
 
     EcoSystem->Initialise();
-    if (main.printInitial()) {
+    if (mainGlobal.printInitial()) {
       EcoSystem->Reset();  //JMB only need to call reset() before the print commands
-      EcoSystem->writeStatus(main.getPrintInitialFile());
+      EcoSystem->writeStatus(mainGlobal.getPrintInitialFile());
     }
 
     EcoSystem->Optimise();
-    if (main.getForcePrint())
-      EcoSystem->Simulate(main.getForcePrint());
+    if (mainGlobal.getForcePrint())
+      EcoSystem->Simulate(mainGlobal.getForcePrint());
   }
 
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
-  if (main.printFinal() && !(main.runNetwork()))
-    EcoSystem->writeStatus(main.getPrintFinalFile());
+  if (mainGlobal.printFinal() && !(mainGlobal.runNetwork()))
+    EcoSystem->writeStatus(mainGlobal.getPrintFinalFile());
 
   //JMB print final values of parameters
-  if (!(main.runNetwork()))
-    EcoSystem->writeParams((main.getPI()).getParamOutFile(), (main.getPI()).getPrecision());
+  if (!(mainGlobal.runNetwork()))
+    EcoSystem->writeParams((mainGlobal.getPI()).getParamOutFile(), (mainGlobal.getPI()).getPrecision());
 
   if (check)
     free(workingdir);
