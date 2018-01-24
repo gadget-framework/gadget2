@@ -13,6 +13,7 @@
 #include "charptrvector.h"
 #include "intmatrix.h"
 #include "gadget.h"
+#include <Rcpp.h>
 
 enum PrinterType { STOCKPRINTER = 1, PREDATORPRINTER, PREDATOROVERPRINTER,
   PREYOVERPRINTER, STOCKSTDPRINTER, STOCKPREYFULLPRINTER, STOCKFULLPRINTER,
@@ -80,6 +81,12 @@ public:
    * \return type
    */
   PrinterType getType() const { return type; };
+
+  /*
+   * \brief IU: Add the rdata
+   */
+  Rcpp::List rdata;
+
 protected:
   /**
    * \brief This ActionAtTimes stores information about when the printer output is required in the model

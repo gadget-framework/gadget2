@@ -6,6 +6,8 @@
 #include "runid.h"
 #endif
 
+#include <Rcpp.h>
+
 ErrorHandler::ErrorHandler() {
   files = new StrStack();
   uselog = 0;
@@ -27,7 +29,7 @@ void ErrorHandler::setLogLevel(int level) {
       break;
     case 1:
       //only get the failure messages written to std::cerr
-      //gadget will exit with exit(EXIT_FAILURE) once it receives a message here
+      //gadget will exit with Rcpp::stop(REXIT_FAILURE) once it receives a message here
       loglevel = LOGFAIL;
       break;
     case 2:
@@ -94,7 +96,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg) {
         logfile.flush();
       }
       cerr << msg << endl;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
       if (uselog) {
@@ -138,7 +140,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, const char* msg
         logfile.flush();
       }
       cerr << msg1 << sep << msg2 << endl;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
       if (uselog) {
@@ -182,7 +184,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, int number) {
         logfile.flush();
       }
       cerr << msg << sep << number << endl;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
       if (uselog) {
@@ -226,7 +228,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, double number) {
         logfile.flush();
       }
       cerr << msg << sep << number << endl;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
       if (uselog) {
@@ -270,7 +272,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, int number, con
         logfile.flush();
       }
       cerr << msg1 << sep << number << sep << msg2 << endl;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
       if (uselog) {
@@ -314,7 +316,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, double number, 
         logfile.flush();
       }
       cerr << msg1 << sep << number << sep << msg2 << endl;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
       if (uselog) {
@@ -363,7 +365,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, DoubleVector vec) {
       for (i = 0; i < vec.Size(); i++)
         cerr << vec[i] << sep;
       cerr << endl;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
       if (uselog) {
@@ -419,7 +421,7 @@ void ErrorHandler::logMessageNaN(LogLevel mlevel, const char* msg) {
         logfile.flush();
       }
       cerr << "Error in model - NaN found" << sep << msg << endl;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
       if (uselog) {
@@ -472,7 +474,7 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
       else
         cerr << "Error in file " << strFilename << " - " << msg << endl;
       delete[] strFilename;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGWARN:
       numwarn++;
@@ -526,7 +528,7 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, int number) 
       else
         cerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
       delete[] strFilename;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGWARN:
       numwarn++;
@@ -579,7 +581,7 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, double numbe
       else
         cerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
       delete[] strFilename;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGWARN:
       numwarn++;
@@ -632,7 +634,7 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg1, const char*
       else
         cerr << "Error in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
       delete[] strFilename;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGWARN:
       numwarn++;
@@ -679,7 +681,7 @@ void ErrorHandler::logFileEOFMessage(LogLevel mlevel) {
       }
       cerr << "Unexpected end of file " << strFilename << endl;
       delete[] strFilename;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGWARN:
       numwarn++;
@@ -722,7 +724,7 @@ void ErrorHandler::logFileUnexpected(LogLevel mlevel, const char* msg1, const ch
       cerr << "Error in file " << strFilename << endl
         << "Expected " << msg1 << " but found instead " << msg2 << endl;
       delete[] strFilename;
-      exit(EXIT_FAILURE);
+      Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGWARN:
       numwarn++;

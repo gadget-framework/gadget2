@@ -3,6 +3,7 @@
 #include "errorhandler.h"
 #include "gadget.h"
 #include "global.h"
+#include <Rcpp.h>
 
 PopPredator::PopPredator(const char* givenname, const IntVector& Areas,
   const LengthGroupDivision* const OtherLgrpDiv, const LengthGroupDivision* const GivenLgrpDiv)
@@ -65,7 +66,7 @@ const DoubleMatrix& PopPredator::getConsumption(int area, const char* preyname) 
       return (*consumption[this->areaNum(area)][prey]);
 
   handle.logMessage(LOGFAIL, "Error in poppredator - failed to match prey", preyname);
-  exit(EXIT_FAILURE);
+  Rcpp::stop(REXIT_FAILURE);
 }
 
 double PopPredator::getConsumptionBiomass(int prey, int area) const {
@@ -177,5 +178,5 @@ const PopInfoVector& PopPredator::getConsumptionPopInfo(int area, const char* pr
       return this->getPrey(prey)->getConsumptionPopInfo(area);
 
   handle.logMessage(LOGFAIL, "Error in poppredator - failed to match prey", preyname);
-  exit(EXIT_FAILURE);
+  Rcpp::stop(REXIT_FAILURE);
 }

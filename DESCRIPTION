@@ -1,0 +1,12 @@
+Package: gadgetr
+Type: Package
+Title: Gadget as an R package
+Version: 0.1
+Date: 2017-11-17
+Author: Ibrahim Umar
+Maintainer: Ibrahim Umar <ibrahim.umar@imr.no>
+Description: Gadget program (https://github.com/Hafro/gadget) re-packaged as an 
+	R package.
+License: GPL (>= 2)
+Imports: Rcpp (>= 0.12.13)
+LinkingTo: Rcpp

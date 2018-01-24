@@ -10,6 +10,8 @@
 #include "runid.h"
 #include "global.h"
 
+#include <Rcpp.h>
+
 StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const TimeInfo)
   : Printer(STOCKFULLPRINTER), stockname(0), aggregator(0), LgrpDiv(0), alptr(0) {
 
@@ -139,6 +141,10 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   aggregator->Sum();
   int a, age, len;
 
+  //IU create lists
+  rdata =  Rcpp::List::create();
+  int ri = 0;
+
   alptr = &aggregator->getSum();
   for (a = 0; a < outerareas.Size(); a++) {
     for (age = (*alptr)[a].minAge(); age <= (*alptr)[a].maxAge(); age++) {
@@ -149,15 +155,26 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
           << age + minage << sep << setw(lowwidth)
           << LgrpDiv->meanLength(len) << sep;
 
+	double rN, rW;
+
         //JMB crude filter to remove the 'silly' values from the output
-        if (((*alptr)[a][age][len].N < rathersmall) || ((*alptr)[a][age][len].W < 0.0))
+        if (((*alptr)[a][age][len].N < rathersmall) || ((*alptr)[a][age][len].W < 0.0)){
           outfile << setw(width) << 0 << sep << setw(width) << 0 << endl;
-        else
+	  rN = rW  = 0;
+        }else{
           outfile << setprecision(precision) << setw(width) << (*alptr)[a][age][len].N << sep
             << setprecision(precision) << setw(width) << (*alptr)[a][age][len].W << endl;
+	  rN = (*alptr)[a][age][len].N;
+	  rW = (*alptr)[a][age][len].W;
+	}
+
+        //IU Lets try to export to R!
+        Rcpp::NumericVector x =  Rcpp::NumericVector::create( TimeInfo->getYear(), TimeInfo->getStep(), outerareas[a], age + minage, LgrpDiv->meanLength(len), rN, rW);
+        rdata.insert(ri++, clone(x));
 
       }
     }
   }
+
   outfile.flush();
 }
