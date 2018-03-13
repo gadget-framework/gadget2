@@ -29,20 +29,20 @@ Rcpp::NumericVector wholeSim(){
           EcoSystem->writeValues();
       }
       delete data;
-      return NULL;
+      return R_NilValue;
 }
 
 // [[Rcpp::export]]
 Rcpp::NumericVector initSim(){
    EcoSystem->initSimulation();
-   return NULL;
+   return R_NilValue;
 }
 
 // [[Rcpp::export]]
 Rcpp::NumericVector stepSim(){
    int res;
    res = EcoSystem->stepSimulation(mainGlobal.runPrint());
-   Rcpp::NumericVector ret {res};
+   Rcpp::NumericVector ret (res);
    return ret;
 }
 
@@ -50,7 +50,7 @@ Rcpp::NumericVector stepSim(){
 Rcpp::NumericVector yearSim(){
    int res;
    res = EcoSystem->yearSimulation(mainGlobal.runPrint());
-   Rcpp::NumericVector ret {res};
+   Rcpp::NumericVector ret (res);
    return ret;
 }
 
@@ -69,7 +69,7 @@ Rcpp::NumericVector finalizeSim(){
           EcoSystem->writeValues();
    }
    delete data;
-   return NULL;
+   return R_NilValue;
 }
 
 // [[Rcpp::export]]
@@ -190,7 +190,7 @@ Rcpp::List gadget(Rcpp::StringVector args) {
       }
 
       // IU: Try to exit here
-      return NULL;
+      return R_NilValue;
 
       EcoSystem->Simulate(mainGlobal.runPrint());
       if ((mainGlobal.getPI()).getPrint())
