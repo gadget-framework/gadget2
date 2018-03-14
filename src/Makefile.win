@@ -1,5 +1,6 @@
-## comment this out if you need a different version of R, 
-## and set set R_HOME accordingly as an environment variable
+## This version is fairly directly derived from the Unix versions
+## You may have to set R_HOME manually if this does not work
+## It requires Rtools in the path -- as does all R package building
 R_HOME := 		$(shell R RHOME | sed -e "s|\\\\|\/|g")
 
 ## include headers and libraries for R 
@@ -9,6 +10,15 @@ RLDFLAGS := 		$(shell $(R_HOME)/bin/R CMD config --ldflags)
 ## include headers and libraries for Rcpp interface classes
 RCPPINCL := 		$(shell echo 'Rcpp:::CxxFlags()' | $(R_HOME)/bin/R --vanilla --slave)
 RCPPLIBS := 		$(shell echo 'Rcpp:::LdFlags()'  | $(R_HOME)/bin/R --vanilla --slave)
+
+## You may have to set this to one of the two values below to enforce a  particular
+## architecture in case the autodetection in the next line does not work correctly
+R_ARCH :=		--arch $(shell echo 'cat(.Platform$$r_arch)' | R --vanilla --slave)
+##R_ARCH :=		--arch i386
+##R_ARCH :=		--arch x64
+
+CXX := 			$(shell $(R_HOME)/bin/R $(R_ARCH) CMD config CXX)
+CPPFLAGS := 		-Wall $(shell $(R_HOME)/bin/R $(R_ARCH) CMD config CPPFLAGS)
 
 ##########################################################################
 # Common for all architecture and compiler options
@@ -51,10 +61,9 @@ _LIBOBJ = $(GADGETINPUT) $(EXTRAINPUT)
 LIBOBJ = $(patsubst %,$(SRC_DIR)/%,$(_LIBOBJ))
 ##########################################################################
 # 2. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler
-CXX = g++
 LIBDIRS = -L. -L/usr/local/lib
 LIBRARIES = -lm -lstdc++
-CXXFLAGS = $(DEFINE_FLAGS)
+CXXFLAGS = $(DEFINE_FLAGS) $(CPPFLAGS)
 _OBJECTS = $(GADGETINPUT) $(GADGETOBJECTS)
 OBJECTS = $(patsubst %,$(SRC_DIR)/%,$(_OBJECTS))
 ##########################################################################
@@ -100,15 +109,10 @@ SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
     commentstream.o parameter.o parametervector.o strstack.o 
 
-LDFLAGS = $(RLDFLAGS) $(RCPPLIBS) $(CXXFLAGS) $(LIBDIRS) $(LIBRARIES)
-
-
-
+LDFLAGS = $(RLDFLAGS) $(RCPPLIBS) $(LIBDIRS) $(LIBRARIES)
 
 gadget	:	$(OBJECTS)
-		ar rcs libgadget.a $(OBJECTS)
-		gcc -shared -o gadgetr.dll $(OBJECTS) $(LDFLAGS)
-		#$(CXX) -o $(GADGET) $(OBJECTS) $(LDFLAGS) 
+		$(CXX) -shared -o gadgetr.dll $(OBJECTS) $(LDFLAGS)
 
 ## you need root permission to be able to do this ...
 install	:	$(GADGET)
