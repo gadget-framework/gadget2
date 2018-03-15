@@ -15,7 +15,7 @@ int check;
 char* workingdir;
 
 // [[Rcpp::export]]
-Rcpp::NumericVector wholeSim(){
+Rcpp::IntegerVector wholeSim(){
       EcoSystem->Simulate(mainGlobal.runPrint());
       if ((mainGlobal.getPI()).getPrint())
         EcoSystem->writeValues();
@@ -29,34 +29,32 @@ Rcpp::NumericVector wholeSim(){
           EcoSystem->writeValues();
       }
       delete data;
-      return R_NilValue;
+      return Rcpp::IntegerVector(1,0);
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector initSim(){
+Rcpp::IntegerVector initSim(){
    EcoSystem->initSimulation();
-   return R_NilValue;
+   return Rcpp::IntegerVector(1,0);
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector stepSim(){
+Rcpp::IntegerVector stepSim(){
    int res;
    res = EcoSystem->stepSimulation(mainGlobal.runPrint());
-   Rcpp::NumericVector ret (res);
-   return ret;
+   return Rcpp::IntegerVector(1,res);
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector yearSim(){
+Rcpp::IntegerVector yearSim(){
    int res;
    res = EcoSystem->yearSimulation(mainGlobal.runPrint());
-   Rcpp::NumericVector ret (res);
-   return ret;
+   return Rcpp::IntegerVector(1, res);
 }
 
 
 // [[Rcpp::export]]
-Rcpp::NumericVector finalizeSim(){
+Rcpp::IntegerVector finalizeSim(){
    EcoSystem->finalizeSimulation();
    if ((mainGlobal.getPI()).getPrint())
         EcoSystem->writeValues();
@@ -69,7 +67,7 @@ Rcpp::NumericVector finalizeSim(){
           EcoSystem->writeValues();
    }
    delete data;
-   return R_NilValue;
+   return Rcpp::IntegerVector(1, 0);
 }
 
 // [[Rcpp::export]]

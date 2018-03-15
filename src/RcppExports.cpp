@@ -6,7 +6,7 @@
 using namespace Rcpp;
 
 // wholeSim
-Rcpp::NumericVector wholeSim();
+Rcpp::IntegerVector wholeSim();
 RcppExport SEXP _gadgetr_wholeSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -16,7 +16,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // initSim
-Rcpp::NumericVector initSim();
+Rcpp::IntegerVector initSim();
 RcppExport SEXP _gadgetr_initSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -26,7 +26,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // stepSim
-Rcpp::NumericVector stepSim();
+Rcpp::IntegerVector stepSim();
 RcppExport SEXP _gadgetr_stepSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -36,7 +36,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // yearSim
-Rcpp::NumericVector yearSim();
+Rcpp::IntegerVector yearSim();
 RcppExport SEXP _gadgetr_yearSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -46,7 +46,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // finalizeSim
-Rcpp::NumericVector finalizeSim();
+Rcpp::IntegerVector finalizeSim();
 RcppExport SEXP _gadgetr_finalizeSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
