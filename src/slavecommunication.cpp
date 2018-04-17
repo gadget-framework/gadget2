@@ -1,3 +1,4 @@
+#ifdef GADGET_NETWORK
 #include "slavecommunication.h"
 #include "gadget.h"
 
@@ -352,3 +353,4 @@ void SlaveCommunication::getBound(double* vec) {
   for (i = 0; i < numVar; i++)
     vec[i] = netDataDouble[i];
 }
+#endif

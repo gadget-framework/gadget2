@@ -1,5 +1,6 @@
 #include "netdata.h"
 #include "gadget.h"
+#include <Rcpp.h>
 
 NetDataVariables::NetDataVariables(int numVar) {
   tag = -1;

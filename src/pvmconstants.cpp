@@ -1,5 +1,6 @@
 #include "pvmconstants.h"
 #include "gadget.h"
+#include <Rcpp.h>
 
 PVMConstants::PVMConstants() {
   stopPVM = 1;
