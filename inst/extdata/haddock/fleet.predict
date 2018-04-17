@@ -1,0 +1,35 @@
+;
+; Predicted fleet effort for this haddock model
+;
+; year  step  area  fleet   effort
+1999    2     1     future  1
+1999    3     1     future  1
+1999    4     1     future  1
+2000    1     1     future  1
+2000    2     1     future  1
+2000    3     1     future  1
+2000    4     1     future  1
+2001    1     1     future  1
+2001    2     1     future  1
+2001    3     1     future  1
+2001    4     1     future  1
+2002    1     1     future  1
+2002    2     1     future  1
+2002    3     1     future  1
+2002    4     1     future  1
+2003    1     1     future  1
+2003    2     1     future  1
+2003    3     1     future  1
+2003    4     1     future  1
+2004    1     1     future  1
+2004    2     1     future  1
+2004    3     1     future  1
+2004    4     1     future  1
+2005    1     1     future  1
+2005    2     1     future  1
+2005    3     1     future  1
+2005    4     1     future  1
+2006    1     1     future  1
+2006    2     1     future  1
+2006    3     1     future  1
+2006    4     1     future  1

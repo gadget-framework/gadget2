@@ -1,0 +1,8 @@
+;
+; Length aggregation file for survey indices
+;
+mlen25   22.5    27.5
+mlen30   27.5    32.5
+mlen35   32.5    37.5
+mlen40   37.5    42.5
+mlen45   42.5    47.5

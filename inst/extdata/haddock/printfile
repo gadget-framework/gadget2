@@ -1,0 +1,52 @@
+;
+; Print file for this haddock model
+;
+[component]
+type            stockstdprinter
+stockname       had              ; name of the stock
+printfile       out/had.std      ; name for the output file
+yearsandsteps   all all          ; timesteps to print
+;
+[component]
+type            stockprinter
+stocknames      had              ; names of the stocks (could be more than one)
+areaaggfile     allarea.agg      ; area aggregation file
+ageaggfile      allage.agg       ; age aggregation file
+lenaggfile      len.agg          ; length aggregation file
+printfile       out/had.print    ; name for the output file
+yearsandsteps   all all          ; timesteps to print
+;
+[component]
+type            stockfullprinter
+stockname       had              ; name of the stock
+printfile       out/had.stock    ; name for the output file
+yearsandsteps   all all          ; timesteps to print
+;
+[component]
+type            predatorprinter
+predatornames   comm future      ; names of the predators (fleets)
+preynames       had              ; names of the preys
+areaaggfile     allarea.agg      ; area aggregation file
+predlenaggfile  alllen.agg       ; length aggregation file for the predators
+preylenaggfile  len.agg          ; length aggregation file for the preys
+printfile       out/had.fleet    ; name for the output file
+yearsandsteps   all all          ; timesteps to print
+;
+[component]
+type            predatorpreyprinter
+predatornames   comm future
+preynames       had
+areaaggfile     allarea.agg
+ageaggfile      age.agg
+lenaggfile      alllen.agg
+printfile       out/hadcatch.fleet
+yearsandsteps   all
+;
+[component]
+type            likelihoodprinter
+likelihood      ldist.sur        ; name of the likelihood component
+printfile       out/ldist.sur    ; name for the output file
+;
+[component]
+type            likelihoodsummaryprinter
+printfile       out/summary.txt  ; name for the output file

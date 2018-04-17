@@ -1,0 +1,7 @@
+;
+; Penalty file for this haddock model
+; This file lists the penalties applied to the variables
+; when the value reaches the bound specified in the inputfile
+;
+; switch   power  lowerW   upperW
+default    2      10000    10000 ; default setting

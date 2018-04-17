@@ -1,0 +1,21 @@
+;
+; Main file for the haddock example
+;
+timefile    time        ; specifying years 1978-2006
+areafile    area        ; specifying only one area
+printfiles  printfile   ; specifying the printer classes
+;
+[stock]          ; the description of the stock data
+stockfiles       had
+;
+[tagging]        ; the description of the tagging data
+; currently no tagging experiments in this haddock model
+;
+[otherfood]      ; the description of the otherfood data
+; currently no otherfood in this haddock model
+;
+[fleet]          ; the description of the fleet data
+fleetfiles       fleet
+;
+[likelihood]     ; the description of the likelihood data
+likelihoodfiles  likelihood
