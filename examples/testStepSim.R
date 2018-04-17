@@ -13,11 +13,10 @@ initSim()
 lengthSteps <- 0
 
 # Loop for all steps (year + step)
-# Loop for all years
 while (TRUE){
-        stop <- stepSim()
+        status <- stepSim()
         # Stop at the end of time
-        if(stop["currentTime"]>=stop["totalSteps"]) break
+        if(status["finished"] == 1) break
         lengthSteps <- lengthSteps + 1
 }
 

@@ -14,9 +14,9 @@ lengthYear <- 0
 
 # Loop for all years
 while (TRUE){
-	stop <- yearSim()
+	status<- yearSim()
 	# Stop at the end of time
-	if(stop["currentTime"]>=stop["totalSteps"]) break
+        if(status["finished"] == 1) break
 	lengthYear <- lengthYear + 1
 }
 

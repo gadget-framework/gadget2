@@ -106,32 +106,33 @@ Rcpp::IntegerVector updateAmountYear(Rcpp::IntegerVector fleetNo, Rcpp::IntegerV
    return updateAmountStep(fleetNo, timeidvec, area, value);
 }
 
-Rcpp::IntegerVector getEcosystemTime(Ecosystem* e){
+Rcpp::IntegerVector getEcosystemTime(Ecosystem* e, int res){
    return
    Rcpp::IntegerVector::create(Rcpp::_["currentTime"] = e->getCurrentTime(),
                                Rcpp::_["currentYear"] = e->getCurrentYear(),
                                Rcpp::_["currentStep"] = e->getCurrentStep(),
-                               Rcpp::_["totalSteps"] = e->numTotalSteps());
+                               Rcpp::_["totalSteps"] = e->numTotalSteps(),
+			       Rcpp::_["finished"] = res);
 }
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector initSim(){
    EcoSystem->initSimulation();
-   return getEcosystemTime(EcoSystem);
+   return getEcosystemTime(EcoSystem, 0);
 }
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector stepSim(){
    int res;
    res = EcoSystem->stepSimulation(mainGlobal.runPrint());
-   return getEcosystemTime(EcoSystem);
+   return getEcosystemTime(EcoSystem, res);
 }
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector yearSim(){
    int res;
    res = EcoSystem->yearSimulation(mainGlobal.runPrint());
-   return getEcosystemTime(EcoSystem);
+   return getEcosystemTime(EcoSystem, res);
 }
 
 
