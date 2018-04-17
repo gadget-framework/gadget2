@@ -5,6 +5,14 @@ wholeSim <- function() {
     .Call(`_gadgetr_wholeSim`)
 }
 
+updateAmountStep <- function(fleetNo, step, area, value) {
+    .Call(`_gadgetr_updateAmountStep`, fleetNo, step, area, value)
+}
+
+updateAmountYear <- function(fleetNo, year, step, area, value) {
+    .Call(`_gadgetr_updateAmountYear`, fleetNo, year, step, area, value)
+}
+
 initSim <- function() {
     .Call(`_gadgetr_initSim`)
 }

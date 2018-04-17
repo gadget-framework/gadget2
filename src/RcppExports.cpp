@@ -15,6 +15,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// updateAmountStep
+Rcpp::IntegerVector updateAmountStep(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::NumericVector value);
+RcppExport SEXP _gadgetr_updateAmountStep(SEXP fleetNoSEXP, SEXP stepSEXP, SEXP areaSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type step(stepSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type area(areaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateAmountStep(fleetNo, step, area, value));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updateAmountYear
+Rcpp::IntegerVector updateAmountYear(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::NumericVector value);
+RcppExport SEXP _gadgetr_updateAmountYear(SEXP fleetNoSEXP, SEXP yearSEXP, SEXP stepSEXP, SEXP areaSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type year(yearSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type step(stepSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type area(areaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateAmountYear(fleetNo, year, step, area, value));
+    return rcpp_result_gen;
+END_RCPP
+}
 // initSim
 Rcpp::IntegerVector initSim();
 RcppExport SEXP _gadgetr_initSim() {
@@ -79,6 +108,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
+    {"_gadgetr_updateAmountStep", (DL_FUNC) &_gadgetr_updateAmountStep, 4},
+    {"_gadgetr_updateAmountYear", (DL_FUNC) &_gadgetr_updateAmountYear, 5},
     {"_gadgetr_initSim", (DL_FUNC) &_gadgetr_initSim, 0},
     {"_gadgetr_stepSim", (DL_FUNC) &_gadgetr_stepSim, 0},
     {"_gadgetr_yearSim", (DL_FUNC) &_gadgetr_yearSim, 0},

@@ -265,6 +265,11 @@ public:
   volatile int interrupted;
 
   /**
+    * \brief IU: Sometimes we need the standalone time information
+    */
+  TimeClass* getTimeInfo() { return TimeInfo; };
+
+  /**
     * \brief IU: Decoupling the simulation
     */
   void initSimulation();

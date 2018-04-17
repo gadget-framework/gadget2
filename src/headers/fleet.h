@@ -149,6 +149,11 @@ public:
    * \return type
    */
   FleetType getType() const { return type; };
+  /**
+   * \brief IU: This will return the amount matrix
+   * \return amount
+   */
+  FormulaMatrix& getAmount() { return amount; };
 protected:
   /**
    * \brief This is the fleet, as a predator in the current model

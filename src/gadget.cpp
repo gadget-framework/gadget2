@@ -9,6 +9,7 @@
 #include <Rcpp.h>
 
 Ecosystem* EcoSystem;
+
 MainInfo mainGlobal;
 StochasticData* data;
 int check;
@@ -33,23 +34,104 @@ Rcpp::IntegerVector wholeSim(){
 }
 
 // [[Rcpp::export]]
+Rcpp::IntegerVector updateAmountStep(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::NumericVector value){
+
+   int fN = fleetNo[0] - 1;
+   int st = step[0];
+   int ar = area[0] - 1;
+
+   double val = value[0];
+
+   int maxFleet = 0;
+   int maxSteps = 0;
+   int maxArea = 0;
+
+   FleetPtrVector& fleetvec = EcoSystem->getModelFleetVector();
+
+   maxFleet = fleetvec.Size();
+
+   if(fN < 0 ||fN > maxFleet-1)
+	   return Rcpp::IntegerVector(1, 55);
+
+   Fleet *fleet = fleetvec[fN];
+	
+   FormulaMatrix& amount = fleet->getAmount();
+
+   std::cout << "Change fleet \"" << fleet->getName() << "\" - Step: " << st << " - Area: " << ar + 1 << " with " << val << std::endl;
+
+   //std::cout << "Row Size " << amount.Nrow() << std::endl; 
+
+   maxSteps = amount.Nrow();
+
+   if(st < 1 || st > maxSteps - 1)
+           return Rcpp::IntegerVector(1, 55);
+
+   //std::cout << "Column size for " << st << " " << amount.Ncol(st) << std::endl;
+
+   maxArea = amount.Ncol(st);
+
+   if(ar < 0 || ar > maxArea-1)
+           return Rcpp::IntegerVector(1, 55);
+
+   Formula& vec = amount[st][ar];
+
+   std::cout << "Value before " << (double) vec << std::endl;
+
+   vec.setValue(val);
+
+   std::cout << "Value after " << (double) vec << std::endl;
+
+   return  Rcpp::IntegerVector(1, 0);
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector updateAmountYear(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::NumericVector value){
+
+   TimeClass* TimeInfo = EcoSystem->getTimeInfo();
+
+   int timeid;
+
+   int yy = year[0];
+   int ss = step[0];
+
+   if (TimeInfo->isWithinPeriod(yy, ss))
+      timeid = TimeInfo->calcSteps(yy, ss);
+   else
+      return Rcpp::IntegerVector(1, 55);
+
+   std::cout << "Step is" << timeid << std::endl;
+
+   Rcpp::IntegerVector timeidvec(1,timeid);
+
+   return updateAmountStep(fleetNo, timeidvec, area, value);
+}
+
+Rcpp::IntegerVector getEcosystemTime(Ecosystem* e){
+   return
+   Rcpp::IntegerVector::create(Rcpp::_["currentTime"] = e->getCurrentTime(),
+                               Rcpp::_["currentYear"] = e->getCurrentYear(),
+                               Rcpp::_["currentStep"] = e->getCurrentStep(),
+                               Rcpp::_["totalSteps"] = e->numTotalSteps());
+}
+
+// [[Rcpp::export]]
 Rcpp::IntegerVector initSim(){
    EcoSystem->initSimulation();
-   return Rcpp::IntegerVector(1,0);
+   return getEcosystemTime(EcoSystem);
 }
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector stepSim(){
    int res;
    res = EcoSystem->stepSimulation(mainGlobal.runPrint());
-   return Rcpp::IntegerVector(1,res);
+   return getEcosystemTime(EcoSystem);
 }
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector yearSim(){
    int res;
    res = EcoSystem->yearSimulation(mainGlobal.runPrint());
-   return Rcpp::IntegerVector(1, res);
+   return getEcosystemTime(EcoSystem);
 }
 
 
@@ -106,9 +188,6 @@ Rcpp::List gadget(Rcpp::StringVector args) {
 	aVector[i+1] = tmp;
   }
 
-  //MainInfo main;
-  //StochasticData* data = 0;
-  //int check = 0;
   data = 0;
   check = 0;
 

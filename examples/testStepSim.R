@@ -1,23 +1,27 @@
 library(gadgetr)
 
-# Remember to setwd() to the gadget model directory
+# Change working directory to example haddock data
+loadExample()
+
 # Load parameters
 gadget(c("-s","-i","refinputfile"))
 
 # Initialize simulation
 initSim()
 
-# Placeholder for stop condition
-stop <- 0
-lengthYear <- 0
+# Count steps
+lengthSteps <- 0
 
 # Loop for all steps (year + step)
-while (!stop){
-	stop <- stepSim()[1]
-	lengthYear <- lengthYear + 1
+# Loop for all years
+while (TRUE){
+        stop <- stepSim()
+        # Stop at the end of time
+        if(stop["currentTime"]>=stop["totalSteps"]) break
+        lengthSteps <- lengthSteps + 1
 }
 
-print(lengthYear)
+print(lengthSteps)
 
 # Sim cleanup
 finalizeSim()
