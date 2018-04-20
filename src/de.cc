@@ -27,7 +27,7 @@ extern Ecosystem** EcoSystems;
 #endif
 
 void OptInfoDE::OptimiseLikelihood() {
-    handle.logMessage(LOGINFO, "\nStarting ADAPTIVE SEQUENTIAL PSO optimisation algorithm\n");
+    handle.logMessage(LOGINFO, "\nStarting ADAPTIVE SEQUENTIAL DE optimisation algorithm\n");
     double tmp;
     int ii, i, j, offset, rchange, rcheck, rnumber, init_reset;
     nvars = EcoSystem->numOptVariables();
@@ -81,14 +81,9 @@ void OptInfoDE::OptimiseLikelihood() {
 
     printf("seed %d\n", seed);
 
-    handle.logMessage(LOGINFO, "Starting DE with particles ", size, "\n");
-
+    handle.logMessage(LOGINFO, "Starting DE with a population size = ", size, "\n");
     F=0.8; CR=0.9;
-	
-    handle.logMessage(LOGINFO, "DE initial inertia ", w, "\n");
-    handle.logMessage(LOGINFO, "DE F", F, "\n");
-    handle.logMessage(LOGINFO, "DE CR", CR, "\n");
-    handle.logMessage(LOGINFO, "DE goal", goal, "\n");
+    handle.logMessage(LOGINFO, "DE goal = ", goal, "\n");
 
     EcoSystem->scaleVariables();
     EcoSystem->getOptScaledValues(x);
@@ -128,7 +123,6 @@ void OptInfoDE::OptimiseLikelihood() {
 
 // Initialize the particles
     i = 0;
-    handle.logMessage(LOGINFO, "Initialising DE ", size, "particles\n");
 
 
 // Initialize the fist particle with the best known position
@@ -142,8 +136,6 @@ void OptInfoDE::OptimiseLikelihood() {
         vel[i][d] = (a - b) / 2.;
     }
     fit[i] = EcoSystem->SimulateAndUpdate(pos[i]);
-
-    printf("\n\n** INIT BEST FUNCTION %lf  \n\n", fit[i]);
 
     fit_b[i] = fit[i]; // this is also the personal best
     if (fit[i] < best.bestf) {
@@ -239,7 +231,7 @@ void OptInfoDE::OptimiseLikelihood() {
             score = EcoSystem->SimulateAndUpdate(bestx);
             for (i = 0; i < nvars; i++)
                 bestx[i] = bestx[i] * init[i];
-            handle.logMessage(LOGINFO, "\nPSO finished with a likelihood score of", score);
+            handle.logMessage(LOGINFO, "\nDE finished with a likelihood score of", score);
             EcoSystem->storeVariables(score, bestx);
             return;
         }
@@ -263,7 +255,6 @@ void OptInfoDE::OptimiseLikelihood() {
 		improv_with_stack_global_best=0;
 		init_reset = 0;
            	if (growth_popul != 0) {
-           		printf("growth_popul %d\n",growth_popul);
            		pos.AddRows(growth_popul, nvars, 0.0);
 			pos_new.AddRows(growth_popul, nvars, 0.0);
            		pos_b.AddRows(growth_popul, nvars, 0.0);
@@ -470,15 +461,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     struct Best { double bestf; int index;};
     struct Best best;
     double timestop;
-    iter_without_improv_global_best=0; 
-    improv_with_stack_global_best=0;
-    consecutive_iters_global_best=0;
-    previous_fbest_fitness=DBL_MAX;
-    growth_trend=0;
-    STATE=0;
-    growth_trend_popul=1;
-
-    printf("SOLVER DE\n");
     size= (int) (nvars);
     
     DoubleMatrix pos(size, nvars, 0.0);    // position matrix
@@ -496,19 +478,24 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     double a, b;
     int steps = 0; //!= iters?
     ostringstream spos, svel;
+    iter_without_improv_global_best=0;
+    improv_with_stack_global_best=0;
+    consecutive_iters_global_best=0;
+    previous_fbest_fitness=DBL_MAX;
+    growth_trend=0;
+    STATE=0;
+    growth_trend_popul=1;
     growth_popul=0;
     printf("seed %d\n", seed);
     threshold_acept=0.1;
     nrestarts=0;
+    printf("SOLVER DE\n");
+
 //    if (seed == 0) seed = 1234;
 
-    handle.logMessage(LOGINFO, "Starting DE with particles ", size, "\n");
-
+    handle.logMessage(LOGINFO, "Starting DE with population size = ", size, "\n");
     F=0.8; CR=0.9;
-	
-    handle.logMessage(LOGINFO, "DE F ", F , "\n");
-    handle.logMessage(LOGINFO, "DE CR", CR, "\n");
-    handle.logMessage(LOGINFO, "DE goal", goal, "\n");
+    handle.logMessage(LOGINFO, "DE goal = ", goal, "\n");
 
     EcoSystem->scaleVariables();
     int numThr = omp_get_max_threads ( );
@@ -540,7 +527,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     best.index = 0;
 
     if (best.bestf != best.bestf) { //check for NaN
-        handle.logMessage(LOGINFO, "Error starting PSO optimisation with f(x) = infinity");
+        handle.logMessage(LOGINFO, "Error starting DE optimisation with f(x) = infinity");
         converge = -1;
         iters = 1;
         return;
@@ -552,7 +539,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
 
 // Initialize the particles
     i = 0;
-    handle.logMessage(LOGINFO, "Initialising DE ", size, "particles\n");
 
 // Initialize the fist particle with the best known position
     for (d = 0; d < nvars; d++) {
@@ -566,7 +552,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     }
     fit[i] = EcoSystems[0]->SimulateAndUpdate(pos[i]);
     
-    printf("\n\n** INIT BEST FUNCTION %lf  \n\n", fit[i]);
 
     fit_b[i] = fit[i]; // this is also the personal best
     if (fit[i] < best.bestf) {
@@ -672,7 +657,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
 		F = calc_adapt_parameters(steps);
         // check optimization goal
         if (best.bestf <= goal) {
-            handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
+            handle.logMessage(LOGINFO, "\nStopping DE optimisation algorithm\n");
             handle.logMessage(LOGINFO, "Goal achieved!!! @ step ", steps);
             score = EcoSystems[0]->SimulateAndUpdate(bestx);
             handle.logMessage(LOGINFO, "\nPSO finished with a likelihood score of", score);
@@ -687,7 +672,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
 		improv_with_stack_global_best=0;
 		init_reset = 0;
            	if (growth_popul != 0) {
-           		printf("growth_popul %d\n",growth_popul);
            		pos.AddRows(growth_popul, nvars, 0.0);
 			pos_new.AddRows(growth_popul, nvars, 0.0);
            		pos_b.AddRows(growth_popul, nvars, 0.0);
@@ -740,7 +724,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
                      fit[i]   = EcoSystems[omp_get_thread_num()]->SimulateAndUpdate(pos[i]);
                      fit_b[i] = fit[i];
 	   	}
-	        printf("SOLVER DE\n");
            	size=size+growth_popul;
            	growth_popul=0;
 		STATE=0;

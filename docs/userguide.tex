@@ -251,6 +251,17 @@ gadget -precision <number>
 Starting Gadget with the -precision switch will specify the number of digits to be used when printing the output from the likelihood calculations to files specified with the -o switch.
 
 {\small\begin{verbatim}
+gadget -parallel [spe|rep]
+\end{verbatim}}
+Starting Gadget with the -parallel switch will execute those algorithms that support multi-threading (OPENMP) execution in parallel (currently, Simmulated Annealing, Hooke \& Jeeves, PSO and DE algorithms). By defualt, the speculative version is used (option {\it spe }). Reproducible execution (option {\it rep}) is only supported by SA and Hooke\&Jeeves algorithms. This mode of execution will use all the available cores in your computer except if it has limited using the environment variable OMP\_NUM\_THREADS=<number of cores to use>. For example, on Linux, executing the next command before running Gadget:
+
+{\small\begin{verbatim}
+		export OPM_NUM_THREADS=4
+\end{verbatim}}
+will run those algorithms using 4 threads. If you set this variable, use less cores than the available number on your computer. If you set a higher number than the number of cores in your computer, the performance of these algorithms can degrade considerablely.   
+
+
+{\small\begin{verbatim}
 gadget -log <filename>
 \end{verbatim}}
 Starting Gadget with the -log switch will specify a file to which Gadget will write logging messages to keep a record of internal Gadget actions.  This can be a large file if Gadget is performing an optimising run (see Log Output, section~\ref{sec:logoutput}, for more information on the format of this file).
@@ -270,7 +281,7 @@ gadget -m <filename>
 \end{verbatim}}
 Starting Gadget with the -m switch will specify a file from which Gadget can read the other command line options.  This file should contain a simple list of the switches and their values, as they would be entered from the command line.
 
-\newpage %JMB insert page break
+%\newpage %JMB insert page break
 {\small\begin{verbatim}
 gadget -printinitial <filename>
 \end{verbatim}}
@@ -3809,6 +3820,9 @@ Hooke \& Jeeves is a simple and fast optimising method, but somewhat unreliable,
 The Hooke \& Jeeves algorithm used in Gadget is derived from that originally presented by R. Hooke and T. A. Jeeves, ''Direct Search Solution of Numerical and Statistical Problems'' in the April 1961 (Vol. 8, pp. 212-229) issue of the Journal of the ACM, with improvements presented by Arthur F Kaupe Jr., ''Algorithm 178: Direct Search'' in the June 1963 (Vol 6, pp.313-314) issue of the Communications of the ACM.
 
 \bigskip
+When compiled with OPENMP, GADGET can also execute a parallel version of this algorithm, selecting the opcion -parallel. The implementation of this option is described in the paper Vázquez, S., et al. "Novel parallelization of simulated annealing and Hooke \& Jeeves search algorithms for multicore systems with application to complex fisheries stock assessment models" on Journal of Computational Science, 17, 599–608 (2016). This parallel version can ger profit from the new multi-core hardware to speedup the execution. It support two options: speculative and reproducible. The former follows exactly the same sequence as the original sequential algorithm. In the case of the speculative option, the execution will be faster but the result could not follow the same pattern that the serial version, maybe producing a different result. This parallel version must be executed with an even number of threads, so, if you select this number using OMP\_NUM\_THREADS environtment variable, choose it to an even number (and lower or equal to the number of cores of the computer).
+
+\bigskip
 Hooke \& Jeeves is the default optimisation method used for Gadget, and will be used if no optimisation information file is specified.
 
 \subsection{File Format}\label{subsec:hookefile}
@@ -3873,11 +3887,19 @@ In comparison to the Hooke \& Jeeves optimisation algorithm, where Hooke \& Jeev
 \bigskip
 The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, ''Minimising Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm'' in the September 1987 (Vol. 13, pp. 262-280) issue of the ACM Transactions on Mathematical Software and Goffe et al, ''Global Optimisation of Statistical Functions with Simulated Annealing'' in the January/February 1994 (Vol. 60, pp. 65-100) issue of the Journal of Econometrics.
 
+\bigskip
+As in the case of Hook \& Jeeves algorithm, if Gadget has been compiled with the OPENMP option, there are two additional parallel versions that can be selected with the -parallel option: speculative (-parallel spe) and reproducible (-parallel rep). By default, the speculative version is selected only -parallel flag is present. These versions will use the multi-core capability of your computer to speed up the execution. The algorithms are described on V\'azquez et al.:"Novel parallelization of simulated annealing and Hooke \& Jeeves search algorithms for multicore systems with application to complex fisheries stock assessment models" published on Journal of Computational Science, 17, 599-608 (2016). 
+
+\bigskip
+The reproducible version follows exactly the same sequence as the original serial algorithm, and thus it finishes in the same point and with the same likelihood score, but in less time, using all the available cores of your computer, except if you limit the number using the environtment vaiable OMP\_NUM\_THREADS. The second speculative version, is allowed to change the parameter modification sequence in order to increase the parallelism, and thus it can finish in a different point and with a different likelihood value. In this latter case, some specification variables of the sequential algorithm were adapted to prevent the algorithm from converging to a worse likelihood value. For example, the number of \textit{effective} evaluations is taken into account as ending criterion instead of the number of total evaluations.
+
 \subsection{File Format}\label{subsec:simannfile}
 To specify the Simulated Annealing algorithm, the optimisation file should start with the keyword ''[simann]'', followed by (up to) 11 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, are shown below:
 
 {\small\begin{verbatim}
 [simann]
+seedM	   1024  ; seed for the metropolis acceptance of SA
+seedP	   2048  ; seed for the order if the parameters of SA
 simanniter 2000  ; number of simulated annealing iterations
 simanneps  1e-04 ; minimum epsilon, simann halt criteria
 t          100   ; simulated annealing initial temperature
@@ -4009,6 +4031,91 @@ $<\delta>$ is the value of the ''gradacc'' parameter
 \bigskip
 When the BFGS algorithm is reset (that is, if the Armijo linesearch fails to find a better point) the gradient accuracy parameter is made smaller to increase the level of accuracy that is used in the gradient calculations.  This is done by multiplying the gradacc parameter by the gradstep parameter, which is a simple reduction factor (and as such must be between 0 and 1).  To prevent the gradacc parameter getting too small, the BFGS algorithm will stop once the value of gradacc is less that the value of gradeps.  Both gradacc and gradeps must be between 0 and 1, with gradeps smaller than gradacc, and the gradient calculations are more accurate when the gradacc parameter is very small.
 
+
+
+
+
+\section{Parallel Multirestart Adaptive Particle Swarm Optimization}\label{sec:pmapso}
+\subsection{Overview}\label{subsec:psoover}
+The Parallel Multirestart Adaptive Particle Swarm Optimization (PMA PSO) algorithm operates on a population of solutions, called swarm. For each iteration new candidate solutions, named particles, are generated by applying movements through the search-space using both local knowledge of the particles and global information of the method. 
+
+\bigskip
+
+PMA PSO is a modification of the PSO algorithm~(Kennedy and Eberhart, 1995), which follows the next scheme: at the beginning, a set of $N$ $D$-dimensional particles that conform the initial swarm are randomly generated within the bound constraints of the problem. Then, a certain movement is applied to each particle through the following expressions: 
+
+\begin{equation}v_{i} \leftarrow \omega v_{i} + \varphi_{l} r_{l} ( pbest_{i} - p_{i} )  + \varphi_{g} r_{g} ( gbest - p_{i} )  \label{eq:pso_vi} \end{equation}
+
+\begin{equation}p_{i} \leftarrow p_{i} +  v_{i} \end{equation}
+where  $p_{i}$ is the current solution for the particle $i$ of the swarm, $v_{i}$ is the vector velocity, $\omega$ is the inertia constant, $\varphi_{g}$ is the the social coefficient, $\varphi_{l}$ is the cognitive coefficient, $r_{g}$ and $r_{l}$ are two random numbers between zero and one, $pbest_{i}$ is the local best solution found by the current particle, and $gbest$ is the best global solution found by any particle during the execution of the method. Using these two formulas, a new solution is created through the sum of the current position with the new velocity vector created, which is generated taking into account the following three factors in Equation (\ref{eq:pso_vi}) in this order:
+
+\begin{itemize}
+	
+	\item Previous velocities and inertia weight: the velocity calculated for a particle "i" in past iterations is taken into account to compute the velocity in the current iteration. The inertial weight ($\omega$) is a configurable parameter of the heuristic, with values between zero and one, to adjust the importance of this accumulation of speeds.
+	
+	\item Cognitive component: It is a vector calculated as the difference between the best value reached by the considered particle $i$ and the current value of that particle. This vector takes into account the local knowledge about previous visited points. To adjust the impact of the influence of this cognitive component, it is multiplied by a random value between zero and one (this is what gives stochasticity to the method), and also by a configurable parameter called cognitive coefficient ($\varphi_{l}$).
+	
+	\item Social component: It is a vector computed as the difference between the global best solution found among all the particles from the swarm and the current particle solution. Therefore, the social component takes into account the influence of the global solution when new solutions are created. Also for this case, the vector generated is multiplied by a random number between zero and one, and by a configurable parameter known as social coefficient ($\varphi_{g}$). 
+	
+\end{itemize}
+
+The choice of values for the size of the population ($N$) and the aforementioned configuration parameters is not trivial, and it will be problem-dependent. To solve this issue, PMA PSO includes a self-tuning of the configuration parameters to intensify the search when there is a promising result and obtain a good solution in a short time or, otherwise, to diversify it with a conservative parameter configuration when the algorithm is stuck in the proximity of a local optimum. Moreover, PMA PSO also includes the following extra characteristics: (1) an additional mechanism to restart the solutions of the algorithm, without losing the best solution found, in order to explore other regions when the search is stagnated; and (2) a parallel computation of the evaluations of the cost function in each iteration of the main loop of the method, using OpenMP to reduce the execution time of the algorithm. 
+
+
+\subsection{File Format}\label{subsec:psofile}
+To specify the PMA PSO algorithm, the optimisation file should start with the keyword ''[pso]'', followed by 2 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  This algorithm has self-adaptation of configuration parameters, only needing parameters related with the stopping criterion. The format for this file, and the default values for the optimisation parameters, are shown below:
+
+{\small\begin{verbatim}
+	[pso]
+	goal        1e-6  ; optimization goal value
+	psoiter     100000000  ; maximum number of iterations
+	\end{verbatim}}
+
+\subsection{Parameters}\label{subsec:psopar}
+\subsubsection{goal}
+This is the criterion for halting the PMA PSO algorithm, accepting the current best point as the 'solution'.  The algorithm has ''converged'' if the value described by goal is overcomed.
+\subsubsection{psoiter}
+This is the maximum number of Gadget model runs that the PSO algorithm will use to try to find the best solution.  If this number is exceeded, Gadget will select the best point found so far, and accept this as the 'solution', even though it has not met the convergence criteria.  A warning that Gadget has stopped without finding a solution that meets the convergence criteria will be printed.
+\section{Parallel Multirestart Adaptive Differential Evolution}\label{sec:pmade}
+\subsection{Overview}\label{subsec:deover}
+Differential Evolution~(Storn and Price, 1997) is an evolutive method where, for each iteration, new solutions are created through difference operations.  Starting from a population of $N$ randomly generated $D$-dimensional solutions within the bounds constraints of the problem, the method creates, using a Mutation Strategy (MStr), a set of candidate solutions for each iteration, which are intended to replace the solutions stored in the population. These mutation operations represent the difference among two or more solutions randomly chosen from the population, multiplied by the so-called Mutation Factor (F). Among the many types of possible mutation strategies, this implementation uses the following ones:
+
+\begin{itemize}
+	\item \texttt{DE/best/2/bin}: 
+	\begin{equation}new\_point_{i} \leftarrow xbest + F ( p_{a} - p_{b} )  + F ( p_{c} - p_{d} )  \end{equation}
+	\item \texttt{DE/current-to-rand/1/bin}:
+	\begin{equation}new\_point_{i} \leftarrow p_{i} + F ( p_{a} - p_{i} )  + F ( p_{b} - p_{c} )  \end{equation}
+	\item \texttt{DE/current-to-best/1/bin}:
+	\begin{equation}new\_point_{i} \leftarrow p_{i} + F ( xbest - p_{i} )  + F ( p_{a} - p_{b} )  \end{equation}
+	\item \texttt{DE/rand-to-best/1/bin}: 
+	\begin{equation}new\_point_{i} \leftarrow p_{a} + F ( xbest - p_{a} )  + F ( p_{b} - p_{c} )  \end{equation}
+\end{itemize}  where $p_{i}$ is the current solution, and $p_{a}$, $p_{b}$, $p_{c}$ and $p_{d}$ are solutions randomly selected belonging to the current population, $xbest$ is the current best solution of the population, and $new\_point_{i}$ is the  candidate solution created.  
+
+\bigskip
+
+The mutation strategy is applied element by element in some of the $D$ positions of the solution.  The crossover constant (CR) is a configuration parameter to decide how many positions of the candidate solution come from the original solution, and how many are the result of the mutation process. For each existing solution in the population, a new candidate is generated, but this candidate only replaces the solution from which it has been derived if it is better.
+This process will be repeated until a specific stopping criteria is met. At that point, the best one of the $N$ solutions in the population is obtained as output of the method.
+
+\bigskip
+
+The choice of values for the size of the population ($N$) and the aforementioned configuration parameters is not trivial, and it will be problem-dependent. To solve this issue we propose a modification to this algorithm, which has been called Parallel Multi-restart Adaptive DE (PMA DE). It includes a self-tuning of the configuration parameters to intensify the search when there is a promising result and obtain a good solution in a short time or, otherwise, to diversify it with a conservative parameter configuration when the algorithm is stuck in the proximity of a local optimum. Moreover, PMA DE also includes the following extra characteristics: (1) an additional mechanism to restart the solutions of the algorithm, without losing the best solution found, in order to explore other regions when the search is stagnated; and (2) a parallel computation of the evaluations of the cost function in each iteration of the main loop of the method, using OpenMP to reduce the execution time of the algorithm. 
+
+\subsection{File Format}\label{subsec:defile}
+To specify the PMA DE algorithm, the optimisation file should start with the keyword ''[DE]'', followed by 2 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  This algorithm has self-adaptation of configuration parameters, only needing parameters related with the stopping criterion. The format for this file, and the default values for the optimisation parameters, are shown below:
+
+{\small\begin{verbatim}
+	[DE]
+	goal     1e-6; optimization goal value
+	iter     100000000  ; maximum number of iterations
+	\end{verbatim}}
+
+\subsection{Parameters}\label{subsec:depar}
+\subsubsection{goal}
+
+This is the criterion for halting the PMA DE algorithm, accepting the current best point as the 'solution'.  The algorithm has ''converged'' if the value described by goal is overcomed.
+
+\subsubsection{iter}
+This is the maximum number of Gadget model runs that the DE algorithm will use to try to find the best solution.  If this number is exceeded, Gadget will select the best point found so far, and accept this as the 'solution', even though it has not met the convergence criteria.  A warning that Gadget has stopped without finding a solution that meets the convergence criteria will be printed.
+
 \section{Combining Optimisation Algorithms}\label{sec:combine}
 \subsection{Overview}\label{subsec:combineover}
 This method attempts to combine the global search of the Simulated Annealing algorithm and the more rapid convergence of the local searches performed by the Hooke \& Jeeves and BFGS algorithms.  It relies on the observation that the likelihood function for many Gadget models consists of a large 'valley' in which the best solution lies, surrounded by much more 'rugged' terrain.
@@ -4136,7 +4243,7 @@ gadget -s -log gadget.log -loglevel 3
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Paramin chapter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Edited by Guðmundur Einarsson %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Edited by Gu??mundur Einarsson %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Summer 2012 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -4230,7 +4337,11 @@ Jones, R., and Johnston, C. 1977. Growth, Reproduction and Mortality in Gadoid F
 
 Kaupe, A.F. 1963. Algorithm 178: Direct Search. ACM Communications. vol 6: pp313-314.\newline
 
+Kennedy, J., and Eberhart, R. 1995. PSO optimization. Proceedings IEEE International Conference Neural Networks. Vol 4: pp1941-1948.\newline
+
 Stef\'{a}nsson, G., and P\'{a}lsson, \'{O}.K. 1997. BORMICON. A Boreal Migration and Consumption Model. Marine Research Institute Report 58, Marine Research Institute, Reykjavik, Iceland.\newline
+
+Storn, R., and Price, K. 1997. Differential evolution--a simple and efficient heuristic for global optimization over continuous spaces. Journal of global optimization. Vol 11: pp341-359. \newline
 
 Tjelmeland, S., and Bogstad, B. 1998. MULTSPEC - A Review of a Multi-Species Modelling Project for the Barents Sea. Fisheries Research vol 37: pp127-142.\newline
 

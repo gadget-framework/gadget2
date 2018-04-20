@@ -5,10 +5,9 @@
 #include <cfloat>
 
 OptInfoDE::OptInfoDE()
-  : OptInfo(),  goal(1e-5), iter(100000), CR(0.9), F(0.8), scale(0)
-{
+  : OptInfo(),  goal(1e-5), iter(100000) {
   type = OPTDE;
-  handle.logMessage(LOGMESSAGE, "Initialising PSO optimisation algorithm");
+  handle.logMessage(LOGMESSAGE, "Initialising DE optimisation algorithm");
 }
 
 void OptInfoDE::read(CommentStream& infile, char* text) {
@@ -25,9 +24,11 @@ void OptInfoDE::read(CommentStream& infile, char* text) {
     } else if   (strcasecmp(text, "iter") == 0) {
       infile >> iter;
       count++;
-    } else if (strcasecmp(text, "scale") == 0) {
-        infile >> scale;
-        count++;
+
+    } else if (strcasecmp(text, "goal") == 0) {
+      infile >> goal;
+      count++;
+
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
@@ -35,13 +36,6 @@ void OptInfoDE::read(CommentStream& infile, char* text) {
     infile >> text;
   }
 
-  if (count == 0)
-    handle.logMessage(LOGINFO, "Warning - no parameters specified for Simulated Annealing optimisation algorithm");
-
-  if (scale != 0 && scale != 1) {
-      handle.logMessage(LOGINFO, "Warning in optinfofile - value of scale outside bounds", scale);
-      scale = 0;
-    }
 }
 
 void OptInfoDE::Print(ofstream& outfile, int prec) {

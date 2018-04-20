@@ -48,19 +48,9 @@ void OptInfoPso::OptimiseLikelihood() {
     struct Best { double bestf; int index;};
     struct Best best;
     double timestop;
-    iter_without_improv_global_best=0; 
-    improv_with_stack_global_best=0;
-    consecutive_iters_global_best=0;
-    previous_fbest_fitness=DBL_MAX;
-    growth_trend=0;
-    STATE=0;
-    growth_trend_popul=1;
-
 // SOLVER
     printf("SOLVER PSO\n");
- 
     size= (int) (nvars);
-    
     DoubleMatrix pos(size, nvars, 0.0);    // position matrix
     DoubleMatrix vel(size, nvars, 0.0);    // velocity matrix
     DoubleMatrix pos_new(size, nvars, 0.0);  // new population
@@ -81,33 +71,33 @@ void OptInfoPso::OptimiseLikelihood() {
     Calc_inertia_fun calc_inertia_fun; // inertia weight update function
     int psosteps = 0; //!= iters?
     ostringstream spos, svel;
+    int numThr = 1;
+
+
     growth_popul=0;
     printf("seed %d\n", seed);
     threshold_acept=0.1;
     nrestarts=0;
-
-    handle.logMessage(LOGINFO, "Starting PSO with particles ", size, "\n");
+    iter_without_improv_global_best=0;
+    improv_with_stack_global_best=0;
+    consecutive_iters_global_best=0;
+    previous_fbest_fitness=DBL_MAX;
+    growth_trend=0;
+    STATE=0;
+    growth_trend_popul=1;
 
 // SELECT APPROPRIATE NHOOD UPDATE FUNCTION
-    handle.logMessage(LOGINFO, "PSO will use global communication\n");
     inform_fun = &OptInfoPso::inform_global;
 
 // SELECT APPROPRIATE INERTIA WEIGHT UPDATE FUNCTION
-    handle.logMessage(LOGINFO, "PSO will use adative dynamic inertia\n");
-    calc_inertia_fun = &OptInfoPso::calc_inertia_adapt_dyn;
-//
-//initialize omega using standard value
-//
     w = PSO_INERTIA;
     c1=2.5; c2=0.5; 
-	
-    handle.logMessage(LOGINFO, "PSO initial inertia ", w, "\n");
-    handle.logMessage(LOGINFO, "PSO c1", c1, "\n");
-    handle.logMessage(LOGINFO, "PSO c2", c2, "\n");
-    handle.logMessage(LOGINFO, "PSO goal", goal, "\n");
 
-    EcoSystem->scaleVariables();
-    int numThr = 1;
+// SELECT APPROPRIATE INERTIA WEIGHT UPDATE FUNCTION
+    calc_inertia_fun = &OptInfoPso::calc_inertia_adapt_dyn;
+    handle.logMessage(LOGINFO, "Starting PSO with ", size, " particles\n");
+    handle.logMessage(LOGINFO, "PSO goal = ", goal, "\n");
+
     EcoSystem->scaleVariables();
     EcoSystem->getOptScaledValues(x);
     EcoSystem->getOptLowerBounds(lowerb);
@@ -117,7 +107,7 @@ void OptInfoPso::OptimiseLikelihood() {
     for (i = 0; i < nvars; ++i) {
         bestx[i] = x[i];
         param[i] = i;
-      }
+    }
     
     for (i = 0; i < nvars; i++) {
             scalex[i] = x[i];
@@ -129,49 +119,36 @@ void OptInfoPso::OptimiseLikelihood() {
                 upperb[i] = tmp;
             }
      }
-
     best.bestf = EcoSystem->SimulateAndUpdate(x);
     best.index = 0;
-
-    if (best.bestf != best.bestf) { //check for NaN
-        handle.logMessage(LOGINFO, "Error starting PSO optimisation with f(x) = infinity");
-        converge = -1;
-        iters = 1;
-        return;
-    }
-
-
     offset = EcoSystem->getFuncEval(); //number of function evaluations done before loop
     iters = 0;
 
 // Initialize the particles
     i = 0;
-    handle.logMessage(LOGINFO, "Initialising PSO ", size, "particles\n");
 
 // SWARM INITIALIZATION
 //
 // Initialize the fist particle with the best known position
     for (d = 0; d < nvars; d++) {
         // generate two numbers within the specified range and around trialx
-        a = x[d];
+	a = x[d];
         // initialize position
         pos[i][d] = a;
         pos_b[i][d] = a;
         gbest[i][d] = a;
         b = lowerb[d] + (upperb[d] - lowerb[d]) * (rand_r(&seed) * 1.0 / RAND_MAX);
         vel[i][d] = (a - b) / 2.;
+	
     }
     fit[i] = EcoSystem->SimulateAndUpdate(pos[i]);
     fit_b[i] =  fit[i];
-    printf("\n\n** INIT BEST FUNCTION %lf  \n\n", fit[i]);
-
     fit_b[i] = fit[i]; // this is also the personal best
     if (fit[i] < best.bestf) {
         best.bestf = fit[i];
         bestx = pos[i];
         best.index=i;
     }
-
     // REPO
     double ***rand;
     rand = (double ***) calloc(size,sizeof(double **));
@@ -233,7 +210,6 @@ void OptInfoPso::OptimiseLikelihood() {
 
 // RUN ALGORITHM
     psosteps = 0;
-
     while (1) {
         if (isZero(best.bestf)) {
             iters=0;
@@ -264,7 +240,7 @@ void OptInfoPso::OptimiseLikelihood() {
             EcoSystem->storeVariables(score, bestx);
             return;
         }
-	w = calc_inertia_adapt_dyn(psosteps);
+	w=(this->*calc_inertia_fun)(psosteps);
         if (best.bestf <= goal) {
             handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
             handle.logMessage(LOGINFO, "Goal achieved!!! @ step ", psosteps);
@@ -492,9 +468,7 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
     growth_trend_popul=1;
 
 // SOLVER
-    printf("SOLVER PSO\n");
-    size= (int) (nvars);
-    
+    size= (int) (nvars); 
     DoubleMatrix pos(size, nvars, 0.0);    // position matrix
     DoubleMatrix vel(size, nvars, 0.0);    // velocity matrix
     DoubleMatrix pos_new(size, nvars, 0.0);  // new population
@@ -520,25 +494,15 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
     threshold_acept=0.1;
     nrestarts=0;
 
-    handle.logMessage(LOGINFO, "Starting PSO with particles ", size, "\n");
-
 // SELECT APPROPRIATE NHOOD UPDATE FUNCTION
-    handle.logMessage(LOGINFO, "PSO will use global communication\n");
     inform_fun = &OptInfoPso::inform_global;
 
 // SELECT APPROPRIATE INERTIA WEIGHT UPDATE FUNCTION
-    handle.logMessage(LOGINFO, "PSO will use adative dynamic inertia\n");
-    calc_inertia_fun = &OptInfoPso::calc_inertia_adapt_dyn;
-//
-//initialize omega using standard value
-//
     w = PSO_INERTIA;
     c1=2.5; c2=0.5;
-	
-    handle.logMessage(LOGINFO, "PSO initial inertia ", w, "\n");
-    handle.logMessage(LOGINFO, "PSO c1", c1, "\n");
-    handle.logMessage(LOGINFO, "PSO c2", c2, "\n");
-    handle.logMessage(LOGINFO, "PSO goal", goal, "\n");
+    calc_inertia_fun = &OptInfoPso::calc_inertia_adapt_dyn;
+    handle.logMessage(LOGINFO, "Starting PSO with ", size, " particles\n");
+    handle.logMessage(LOGINFO, "PSO goal = ", goal, "\n");
 
     EcoSystem->scaleVariables();
     int numThr = omp_get_max_threads ( );
@@ -582,7 +546,6 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
 
 // Initialize the particles
     i = 0;
-    handle.logMessage(LOGINFO, "Initialising PSO ", size, "particles\n");
 
 // SWARM INITIALIZATION
 //
@@ -599,7 +562,6 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
     }
     fit[i] = EcoSystems[0]->SimulateAndUpdate(pos[i]);
 
-    printf("\n\n** INIT BEST FUNCTION %lf  \n\n", fit[i]);
 
     fit_b[i] = fit[i]; // this is also the personal best
     if (fit[i] < best.bestf) {
@@ -703,7 +665,7 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
             return;
         }
         // update inertia weight
-	w = calc_inertia_adapt_dyn(psosteps);
+	w=(this->*calc_inertia_fun)(psosteps);
         // check optimization goal
         if (best.bestf <= goal) {
             handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
@@ -777,7 +739,6 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
                      fit[i]   = EcoSystems[omp_get_thread_num()]->SimulateAndUpdate(pos[i]);
                      fit_b[i] = fit[i];
 	   	}
-	        printf("SOLVER PSO\n");	
            	size=size+growth_popul;
            	growth_popul=0;
 		STATE=0;

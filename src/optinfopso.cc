@@ -5,8 +5,7 @@
 #include <cfloat>
 
 OptInfoPso::OptInfoPso()
-  : OptInfo(),  goal(1e-5), psoiter(100000), c1(1.496), c2(1.496), scale(0)
-     {
+  : OptInfo(),  goal(1e-5), psoiter(100000) {
   type = OPTPSO;
   handle.logMessage(LOGMESSAGE, "Initialising PSO optimisation algorithm");
 }
@@ -14,20 +13,15 @@ OptInfoPso::OptInfoPso()
 void OptInfoPso::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading PSO optimisation parameters");
 
-//  unsigned s1 = 0;
-//  unsigned s2 = 0;
-//  unsigned s3 = 0;
-
   int count = 0;
-  while (!infile.eof() && strcasecmp(text, "[PSO]") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
+  while (!infile.eof() && strcasecmp(text, "[PSO]") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]") && strcasecmp(text, "[DE]")) {
     infile >> ws;
     if (strcasecmp(text, "seed") == 0) {
       int s = 0;
       infile >> s >> ws;
-//      s1 = s;
       handle.logMessage(LOGMESSAGE, "Initialising random number generator with", s);
       srand(s);
-	} 
+    } 
     else if (strcasecmp(text, "psoiter") == 0) {
       infile >> psoiter;
       count++;
@@ -36,18 +30,6 @@ void OptInfoPso::read(CommentStream& infile, char* text) {
       infile >> goal;
       count++;
 
-    } else if (strcasecmp(text, "c1") == 0) {
-      infile >> c1;
-      count++;
-
-    } else if (strcasecmp(text, "c2") == 0) {
-      infile >> c2;
-      count++;
-
-    } else if (strcasecmp(text, "scale") == 0) {
-        infile >> scale;
-        count++;
-
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry
@@ -55,13 +37,6 @@ void OptInfoPso::read(CommentStream& infile, char* text) {
     infile >> text;
   }
 
-  if (count == 0)
-    handle.logMessage(LOGINFO, "Warning - no parameters specified for Simulated Annealing optimisation algorithm");
-
-  if (scale != 0 && scale != 1) {
-      handle.logMessage(LOGINFO, "Warning in optinfofile - value of scale outside bounds", scale);
-      scale = 0;
-    }
 }
 
 void OptInfoPso::Print(ofstream& outfile, int prec) {
@@ -74,4 +49,26 @@ void OptInfoPso::Print(ofstream& outfile, int prec) {
     outfile << "\n; because the convergence criteria were met\n";
   else
     outfile << "\n; because the maximum number of function evaluations was reached\n";
+}
+
+/**
+ * \brief calculate constant  inertia weight equal to w_max
+ */
+double OptInfoPso::calc_inertia_const(int step) {
+    return w_max;
+}
+
+
+
+/**
+ * \brief calculate linearly decreasing inertia weight
+ */
+double OptInfoPso::calc_inertia_lin_dec(int step) {
+    int dec_stage = 3 * psoiter / 4;
+    double W;
+    if (step <= dec_stage)
+        W= w_min + (w_max - w_min) * (dec_stage - step) / dec_stage;
+    else
+        W= w_min;
+    return W;
 }

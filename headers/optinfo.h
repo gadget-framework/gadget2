@@ -454,6 +454,8 @@ public:
    * \brief This is the function that will calculate the likelihood score using the PSO optimiser
    */
   virtual void OptimiseLikelihood();
+  double calc_inertia_const(int step);
+  double calc_inertia_lin_dec(int step);
 #ifdef _OPENMP
 //#ifdef SPECULATIVE
   /**
@@ -466,33 +468,9 @@ public:
 private:
 
  /**
-  * \brief CONSTANTS: max swarm size
-  */
- #define PSO_MAX_SIZE 100
- 
- /**
   * \brief CONSTANTS: default value of w (see clerc02) 
   */
  #define PSO_INERTIA 0.7298 
- 
- 
- 
- /**
-  * \brief NEIGHBORHOOD SCHEMES: global best topology 
-  */
-#define PSO_NHOOD_GLOBAL 0
- 
- /**
-  * \brief NEIGHBORHOOD SCHEMES: ring topology 
-  */
-#define PSO_NHOOD_RING 1
- 
- /**
-  * \brief NEIGHBORHOOD SCHEMES: Random neighborhood topology. see http://clerc.maurice.free.fr/pso/random_topology.pdf 
-  */
-#define PSO_NHOOD_RANDOM 2
- 
- 
  
  /**
   * \brief INERTIA WEIGHT UPDATE FUNCTIONS 
@@ -541,7 +519,26 @@ private:
 #pragma omp threadprivate(c1,c2)  
 #endif
 
- // ultimo fitness
+ /**
+  * \brief inertia weight strategy (see PSO_W_*)
+  */
+ int w_strategy;
+ /**
+  * \brief whether to keep particle position within defined bounds (TRUE) or apply periodic boundary conditions (FALSE)
+  */
+ int clamp_pos;
+ /**
+  * \brief max inertia weight value
+  */
+ double w_max;
+
+ /**
+ * \brief min inertia weight value
+ */
+ double w_min;
+
+
+ // last best fitness
  double previous_fbest_fitness;
 
  int iter_without_improv_global_best; // Iteration without improvements of global best solution
@@ -557,8 +554,8 @@ private:
  int growth_trend_popul;
  int num_restart;
  /**
-    * \brief This is the flag to denote whether the parameters should be scaled or not (default 0, not scale)
-    */
+  * \brief This is the flag to denote whether the parameters should be scaled or not (default 0, not scale)
+  */
  int scale;
  double calc_inertia_adapt_dyn(int);
  void inform_global(IntMatrix& , DoubleMatrix& , DoubleMatrix& , DoubleVector& , DoubleVector& , int );
