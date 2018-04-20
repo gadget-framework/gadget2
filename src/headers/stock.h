@@ -283,6 +283,7 @@ public:
    * \brief This will return the total population size (in numbers) of the stock on a given area
    * \param area is the area identifier
    * \return population size
+
    */
   double getTotalStockNumber(int area) const;
   /**
@@ -338,6 +339,11 @@ public:
    * \param tagname is the name of the tagging experiment to be removed
    */
   void deleteTags(const char* tagname);
+  /**
+   * \brief IU: This will return the renewal data object
+   * \return renewaldata
+   */
+  RenewalData* getRenewalData() { return renewal; };
 protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store information about the stock population

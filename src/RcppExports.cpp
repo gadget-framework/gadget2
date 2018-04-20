@@ -5,6 +5,41 @@
 
 using namespace Rcpp;
 
+// getEcosystemInfo
+Rcpp::List getEcosystemInfo();
+RcppExport SEXP _gadgetr_getEcosystemInfo() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(getEcosystemInfo());
+    return rcpp_result_gen;
+END_RCPP
+}
+// updateRecruitment
+Rcpp::IntegerVector updateRecruitment(Rcpp::CharacterVector stockName);
+RcppExport SEXP _gadgetr_updateRecruitment(SEXP stockNameSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type stockName(stockNameSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateRecruitment(stockName));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updateSuitability
+Rcpp::IntegerVector updateSuitability(Rcpp::IntegerVector fleetNo, Rcpp::CharacterVector stockName, Rcpp::IntegerVector len, Rcpp::NumericVector value);
+RcppExport SEXP _gadgetr_updateSuitability(SEXP fleetNoSEXP, SEXP stockNameSEXP, SEXP lenSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type stockName(stockNameSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type len(lenSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateSuitability(fleetNo, stockName, len, value));
+    return rcpp_result_gen;
+END_RCPP
+}
 // wholeSim
 Rcpp::IntegerVector wholeSim();
 RcppExport SEXP _gadgetr_wholeSim() {
@@ -107,6 +142,9 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_gadgetr_getEcosystemInfo", (DL_FUNC) &_gadgetr_getEcosystemInfo, 0},
+    {"_gadgetr_updateRecruitment", (DL_FUNC) &_gadgetr_updateRecruitment, 1},
+    {"_gadgetr_updateSuitability", (DL_FUNC) &_gadgetr_updateSuitability, 4},
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
     {"_gadgetr_updateAmountStep", (DL_FUNC) &_gadgetr_updateAmountStep, 4},
     {"_gadgetr_updateAmountYear", (DL_FUNC) &_gadgetr_updateAmountYear, 5},

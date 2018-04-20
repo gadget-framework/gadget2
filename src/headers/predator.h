@@ -173,6 +173,12 @@ public:
    * \return type
    */
   PredatorType getType() const { return type; };
+  /**
+   * \brief IU: This will return the suitability object for a given prey
+   * \param i is the index of the prey
+   * \return suitable object
+   */
+  DoubleMatrix* getSuits(int i) { return suitable->getSuits(i); };
 protected:
   /**
    * \brief This function will read the suitability data from the input file

@@ -69,6 +69,12 @@ public:
    * \param TimeInfo is the TimeClass for the current model
    */
   void Reset(const Predator* const pred, const TimeClass* const TimeInfo);
+  /**
+   * \brief IU: This function will return the calculated suitability object for a given prey
+   * \param i is the index of the prey
+   * \return preCalcSuitability[i], the DoubleMatrix containing the suitability values
+   */
+  DoubleMatrix* getSuits(int i) { return (preCalcSuitability[i]); };
 protected:
   /**
    * \brief This is the CharPtrVector of prey names
