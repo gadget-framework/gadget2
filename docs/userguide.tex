@@ -10,6 +10,7 @@
 
 \title{\Huge{Gadget User Guide}}
 \author{Edited by James Begley}
+\author{Updated by Andr\'es G\'omez and David Rodr\'iguez Penas}
 \date{\today}  % show the date on the title page
 %\date{}   % don't show the date on the title page
 \maketitle
@@ -253,12 +254,12 @@ Starting Gadget with the -precision switch will specify the number of digits to 
 {\small\begin{verbatim}
 gadget -parallel [spe|rep]
 \end{verbatim}}
-Starting Gadget with the -parallel switch will execute those algorithms that support multi-threading (OPENMP) execution in parallel (currently, Simmulated Annealing, Hooke \& Jeeves, PSO and DE algorithms). By defualt, the speculative version is used (option {\it spe }). Reproducible execution (option {\it rep}) is only supported by SA and Hooke\&Jeeves algorithms. This mode of execution will use all the available cores in your computer except if it has limited using the environment variable OMP\_NUM\_THREADS=<number of cores to use>. For example, on Linux, executing the next command before running Gadget:
+Starting Gadget with the -parallel switch will execute in parallel those algorithms that support multi-threading (OPENMP) execution (currently, Simulated Annealing, Hooke \& Jeeves, PMAPSO and PMADE algorithms). By defualt, the speculative version is used (option {\it spe }). Reproducible execution (option {\it rep}) is only supported by SA and Hooke\&Jeeves algorithms. Both modes of execution will use all the available cores in your computer except if it has been limited using the environment variable OMP\_NUM\_THREADS=<number of cores to use>. For example, on Linux, executing the next command before running Gadget:
 
 {\small\begin{verbatim}
 		export OPM_NUM_THREADS=4
 \end{verbatim}}
-will run those algorithms using 4 threads. If you set this variable, use less cores than the available number on your computer. If you set a higher number than the number of cores in your computer, the performance of these algorithms can degrade considerablely.   
+will run these algorithms using 4 threads. If you set this variable, use less cores than the available number on your computer. If you set a higher number than the number of cores in your computer, the performance of these algorithms can degrade considerablely. It is better if you adjust it to a even number (in some algorithms, it is mandatory).   
 
 
 {\small\begin{verbatim}
@@ -3820,7 +3821,10 @@ Hooke \& Jeeves is a simple and fast optimising method, but somewhat unreliable,
 The Hooke \& Jeeves algorithm used in Gadget is derived from that originally presented by R. Hooke and T. A. Jeeves, ''Direct Search Solution of Numerical and Statistical Problems'' in the April 1961 (Vol. 8, pp. 212-229) issue of the Journal of the ACM, with improvements presented by Arthur F Kaupe Jr., ''Algorithm 178: Direct Search'' in the June 1963 (Vol 6, pp.313-314) issue of the Communications of the ACM.
 
 \bigskip
-When compiled with OPENMP, GADGET can also execute a parallel version of this algorithm, selecting the opcion -parallel. The implementation of this option is described in the paper Vázquez, S., et al. "Novel parallelization of simulated annealing and Hooke \& Jeeves search algorithms for multicore systems with application to complex fisheries stock assessment models" on Journal of Computational Science, 17, 599–608 (2016). This parallel version can ger profit from the new multi-core hardware to speedup the execution. It support two options: speculative and reproducible. The former follows exactly the same sequence as the original sequential algorithm. In the case of the speculative option, the execution will be faster but the result could not follow the same pattern that the serial version, maybe producing a different result. This parallel version must be executed with an even number of threads, so, if you select this number using OMP\_NUM\_THREADS environtment variable, choose it to an even number (and lower or equal to the number of cores of the computer).
+When compiled with OpenMP, Gadget can also execute a parallel version of this algorithm, selecting the opcion \emph{-parallel}. The implementation of this option is described in the paper Vázquez, S., et al. "Novel parallelization of simulated annealing and Hooke \& Jeeves search algorithms for multicore systems with application to complex fisheries stock assessment models" on Journal of Computational Science, 17, 599–608 (2016). 
+
+\bigskip
+This parallel version can get profit from the new multi-core hardware to speedup the execution. It support two options: speculative and reproducible. The latter follows exactly the same sequence as the original sequential algorithm. In the case of the speculative option, the execution will be faster but the result could not follow the same pattern that the serial version, maybe producing a different result. This parallel version must be executed with an even number of threads, so, if you select this number using OMP\_NUM\_THREADS environtment variable, choose it correctly (and lower or equal to the number of cores of the computer).
 
 \bigskip
 Hooke \& Jeeves is the default optimisation method used for Gadget, and will be used if no optimisation information file is specified.
@@ -3888,18 +3892,16 @@ In comparison to the Hooke \& Jeeves optimisation algorithm, where Hooke \& Jeev
 The Simulated Annealing algorithm used in Gadget is derived from that presented by Corana et al, ''Minimising Multimodal Functions of Continuous Variables with the 'Simulated Annealing' Algorithm'' in the September 1987 (Vol. 13, pp. 262-280) issue of the ACM Transactions on Mathematical Software and Goffe et al, ''Global Optimisation of Statistical Functions with Simulated Annealing'' in the January/February 1994 (Vol. 60, pp. 65-100) issue of the Journal of Econometrics.
 
 \bigskip
-As in the case of Hook \& Jeeves algorithm, if Gadget has been compiled with the OPENMP option, there are two additional parallel versions that can be selected with the -parallel option: speculative (-parallel spe) and reproducible (-parallel rep). By default, the speculative version is selected only -parallel flag is present. These versions will use the multi-core capability of your computer to speed up the execution. The algorithms are described on V\'azquez et al.:"Novel parallelization of simulated annealing and Hooke \& Jeeves search algorithms for multicore systems with application to complex fisheries stock assessment models" published on Journal of Computational Science, 17, 599-608 (2016). 
+As in the case of Hook \& Jeeves algorithm, if Gadget has been compiled with the OpenMP option, there are two additional parallel versions that can be selected with the -parallel option: speculative (-parallel spe) and reproducible (-parallel rep). By default, the speculative version is selected whan only -parallel flag is present. These versions will use the multi-core capability of your computer to speed up the execution. The algorithms are described on V\'azquez et al.:"Novel parallelization of simulated annealing and Hooke \& Jeeves search algorithms for multicore systems with application to complex fisheries stock assessment models" published on Journal of Computational Science, 17, 599-608 (2016). 
 
 \bigskip
-The reproducible version follows exactly the same sequence as the original serial algorithm, and thus it finishes in the same point and with the same likelihood score, but in less time, using all the available cores of your computer, except if you limit the number using the environtment vaiable OMP\_NUM\_THREADS. The second speculative version, is allowed to change the parameter modification sequence in order to increase the parallelism, and thus it can finish in a different point and with a different likelihood value. In this latter case, some specification variables of the sequential algorithm were adapted to prevent the algorithm from converging to a worse likelihood value. For example, the number of \textit{effective} evaluations is taken into account as ending criterion instead of the number of total evaluations.
+The reproducible version follows exactly the same sequence as the original serial algorithm, and thus it finishes in the same point and with the same likelihood score, but in less time, using all the available cores of your computer, except if you limit the number using the environtment vaiable OMP\_NUM\_THREADS. The speculative version, is allowed to change the parameter modification sequence in order to increase the parallelism, and thus it can finish in a different point and with a different likelihood value. In this latter case, some specification variables of the sequential algorithm were adapted to prevent the algorithm from converging to a worse likelihood value. For example, the number of \textit{effective} evaluations is taken into account as ending criterion instead of the number of total evaluations.
 
 \subsection{File Format}\label{subsec:simannfile}
 To specify the Simulated Annealing algorithm, the optimisation file should start with the keyword ''[simann]'', followed by (up to) 11 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  The format for this file, and the default values for the optimisation parameters, are shown below:
 
 {\small\begin{verbatim}
 [simann]
-seedM	   1024  ; seed for the metropolis acceptance of SA
-seedP	   2048  ; seed for the order if the parameters of SA
 simanniter 2000  ; number of simulated annealing iterations
 simanneps  1e-04 ; minimum epsilon, simann halt criteria
 t          100   ; simulated annealing initial temperature
@@ -4058,7 +4060,7 @@ where  $p_{i}$ is the current solution for the particle $i$ of the swarm, $v_{i}
 	
 \end{itemize}
 
-The choice of values for the size of the population ($N$) and the aforementioned configuration parameters is not trivial, and it will be problem-dependent. To solve this issue, PMA PSO includes a self-tuning of the configuration parameters to intensify the search when there is a promising result and obtain a good solution in a short time or, otherwise, to diversify it with a conservative parameter configuration when the algorithm is stuck in the proximity of a local optimum. Moreover, PMA PSO also includes the following extra characteristics: (1) an additional mechanism to restart the solutions of the algorithm, without losing the best solution found, in order to explore other regions when the search is stagnated; and (2) a parallel computation of the evaluations of the cost function in each iteration of the main loop of the method, using OpenMP to reduce the execution time of the algorithm. 
+The choice of values for the size of the population ($N$) and the aforementioned configuration parameters is not trivial, and it will be problem-dependent. To solve this issue, PMA PSO includes a self-tuning of the configuration parameters to intensify the search when there is a promising result and obtain a good solution in a short time or, otherwise, to diversify it with a conservative parameter configuration when the algorithm is stuck in the proximity of a local optimum. Moreover, PMA PSO also includes the following extra characteristics: (1) an additional mechanism to restart the solutions of the algorithm, without losing the best solution found, in order to explore other regions when the search is stagnated; and (2) a parallel computation of the evaluations of the cost function in each iteration of the main loop of the method, using OpenMP, to reduce the execution time of the algorithm. 
 
 
 \subsection{File Format}\label{subsec:psofile}
@@ -4097,7 +4099,7 @@ This process will be repeated until a specific stopping criteria is met. At that
 
 \bigskip
 
-The choice of values for the size of the population ($N$) and the aforementioned configuration parameters is not trivial, and it will be problem-dependent. To solve this issue we propose a modification to this algorithm, which has been called Parallel Multi-restart Adaptive DE (PMA DE). It includes a self-tuning of the configuration parameters to intensify the search when there is a promising result and obtain a good solution in a short time or, otherwise, to diversify it with a conservative parameter configuration when the algorithm is stuck in the proximity of a local optimum. Moreover, PMA DE also includes the following extra characteristics: (1) an additional mechanism to restart the solutions of the algorithm, without losing the best solution found, in order to explore other regions when the search is stagnated; and (2) a parallel computation of the evaluations of the cost function in each iteration of the main loop of the method, using OpenMP to reduce the execution time of the algorithm. 
+The choice of values for the size of the population ($N$) and the aforementioned configuration parameters is not trivial, and it will be problem-dependent. To solve this issue we propose a modification to this algorithm, which has been called Parallel Multi-restart Adaptive DE (PMA DE). It includes a self-tuning of the configuration parameters to intensify the search when there is a promising result and obtain a good solution in a short time or, otherwise, to diversify it with a conservative parameter configuration when the algorithm is stuck in the proximity of a local optimum. Moreover, PMA DE also includes the following extra characteristics: (1) an additional mechanism to restart the solutions of the algorithm, without losing the best solution found, in order to explore other regions when the search is stagnated; and (2) a parallel computation of the evaluations of the cost function in each iteration of the main loop of the method, using OpenMP, to reduce the execution time of the algorithm. 
 
 \subsection{File Format}\label{subsec:defile}
 To specify the PMA DE algorithm, the optimisation file should start with the keyword ''[DE]'', followed by 2 lines giving the parameters for the optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  This algorithm has self-adaptation of configuration parameters, only needing parameters related with the stopping criterion. The format for this file, and the default values for the optimisation parameters, are shown below:
@@ -4117,14 +4119,17 @@ This is the criterion for halting the PMA DE algorithm, accepting the current be
 This is the maximum number of Gadget model runs that the DE algorithm will use to try to find the best solution.  If this number is exceeded, Gadget will select the best point found so far, and accept this as the 'solution', even though it has not met the convergence criteria.  A warning that Gadget has stopped without finding a solution that meets the convergence criteria will be printed.
 
 \section{Combining Optimisation Algorithms}\label{sec:combine}
+
 \subsection{Overview}\label{subsec:combineover}
-This method attempts to combine the global search of the Simulated Annealing algorithm and the more rapid convergence of the local searches performed by the Hooke \& Jeeves and BFGS algorithms.  It relies on the observation that the likelihood function for many Gadget models consists of a large 'valley' in which the best solution lies, surrounded by much more 'rugged' terrain.
+
+This method attempts to combine the global search of algorithms such as Simulated Annealing, PMA-PSO or PMA-DE, with the more rapid convergence of the local searches performed by the Hooke \& Jeeves and BFGS algorithms.  It relies on the observation that the likelihood function for many Gadget models consists of a large 'valley' in which the best solution lies, surrounded by much more 'rugged' terrain.
 
 \bigskip
-A period of Simulated Annealing at the start of the optimisation run serves to move the search into this valley, at which point the Simulated Annealing algorithm becomes inefficient so the Hooke \& Jeeves algorithm and/or the BFGS algorithm takes over and homes in on a solution within that valley.  Hopefully the Simulated Annealing algorithm will have moved the current point to the correct side of any 'hills' to avoid the local searches becoming trapped into an unrealistic local minimum.
+A period of global search at the start of the optimisation run, performed applying Simulated Annealing, PMA-PSO or PMA-DE, serves to move the search into this valley, at which point global search algorithms are typically more inefficient than local ones. Thus at this point, the Hooke \& Jeeves algorithm and/or the BFGS algorithm takes over and homes in on a solution within that valley.  Hopefully the global search algorithms will have moved the current point to the correct side of any 'hills' to avoid the local searches becoming trapped into an unrealistic local minimum.
 
 \subsection{File Format}\label{subsec:combinefile}
-To specify a combination of optimisation algorithms, the optimisation file should simply list the algorithms that should be used, along with the parameters for each optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  As an example, the format for this file used to specify all three optimisation algorithms, and the default values for the optimisation parameters, is shown below:
+
+To specify a combination of optimisation algorithms, the optimisation file should simply list the algorithms that should be used, along with the parameters for each optimisation algorithm.  Any parameters that are not specified in the file are given default values, which work reasonably well for simple Gadget models.  As an example, the format for this file used to specify all optimisation algorithms, and the default values for the optimisation parameters, is shown below:
 
 {\small\begin{verbatim}
 [simann]
@@ -4139,6 +4144,12 @@ cstep      2     ; step length adjustment factor
 lratio     0.3   ; lower limit for ratio when adjusting step length
 uratio     0.7   ; upper limit for ratio when adjusting step length
 check      4     ; number of temperature loops to check
+[pso]
+goal        1e-6  ; optimization goal value
+psoiter     100000000  ; maximum number of iterations
+[DE]
+goal     1e-6; optimization goal value
+iter     100000000  ; maximum number of iterations
 [hooke]
 hookeiter  1000  ; number of hooke & jeeves iterations
 hookeeps   1e-04 ; minimum epsilon, hooke & jeeves halt criteria
@@ -4154,10 +4165,10 @@ gradstep   0.5   ; gradient accuracy adjustment factor
 gradeps    1e-10 ; minimum value for gradient accuracy
 \end{verbatim}}
 
-It should be noted that the optimisation algorithms will be performed in the order that they are specified in the input file, so for this example the order will be: first Simulated Annealing, second Hooke \& Jeeves and finally BFGS.
+It should be noted that the optimisation algorithms will be performed in the order that they are specified in the input file. Thus, for this example the order will be: first Simulated Annealing, second PMA-PSO, third PMA-DE, fourth Hooke \& Jeeves and finally BFGS. Notice that this example is provided for completeness in order to show that Gadget can apply any combination of search algorithms in any arbitrary order. However, it is unlikely that you need to execute all the global optimisation algorithms (SA, PMA-PSO and PMA-DE), and it is better that only the most suitable for the problem is executed.
 
 \subsection{Parameters}\label{subsec:combinepar}
-The parameters for this combined optimisation algorithm are the same as for the individual algorithms, and are described in sections \ref{subsec:hookepar} (for the Hooke \& Jeeves parameters), \ref{subsec:simannpar} (for the Simulated Annealing parameters) and \ref{subsec:bfgspar} (for the BFGS parameters).
+The parameters for this combined optimisation algorithm are the same as for the individual algorithms, and are described in sections \ref{subsec:hookepar} (for the Hooke \& Jeeves parameters), \ref{subsec:simannpar} (for the Simulated Annealing parameters), \ref{subsec:psopar} (for PMA PSO parameters), \ref{subsec:depar} (for PMA Differential Evolution parameters), and \ref{subsec:bfgspar} (for the BFGS parameters).
 
 \section{Repeatability}\label{sec:repeat}
 The optimisation algorithms used by Gadget contain a random number generator, used to randomise the order of the parameters (to ensure that the order of the parameters has no effect on the optimum found) and to generate the initial direction chosen by the algorithm to look for a solution.  For the Simulated Annealing algorithm, this is also affects the Metropolis criteria used to accept any changes in an 'uphill' direction.
@@ -4419,6 +4430,9 @@ A version of this user guide was printed and published as a Marine Research Inst
 \begin{itemize}
 \item removed the hard-coded factor of 4 from various maturation and suitability functions \newline (see equations \ref{eq:l50suit}, \ref{eq:mat3} and \ref{eq:mat4}) {\bf note} that these functions have been re-named, so using one of these functions will currently generate an error to alert the user of this change
 \item extended the options for a fleet that implements a harvest control rule (see section~\ref{sec:quotafleet})
+\begin{itemize}
+\item 
+\end{itemize}
 \item added an option to aggregate the StockDistribution data (see section~\ref{sec:stockdist})
 \item added the MigrationProportion likelihood component (see section~\ref{sec:migpro})
 \item simplified the TimeVariable component (see section~\ref{subsec:timevar})
