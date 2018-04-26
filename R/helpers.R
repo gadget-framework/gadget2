@@ -7,6 +7,20 @@ getStockNo <- function(stockName){
         match(stockName, getEcosystemInfo()$stock)
 }
 
+getLenGrpIdx <- function(stockNo, len){
+	stockInfoLen <- getStockInfoC(stockNo)$lengthGroup
+	sSize <- nrow(stockInfoLen)
+
+	if(len < stockInfoLen[1, "minLength"])
+		return(-1)
+
+	if(len > stockInfoLen[sSize, "maxLength"])
+                return(sSize)
+
+	idx <- which(stockInfoLen$minLength <= len & stockInfoLen$maxLength > len)
+	return(idx)
+}
+
 updateRecruitment <- function(stockName, year, step, area, age, number, mean,
                 sdev=NA, alpha=NA, beta=NA,
                 length=NA, meanWeight=NA){
@@ -31,7 +45,7 @@ updateSuitability <- function(fleetName, stockName, len, value){
         stockNo <- getStockNo(stockName)
 
         if(is.na(stockNo)){
-                print("Can't find stock")
+                print("Can't find stock!")
                 return(1)
         }
 
@@ -39,7 +53,7 @@ updateSuitability <- function(fleetName, stockName, len, value){
         fleetNo <- getFleetNo(fleetName)
 
         if(is.na(fleetNo)){
-                print("Can't find fleet")
+                print("Can't find fleet!")
                 return(1)
         }
 

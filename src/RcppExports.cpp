@@ -49,14 +49,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // updateSuitabilityC
-Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo, Rcpp::IntegerVector len, Rcpp::NumericVector value);
+Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo, Rcpp::NumericVector len, Rcpp::NumericVector value);
 RcppExport SEXP _gadgetr_updateSuitabilityC(SEXP fleetNoSEXP, SEXP stockNoSEXP, SEXP lenSEXP, SEXP valueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type len(lenSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type len(lenSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value(valueSEXP);
     rcpp_result_gen = Rcpp::wrap(updateSuitabilityC(fleetNo, stockNo, len, value));
     return rcpp_result_gen;

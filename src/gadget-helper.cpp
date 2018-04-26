@@ -118,7 +118,7 @@ Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::Intege
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo, Rcpp::IntegerVector len, Rcpp::NumericVector value){
+Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo, Rcpp::NumericVector len, Rcpp::NumericVector value){
 
    int lenIdx;
  
@@ -144,11 +144,12 @@ Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::Intege
      return Rcpp::IntegerVector(1,55);
    }
 
-   if(len[0] > suit->Ncol(0) || len[0] < 1){
-     std::cout << "The length index is out of the range" << std::endl;
-     return Rcpp::IntegerVector(1,55);
-   }else{
-     lenIdx = len[0]-1;
+   const LengthGroupDivision* lengthGroup = predator->getLengthGroupDiv();
+
+   lenIdx = lengthGroup->numLengthGroup(len[0]);
+
+   if(lenIdx == -1){
+     std::cout << "Invalid length" << std::endl;
    }
 
 #ifdef DEBUG
