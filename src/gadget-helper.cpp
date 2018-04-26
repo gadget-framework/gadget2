@@ -35,6 +35,30 @@ Rcpp::List getEcosystemInfo(){
 }
 
 // [[Rcpp::export]]
+Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo){
+
+   StockPtrVector stockvec = EcoSystem->getModelStockVector();
+   Stock *stock = stockvec[stockNo[0]-1];
+
+   const LengthGroupDivision* lengthGroup = stock->getLengthGroupDiv();
+
+   int lSize = lengthGroup->numLengthGroups();
+
+   Rcpp::NumericVector maxLength(lSize);
+   Rcpp::NumericVector minLength(lSize);
+
+   for(int i = 0; i < lSize; i++){
+      maxLength[i] = lengthGroup->maxLength(i);
+      minLength[i] = lengthGroup->minLength(i);
+   }
+
+   return Rcpp::List::create(Rcpp::_("lengthGroup") =
+				   Rcpp::DataFrame::create( Rcpp::_("minLength") = minLength,
+							    Rcpp::_("maxLength") = maxLength)
+				);
+}
+
+// [[Rcpp::export]]
 Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step,
                 Rcpp::IntegerVector area,
 		Rcpp::IntegerVector age, Rcpp::IntegerVector number, Rcpp::NumericVector mean,

@@ -5,6 +5,10 @@ getEcosystemInfo <- function() {
     .Call(`_gadgetr_getEcosystemInfo`)
 }
 
+getStockInfoC <- function(stockNo) {
+    .Call(`_gadgetr_getStockInfoC`, stockNo)
+}
+
 updateRecruitmentC <- function(stockNo, year, step, area, age, number, mean, sdev, alpha, beta, length, meanWeight) {
     .Call(`_gadgetr_updateRecruitmentC`, stockNo, year, step, area, age, number, mean, sdev, alpha, beta, length, meanWeight)
 }

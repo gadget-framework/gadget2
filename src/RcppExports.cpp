@@ -15,6 +15,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getStockInfoC
+Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_getStockInfoC(SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(getStockInfoC(stockNo));
+    return rcpp_result_gen;
+END_RCPP
+}
 // updateRecruitmentC
 Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::IntegerVector age, Rcpp::IntegerVector number, Rcpp::NumericVector mean, Rcpp::NumericVector sdev, Rcpp::NumericVector alpha, Rcpp::NumericVector beta, Rcpp::NumericVector length, Rcpp::NumericVector meanWeight);
 RcppExport SEXP _gadgetr_updateRecruitmentC(SEXP stockNoSEXP, SEXP yearSEXP, SEXP stepSEXP, SEXP areaSEXP, SEXP ageSEXP, SEXP numberSEXP, SEXP meanSEXP, SEXP sdevSEXP, SEXP alphaSEXP, SEXP betaSEXP, SEXP lengthSEXP, SEXP meanWeightSEXP) {
@@ -154,6 +165,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_getEcosystemInfo", (DL_FUNC) &_gadgetr_getEcosystemInfo, 0},
+    {"_gadgetr_getStockInfoC", (DL_FUNC) &_gadgetr_getStockInfoC, 1},
     {"_gadgetr_updateRecruitmentC", (DL_FUNC) &_gadgetr_updateRecruitmentC, 12},
     {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
