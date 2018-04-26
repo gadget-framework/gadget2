@@ -38,13 +38,15 @@ Rcpp::IntegerVector updateAmountStep(Rcpp::IntegerVector fleetNo, Rcpp::IntegerV
 
    int fN = fleetNo[0] - 1;
    int st = step[0];
-   int ar = area[0] - 1;
 
    double val = value[0];
 
    int maxFleet = 0;
    int maxSteps = 0;
    int maxArea = 0;
+
+   AreaClass* Area = EcoSystem->getArea();
+   int ar = Area->getInnerArea(area[0]);
 
    FleetPtrVector& fleetvec = EcoSystem->getModelFleetVector();
 

@@ -268,6 +268,15 @@ public:
     * \brief IU: Sometimes we need the standalone time information
     */
   TimeClass* getTimeInfo() { return TimeInfo; };
+  /**
+    * \brief IU: Sometimes we need the standalone area information
+    */
+  AreaClass* getArea() {return Area;};
+  /**
+    * \brief IU: Sometimes we need the standalone keepr information
+    */
+  Keeper* getKeeper() {return keeper;};
+
 
   /**
     * \brief IU: Decoupling the simulation

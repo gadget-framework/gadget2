@@ -63,6 +63,23 @@ public:
    * \return 1 if renewal data will be added to the model, 0 otherwise
    */
   int isRenewalStepArea(int area, const TimeClass* const TimeInfo);
+  /**
+   * \brief IU: Update renewal
+   * \return 1 if renewal data is added to the model, 0 otherwise
+   */
+  void updateNumberData(int year, int step, int area, int age, double length, int number, double meanWeight,
+    Keeper* const keeper, const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage);
+  /**
+   * \brief IU: Update renewal
+   * \return 1 if renewal data is added to the model, 0 otherwise
+   */
+  void updateNormalParameterData(int year, int step, int area, int age, int number, double mean, double sdev, double alphaVal, double betaVal,
+    Keeper* const keeper, const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage);
+  /**
+   * \brief IU: Read readoption value
+   * \return readoption value
+   */
+   int getReadOption() { return readoption; };
 protected:
   /**
    * \brief This is the function used to read the normal distribution and condition factor for the renewal data

@@ -15,28 +15,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// updateRecruitment
-Rcpp::IntegerVector updateRecruitment(Rcpp::CharacterVector stockName);
-RcppExport SEXP _gadgetr_updateRecruitment(SEXP stockNameSEXP) {
+// updateRecruitmentC
+Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::IntegerVector age, Rcpp::IntegerVector number, Rcpp::NumericVector mean, Rcpp::NumericVector sdev, Rcpp::NumericVector alpha, Rcpp::NumericVector beta, Rcpp::NumericVector length, Rcpp::NumericVector meanWeight);
+RcppExport SEXP _gadgetr_updateRecruitmentC(SEXP stockNoSEXP, SEXP yearSEXP, SEXP stepSEXP, SEXP areaSEXP, SEXP ageSEXP, SEXP numberSEXP, SEXP meanSEXP, SEXP sdevSEXP, SEXP alphaSEXP, SEXP betaSEXP, SEXP lengthSEXP, SEXP meanWeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type stockName(stockNameSEXP);
-    rcpp_result_gen = Rcpp::wrap(updateRecruitment(stockName));
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type year(yearSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type step(stepSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type area(areaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type age(ageSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type number(numberSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type sdev(sdevSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type length(lengthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type meanWeight(meanWeightSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateRecruitmentC(stockNo, year, step, area, age, number, mean, sdev, alpha, beta, length, meanWeight));
     return rcpp_result_gen;
 END_RCPP
 }
-// updateSuitability
-Rcpp::IntegerVector updateSuitability(Rcpp::IntegerVector fleetNo, Rcpp::CharacterVector stockName, Rcpp::IntegerVector len, Rcpp::NumericVector value);
-RcppExport SEXP _gadgetr_updateSuitability(SEXP fleetNoSEXP, SEXP stockNameSEXP, SEXP lenSEXP, SEXP valueSEXP) {
+// updateSuitabilityC
+Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo, Rcpp::IntegerVector len, Rcpp::NumericVector value);
+RcppExport SEXP _gadgetr_updateSuitabilityC(SEXP fleetNoSEXP, SEXP stockNoSEXP, SEXP lenSEXP, SEXP valueSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
-    Rcpp::traits::input_parameter< Rcpp::CharacterVector >::type stockName(stockNameSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type len(lenSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value(valueSEXP);
-    rcpp_result_gen = Rcpp::wrap(updateSuitability(fleetNo, stockName, len, value));
+    rcpp_result_gen = Rcpp::wrap(updateSuitabilityC(fleetNo, stockNo, len, value));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -143,8 +154,8 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_getEcosystemInfo", (DL_FUNC) &_gadgetr_getEcosystemInfo, 0},
-    {"_gadgetr_updateRecruitment", (DL_FUNC) &_gadgetr_updateRecruitment, 1},
-    {"_gadgetr_updateSuitability", (DL_FUNC) &_gadgetr_updateSuitability, 4},
+    {"_gadgetr_updateRecruitmentC", (DL_FUNC) &_gadgetr_updateRecruitmentC, 12},
+    {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
     {"_gadgetr_updateAmountStep", (DL_FUNC) &_gadgetr_updateAmountStep, 4},
     {"_gadgetr_updateAmountYear", (DL_FUNC) &_gadgetr_updateAmountYear, 5},

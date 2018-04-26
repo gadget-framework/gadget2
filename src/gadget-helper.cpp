@@ -35,51 +35,66 @@ Rcpp::List getEcosystemInfo(){
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector updateRecruitment(Rcpp::CharacterVector stockName){
+Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step,
+                Rcpp::IntegerVector area,
+		Rcpp::IntegerVector age, Rcpp::IntegerVector number, Rcpp::NumericVector mean,
+		Rcpp::NumericVector sdev, Rcpp::NumericVector alpha, Rcpp::NumericVector beta,
+		Rcpp::NumericVector length,Rcpp::NumericVector meanWeight){
 
+   int maxage, minage;
+
+   TimeClass* TimeInfo = EcoSystem->getTimeInfo();
+   AreaClass* Area = EcoSystem->getArea(); 
    StockPtrVector stockvec = EcoSystem->getModelStockVector();
+   Keeper* keeper = EcoSystem->getKeeper();
 
-   // Find the stock based on the name
-   int stockNo=-1;
+   Stock *stock = stockvec[stockNo[0]-1];
 
-   for(int i=0; i < stockvec.Size(); i++){
-      const char* stName = stockvec[i]->getName();
-      if(strcmp(stName,(const char*)stockName[0])==0){
-         stockNo = i;
-         break;
-      }
-   }
+   maxage = stock->maxAge();
+   minage = maxage = stock->minAge();
 
-   if(stockNo < 0){
-     std::cout << "No stock found" << std::endl;
-     return Rcpp::IntegerVector(1,55);
-   }
-
-   Stock *stock = stockvec[stockNo];
-   
    RenewalData* renewal = stock->getRenewalData();
 
-   // Important vars:
-   //
-   // renewalTime[i]
-   // renewalArea[i]
-   // renewalAge[i]
-   // renewalDistribution[i]
-   // renewalMult[i]
-   // *CI
+   int readoption = renewal->getReadOption();
+
+#ifdef DEBUG
+   std::cout << "Renewal type: " << readoption << std::endl; 
+
+   std::cout << "print data before" << std::endl;
    std::ofstream ofs;
-   ofs.open ("/tmp/testofs.txt", std::ofstream::out);
+   ofs.open ("/tmp/testofs-before.txt", std::ofstream::out);
 
    renewal->Print(ofs);
    ofs.close();
+#endif
 
+   if(readoption == 0){
+     //Normal condition -- not implemented yet
+   }else if(readoption == 1){
+     //Normal parameter
+     //std::cout << year[0] << step[0] << area[0] << age[0] << number[0] << mean[0] << sdev[0] << alpha[0] << beta[0] << std::endl;
+     renewal->updateNormalParameterData(year[0], step[0], area[0], age[0], number[0], mean[0], sdev[0], alpha[0], beta[0],
+       keeper, TimeInfo, Area, minage, maxage);
+   }else{
+     //Number
+     renewal->updateNumberData(year[0], step[0], area[0], age[0], length[0], number[0], meanWeight[0],
+       keeper, TimeInfo, Area, minage, maxage);
+   }
+
+#ifdef DEBUG
+   std::cout << "print data after" << std::endl;
+   ofs.open ("/tmp/testofs-after.txt", std::ofstream::out);
+
+   renewal->Print(ofs);
+   ofs.close();
+#endif
 
    return Rcpp::IntegerVector(1,0);
 
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector updateSuitability(Rcpp::IntegerVector fleetNo, Rcpp::CharacterVector stockName, Rcpp::IntegerVector len, Rcpp::NumericVector value){
+Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo, Rcpp::IntegerVector len, Rcpp::NumericVector value){
 
    int lenIdx;
  
@@ -89,24 +104,7 @@ Rcpp::IntegerVector updateSuitability(Rcpp::IntegerVector fleetNo, Rcpp::Charact
 
    LengthPredator *predator = fleet->getPredator();
 
-   // Find the suitability for the stockName prey
- 
-   int preyNo=-1;
-
-   for(int i=0; i<predator->numPreys(); i++){
-      const char* preyname = predator->getPreyName(i);
-      if(strcmp(preyname,(const char*)stockName[0])==0){
-         preyNo = i;
-         break;
-      }
-   }
-
-   if(preyNo < 0){
-     std::cout << "No suitable prey found" << std::endl;
-     return Rcpp::IntegerVector(1,55);
-   }
-
-   DoubleMatrix *suit = predator->getSuits(preyNo);
+   DoubleMatrix *suit = predator->getSuits(stockNo[0]-1);
 
 #ifdef DEBUG
    for(int i=0; i<suit->Nrow(); i++){

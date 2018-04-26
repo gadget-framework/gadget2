@@ -5,12 +5,12 @@ getEcosystemInfo <- function() {
     .Call(`_gadgetr_getEcosystemInfo`)
 }
 
-updateRecruitment <- function(stockName) {
-    .Call(`_gadgetr_updateRecruitment`, stockName)
+updateRecruitmentC <- function(stockNo, year, step, area, age, number, mean, sdev, alpha, beta, length, meanWeight) {
+    .Call(`_gadgetr_updateRecruitmentC`, stockNo, year, step, area, age, number, mean, sdev, alpha, beta, length, meanWeight)
 }
 
-updateSuitability <- function(fleetNo, stockName, len, value) {
-    .Call(`_gadgetr_updateSuitability`, fleetNo, stockName, len, value)
+updateSuitabilityC <- function(fleetNo, stockNo, len, value) {
+    .Call(`_gadgetr_updateSuitabilityC`, fleetNo, stockNo, len, value)
 }
 
 wholeSim <- function() {
