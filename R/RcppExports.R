@@ -17,6 +17,10 @@ updateSuitabilityC <- function(fleetNo, stockNo, len, value) {
     .Call(`_gadgetr_updateSuitabilityC`, fleetNo, stockNo, len, value)
 }
 
+printPredatorPrey <- function(fleetNo, stockNo) {
+    .Call(`_gadgetr_printPredatorPrey`, fleetNo, stockNo)
+}
+
 wholeSim <- function() {
     .Call(`_gadgetr_wholeSim`)
 }

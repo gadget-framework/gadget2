@@ -62,6 +62,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// printPredatorPrey
+Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_printPredatorPrey(SEXP fleetNoSEXP, SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(printPredatorPrey(fleetNo, stockNo));
+    return rcpp_result_gen;
+END_RCPP
+}
 // wholeSim
 Rcpp::IntegerVector wholeSim();
 RcppExport SEXP _gadgetr_wholeSim() {
@@ -168,6 +180,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_getStockInfoC", (DL_FUNC) &_gadgetr_getStockInfoC, 1},
     {"_gadgetr_updateRecruitmentC", (DL_FUNC) &_gadgetr_updateRecruitmentC, 12},
     {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},
+    {"_gadgetr_printPredatorPrey", (DL_FUNC) &_gadgetr_printPredatorPrey, 2},
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
     {"_gadgetr_updateAmountStep", (DL_FUNC) &_gadgetr_updateAmountStep, 4},
     {"_gadgetr_updateAmountYear", (DL_FUNC) &_gadgetr_updateAmountYear, 5},
