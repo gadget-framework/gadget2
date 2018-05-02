@@ -25,6 +25,10 @@ printStock <- function(stockNo) {
     .Call(`_gadgetr_printStock`, stockNo)
 }
 
+printSSB <- function(stockNo) {
+    .Call(`_gadgetr_printSSB`, stockNo)
+}
+
 wholeSim <- function() {
     .Call(`_gadgetr_wholeSim`)
 }

@@ -71,6 +71,11 @@ public:
    * \brief This function will reset the spawning data
    */
   void Reset(const TimeClass* const TimeInfo);
+  /**
+   * \brief IU: This will return the spawnNumbers data
+   * \return spawnNumbers
+   */
+  const DoubleMatrixPtrVector* getSpawnNumbers() const { return  &spawnNumbers; };
 protected:
   /**
    * \brief This function will calculate the number of recruits that will be created by the spawning process on the current timestep, for a given age-length cell of the spawning stock

@@ -85,6 +85,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// printSSB
+Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_printSSB(SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(printSSB(stockNo));
+    return rcpp_result_gen;
+END_RCPP
+}
 // wholeSim
 Rcpp::IntegerVector wholeSim();
 RcppExport SEXP _gadgetr_wholeSim() {
@@ -193,6 +204,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},
     {"_gadgetr_printPredatorPrey", (DL_FUNC) &_gadgetr_printPredatorPrey, 2},
     {"_gadgetr_printStock", (DL_FUNC) &_gadgetr_printStock, 1},
+    {"_gadgetr_printSSB", (DL_FUNC) &_gadgetr_printSSB, 1},
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
     {"_gadgetr_updateAmountStep", (DL_FUNC) &_gadgetr_updateAmountStep, 4},
     {"_gadgetr_updateAmountYear", (DL_FUNC) &_gadgetr_updateAmountYear, 5},
