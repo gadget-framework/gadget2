@@ -52,6 +52,10 @@ TimeClass::TimeClass(CommentStream& infile, double maxratio) {
   currentstep = firststep;
   currentsubstep = 1;
   handle.logMessage(LOGMESSAGE, "Read time file - number of timesteps", this->numTotalSteps());
+
+  //IU: Init previous variables
+  prevyear = 0;
+  prevstep = 0;
 }
 
 void TimeClass::IncrementTime() {
@@ -61,6 +65,11 @@ void TimeClass::IncrementTime() {
 
   } else {
     currentsubstep = 1;
+
+    //IU: Increment previous variables
+    prevyear = currentyear;
+    prevstep = currentstep;
+
     if (currentstep == numtimesteps) {
       currentstep = 1;
       currentyear++;
@@ -93,6 +102,11 @@ int TimeClass::didStepSizeChange() const {
 void TimeClass::Reset() {
   currentyear = firstyear;
   currentstep = firststep;
+
+  //IU: Init previous variables
+  prevyear = 0;
+  prevstep = 0;
+
   currentsubstep = 1;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "\nReset time in the simulation to timestep", this->getTime());

@@ -199,6 +199,16 @@ public:
    * \return maximum ratio of the stock that can be consumed on the current substep
    */
   double getMaxRatioConsumed() const;
+ /**
+   * \brief IU: This will return the previous step of the model simulation
+   * \return prevstep
+   */
+  int getPrevStep() const { return prevstep; };
+  /**
+   * \brief IU: This will return the previous year of the model simulation
+   * \return prevyear
+   */
+  int getPrevYear() const { return prevyear; };
 protected:
   /**
    * \brief This is the current step of the model simulation
@@ -250,6 +260,14 @@ protected:
    * \brief This is the current substep of the model simulation
    */
   int currentsubstep;
+  /**
+   * \brief IU: This is the previous year in the model simulation
+   */
+  int prevyear;
+  /**
+   * \brief IU: This is the previous step in the model simulation
+   */
+  int prevstep;
 };
 
 #endif
