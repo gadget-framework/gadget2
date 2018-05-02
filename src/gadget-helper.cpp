@@ -284,14 +284,13 @@ Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::Integer
   for (a = 0; a < areas.Size(); a++) {
     for (age = consume[a].minAge(); age <= consume[a].maxAge(); age++) {
       for (len = consume[a].minLength(age); len < consume[a].maxLength(age); len++) {
-        cout << setw(lowwidth) << TimeInfo->getYear() << sep
-          << setw(lowwidth) << TimeInfo->getStep() << sep
+        cout << setw(lowwidth) << TimeInfo->getPrevYear() << sep
+          << setw(lowwidth) << TimeInfo->getPrevStep() << sep
           << setw(printwidth) << Area->getModelArea(a) << sep
           << setw(printwidth) << stock->minAge() + age << sep
           << setw(printwidth) << prey->getLengthGroupDiv()->minLength(len) << sep;
-
-        Rcpp::NumericVector v = Rcpp::NumericVector::create(TimeInfo->getYear(), TimeInfo->getStep(),
-            Area->getModelArea(a), stock->minAge() + age,
+        Rcpp::NumericVector v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+            TimeInfo->getPrevStep(), Area->getModelArea(a), stock->minAge() + age,
             prey->getLengthGroupDiv()->minLength(len) );
 
         Rcpp::NumericVector w;
