@@ -21,6 +21,10 @@ printPredatorPrey <- function(fleetNo, stockNo) {
     .Call(`_gadgetr_printPredatorPrey`, fleetNo, stockNo)
 }
 
+printStock <- function(stockNo) {
+    .Call(`_gadgetr_printStock`, stockNo)
+}
+
 wholeSim <- function() {
     .Call(`_gadgetr_wholeSim`)
 }

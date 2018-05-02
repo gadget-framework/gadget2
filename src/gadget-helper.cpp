@@ -339,3 +339,80 @@ Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::Integer
 
   return mout;
 }
+
+// [[Rcpp::export]]
+Rcpp::NumericMatrix printStock(Rcpp::IntegerVector stockNo){
+
+   int j, age, len;
+
+   const AgeBandMatrix* alptr;
+
+   TimeClass* TimeInfo = EcoSystem->getTimeInfo();
+
+   AreaClass* Area = EcoSystem->getArea();
+   IntVector areas = Area->getAllModelAreas();
+
+   StockPtrVector stockvec = EcoSystem->getModelStockVector();
+   Stock *stock = stockvec[stockNo[0]-1];
+
+   int width = 0;
+   int lowwidth = 0;
+   int precision = 4;
+
+   Rcpp::DataFrame df;
+
+   for (j = 0; j < areas.Size(); j++) {
+     int a = Area->getInnerArea(areas[j]);
+     alptr = &stock->getCurrentALK(a);
+     for (age = alptr->minAge(); age <= alptr->maxAge(); age++) {
+       for (len = alptr->minLength(age); len < alptr->maxLength(age); len++) {
+         cout << setw(lowwidth) << TimeInfo->getPrevYear() << sep
+           << setw(lowwidth) << TimeInfo->getPrevStep() << sep
+           << setw(lowwidth) << Area->getModelArea(a) << sep << setw(lowwidth)
+           << age << sep << setw(lowwidth)
+           << stock->getLengthGroupDiv()->minLength(len) << sep;
+
+         Rcpp::NumericVector v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+            TimeInfo->getPrevStep(), Area->getModelArea(a), age,
+            stock->getLengthGroupDiv()->minLength(len));
+         Rcpp::NumericVector w;
+
+         //JMB crude filter to remove the 'silly' values from the output
+         if (((*alptr)[age][len].N < rathersmall) || ((*alptr)[age][len].W < 0.0)){
+           cout << setw(width) << 0 << sep << setw(width) << 0 << endl;
+           w = Rcpp::NumericVector::create(0, 0);
+         }else{
+           cout << setprecision(precision) << setw(width) << (*alptr)[age][len].N << sep
+             << setprecision(precision) << setw(width) << (*alptr)[age][len].W << endl;
+           w = Rcpp::NumericVector::create((*alptr)[age][len].N, (*alptr)[age][len].W);
+         }
+
+         // Do: z <- c(v,w)
+         Rcpp::NumericVector z(v.size() + w.size());
+
+         std::copy(v.begin(), v.end(), z.begin());
+         std::copy(w.begin(), w.end(), z.begin() + v.size());
+
+         // Append at the end of the DataFrame
+         df.insert(df.end(), z);
+       }
+     }
+  }
+
+  // Give names to the columns
+  Rcpp::CharacterVector namevec = Rcpp::CharacterVector::create("year", "step",
+     "area", "age", "length", "number", "meanWeights");
+
+  // Convert to matrix so that we can transpose it (nrows = 7)
+  int dfsize = df.size();
+  Rcpp::NumericMatrix mattemp(7, dfsize);
+  for ( j = 0; j < dfsize; j++ ) {
+      mattemp(Rcpp::_, j) = Rcpp::NumericVector(df[j]);
+  }
+
+  Rcpp::rownames(mattemp) = namevec;
+
+  Rcpp::NumericMatrix mout = Rcpp::transpose(mattemp);
+
+  return mout;
+}
