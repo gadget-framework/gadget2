@@ -348,7 +348,7 @@ public:
    * \brief IU: This will return the spawn data object
    * \return spawner
    */
-  const SpawnData* getSpawnData() const { return spawner; };
+  SpawnData* getSpawnData() { return spawner; };
 protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store information about the stock population

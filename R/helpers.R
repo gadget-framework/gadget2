@@ -74,4 +74,3 @@ updateAmount <- function(fleetName, year, step, area, value){
 
 
 }
-

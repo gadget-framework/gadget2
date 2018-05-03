@@ -8,7 +8,7 @@
 extern Ecosystem* EcoSystem;
 
 // [[Rcpp::export]]
-Rcpp::List getEcosystemInfo(){
+Rcpp::List getEcosystemInfo() {
 
    FleetPtrVector& fleetvec = EcoSystem->getModelFleetVector();
 
@@ -524,4 +524,65 @@ Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo){
   Rcpp::NumericMatrix mout = Rcpp::transpose(mattemp);
 
   return mout;
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo){
+
+   int j, age, len;
+   int functionnumber, paramsize;
+
+   const AgeBandMatrix* alptr;
+
+   TimeClass* TimeInfo = EcoSystem->getTimeInfo();
+
+   AreaClass* Area = EcoSystem->getArea();
+   IntVector areas = Area->getAllModelAreas();
+
+   StockPtrVector stockvec = EcoSystem->getModelStockVector();
+   Stock *stock = stockvec[stockNo[0]-1];
+
+   if(!stock->getSpawnData()){
+	   return Rcpp::IntegerVector(1,55);
+   }
+
+   ModelVariableVector* spawnparameters = stock->getSpawnData()->getSpawnParameters();
+   const char* functionname = stock->getSpawnData()->getFunctionName();
+
+   if (strcasecmp(functionname, "simplessb") == 0) {
+     functionnumber = 1;
+     paramsize = 1;
+   } else if (strcasecmp(functionname, "ricker") == 0) {
+     functionnumber = 2;
+     paramsize = 2;
+   } else if (strcasecmp(functionname, "bevertonholt") == 0) {
+     functionnumber = 3;
+     paramsize = 2;
+   } else if (strcasecmp(functionname, "fecundity") == 0) {
+     functionnumber = 4;
+     paramsize = 5;
+   } else if (strcasecmp(functionname, "baleen") == 0) {
+     functionnumber = 5;
+     paramsize = 4;
+   } else if (strcasecmp(functionname, "hockeystick") == 0) {
+     functionnumber = 6;
+     paramsize = 2;
+   } else {
+     std::cout << "unrecognised recruitment function " << functionname << std::endl;
+   }
+
+   cout << functionname << " " << functionnumber << endl;
+   for (j = 0 ; j < paramsize ; j++)
+      cout << (*spawnparameters)[j] << " ";
+   cout << endl;
+
+   (*spawnparameters)[0].setValue(4);
+   (*spawnparameters)[1].setValue(10);
+
+   cout << functionname << " " << functionnumber << endl;
+   for (j = 0 ; j < paramsize ; j++)
+      cout << (*spawnparameters)[j] << " ";
+   cout << endl;
+
+   return Rcpp::IntegerVector(1,0);
 }

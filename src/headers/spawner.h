@@ -76,6 +76,16 @@ public:
    * \return spawnNumbers
    */
   const DoubleMatrixPtrVector* getSpawnNumbers() const { return  &spawnNumbers; };
+  /**
+   * \brief IU: This will return the spawnParameters (recruitment function parameters)
+   * \return spawnParameters
+   */
+  ModelVariableVector* getSpawnParameters() { return  &spawnParameters; };
+  /**
+   * \brief IU: This will return the functionname (recruitment function name)
+   * \return functionname
+   */
+  const char* getFunctionName() const { return  functionname; };
 protected:
   /**
    * \brief This function will calculate the number of recruits that will be created by the spawning process on the current timestep, for a given age-length cell of the spawning stock
