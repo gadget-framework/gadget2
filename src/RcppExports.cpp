@@ -26,9 +26,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// updateRecruitmentC
-Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::IntegerVector age, Rcpp::IntegerVector number, Rcpp::NumericVector mean, Rcpp::NumericVector sdev, Rcpp::NumericVector alpha, Rcpp::NumericVector beta, Rcpp::NumericVector length, Rcpp::NumericVector meanWeight);
-RcppExport SEXP _gadgetr_updateRecruitmentC(SEXP stockNoSEXP, SEXP yearSEXP, SEXP stepSEXP, SEXP areaSEXP, SEXP ageSEXP, SEXP numberSEXP, SEXP meanSEXP, SEXP sdevSEXP, SEXP alphaSEXP, SEXP betaSEXP, SEXP lengthSEXP, SEXP meanWeightSEXP) {
+// updateRenewalC
+Rcpp::IntegerVector updateRenewalC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::IntegerVector age, Rcpp::IntegerVector number, Rcpp::NumericVector mean, Rcpp::NumericVector sdev, Rcpp::NumericVector alpha, Rcpp::NumericVector beta, Rcpp::NumericVector length, Rcpp::NumericVector meanWeight);
+RcppExport SEXP _gadgetr_updateRenewalC(SEXP stockNoSEXP, SEXP yearSEXP, SEXP stepSEXP, SEXP areaSEXP, SEXP ageSEXP, SEXP numberSEXP, SEXP meanSEXP, SEXP sdevSEXP, SEXP alphaSEXP, SEXP betaSEXP, SEXP lengthSEXP, SEXP meanWeightSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -44,7 +44,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type beta(betaSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type length(lengthSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type meanWeight(meanWeightSEXP);
-    rcpp_result_gen = Rcpp::wrap(updateRecruitmentC(stockNo, year, step, area, age, number, mean, sdev, alpha, beta, length, meanWeight));
+    rcpp_result_gen = Rcpp::wrap(updateRenewalC(stockNo, year, step, area, age, number, mean, sdev, alpha, beta, length, meanWeight));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -200,7 +200,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_getEcosystemInfo", (DL_FUNC) &_gadgetr_getEcosystemInfo, 0},
     {"_gadgetr_getStockInfoC", (DL_FUNC) &_gadgetr_getStockInfoC, 1},
-    {"_gadgetr_updateRecruitmentC", (DL_FUNC) &_gadgetr_updateRecruitmentC, 12},
+    {"_gadgetr_updateRenewalC", (DL_FUNC) &_gadgetr_updateRenewalC, 12},
     {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},
     {"_gadgetr_printPredatorPrey", (DL_FUNC) &_gadgetr_printPredatorPrey, 2},
     {"_gadgetr_printStock", (DL_FUNC) &_gadgetr_printStock, 1},

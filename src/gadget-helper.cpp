@@ -61,7 +61,7 @@ Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo){
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step,
+Rcpp::IntegerVector updateRenewalC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step,
                 Rcpp::IntegerVector area,
 		Rcpp::IntegerVector age, Rcpp::IntegerVector number, Rcpp::NumericVector mean,
 		Rcpp::NumericVector sdev, Rcpp::NumericVector alpha, Rcpp::NumericVector beta,
@@ -80,6 +80,12 @@ Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::Intege
    minage = maxage = stock->minAge();
 
    RenewalData* renewal = stock->getRenewalData();
+
+   if(!renewal){
+     std::cout << "This stock doesn't renew" << std::endl;
+     return Rcpp::IntegerVector(1,55);
+   }
+
 
    int readoption = renewal->getReadOption();
 
@@ -115,8 +121,7 @@ Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::Intege
    ofs.close();
 #endif
 
-   return Rcpp::IntegerVector(1,0);
-
+   return Rcpp::IntegerVector(1, 0);
 }
 
 // [[Rcpp::export]]

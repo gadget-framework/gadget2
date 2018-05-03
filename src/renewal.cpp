@@ -566,20 +566,23 @@ void RenewalData::updateNormalParameterData (int year, int step, int area, int a
       renewalArea.resize(1, Area->getInnerArea(area));
       renewalAge.resize(1, age);
 
+      id = renewalTime.Size() - 1;
+
       renewalMult.resize(1, keeper);
       meanLength.resize(1, keeper);
       sdevLength.resize(1, keeper);
       alpha.resize(1, keeper);
       beta.resize(1, keeper);
       renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
-    }else{
-      renewalMult[id] = number;
-      meanLength[id] = mean;
-      sdevLength[id] = sdev;
-      alpha[id] = alphaVal;
-      beta[id] = betaVal;
     }
+
+    renewalMult[id] = number;
+    meanLength[id] = mean;
+    sdevLength[id] = sdev;
+    alpha[id] = alphaVal;
+    beta[id] = betaVal;
   }
+  // Make sure to reset to update the renewalDistribution
   Reset();
 }
 
@@ -649,22 +652,22 @@ void RenewalData::updateNumberData(int year, int step, int area, int age, double
     if( renewalNumber.Size() < 1)
       renewalNumber.resize(new FormulaMatrix(maxage - minage + 1, numlen, 0.0));
 
-std::cout << renewalDistribution[id][age][lengthid].N << std::endl;
+//std::cout << renewalDistribution[id][age][lengthid].N << std::endl;
     renewalDistribution[id][age][lengthid].N = 0.0;
-std::cout << renewalDistribution[id][age][lengthid].N << std::endl;
+//std::cout << renewalDistribution[id][age][lengthid].N << std::endl;
 
-std::cout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
+//std::cout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
     (*renewalNumber[id])[age - minage][lengthid] = number;
-std::cout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
+//std::cout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
 
-std::cout << renewalDistribution[id][age][lengthid].W << std::endl;
+//std::cout << renewalDistribution[id][age][lengthid].W << std::endl;
     renewalDistribution[id][age][lengthid].W = meanWeight;
-std::cout << renewalDistribution[id][age][lengthid].W << std::endl;
+//std::cout << renewalDistribution[id][age][lengthid].W << std::endl;
 
   }
 
   for (i = 0; i < renewalNumber.Size(); i++)
     (*renewalNumber[i]).Inform(keeper);
-  // Make sure to reset
+  // Make sure to reset to update the renewalDistribution
   Reset();
 }

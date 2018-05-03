@@ -21,7 +21,7 @@ getLenGrpIdx <- function(stockNo, len){
 	return(idx)
 }
 
-updateRecruitment <- function(stockName, year, step, area, age, number, mean,
+updateRenewal <- function(stockName, year, step, area, age, number, mean,
                 sdev=NA, alpha=NA, beta=NA,
                 length=NA, meanWeight=NA){
 
@@ -33,7 +33,7 @@ updateRecruitment <- function(stockName, year, step, area, age, number, mean,
 		return(1)
 	}
 
-	return (updateRecruitmentC(stockNo, year, step, area, age, number, mean,
+	return (updateRenewalC(stockNo, year, step, area, age, number, mean,
                 sdev, alpha, beta,
                 length, meanWeight))
 
