@@ -652,17 +652,17 @@ void RenewalData::updateNumberData(int year, int step, int area, int age, double
     if( renewalNumber.Size() < 1)
       renewalNumber.resize(new FormulaMatrix(maxage - minage + 1, numlen, 0.0));
 
-//std::cout << renewalDistribution[id][age][lengthid].N << std::endl;
+//Rcpp::Rcout << renewalDistribution[id][age][lengthid].N << std::endl;
     renewalDistribution[id][age][lengthid].N = 0.0;
-//std::cout << renewalDistribution[id][age][lengthid].N << std::endl;
+//Rcpp::Rcout << renewalDistribution[id][age][lengthid].N << std::endl;
 
-//std::cout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
+//Rcpp::Rcout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
     (*renewalNumber[id])[age - minage][lengthid] = number;
-//std::cout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
+//Rcpp::Rcout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
 
-//std::cout << renewalDistribution[id][age][lengthid].W << std::endl;
+//Rcpp::Rcout << renewalDistribution[id][age][lengthid].W << std::endl;
     renewalDistribution[id][age][lengthid].W = meanWeight;
-//std::cout << renewalDistribution[id][age][lengthid].W << std::endl;
+//Rcpp::Rcout << renewalDistribution[id][age][lengthid].W << std::endl;
 
   }
 

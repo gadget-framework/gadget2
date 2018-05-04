@@ -59,16 +59,16 @@ Rcpp::IntegerVector updateAmountStep(Rcpp::IntegerVector fleetNo, Rcpp::IntegerV
 	
    FormulaMatrix& amount = fleet->getAmount();
 
-   std::cout << "Change fleet \"" << fleet->getName() << "\" - Step: " << st << " - Area: " << ar + 1 << " with " << val << std::endl;
+   Rcpp::Rcout << "Change fleet \"" << fleet->getName() << "\" - Step: " << st << " - Area: " << ar + 1 << " with " << val << std::endl;
 
-   //std::cout << "Row Size " << amount.Nrow() << std::endl; 
+   //Rcpp::Rcout << "Row Size " << amount.Nrow() << std::endl; 
 
    maxSteps = amount.Nrow();
 
    if(st < 1 || st > maxSteps - 1)
            return Rcpp::IntegerVector(1, 55);
 
-   //std::cout << "Column size for " << st << " " << amount.Ncol(st) << std::endl;
+   //Rcpp::Rcout << "Column size for " << st << " " << amount.Ncol(st) << std::endl;
 
    maxArea = amount.Ncol(st);
 
@@ -77,11 +77,11 @@ Rcpp::IntegerVector updateAmountStep(Rcpp::IntegerVector fleetNo, Rcpp::IntegerV
 
    Formula& vec = amount[st][ar];
 
-   std::cout << "Value before " << (double) vec << std::endl;
+   Rcpp::Rcout << "Value before " << (double) vec << std::endl;
 
    vec.setValue(val);
 
-   std::cout << "Value after " << (double) vec << std::endl;
+   Rcpp::Rcout << "Value after " << (double) vec << std::endl;
 
    return  Rcpp::IntegerVector(1, 0);
 }
@@ -101,7 +101,7 @@ Rcpp::IntegerVector updateAmountYear(Rcpp::IntegerVector fleetNo, Rcpp::IntegerV
    else
       return Rcpp::IntegerVector(1, 55);
 
-   std::cout << "Step is" << timeid << std::endl;
+   Rcpp::Rcout << "Step is" << timeid << std::endl;
 
    Rcpp::IntegerVector timeidvec(1,timeid);
 

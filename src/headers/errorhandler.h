@@ -47,7 +47,7 @@ public:
    */
   int checkLogFile() { return uselog; };
   /**
-   * \brief This function will log information about the finish of the current model run to std::cout and a log file if one exists
+   * \brief This function will log information about the finish of the current model run to Rcpp::Rcout and a log file if one exists
    */
   void logFinish();
   /**

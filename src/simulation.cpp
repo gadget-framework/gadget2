@@ -258,7 +258,7 @@ int Ecosystem::stepSimulation(int print) {
     TimeInfo->IncrementTime();
     return 0;
   }else{
-    //std::cout << "At the end of time..." << std::endl;
+    //Rcpp::Rcout << "At the end of time..." << std::endl;
     return 1;
   }
 }

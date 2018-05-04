@@ -35,8 +35,8 @@ void SlaveCommunication::printErrorMsg(const char* errorMsg)
   	msg = new char[strlen(errorMsg) + 1];
   	strcpy(msg, errorMsg);
 	//Prófum þetta hér, var notað pvm_perror sem skrifar villuna sem síðasta pvm kallið olli.
-	std::cout << msg << "\n";
-  	cerr << msg;
+	Rcpp::Rcout << msg << "\n";
+  	Rcpp::Rcerr << msg;
   	delete[] msg;
 }
 
@@ -78,13 +78,13 @@ int SlaveCommunication::startNetCommunication()
 			MPI_Recv(&numVar, 1, MPI_INT, 0, MPI_ANY_TAG, parentcomm, &status);
 	    	if (numVar <= 0) 
 			{
-	    		cerr << "Error in slavecommunication - number of variables received from master is less than zero\n";
+	    		Rcpp::Rcerr << "Error in slavecommunication - number of variables received from master is less than zero\n";
 	    		return !OK;
 	    	}
 			MPI_Recv(&myID, 1, MPI_INT, 0, MPI_ANY_TAG, parentcomm, &status);
 	    	if (myID < 0) 
 			{
-	    		cerr << "Error in slavecommunication - received invalid id of " << myID << endl;
+	    		Rcpp::Rcerr << "Error in slavecommunication - received invalid id of " << myID << endl;
 	    		return !OK;
 	    	}
 	    	netDataVar = new NetDataVariables(numVar);
@@ -93,13 +93,13 @@ int SlaveCommunication::startNetCommunication()
 	    }
 		else
 		{
-			cerr << "Error in slavecommunication - received unrecognised tag of type " << status.MPI_TAG << endl;
+			Rcpp::Rcerr << "Error in slavecommunication - received unrecognised tag of type " << status.MPI_TAG << endl;
 	    	return !OK;
 		}
 	//}
 	//else
 	//{
-	//	cerr << "Error in slavecommunication - non-blocking-probe fail" << endl;
+	//	Rcpp::Rcerr << "Error in slavecommunication - non-blocking-probe fail" << endl;
     //	return !OK;
 	//}
 }
@@ -125,7 +125,7 @@ int SlaveCommunication::sendToMaster(double res)
   	} 
 	else 
 	{
-		//cout << "Slave að skrifa result: " << res << "\n";
+		//Rcpp::Rcout << "Slave að skrifa result: " << res << "\n";
     	NetDataResult* sendData = new NetDataResult;
     	sendData->who = myID;
     	sendData->result = res;
@@ -149,7 +149,7 @@ int SlaveCommunication::send(NetDataResult* sendData)
 {
   	int info;
 	MPI_Comm parentcomm;
-	//cout << "Slave að skrifa result: " << sendData->result << "\n";
+	//Rcpp::Rcout << "Slave að skrifa result: " << sendData->result << "\n";
 	MPI_Comm_get_parent(&parentcomm);
 	MPI_Send(&sendData->tag,1,MPI_INT, 0, pvmConst->getMasterReceiveDataTag(),parentcomm);
 	MPI_Send(&sendData->result,1,MPI_DOUBLE, 0, pvmConst->getMasterReceiveDataTag(),parentcomm);
@@ -218,7 +218,7 @@ int SlaveCommunication::receiveFromMaster()
     } 
 	else 
 	{
-    	cerr << "Error in slavecommunication - received unrecognised tag of type " << type << endl;
+    	Rcpp::Rcerr << "Error in slavecommunication - received unrecognised tag of type " << type << endl;
     	return !OK;
     }
   	

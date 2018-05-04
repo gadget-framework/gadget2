@@ -82,7 +82,7 @@ Rcpp::IntegerVector updateRenewalC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVec
    RenewalData* renewal = stock->getRenewalData();
 
    if(!renewal){
-     std::cout << "This stock doesn't renew" << std::endl;
+     Rcpp::Rcout << "This stock doesn't renew" << std::endl;
      return Rcpp::IntegerVector(1,55);
    }
 
@@ -90,9 +90,9 @@ Rcpp::IntegerVector updateRenewalC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVec
    int readoption = renewal->getReadOption();
 
 #ifdef DEBUG
-   std::cout << "Renewal type: " << readoption << std::endl;
+   Rcpp::Rcout << "Renewal type: " << readoption << std::endl;
 
-   std::cout << "print data before" << std::endl;
+   Rcpp::Rcout << "print data before" << std::endl;
    std::ofstream ofs;
    ofs.open ("/tmp/testofs-before.txt", std::ofstream::out);
 
@@ -104,7 +104,7 @@ Rcpp::IntegerVector updateRenewalC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVec
      //Normal condition -- not implemented yet
    }else if(readoption == 1){
      //Normal parameter
-     //std::cout << year[0] << step[0] << area[0] << age[0] << number[0] << mean[0] << sdev[0] << alpha[0] << beta[0] << std::endl;
+     //Rcpp::Rcout << year[0] << step[0] << area[0] << age[0] << number[0] << mean[0] << sdev[0] << alpha[0] << beta[0] << std::endl;
      renewal->updateNormalParameterData(year[0], step[0], area[0], age[0], number[0], mean[0], sdev[0], alpha[0], beta[0],
        keeper, TimeInfo, Area, minage, maxage);
    }else{
@@ -114,7 +114,7 @@ Rcpp::IntegerVector updateRenewalC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVec
    }
 
 #ifdef DEBUG
-   std::cout << "print data after" << std::endl;
+   Rcpp::Rcout << "print data after" << std::endl;
    ofs.open ("/tmp/testofs-after.txt", std::ofstream::out);
 
    renewal->Print(ofs);
@@ -140,14 +140,14 @@ Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::Intege
 #ifdef DEBUG
    for(int i=0; i<suit->Nrow(); i++){
       for(int j=0; j<suit->Ncol(i); j++){
-         std::cout << (*suit)[i][j] << " ";
+         Rcpp::Rcout << (*suit)[i][j] << " ";
       }
-      std::cout << std::endl;
+      Rcpp::Rcout << std::endl;
    }
 #endif
 
    if(suit->Nrow() == 0){
-     std::cout << "No suitability vector found" << std::endl;
+     Rcpp::Rcout << "No suitability vector found" << std::endl;
      return Rcpp::IntegerVector(1,55);
    }
 
@@ -156,20 +156,20 @@ Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::Intege
    lenIdx = lengthGroup->numLengthGroup(len[0]);
 
    if(lenIdx == -1){
-     std::cout << "Invalid length" << std::endl;
+     Rcpp::Rcout << "Invalid length" << std::endl;
    }
 
 #ifdef DEBUG
    DoubleVector suitVal = (*suit)[0];
 
-   std::cout << "Bef: " << suitVal[lenIdx] << " " << (*suit)[0][lenIdx] << std::endl;
+   Rcpp::Rcout << "Bef: " << suitVal[lenIdx] << " " << (*suit)[0][lenIdx] << std::endl;
 #endif
 
    //Since predator length for fleet will always be one, pick only the first element
    (*suit)[0].set(lenIdx, value[0]);
 
 #ifdef DEBUG
-   std::cout << "Aft: " << suitVal[lenIdx] << " " << (*suit)[0][lenIdx] << std::endl;
+   Rcpp::Rcout << "Aft: " << suitVal[lenIdx] << " " << (*suit)[0][lenIdx] << std::endl;
 #endif
 
    return Rcpp::IntegerVector(1,0);
@@ -207,11 +207,11 @@ Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::Integer
    CI = new ConversionIndex(prey->getLengthGroupDiv(), prey->getLengthGroupDiv());
 
    if (CI->Error())
-     std::cout << "Error in predatorpreyaggregator - error when checking length structure" << std::endl;
+     Rcpp::Rcout << "Error in predatorpreyaggregator - error when checking length structure" << std::endl;
 
    //check that the prey is a stock
    if (prey->getType() == LENGTHPREY)
-     std::cout << "Error in predatorpreyaggregator - cannot aggregate prey" << prey->getName() << std::endl;
+     Rcpp::Rcout << "Error in predatorpreyaggregator - cannot aggregate prey" << prey->getName() << std::endl;
 
    for (j = 0; j < areas.Size(); j++){
       int area = Area->getInnerArea(areas[j]);
@@ -293,7 +293,7 @@ Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::Integer
     for (age = consume[a].minAge(); age <= consume[a].maxAge(); age++) {
       for (len = consume[a].minLength(age); len < consume[a].maxLength(age); len++) {
 #ifdef DEBUG
-        cout << setw(lowwidth) << TimeInfo->getPrevYear() << sep
+        Rcpp::Rcout << setw(lowwidth) << TimeInfo->getPrevYear() << sep
           << setw(lowwidth) << TimeInfo->getPrevStep() << sep
           << setw(printwidth) << Area->getModelArea(a) << sep
           << setw(printwidth) << stock->minAge() + age << sep
@@ -307,12 +307,12 @@ Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::Integer
         // JMB crude filter to remove the 'silly' values from the output
         if ((consume[a][age][len].N < rathersmall) || (consume[a][age][len].W < 0.0)){
 #ifdef DEBUG
-          cout << setw(width) << 0 << sep << setw(width) << 0 << sep << setw(width) << 0 << endl;
+          Rcpp::Rcout << setw(width) << 0 << sep << setw(width) << 0 << sep << setw(width) << 0 << endl;
 #endif
           w = Rcpp::NumericVector::create(0, 0, 0);
         }else{
 #ifdef DEBUG
-          cout << setprecision(precision) << setw(width) << consume[a][age][len].N
+          Rcpp::Rcout << setprecision(precision) << setw(width) << consume[a][age][len].N
             << sep << setprecision(precision) << setw(width)
             << consume[a][age][len].N * consume[a][age][len].W
             << sep << setprecision(precision) << setw(width)
@@ -382,7 +382,7 @@ Rcpp::NumericMatrix printStock(Rcpp::IntegerVector stockNo){
      for (age = alptr->minAge(); age <= alptr->maxAge(); age++) {
        for (len = alptr->minLength(age); len < alptr->maxLength(age); len++) {
 #ifdef DEBUG
-         cout << setw(lowwidth) << TimeInfo->getPrevYear() << sep
+         Rcpp::Rcout << setw(lowwidth) << TimeInfo->getPrevYear() << sep
            << setw(lowwidth) << TimeInfo->getPrevStep() << sep
            << setw(lowwidth) << Area->getModelArea(a) << sep << setw(lowwidth)
            << age << sep << setw(lowwidth)
@@ -396,12 +396,12 @@ Rcpp::NumericMatrix printStock(Rcpp::IntegerVector stockNo){
          //JMB crude filter to remove the 'silly' values from the output
          if (((*alptr)[age][len].N < rathersmall) || ((*alptr)[age][len].W < 0.0)){
 #ifdef DEBUG
-           cout << setw(width) << 0 << sep << setw(width) << 0 << endl;
+           Rcpp::Rcout << setw(width) << 0 << sep << setw(width) << 0 << endl;
 #endif
            w = Rcpp::NumericVector::create(0, 0);
          }else{
 #ifdef DEBUG
-           cout << setprecision(precision) << setw(width) << (*alptr)[age][len].N << sep
+           Rcpp::Rcout << setprecision(precision) << setw(width) << (*alptr)[age][len].N << sep
              << setprecision(precision) << setw(width) << (*alptr)[age][len].W << endl;
 #endif
            w = Rcpp::NumericVector::create((*alptr)[age][len].N, (*alptr)[age][len].W);
@@ -473,7 +473,7 @@ Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo){
      for (age = alptr->minAge(); age <= alptr->maxAge(); age++) {
        for (len = alptr->minLength(age); len < alptr->maxLength(age); len++) {
 #ifdef DEBUG
-         cout << setw(lowwidth) << TimeInfo->getPrevYear() << sep
+         Rcpp::Rcout << setw(lowwidth) << TimeInfo->getPrevYear() << sep
            << setw(lowwidth) << TimeInfo->getPrevStep() << sep
            << setw(lowwidth) << Area->getModelArea(a) << sep << setw(lowwidth)
            << age << sep << setw(lowwidth)
@@ -486,12 +486,12 @@ Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo){
 
          if (((*(*spawnNumbers)[a])[age][len]  < rathersmall) || ((*(*spawnNumbers)[a])[age][len]< 0.0)){
 #ifdef DEBUG
-           cout << setw(width) << 0 << endl;
+           Rcpp::Rcout << setw(width) << 0 << endl;
 #endif
            w = Rcpp::NumericVector::create(0);
          }else{
 #ifdef DEBUG
-           cout << setprecision(precision) << setw(width) <<  (*(*spawnNumbers)[a])[age][len] << endl;
+           Rcpp::Rcout << setprecision(precision) << setw(width) <<  (*(*spawnNumbers)[a])[age][len] << endl;
 #endif
            w = Rcpp::NumericVector::create((*(*spawnNumbers)[a])[age][len]);
          }
@@ -565,32 +565,32 @@ Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo, Rcpp::Numer
      functionnumber = 6;
      paramsize = 2;
    } else {
-     std::cout << "unrecognised recruitment function " << functionname << std::endl;
+     Rcpp::Rcout << "unrecognised recruitment function " << functionname << std::endl;
      return Rcpp::IntegerVector(1,55);
    }
 
    // Check the length of user-defined parameters
    if(recruitParams.length() != paramsize){
-      std::cout << "Recruitment function " << functionname << " requires "
+      Rcpp::Rcout << "Recruitment function " << functionname << " requires "
          << paramsize << " parameters!" << std::endl;
       return Rcpp::IntegerVector(1,55);
    }
 
 #ifdef DEBUG
-   cout << functionname << " " << functionnumber << endl;
+   Rcpp::Rcout << functionname << " " << functionnumber << endl;
    for (j = 0 ; j < paramsize ; j++)
-      cout << (*spawnparameters)[j] << " ";
-   cout << endl;
+      Rcpp::Rcout << (*spawnparameters)[j] << " ";
+   Rcpp::Rcout << endl;
 #endif
 
    for (j = 0 ; j < paramsize ; j++)
       (*spawnparameters)[j].setValue(recruitParams[j]);
 
 #ifdef DEBUG
-   cout << functionname << " " << functionnumber << endl;
+   Rcpp::Rcout << functionname << " " << functionnumber << endl;
    for (j = 0 ; j < paramsize ; j++)
-      cout << (*spawnparameters)[j] << " ";
-   cout << endl;
+      Rcpp::Rcout << (*spawnparameters)[j] << " ";
+   Rcpp::Rcout << endl;
 #endif
 
    return Rcpp::IntegerVector(1,0);
