@@ -97,13 +97,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // updateRecruitementC
-Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo);
-RcppExport SEXP _gadgetr_updateRecruitementC(SEXP stockNoSEXP) {
+Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo, Rcpp::NumericVector recruitParams);
+RcppExport SEXP _gadgetr_updateRecruitementC(SEXP stockNoSEXP, SEXP recruitParamsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
-    rcpp_result_gen = Rcpp::wrap(updateRecruitementC(stockNo));
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type recruitParams(recruitParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateRecruitementC(stockNo, recruitParams));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -216,7 +217,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_printPredatorPrey", (DL_FUNC) &_gadgetr_printPredatorPrey, 2},
     {"_gadgetr_printStock", (DL_FUNC) &_gadgetr_printStock, 1},
     {"_gadgetr_printSSB", (DL_FUNC) &_gadgetr_printSSB, 1},
-    {"_gadgetr_updateRecruitementC", (DL_FUNC) &_gadgetr_updateRecruitementC, 1},
+    {"_gadgetr_updateRecruitementC", (DL_FUNC) &_gadgetr_updateRecruitementC, 2},
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
     {"_gadgetr_updateAmountStep", (DL_FUNC) &_gadgetr_updateAmountStep, 4},
     {"_gadgetr_updateAmountYear", (DL_FUNC) &_gadgetr_updateAmountYear, 5},

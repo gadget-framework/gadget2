@@ -527,14 +527,10 @@ Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo){
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo){
+Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo, Rcpp::NumericVector recruitParams){
 
-   int j, age, len;
+   int j;
    int functionnumber, paramsize;
-
-   const AgeBandMatrix* alptr;
-
-   TimeClass* TimeInfo = EcoSystem->getTimeInfo();
 
    AreaClass* Area = EcoSystem->getArea();
    IntVector areas = Area->getAllModelAreas();
@@ -549,6 +545,7 @@ Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo){
    ModelVariableVector* spawnparameters = stock->getSpawnData()->getSpawnParameters();
    const char* functionname = stock->getSpawnData()->getFunctionName();
 
+   // Determine the function type and its number of parameters
    if (strcasecmp(functionname, "simplessb") == 0) {
      functionnumber = 1;
      paramsize = 1;
@@ -569,20 +566,32 @@ Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo){
      paramsize = 2;
    } else {
      std::cout << "unrecognised recruitment function " << functionname << std::endl;
+     return Rcpp::IntegerVector(1,55);
    }
 
+   // Check the length of user-defined parameters
+   if(recruitParams.length() != paramsize){
+      std::cout << "Recruitment function " << functionname << " requires "
+         << paramsize << " parameters!" << std::endl;
+      return Rcpp::IntegerVector(1,55);
+   }
+
+#ifdef DEBUG
    cout << functionname << " " << functionnumber << endl;
    for (j = 0 ; j < paramsize ; j++)
       cout << (*spawnparameters)[j] << " ";
    cout << endl;
+#endif
 
-   (*spawnparameters)[0].setValue(4);
-   (*spawnparameters)[1].setValue(10);
+   for (j = 0 ; j < paramsize ; j++)
+      (*spawnparameters)[j].setValue(recruitParams[j]);
 
+#ifdef DEBUG
    cout << functionname << " " << functionnumber << endl;
    for (j = 0 ; j < paramsize ; j++)
       cout << (*spawnparameters)[j] << " ";
    cout << endl;
+#endif
 
    return Rcpp::IntegerVector(1,0);
 }

@@ -29,8 +29,8 @@ printSSB <- function(stockNo) {
     .Call(`_gadgetr_printSSB`, stockNo)
 }
 
-updateRecruitementC <- function(stockNo) {
-    .Call(`_gadgetr_updateRecruitementC`, stockNo)
+updateRecruitementC <- function(stockNo, recruitParams) {
+    .Call(`_gadgetr_updateRecruitementC`, stockNo, recruitParams)
 }
 
 wholeSim <- function() {
