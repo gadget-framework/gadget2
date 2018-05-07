@@ -347,3 +347,11 @@ Rcpp::List gadget(Rcpp::StringVector args) {
   //
   return z;
 }
+
+// [[Rcpp::export]]
+Rcpp::LogicalVector isGadgetInitialized(){
+	if(!EcoSystem)
+		return Rcpp::LogicalVector(1, FALSE);
+	else
+		return Rcpp::LogicalVector(1, TRUE);
+}

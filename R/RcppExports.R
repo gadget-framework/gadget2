@@ -69,3 +69,7 @@ gadget <- function(args) {
     .Call(`_gadgetr_gadget`, args)
 }
 
+isGadgetInitialized <- function() {
+    .Call(`_gadgetr_isGadgetInitialized`)
+}
+

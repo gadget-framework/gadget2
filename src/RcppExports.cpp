@@ -208,6 +208,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// isGadgetInitialized
+Rcpp::LogicalVector isGadgetInitialized();
+RcppExport SEXP _gadgetr_isGadgetInitialized() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(isGadgetInitialized());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_getEcosystemInfo", (DL_FUNC) &_gadgetr_getEcosystemInfo, 0},
@@ -227,6 +237,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_finalizeSim", (DL_FUNC) &_gadgetr_finalizeSim, 0},
     {"_gadgetr_finalize", (DL_FUNC) &_gadgetr_finalize, 0},
     {"_gadgetr_gadget", (DL_FUNC) &_gadgetr_gadget, 1},
+    {"_gadgetr_isGadgetInitialized", (DL_FUNC) &_gadgetr_isGadgetInitialized, 0},
     {NULL, NULL, 0}
 };
 
