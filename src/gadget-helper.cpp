@@ -438,7 +438,7 @@ Rcpp::NumericMatrix printStock(Rcpp::IntegerVector stockNo){
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo){
+Rcpp::NumericMatrix printDetailedSSB(Rcpp::IntegerVector stockNo){
 
    int j, age, len;
 
@@ -594,4 +594,110 @@ Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo, Rcpp::Numer
 #endif
 
    return Rcpp::IntegerVector(1,0);
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo){
+
+   int j;
+
+   TimeClass* TimeInfo = EcoSystem->getTimeInfo();
+
+   AreaClass* Area = EcoSystem->getArea();
+   IntVector areas = Area->getAllModelAreas();
+
+   StockPtrVector stockvec = EcoSystem->getModelStockVector();
+   Stock *stock = stockvec[stockNo[0]-1];
+
+   SpawnData* spawner = stock->getSpawnData();
+   if(!spawner){
+	   Rcpp::NumericMatrix m(0,0);
+	   return m;
+   }
+
+   Rcpp::DataFrame df;
+
+   for (j = 0; j < areas.Size(); j++) {
+      int a = Area->getInnerArea(areas[j]);
+      Rcpp::NumericVector v;
+      if(spawner->isSpawnStepAreaPrev(a, TimeInfo)){
+          v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+            TimeInfo->getPrevStep(), Area->getModelArea(a), spawner->getSSB()[a]);
+      }else{
+          v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+            TimeInfo->getPrevStep(), Area->getModelArea(a), 0.0);
+      }
+      // Append at the end of the DataFrame
+      df.insert(df.end(), v);
+   }
+
+   // Give names to the columns
+   Rcpp::CharacterVector namevec = Rcpp::CharacterVector::create("year", "step",
+     "area", "SSB");
+
+   // Convert to matrix so that we can transpose it (nrows = 4)
+   int dfsize = df.size();
+   Rcpp::NumericMatrix mattemp(4, dfsize);
+   for ( j = 0; j < dfsize; j++ ) {
+      mattemp(Rcpp::_, j) = Rcpp::NumericVector(df[j]);
+   }
+
+   Rcpp::rownames(mattemp) = namevec;
+
+   Rcpp::NumericMatrix mout = Rcpp::transpose(mattemp);
+
+   return mout;
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericMatrix printRecruitment(Rcpp::IntegerVector stockNo){
+
+   int j;
+
+   TimeClass* TimeInfo = EcoSystem->getTimeInfo();
+
+   AreaClass* Area = EcoSystem->getArea();
+   IntVector areas = Area->getAllModelAreas();
+
+   StockPtrVector stockvec = EcoSystem->getModelStockVector();
+   Stock *stock = stockvec[stockNo[0]-1];
+
+   SpawnData* spawner = stock->getSpawnData();
+   if(!spawner){
+	   Rcpp::NumericMatrix m(0,0);
+	   return m;
+   }
+
+   Rcpp::DataFrame df;
+
+   for (j = 0; j < areas.Size(); j++) {
+      int a = Area->getInnerArea(areas[j]);
+      Rcpp::NumericVector v;
+      if(spawner->isSpawnStepAreaPrev(a, TimeInfo)){
+         v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+            TimeInfo->getPrevStep(), Area->getModelArea(a), spawner->getRec()[a]);
+      }else{
+         v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+            TimeInfo->getPrevStep(), Area->getModelArea(a), 0.0);
+      }
+      // Append at the end of the DataFrame
+      df.insert(df.end(), v);
+   }
+
+   // Give names to the columns
+   Rcpp::CharacterVector namevec = Rcpp::CharacterVector::create("year", "step",
+     "area", "Rec");
+
+   // Convert to matrix so that we can transpose it (nrows = 4)
+   int dfsize = df.size();
+   Rcpp::NumericMatrix mattemp(4, dfsize);
+   for ( j = 0; j < dfsize; j++ ) {
+      mattemp(Rcpp::_, j) = Rcpp::NumericVector(df[j]);
+   }
+
+   Rcpp::rownames(mattemp) = namevec;
+
+   Rcpp::NumericMatrix mout = Rcpp::transpose(mattemp);
+
+   return mout;
 }

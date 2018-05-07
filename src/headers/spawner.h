@@ -11,6 +11,8 @@
 #include "selectfunc.h"
 #include "stock.h"
 
+#include <Rcpp.h>
+
 /**
  * \class SpawnData
  * \brief This is the class used to calculate the affect of the spawning process on the stock, possibly including the creation of new recruits into the model
@@ -86,6 +88,23 @@ public:
    * \return functionname
    */
   const char* getFunctionName() const { return  functionname; };
+  /**
+   * \brief IU: This will return the SSB value
+   * \return ssbTotal
+   */
+  Rcpp::NumericVector getSSB() { return ssbTotal; };
+  /**
+   * \brief IU: This will return the Recruitment number
+   * \return recTotal
+   */
+  Rcpp::NumericVector getRec() { return recTotal; };
+  /**
+   * \brief This will check if the spawning process had taken place on the previous timestep and area
+   * \param area is the area that the spawning is being calculated on
+   * \param TimeInfo is the TimeClass for the current model
+   * \return 1 if the spawning process had taken place, 0 otherwise
+   */
+  int isSpawnStepAreaPrev(int area, const TimeClass* const TimeInfo);
 protected:
   /**
    * \brief This function will calculate the number of recruits that will be created by the spawning process on the current timestep, for a given age-length cell of the spawning stock
@@ -209,6 +228,14 @@ protected:
    * \brief This is the name of the function to be used to calculate the number of recruits
    */
   char* functionname;
+  /**
+   * \brief IU: This is a placeholder for recruitment (indexed by inarea)
+   */
+  Rcpp::NumericVector recTotal;
+  /**
+   * \brief IU: This is a placeholder for SSB (indexed by inarea)
+   */
+  Rcpp::NumericVector ssbTotal;
 };
 
 #endif

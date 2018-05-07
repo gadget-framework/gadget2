@@ -85,14 +85,14 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// printSSB
-Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo);
-RcppExport SEXP _gadgetr_printSSB(SEXP stockNoSEXP) {
+// printDetailedSSB
+Rcpp::NumericMatrix printDetailedSSB(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_printDetailedSSB(SEXP stockNoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
-    rcpp_result_gen = Rcpp::wrap(printSSB(stockNo));
+    rcpp_result_gen = Rcpp::wrap(printDetailedSSB(stockNo));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -105,6 +105,28 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type recruitParams(recruitParamsSEXP);
     rcpp_result_gen = Rcpp::wrap(updateRecruitementC(stockNo, recruitParams));
+    return rcpp_result_gen;
+END_RCPP
+}
+// printSSB
+Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_printSSB(SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(printSSB(stockNo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// printRecruitment
+Rcpp::NumericMatrix printRecruitment(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_printRecruitment(SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(printRecruitment(stockNo));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -226,8 +248,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},
     {"_gadgetr_printPredatorPrey", (DL_FUNC) &_gadgetr_printPredatorPrey, 2},
     {"_gadgetr_printStock", (DL_FUNC) &_gadgetr_printStock, 1},
-    {"_gadgetr_printSSB", (DL_FUNC) &_gadgetr_printSSB, 1},
+    {"_gadgetr_printDetailedSSB", (DL_FUNC) &_gadgetr_printDetailedSSB, 1},
     {"_gadgetr_updateRecruitementC", (DL_FUNC) &_gadgetr_updateRecruitementC, 2},
+    {"_gadgetr_printSSB", (DL_FUNC) &_gadgetr_printSSB, 1},
+    {"_gadgetr_printRecruitment", (DL_FUNC) &_gadgetr_printRecruitment, 1},
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
     {"_gadgetr_updateAmountStep", (DL_FUNC) &_gadgetr_updateAmountStep, 4},
     {"_gadgetr_updateAmountYear", (DL_FUNC) &_gadgetr_updateAmountYear, 5},
