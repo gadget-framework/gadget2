@@ -3,6 +3,7 @@
 #include "interrupthandler.h"
 #include "gadget.h"
 
+extern volatile int interrupted_print;
 volatile int* irhInterrupted;
 
 void registerInterrupts(volatile int* interrupted) {
@@ -19,6 +20,7 @@ void registerInterrupts(volatile int* interrupted) {
 
 void interruptHandler(int signal) {
   *irhInterrupted = 1;
+  interrupted_print = 1;
 }
 
 #endif

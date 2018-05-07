@@ -8,7 +8,7 @@
 
 LinearPredator::LinearPredator(CommentStream& infile, const char* givenname,
   const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper, Formula multscaler)
-  : LengthPredator(givenname, Areas, keeper, multscaler) {
+  : LengthPredator(givenname, Areas, TimeInfo,keeper, multscaler) {
 
   type = LINEARPREDATOR;
   keeper->addString("predator");

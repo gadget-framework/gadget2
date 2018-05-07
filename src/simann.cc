@@ -178,6 +178,7 @@
 #include "ecosystem.h"
 #include "global.h"
 #include "seq_optimize_template.h"
+#include <float.h>
 #ifdef SPECULATIVE
 #include <omp.h>
 #endif
@@ -436,9 +437,9 @@ extern Ecosystem** EcoSystems;
 //}
 
 
-#ifdef SPECULATIVE
+#ifdef _OPENMP
+//#ifdef SPECULATIVE
 void OptInfoSimann::OptimiseLikelihoodOMP() {
-
   //set initial values
   int nacc = 0;         //The number of accepted function evaluations
   int nrej = 0;         //The number of rejected function evaluations
@@ -448,6 +449,7 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
   double fopt, funcval, trialf;
   int    a, i, j, k, l, quit;
   int    rchange, rcheck, rnumber;  //Used to randomise the order of the parameters
+  double prev_fopt=DBL_MAX;
 
   // store the info of the different threads
   struct Storage {
@@ -519,7 +521,7 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
     fstar[i] = funcval;
 
 
-
+  double timestop;
   int numThr = omp_get_max_threads ( );
   int bestId=0;
   int ini=0;
@@ -536,6 +538,8 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
  int ns_ = ceil(numThr/2.);
  double res;
   aux=0;
+
+
   //Start the main loop.  Note that it terminates if
   //(i) the algorithm succesfully optimises the function or
   //(ii) there are too many function evaluations
@@ -667,7 +671,7 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
             }
           }
           // JMB added check for really silly values
-          if (isZero(trialf)) {
+           if (isZero(trialf)) {
             handle.logMessage(LOGINFO, "Error in Simulated Annealing optimisation after", iters, "function evaluations, f(x) = 0");
             converge = -1;
             delete[] storage;
@@ -692,7 +696,11 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
             EcoSystem->writeBestValues();
           }
         }
-      }
+
+
+     }
+
+
     }
 
     //Check termination criteria
@@ -708,7 +716,8 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
           quit = 0;
     }
 
-    handle.logMessage(LOGINFO, "Checking convergence criteria after", iters, "function evaluations ...");
+    //handle.logMessage(LOGINFO, "Checking convergence criteria after", iters, "function evaluations ...");
+
 
     //Terminate SA if appropriate
     if (quit) {
@@ -732,12 +741,16 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
     if (t < rathersmall)
       t = rathersmall;  //JMB make sure temperature doesnt get too small
 
-    handle.logMessage(LOGINFO, "Reducing the temperature to", t);
+    //handle.logMessage(LOGINFO, "Reducing the temperature to", t);
     funcval = fopt;
     for (i = 0; i < nvars; ++i)
       x[i] = bestx[i];
   }
+
+  printf("END - nvars %d threads %d fbest %.5lf evals %d time %lf\n", nvars, numThr, score, iters, timestop);
+
 }
+//#endif
 #endif
 
 // calcule a new point
@@ -803,14 +816,17 @@ void buildNewParams_f(Siman& seed, DoubleVector& params) {
 }
 
 /// Represents the function that computes how good the parameters are
-double evaluate_f(const DoubleVector& params) {
-	double trialf;
 #ifdef _OPENMP
+double evaluate_par_f(const DoubleVector& params) {
+	double trialf;
 	int id = omp_get_thread_num ();
 	trialf = EcoSystems[id]->SimulateAndUpdate(params);
-#else
-	trialf = EcoSystem->SimulateAndUpdate(params);
+  return -trialf;
+}
 #endif
+double evaluate_f(const DoubleVector& params) {
+	double trialf;
+	trialf = EcoSystem->SimulateAndUpdate(params);
   return -trialf;
 }
 
@@ -852,7 +868,7 @@ struct ControlClass {
 		if (t < rathersmall)
 			t = rathersmall;  //JMB make sure temperature doesnt get too small
 
-		handle.logMessage(LOGINFO, "Reducing the temperature to", t);
+		//handle.logMessage(LOGINFO, "Reducing the temperature to", t);
 		seed.setT(t);
 
 		DoubleVector* bestx = seed.getBestx();
@@ -865,6 +881,7 @@ struct ControlClass {
 			DoubleVector init, Siman siman){
 		//If greater than any other point, record as new optimum
 		int i, nvars = siman.getNvars();
+		double timestop;
 		DoubleVector scalex(nvars);
 		DoubleVector* bestx = siman.getBestx();
 
@@ -883,6 +900,7 @@ struct ControlClass {
 		handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
 		handle.logMessage(LOGINFO, "The likelihood score is", -fopt, "at the point");
 		EcoSystem->writeBestValues();
+
 		}
 	}
 
@@ -964,8 +982,8 @@ struct ControlClass {
 					  quit = false;
 		}
 
-		handle.logMessage(LOGINFO, "Checking convergence criteria after", iters,
-				"function evaluations ...");
+		//handle.logMessage(LOGINFO, "Checking convergence criteria after", iters,
+		//		"function evaluations ...");
 
 		temperature(siman, siman.getX());
 
@@ -1009,6 +1027,91 @@ std::ostream &operator<<(std::ostream &os, const DoubleVector &p)
 }
 
 
+#ifdef _OPENMP
+void OptInfoSimann::OptimiseLikelihoodREP() {
+
+	//set initial values
+
+	double tmp, p, pp;
+	double funcval, trialf;
+	int a, i, j, k, l, quit;
+	int rchange, rcheck, rnumber; //Used to randomise the order of the parameters
+
+	handle.logMessage(LOGINFO,
+			"\nStarting Simulated Annealing optimisation algorithm\n");
+	int nvars = EcoSystem->numOptVariables();
+	DoubleVector x(nvars);
+	DoubleVector init(nvars);
+	DoubleVector trialx(nvars, 0.0);
+	DoubleVector bestx(nvars);
+	DoubleVector scalex(nvars);
+	DoubleVector lowerb(nvars);
+	DoubleVector upperb(nvars);
+	DoubleVector fstar(tempcheck);
+	DoubleVector vm(nvars, vminit);
+	IntVector param(nvars, 0);
+        double timestop;
+	EcoSystem->resetVariables(); //JMB need to reset variables in case they have been scaled
+	if (scale) {
+		EcoSystem->scaleVariables();
+	
+		int numThr = omp_get_max_threads ( );
+		for(i = 0; i < numThr; i++) // scale the variables for the ecosystem of every thread
+			EcoSystems[i]->scaleVariables();
+	}
+	EcoSystem->getOptScaledValues(x);
+	EcoSystem->getOptLowerBounds(lowerb);
+	EcoSystem->getOptUpperBounds(upperb);
+	EcoSystem->getOptInitialValues(init);
+
+	for (i = 0; i < nvars; i++) {
+		bestx[i] = x[i];
+		param[i] = i;
+	}
+
+	if (scale) {
+		for (i = 0; i < nvars; i++) {
+			scalex[i] = x[i];
+			// Scaling the bounds, because the parameters are scaled
+			lowerb[i] = lowerb[i] / init[i];
+			upperb[i] = upperb[i] / init[i];
+			if (lowerb[i] > upperb[i]) {
+				tmp = lowerb[i];
+				lowerb[i] = upperb[i];
+				upperb[i] = tmp;
+			}
+		}
+	}
+
+	//funcval is the function value at x
+	funcval = EcoSystem->SimulateAndUpdate(x);
+	if (funcval != funcval) { //check for NaN
+		handle.logMessage(LOGINFO,
+				"Error starting Simulated Annealing optimisation with f(x) = infinity");
+		converge = -1;
+		iters = 1;
+		return;
+	}
+
+	//the function is to be minimised so switch the sign of funcval (and trialf)
+	funcval = -funcval;
+	cs /= lratio;  //JMB save processing time
+	for (i = 0; i < tempcheck; i++)
+		fstar[i] = funcval;
+
+	Siman s(seed, seedM, seedP, nvars, nt, ns, param, &x, &lowerb, &upperb, vm, t, rt, (1.0 / ns),
+			tempcheck, simanneps, fstar, lratio, uratio, cs, &bestx, scale, &converge, &score);
+
+	ReproducibleSearch<Siman, DoubleVector, ControlClass, evaluate_par_f, buildNewParams_f>
+	pa(s, x, simanniter);
+
+	// OpenMP parallelization
+	int numThr = omp_get_max_threads ( );
+	pa.paral_opt_omp(funcval,numThr,numThr);
+	iters = pa.iterations();
+
+}
+#endif
 void OptInfoSimann::OptimiseLikelihood() {
 
 	//set initial values
@@ -1035,11 +1138,6 @@ void OptInfoSimann::OptimiseLikelihood() {
 	EcoSystem->resetVariables(); //JMB need to reset variables in case they have been scaled
 	if (scale) {
 		EcoSystem->scaleVariables();
-#ifdef _OPENMP
-		int numThr = omp_get_max_threads ( );
-		for(i = 0; i < numThr; i++) // scale the variables for the ecosystem of every thread
-			EcoSystems[i]->scaleVariables();
-#endif
 	}
 	EcoSystem->getOptScaledValues(x);
 	EcoSystem->getOptLowerBounds(lowerb);
@@ -1087,16 +1185,20 @@ void OptInfoSimann::OptimiseLikelihood() {
 	ReproducibleSearch<Siman, DoubleVector, ControlClass, evaluate_f, buildNewParams_f>
 	pa(s, x, simanniter);
 
-#ifdef _OPENMP
-	// OpenMP parallelization
-	int numThr = omp_get_max_threads ( );
-	pa.paral_opt_omp(funcval,numThr,numThr);
-#else
 	// sequential code
 	pa.seq_opt(funcval);
-#endif
+
+
+	iters = pa.iterations();
+        double timestop;
+        timestop = RUNID.returnTime();
+        printf("END - nvars %d threads 1 fbest %.5lf evals %d time %lf\n", nvars, -funcval, iters, timestop);
 
 }
+
+
+
+
 
 
 

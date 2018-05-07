@@ -2,3 +2,4 @@
 #include "errorhandler.h"
 RunID RUNID;
 ErrorHandler handle;
+int rrid;

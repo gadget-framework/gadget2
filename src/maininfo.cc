@@ -20,6 +20,9 @@ void MainInfo::showUsage() {
     << " -n                           perform a network run (using paramin)\n"
     << " -v --version                 display version information and exit\n"
     << " -h --help                    display this help screen and exit\n"
+#ifdef _OPENMP
+    << " -parallel  <option>          run in parallel <option> == [spe, rep]. spe=speculative, rep=reproducible. Defaull spe\n"
+#endif
     << "\nOptions for specifying the input to Gadget models:\n"
     << " -i <filename>                read model parameters from <filename>\n"
     << " -opt <filename>              read optimising parameters from <filename>\n"
@@ -36,12 +39,16 @@ void MainInfo::showUsage() {
     << " -log <filename>              print logging information to <filename>\n"
     << " -printinitial <filename>     print initial model information to <filename>\n"
     << " -printfinal <filename>       print final model information to <filename>\n"
-    << "\nFor more information see the Gadget web page at http://www.hafro.is/gadget\n\n";
+    << "\nFor more information see the Gadget web page at http://www.github.com/hafro/gadget\n\n";
   exit(EXIT_SUCCESS);
 }
 
 MainInfo::MainInfo()
-  : givenOptInfo(0), givenInitialParam(0), runoptimise(0),
+#ifdef _OPENMP
+  : givenOptInfo(0), givenInitialParam(0), runoptimise(0), runparallel(0),
+#else
+  : givenOptInfo(0), givenInitialParam(0), runoptimise(0), 
+#endif
     runstochastic(0), runnetwork(0), runprint(1), forceprint(0),
     printInitialInfo(0), printFinalInfo(0), printLogLevel(0), maxratio(0.95) {
 
@@ -90,7 +97,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
     handle.logMessage(LOGWARN, "Warning - no command line options specified, using default values");
     return;
   }
-
+  rrid=0;
   seed = new unsigned[3];
   seed[0] = 0;
   seed[1] = 0;
@@ -146,12 +153,14 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 
     } else if (strcasecmp(aVector[k], "-co") == 0) {
       handle.logMessage(LOGFAIL, "The -co switch is no longer supported");
-
-    } else if (strcasecmp(aVector[k], "-printinitial") == 0) {
+#ifdef _OPENMP
+    } else if (strcasecmp(aVector[k], "-parallel") == 0) {
+      handle.logMessage(LOGINFO, "--------parallel option ", aVector[k]);
       if (k == aNumber - 1)
         this->showCorrectUsage(aVector[k]);
       k++;
-      this->setPrintInitialFile(aVector[k]);
+      this->setParallel(aVector[k]);
+#endif
 
     } else if (strcasecmp(aVector[k], "-printfinal") == 0) {
       if (k == aNumber - 1)
@@ -164,7 +173,6 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         this->showCorrectUsage(aVector[k]);
       k++;
       this->setMainGadgetFile(aVector[k]);
-
     } else if (strcasecmp(aVector[k], "-opt") == 0) {
       if (k == aNumber - 1)
         this->showCorrectUsage(aVector[k]);
@@ -254,7 +262,12 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
         this->showCorrectUsage(aVector[k]);
       k++;
       maxratio = atof(aVector[k]);
-
+    } else if (strcasecmp(aVector[k], "-nrun") == 0) {
+      if (k == aNumber - 1)
+        this->showCorrectUsage(aVector[k]);
+      k++;
+      rrid=atoi(aVector[k]);
+      printf("RRID %d\n", rrid);
     } else
       this->showCorrectUsage(aVector[k]);
 
@@ -273,8 +286,6 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
 	  if (seed[2] == 0)
 		  seed[2] = seed[0];
   }
-
-
 
 
 }
@@ -423,6 +434,12 @@ void MainInfo::read(CommentStream& infile) {
     } else if (strcasecmp(text, "-printfinal") == 0) {
       infile >> text >> ws;
       this->setPrintFinalFile(text);
+#ifdef _OPENMP
+    } else if (strcasecmp(text, "-parallel") == 0) {
+      infile >> text >> ws;
+handle.logMessage(LOGINFO, "--------parallel option 222 ", text);
+      this->setParallel(text);
+#endif
     } else if (strcasecmp(text, "-opt") == 0) {
       infile >> text >> ws;
       this->setOptInfoFile(text);
@@ -449,6 +466,8 @@ void MainInfo::read(CommentStream& infile) {
       srand(dummy);
     } else if (strcasecmp(text, "-maxratio") == 0) {
       infile >> maxratio >> ws;
+   // } else if (strcasecmp(text, "-nrun") == 0) {
+   //   infile >> rrid >> ws;
     } else if (strcasecmp(text, "-printlikesummary") == 0) {
       handle.logMessage(LOGWARN, "The -printlikesummary switch is no longer supported\nSpecify a likelihoodsummaryprinter class in the model print file instead");
     } else if (strcasecmp(text, "-printlikelihood") == 0) {
@@ -479,6 +498,22 @@ void MainInfo::setPrintFinalFile(char* filename) {
   strcpy(strPrintFinalFile, filename);
   printFinalInfo = 1;
 }
+#ifdef _OPENMP
+void MainInfo::setParallel(char* filename) {
+  if (!strcasecmp(filename,"spe")){
+       runparallel=1;
+handle.logMessage(LOGINFO, "--------parallel speculative ", filename);
+       return;
+  }
+  if (!strcasecmp(filename,"rep")){
+handle.logMessage(LOGINFO, "--------parallel reproducible ", filename);
+       runparallel=2;
+       return;
+  }
+  this->showCorrectUsage("opt");
+  
+}
+#endif
 
 void MainInfo::setMainGadgetFile(char* filename) {
   if (strMainGadgetFile != NULL) {

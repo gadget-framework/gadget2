@@ -1,5 +1,6 @@
 #include "strstack.h"
 #include "gadget.h"
+#include "omp.h"
 
 StrStack::~StrStack() {
   int i;
@@ -8,17 +9,21 @@ StrStack::~StrStack() {
 }
 
 void StrStack::clearString() {
+#pragma omp critical
   if (size > 0)
     size--;
 }
 
 void StrStack::storeString(const char* str) {
+#pragma omp critical
+{
   if (size == v.Size()) {
     v.resize(new char[MaxStrLength]);
     strncpy(v[size], "", MaxStrLength);
   }
   strcpy(v[size], str);
   size++;
+}
 }
 
 char* StrStack::sendAll() const {

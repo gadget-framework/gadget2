@@ -240,7 +240,8 @@ int checkLengthGroupStructure(const LengthGroupDivision* finer,
 }
 
 // initialize the meanLength vector
-double* const LengthGroupDivision::meanlengthvecPow_initilize(
+//double* const LengthGroupDivision::meanlengthvecPow_initilize(
+double* LengthGroupDivision::meanlengthvecPow_initilize(
 		int maxlengthgroupgrowth, double tmpPower) const
 {
 	double * meanlength_vectorPow = new double[size + maxlengthgroupgrowth];

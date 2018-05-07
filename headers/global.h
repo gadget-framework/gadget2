@@ -5,5 +5,6 @@
  
 extern RunID RUNID;
 extern ErrorHandler handle;
+extern int rrid;
 
 #endif

@@ -102,7 +102,7 @@ public:
    * \param maxlengthgroupgrowth max length of the meanLength vector
    * \param tmpPower the power term of the length
    */
-  double* const meanlengthvecPow_initilize( int maxlengthgroupgrowth, double tmpPower) const;
+  double* meanlengthvecPow_initilize( int maxlengthgroupgrowth, double tmpPower) const;
 protected:
   /**
    * \brief This is the flag to denote whether an error has occured or not

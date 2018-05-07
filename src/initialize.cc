@@ -31,6 +31,7 @@
 #include "migrationpenalty.h"
 #include "migrationproportion.h"
 #include "catchinkilos.h"
+#include "proglikelihood.h"
 #include "global.h"
 
 void Ecosystem::Initialise() {
@@ -154,6 +155,9 @@ void Ecosystem::Initialise() {
         ((MigrationProportion*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       case BOUNDLIKELIHOOD:
+        break;
+      case PROGLIKELIHOOD:
+        ((ProgLikelihood*)likevec[i])->setFleetsAndStocks(fleetvec, stockvec);
         break;
       default:
         handle.logMessage(LOGFAIL, "Error when initialising model - unrecognised likelihood type", likevec[i]->getType());

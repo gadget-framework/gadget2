@@ -104,6 +104,10 @@ void DoubleVector::setToZero() {
     v[i] = 0.0;
 }
 
+double* DoubleVector::getv() {
+    return v;
+}
+
 double DoubleVector::operator * (const DoubleVector& d) const {
   double result = 0.0;
   int i;

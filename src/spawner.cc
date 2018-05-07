@@ -141,6 +141,7 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     //read in the recruitment function details
     functionnumber = 0;
     infile >> functionname >> ws;
+
     if (strcasecmp(functionname, "simplessb") == 0) {
       functionnumber = 1;
       spawnParameters.resize(1, keeper);
@@ -159,9 +160,9 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
     } else if (strcasecmp(functionname, "hockeystick") == 0) {
       functionnumber = 6;
       spawnParameters.resize(2, keeper);
-    } else
+    } else {
       handle.logFileMessage(LOGFAIL, "unrecognised recruitment function", functionname);
-
+    }
     spawnParameters.read(infile, TimeInfo, keeper);
 
     //read in the details about the new stock
@@ -302,6 +303,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
 
   //create a length distribution and mean weight for the new stock
   stockParameters.Update(TimeInfo);
+ 
   if (handle.getLogLevel() >= LOGWARN) {
     if (isZero(stockParameters[1]))
       handle.logMessage(LOGWARN, "Warning in spawner - invalid standard deviation for spawned stock", this->getName());
@@ -359,6 +361,8 @@ int SpawnData::isSpawnStepArea(int area, const TimeClass* const TimeInfo) {
 
 void SpawnData::Reset(const TimeClass* const TimeInfo) {
   int i;
+
+   spawnParameters.Update(TimeInfo);
 
   fnProportion->updateConstants(TimeInfo);
   if (fnProportion->didChange(TimeInfo)) {
@@ -420,23 +424,22 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
 
 double SpawnData::calcSpawnNumber(int age, int len, double number, double weight) {
   double temp = 0.0;
-
   switch (functionnumber) {
     case 1:
     case 2:
     case 3:
       temp = number * weight;
       break;
-  case 4:
-    temp = pow(LgrpDiv->meanLength(len), spawnParameters[1]) * pow(age, spawnParameters[2])
-      * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
-    break;
-  case 5:
-    temp = number;
-    break;    
-  default:
-    handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
-    break;
+    case 4:
+      temp = pow(LgrpDiv->meanLength(len), spawnParameters[1]) * pow(age, spawnParameters[2])
+        * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
+      break;
+    case 5:
+      temp = number;
+      break;
+    default:
+      handle.logMessage(LOGWARN, "Warning in spawner data - unrecognised recruitment function", functionname);
+      break;
   }
 
   return temp;
@@ -461,12 +464,27 @@ double SpawnData::calcRecruitNumber(double temp, int inarea) {
     case 3:
       total = ssb * spawnParameters[0] / (spawnParameters[1] + ssb);
       break;
-  case 5:
-    total = ssb * spawnParameters[0] * 
-      max(1 + spawnParameters[1] * (1- pow(ssb / spawnParameters[2],double(spawnParameters[3]))),0.0); 
-    break;
+    case 5:
+      if (isZero(spawnParameters[2])) {
+        handle.logMessage(LOGWARN, "Warning in spawner - spawn parameter is zero");
+        total = ssb * spawnParameters[0];
+      } else {
+        total = ssb * spawnParameters[0]
+          * max(1.0 + spawnParameters[1] * (1.0 - pow(ssb / spawnParameters[2], spawnParameters[3])), 0.0);
+      }
+      break;
+    case 6:
+      if (ssb > spawnParameters[1]) {
+        total = 1.0e4 * spawnParameters[0];
+      } else if (isZero(spawnParameters[1])) {
+        handle.logMessage(LOGWARN, "Warning in spawner - spawn parameter is zero");
+        total = 1.0e4 * spawnParameters[0];
+      } else {
+        total = 1.0e4 * spawnParameters[0] * (ssb / spawnParameters[1]);
+      }
+      break;
     default:
-      handle.logMessage(LOGWARN, "Warning in spawner - unrecognised recruitment function", functionname);
+      handle.logMessage(LOGWARN, "Warning in spawner calcrecruit- unrecognised recruitment function", functionname);
       break;
   }
 

@@ -7,7 +7,7 @@
 
 TotalPredator::TotalPredator(CommentStream& infile, const char* givenname,
   const IntVector& Areas, const TimeClass* const TimeInfo, Keeper* const keeper, Formula multscaler)
-  : LengthPredator(givenname, Areas, keeper, multscaler) {
+  : LengthPredator(givenname, Areas, TimeInfo,keeper, multscaler) {
 
   type = TOTALPREDATOR;
   keeper->addString("predator");
@@ -23,7 +23,7 @@ void TotalPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   int prey, preyl;
   double tmp, wanttoeat;
   int predl = 0;  //JMB there is only ever one length group ...
-  wanttoeat = prednumber[inarea][predl].N * multi / TimeInfo->numSubSteps();
+  wanttoeat = prednumber[inarea][predl].N * multi*timeMultiplier[TimeInfo->getTime()] / TimeInfo->numSubSteps();
   totalcons[inarea][predl] = 0.0;
 
   if (isZero(wanttoeat)) //JMB no predation takes place on this timestep

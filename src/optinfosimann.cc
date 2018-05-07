@@ -2,6 +2,7 @@
 #include "errorhandler.h"
 #include "gadget.h"
 #include "global.h"
+#include <cfloat>
 
 OptInfoSimann::OptInfoSimann()
   : OptInfo(), rt(0.85), simanneps(1e-4), ns(5), nt(2), t(100.0), cs(2.0),
@@ -18,7 +19,7 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
   unsigned s3 = 0;
 
   int count = 0;
-  while (!infile.eof() && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
+  while (!infile.eof() && strcasecmp(text,"[pso]") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
     infile >> ws;
     if (strcasecmp(text, "seed") == 0) {
       int s = 0;
@@ -86,7 +87,6 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
     } else if (strcasecmp(text, "scale") == 0) {
       infile >> scale;
       count++;
-
     } else {
       handle.logMessage(LOGINFO, "Warning in optinfofile - unrecognised option", text);
       infile >> text;  //read and ignore the next entry

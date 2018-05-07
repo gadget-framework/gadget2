@@ -14,7 +14,7 @@ void OptInfoBFGS::read(CommentStream& infile, char* text) {
   handle.logMessage(LOGMESSAGE, "Reading BFGS optimisation parameters");
 
   int count = 0;
-  while (!infile.eof() && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
+  while (!infile.eof() && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]") && strcasecmp(text,"[pso]")) {
     infile >> ws;
     if (strcasecmp(text, "seed") == 0) {
       int seed = 0;

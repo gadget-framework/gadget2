@@ -39,9 +39,15 @@ public:
    */
   Ecosystem(const MainInfo& main);
   /**
+   * \brief This is the Ecosystem constructor specifying details about the model
+   * \param main is the MainInfo specifying the command line options for the model run
+   */
+  Ecosystem(const Ecosystem& ecosystem);
+  /**
    * \brief This is the default Ecosystem destructor
    */
   ~Ecosystem();
+
   /**
    * \brief This function will read the model data from the main input file
    * \param infile is the CommentStream to read the likelihood data from
@@ -272,7 +278,7 @@ public:
   /**
    * \brief This is the flag used to denote whether the user has interrupted the current model run
    */
-  volatile int interrupted;
+  //volatile int interrupted;
 protected:
   /**
    * \brief This is the value of the likelihood score for the current simulation
@@ -349,6 +355,25 @@ protected:
    * \note This vector is only used to temporarily store values during an optimising run
    */
   IntVector optflag;
+
+
+  ofstream  convergence_best;
+  ofstream  convergence_time;
+  ofstream  convergence_eval;
+  ofstream  convergence;
+
+#ifdef _OPENMP
+  /**
+ * \brief This empty char is used for the purpose of avoiding false sharing between the EcoSystems.
+ */
+  char filling[128];
+ /**
+ * \brief Type of selected parallel optimization
+ */
+  const int static SPECULATIVE=1;
+  const int static REPRODUCIBLE=2;
+  int runParallel;
+#endif
 };
 
 #endif

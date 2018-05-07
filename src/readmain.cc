@@ -27,6 +27,7 @@
 #include "readword.h"
 #include "gadget.h"
 #include "global.h"
+#include "proglikelihood.h"
 
 //
 // A function to read fleet information
@@ -240,6 +241,10 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
     } else if (strcasecmp(type, "surveydistribution") == 0) {
       likevec.resize(new SurveyDistribution(infile, Area, TimeInfo, keeper, weight, name));
 
+    } else if (strcasecmp(type, "proglikelihood") == 0) {
+      likevec.resize(new ProgLikelihood(infile, Area, TimeInfo, keeper, weight, name));
+
+
     } else if (strcasecmp(type, "stomachcontent") == 0) {
       likevec.resize(new StomachContent(infile, Area, TimeInfo, keeper, weight, name));
 
@@ -305,8 +310,12 @@ void Ecosystem::readOptimisation(CommentStream& infile, unsigned* seed) {
       optvec.resize(new OptInfoSimann());
     else if (strcasecmp(text, "[bfgs]") == 0)
       optvec.resize(new OptInfoBFGS());
+    else if (strcasecmp(text, "[pso]") == 0)
+      optvec.resize(new OptInfoPso());
+    else if (strcasecmp(text, "[DE]") == 0)
+      optvec.resize(new OptInfoDE());
     else
-      handle.logFileUnexpected(LOGFAIL, "[hooke], [simann], or [bfgs]", text);
+      handle.logFileUnexpected(LOGFAIL, "[hooke], [simann], [bfgs], [DE] or [pso]", text);
 
     if (!infile.eof()) {
       infile >> text;

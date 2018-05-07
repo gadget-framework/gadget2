@@ -1,5 +1,6 @@
 #include "runid.h"
 #include "gadget.h"
+#include <omp.h>
 
 extern int gethostname(char*, int);
 
@@ -8,11 +9,13 @@ RunID::RunID() {
   strncpy(hostname, "", MaxStrLength);
   timestring = new char[MaxStrLength];
   strncpy(timestring, "", MaxStrLength);
-
+  
   if (uname(&host) != -1)
     strcpy(hostname, host.nodename);
   if (time(&runtime))
     strcpy(timestring, ctime(&runtime));
+  
+  runtime2 = omp_get_wtime();
 }
 
 RunID::~RunID() {
@@ -31,3 +34,10 @@ void RunID::printTime(ostream& o) {
   o << difftime(time(&stoptime), runtime) << " seconds" << endl;
   o.flush();
 }
+
+double RunID::returnTime() {
+  double t1;
+
+  return (omp_get_wtime() - runtime2);
+}
+

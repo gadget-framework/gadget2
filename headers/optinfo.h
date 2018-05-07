@@ -1,13 +1,15 @@
 #ifndef optinfo_h
 #define optinfo_h
 
+#include <vector>
 #include "maininfo.h"
 #include "doublematrix.h"
 #include "doublevector.h"
 #include "intvector.h"
+#include "intmatrix.h"
 #include "seq_optimize_template.h"
 
-enum OptType { OPTHOOKE = 1, OPTSIMANN, OPTBFGS };
+enum OptType { OPTHOOKE = 1, OPTSIMANN, OPTBFGS, OPTPSO, OPTDE };
 
 /**
  * \class OptInfo
@@ -41,10 +43,13 @@ public:
    * \brief This is the function used to call the optimisation algorithms
    */
   virtual void OptimiseLikelihood() {};
+#ifdef _OPENMP
   /**
    * \brief This is the function used to call the optimisation algorithms parallelized with OpenMP of the reproducible version
    */
   virtual void OptimiseLikelihoodOMP() {};
+  virtual void OptimiseLikelihoodREP() {};
+#endif
   /**
    * \brief This function set the seeds used in SA
    * \param val array of unsigned int with the seeds
@@ -121,11 +126,13 @@ public:
    * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser
    */
   virtual void OptimiseLikelihood();
-#ifdef SPECULATIVE
+#ifdef _OPENMP
   /**
    * \brief This is the function that will calculate the likelihood score using the Hooke & Jeeves optimiser parallelized with the reproducible version implemented OpenMP
    */
+
   virtual void OptimiseLikelihoodOMP();
+  virtual void OptimiseLikelihoodREP();
 #endif
 private:
   /**
@@ -211,11 +218,14 @@ public:
    * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser
    */
   virtual void OptimiseLikelihood();
-#ifdef SPECULATIVE
+#ifdef _OPENMP
+//#ifdef SPECULATIVE
   /**
    * \brief This is the function that will calculate the likelihood score using the Simulated Annealing optimiser parallelized with the reproducible version implemented OpenMP
    */
   virtual void OptimiseLikelihoodOMP();
+  virtual void OptimiseLikelihoodREP();
+//#endif
 #endif
   /**
    * \brief This function calculate a new valor for the parameter l
@@ -315,11 +325,14 @@ public:
    * \brief This is the function that will calculate the likelihood score using the BFGS optimiser
    */
   virtual void OptimiseLikelihood();
-#ifdef SPECULATIVE
+#ifdef _OPENMP
+//#ifdef SPECULATIVE
   /**
   * \brief This function call the sequential function. BFGS isn't implemented with OpenMP
   */
   virtual void OptimiseLikelihoodOMP();
+  virtual void OptimiseLikelihoodREP();
+//#endif
 #endif
 private:
   /**
@@ -369,4 +382,188 @@ private:
   double gradeps;
 };
 
+
+class OptInfoDE : public OptInfo  {
+public:
+  OptInfoDE();
+  ~OptInfoDE() {};
+  virtual void read(CommentStream& infile, char* text);
+  virtual void Print(ofstream& outfile, int prec);
+  virtual void OptimiseLikelihood();
+#ifdef _OPENMP
+  virtual void OptimiseLikelihoodOMP();
+  virtual void OptimiseLikelihoodREP();
+#endif
+private:
+ double F;
+ double CR;
+ double goal;
+ int iter;
+ int scale;
+ double previous_fbest_fitness;
+ int iter_without_improv_global_best; // Iteration without improvements of global best solution
+ int improv_with_stack_global_best;   // Consecutive improvements of global best solution, but with insignificant value
+ int consecutive_iters_global_best;   // Consecutive improvements of global best solution, with a good percentage of improvement
+ int STATE; // state of the search
+ int nrestarts;
+ int growth_trend; // trend of decrease or increase of the configuration parameters C1 and C2
+ int growth_popul; // peding growth of the population
+ int nvars;
+ double threshold_acept;
+ int growth_trend_popul;
+ int num_restart;
+ int size;
+
+ void   growth_trend_manager();
+ double F_manager(int step);
+ double calc_adapt_parameters(int step);
+ void   position_within_bounds(DoubleMatrix& pos, DoubleMatrix& vel, DoubleVector& lowerb, DoubleVector& upperb, int i, int d);
+};
+ 
+/**
+ * \class OptInfoPso
+ * \brief This is the class used for the PSO optimisation
+ *
+ * PSO or Particle Swarm Optimization 
+ *
+ * The PSO algorithm used in Gadget is derived from that presented by Kyriakos Kentzoglanakis.
+ */
+class OptInfoPso : public OptInfo  {
+public:
+  /**
+   * \brief This is the default OptInfoBFGS constructor
+   */
+  OptInfoPso();
+  /**
+   * \brief This is the default OptInfoBFGS destructor
+   */
+  ~OptInfoPso() {};
+  /**
+   * \brief This is the function used to read in the BFGS parameters
+   * \param infile is the CommentStream to read the optimisation parameters from
+   * \param text is a text string used to compare parameter names
+   */
+  virtual void read(CommentStream& infile, char* text);
+  /**
+   * \brief This function will print information from the optimisation algorithm
+   * \param outfile is the ofstream that the optimisation information gets sent to
+   * \param prec is the precision to use in the output file
+   */
+  virtual void Print(ofstream& outfile, int prec);
+  /**
+   * \brief This is the function that will calculate the likelihood score using the PSO optimiser
+   */
+  virtual void OptimiseLikelihood();
+  double calc_inertia_const(int step);
+  double calc_inertia_lin_dec(int step);
+#ifdef _OPENMP
+//#ifdef SPECULATIVE
+  /**
+  * \brief This function call the sequential function. PSO isn't implemented with OpenMP
+  */
+  virtual void OptimiseLikelihoodOMP();
+  virtual void OptimiseLikelihoodREP();
+//#endif
+#endif
+private:
+
+ /**
+  * \brief CONSTANTS: default value of w (see clerc02) 
+  */
+ #define PSO_INERTIA 0.7298 
+ 
+ /**
+  * \brief INERTIA WEIGHT UPDATE FUNCTIONS 
+  */
+#define PSO_W_CONST 0
+#define PSO_W_LIN_DEC 1
+#define PSO_W_ADAPT 2
+
+
+ /**
+  * \brief PSO SOLUTION -- Initialized by the user
+  */
+ typedef struct {
+ 
+     double error;
+     double *gbest; // should contain DIM elements!!
+ 
+ } pso_result_t;
+ 
+ /**
+  * \brief optimization goal (error threshold) 
+  */
+ double goal; 
+ 
+ /**
+  * \brief swarm size (number of particles)
+  */
+ int size; 
+ 
+ /**
+  * \brief maximum number of iterations
+  */
+ int psoiter; 
+ 
+ /**
+  * \brief cognitive coefficient
+  */
+ double c1; 
+ 
+ /**
+  * \brief social coefficient
+  */
+ double c2; 
+
+#ifdef OPENMP
+#pragma omp threadprivate(c1,c2)  
+#endif
+
+ /**
+  * \brief inertia weight strategy (see PSO_W_*)
+  */
+ int w_strategy;
+ /**
+  * \brief whether to keep particle position within defined bounds (TRUE) or apply periodic boundary conditions (FALSE)
+  */
+ int clamp_pos;
+ /**
+  * \brief max inertia weight value
+  */
+ double w_max;
+
+ /**
+ * \brief min inertia weight value
+ */
+ double w_min;
+
+
+ // last best fitness
+ double previous_fbest_fitness;
+
+ int iter_without_improv_global_best; // Iteration without improvements of global best solution
+ int improv_with_stack_global_best;   // Consecutive improvements of global best solution, but with insignificant value
+ int consecutive_iters_global_best;   // Consecutive improvements of global best solution, with a good percentage of improvement
+ int STATE; // state of the search
+ int nrestarts; 
+ int growth_trend; // trend of decrease or increase of the configuration parameters C1 and C2
+ int growth_popul; // peding growth of the population
+ int nvars;
+// double k_vmax; 
+ double threshold_acept;
+ int growth_trend_popul;
+ int num_restart;
+ /**
+  * \brief This is the flag to denote whether the parameters should be scaled or not (default 0, not scale)
+  */
+ int scale;
+ double calc_inertia_adapt_dyn(int);
+ void inform_global(IntMatrix& , DoubleMatrix& , DoubleMatrix& , DoubleVector& , DoubleVector& , int );
+ void growth_trend_manager();
+ double w_manager(int step);
+ void position_within_bounds(DoubleMatrix&, DoubleMatrix&, DoubleVector&, DoubleVector&, int , int );
+ typedef void (OptInfoPso::*Inform_fun)(IntMatrix&, DoubleMatrix&, DoubleMatrix&, DoubleVector&, DoubleVector&,  int); // neighborhood update function
+ typedef double (OptInfoPso::*Calc_inertia_fun)(int); // inertia weight update function
+
+};
 #endif
