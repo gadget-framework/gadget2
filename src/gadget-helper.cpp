@@ -8,35 +8,6 @@
 extern Ecosystem* EcoSystem;
 
 // [[Rcpp::export]]
-Rcpp::List getEcosystemInfo() {
-
-   FleetPtrVector& fleetvec = EcoSystem->getModelFleetVector();
-
-   int maxFleet = fleetvec.Size();
-
-   Rcpp::CharacterVector infoFleet(maxFleet);
-
-   for(int fN=0;fN<maxFleet;fN++){
-      Fleet *fleet = fleetvec[fN];
-      infoFleet[fN] = fleet->getName();
-   }
-
-   StockPtrVector& stockvec = EcoSystem->getModelStockVector();
-   int maxStock = stockvec.Size();
-
-   Rcpp::CharacterVector infoStock(maxStock);
-
-   for(int sN=0;sN<maxStock;sN++){
-      Stock *stock = stockvec[sN];
-      infoStock[sN] = stock->getName();
-   }
-
-   return Rcpp::List::create(Rcpp::Named("fleet") = infoFleet,
-                Rcpp::Named("stock") = infoStock);
-
-}
-
-// [[Rcpp::export]]
 Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo){
 
    StockPtrVector stockvec = EcoSystem->getModelStockVector();

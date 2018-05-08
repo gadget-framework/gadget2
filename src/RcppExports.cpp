@@ -5,16 +5,6 @@
 
 using namespace Rcpp;
 
-// getEcosystemInfo
-Rcpp::List getEcosystemInfo();
-RcppExport SEXP _gadgetr_getEcosystemInfo() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(getEcosystemInfo());
-    return rcpp_result_gen;
-END_RCPP
-}
 // getStockInfoC
 Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo);
 RcppExport SEXP _gadgetr_getStockInfoC(SEXP stockNoSEXP) {
@@ -169,6 +159,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// getEcosystemInfo
+Rcpp::List getEcosystemInfo();
+RcppExport SEXP _gadgetr_getEcosystemInfo() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(getEcosystemInfo());
+    return rcpp_result_gen;
+END_RCPP
+}
 // initSim
 Rcpp::IntegerVector initSim();
 RcppExport SEXP _gadgetr_initSim() {
@@ -242,7 +242,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_gadgetr_getEcosystemInfo", (DL_FUNC) &_gadgetr_getEcosystemInfo, 0},
     {"_gadgetr_getStockInfoC", (DL_FUNC) &_gadgetr_getStockInfoC, 1},
     {"_gadgetr_updateRenewalC", (DL_FUNC) &_gadgetr_updateRenewalC, 12},
     {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},
@@ -255,6 +254,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
     {"_gadgetr_updateAmountStep", (DL_FUNC) &_gadgetr_updateAmountStep, 4},
     {"_gadgetr_updateAmountYear", (DL_FUNC) &_gadgetr_updateAmountYear, 5},
+    {"_gadgetr_getEcosystemInfo", (DL_FUNC) &_gadgetr_getEcosystemInfo, 0},
     {"_gadgetr_initSim", (DL_FUNC) &_gadgetr_initSim, 0},
     {"_gadgetr_stepSim", (DL_FUNC) &_gadgetr_stepSim, 0},
     {"_gadgetr_yearSim", (DL_FUNC) &_gadgetr_yearSim, 0},
