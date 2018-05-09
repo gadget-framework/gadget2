@@ -108,7 +108,12 @@ Rcpp::IntegerVector updateAmountYear(Rcpp::IntegerVector fleetNo, Rcpp::IntegerV
    return updateAmountStep(fleetNo, timeidvec, area, value);
 }
 
-Rcpp::IntegerVector getEcosystemTime(Ecosystem* e, int res){
+Rcpp::IntegerVector getEcosystemTime(Ecosystem* e){
+   int res = 0;
+
+   if(e->getCurrentYear() == e->getTimeInfo()->getPrevYear() &&
+      e->getCurrentStep() == e->getTimeInfo()->getPrevStep()) res = 1;
+
    return
    Rcpp::IntegerVector::create(Rcpp::_["currentTime"] = e->getCurrentTime(),
                                Rcpp::_["currentYear"] = e->getCurrentYear(),
@@ -143,28 +148,28 @@ Rcpp::List getEcosystemInfo() {
 
    return Rcpp::List::create(Rcpp::Named("fleet") = infoFleet,
                 Rcpp::Named("stock") = infoStock,
-		Rcpp::Named("time") = getEcosystemTime(EcoSystem, 0));
+		Rcpp::Named("time") = getEcosystemTime(EcoSystem));
 
 }
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector initSim(){
    EcoSystem->initSimulation();
-   return getEcosystemTime(EcoSystem, 0);
+   return getEcosystemTime(EcoSystem);
 }
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector stepSim(){
    int res;
    res = EcoSystem->stepSimulation(mainGlobal.runPrint());
-   return getEcosystemTime(EcoSystem, res);
+   return getEcosystemTime(EcoSystem);
 }
 
 // [[Rcpp::export]]
 Rcpp::IntegerVector yearSim(){
    int res;
    res = EcoSystem->yearSimulation(mainGlobal.runPrint());
-   return getEcosystemTime(EcoSystem, res);
+   return getEcosystemTime(EcoSystem);
 }
 
 

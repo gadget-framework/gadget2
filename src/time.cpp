@@ -63,6 +63,10 @@ void TimeClass::IncrementTime() {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "\nThe simulation has reached the last timestep for the current model run");
 
+    //IU: Make sure prev information is updated as well
+    prevyear = currentyear;
+    prevstep = currentstep;
+
   } else {
     currentsubstep = 1;
 

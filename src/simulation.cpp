@@ -253,14 +253,16 @@ int Ecosystem::stepSimulation(int print) {
     // remove any expired tagging experiments
     tagvec.deleteTags(TimeInfo);
 
-  if(TimeInfo->getTime() < TimeInfo->numTotalSteps()) {
     // increase the time in the simulation
     TimeInfo->IncrementTime();
-    return 0;
-  }else{
-    //Rcpp::Rcout << "At the end of time..." << std::endl;
-    return 1;
-  }
+
+    // Check if we have finished the last step in the simulation
+    if(TimeInfo->getYear() == TimeInfo->getPrevYear() &&
+       TimeInfo->getStep() == TimeInfo->getPrevStep()) {
+      return 1;
+    }else{
+      return 0;
+    }
 }
 
 void Ecosystem::finalizeSimulation() {
