@@ -91,14 +91,10 @@ runYear <- function() {
 		else {
 			combineStats(tmp["fleets"], c())
 			combineStats(tmp["stocks"], c())
-
 		}
 		# stop condition
-		if(status[["currentYear"]] > currentYear) break
+		if(status[["currentYear"]] > currentYear || status[["finished"]] == 1) break
 	}
-
-	print("End loop")
-
 	return(stats)
 }
 
