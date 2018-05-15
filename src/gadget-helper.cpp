@@ -621,7 +621,7 @@ Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo){
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix printRecruitment(Rcpp::IntegerVector stockNo){
+Rcpp::List printRecruitment(Rcpp::IntegerVector stockNo){
 
    int j;
 
@@ -633,42 +633,86 @@ Rcpp::NumericMatrix printRecruitment(Rcpp::IntegerVector stockNo){
    StockPtrVector stockvec = EcoSystem->getModelStockVector();
    Stock *stock = stockvec[stockNo[0]-1];
 
+   Rcpp::DataFrame dfRec, dfRen;
+   Rcpp::NumericMatrix matRec, matRen;
+
+   // Get from Spawner and Renewal
    SpawnData* spawner = stock->getSpawnData();
-   if(!spawner){
-	   Rcpp::NumericMatrix m(0,0);
-	   return m;
+   RenewalData* renewal = stock->getRenewalData();
+
+   if(!spawner && !renewal){
+        return Rcpp::List::create(
+          Rcpp::_["renew"]  = matRen,
+          Rcpp::_["spawn"]  = matRec);
    }
 
-   Rcpp::DataFrame df;
-
-   for (j = 0; j < areas.Size(); j++) {
-      int a = Area->getInnerArea(areas[j]);
-      Rcpp::NumericVector v;
-      if(spawner->isSpawnStepAreaPrev(a, TimeInfo)){
-         v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
-            TimeInfo->getPrevStep(), Area->getModelArea(a), spawner->getRec()[a]);
-      }else{
-         v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
-            TimeInfo->getPrevStep(), Area->getModelArea(a), 0.0);
+   if(spawner){
+      for (j = 0; j < areas.Size(); j++) {
+         int a = Area->getInnerArea(areas[j]);
+         Rcpp::NumericVector v;
+         if(spawner->isSpawnStepAreaPrev(a, TimeInfo)){
+            v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+               TimeInfo->getPrevStep(), Area->getModelArea(a), spawner->getRec()[a]);
+         }else{
+            v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+               TimeInfo->getPrevStep(), Area->getModelArea(a), 0.0);
+         }
+         // Append at the end of the DataFrame
+         dfRec.insert(dfRec.end(), v);
       }
-      // Append at the end of the DataFrame
-      df.insert(df.end(), v);
+
+      // Give names to the columns
+      Rcpp::CharacterVector namevec = Rcpp::CharacterVector::create("year", "step",
+        "area", "Rec");
+
+      // Convert to matrix so that we can transpose it (nrows = 4)
+      int dfsize = dfRec.size();
+      Rcpp::NumericMatrix mattemp(4, dfsize);
+      for ( j = 0; j < dfsize; j++ ) {
+         mattemp(Rcpp::_, j) = Rcpp::NumericVector(dfRec[j]);
+      }
+
+      Rcpp::rownames(mattemp) = namevec;
+
+      matRec = Rcpp::transpose(mattemp);
    }
 
-   // Give names to the columns
-   Rcpp::CharacterVector namevec = Rcpp::CharacterVector::create("year", "step",
-     "area", "Rec");
+   if(renewal){
+      for (j = 0; j < areas.Size(); j++) {
+         int a = Area->getInnerArea(areas[j]);
+         Rcpp::NumericVector v;
+	 if(renewal->isRenewalPrevStepArea(a, TimeInfo)){
+	    Rcpp::List renewalInfo = stock->getCurrentALK(a).getRenewalInfo();
+            for(int ll = 0; ll < renewalInfo.length(); ll++){
+               Rcpp::NumericVector tmp = renewalInfo[ll];
+               v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+                  TimeInfo->getPrevStep(), Area->getModelArea(a), tmp[0],
+                  stock->getLengthGroupDiv()->minLength(tmp[1]), tmp[2], tmp[3]);
+               dfRen.insert(dfRen.end(), v);
+            }
+         }else{
+               v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
+                  TimeInfo->getPrevStep(), Area->getModelArea(a), 0, 0, 0, 0);
+               dfRen.insert(dfRen.end(), v);
+         }
+      }
+      // Give names to the columns
+      Rcpp::CharacterVector namevec = Rcpp::CharacterVector::create("year", "step",
+        "area", "age", "length", "renewalNumber", "renewalWeight");
 
-   // Convert to matrix so that we can transpose it (nrows = 4)
-   int dfsize = df.size();
-   Rcpp::NumericMatrix mattemp(4, dfsize);
-   for ( j = 0; j < dfsize; j++ ) {
-      mattemp(Rcpp::_, j) = Rcpp::NumericVector(df[j]);
+      // Convert to matrix so that we can transpose it (nrows = 7)
+      int dfsize = dfRen.size();
+      Rcpp::NumericMatrix mattemp(7, dfsize);
+      for ( j = 0; j < dfsize; j++ ) {
+         mattemp(Rcpp::_, j) = Rcpp::NumericVector(dfRen[j]);
+      }
+
+      Rcpp::rownames(mattemp) = namevec;
+
+      matRen = Rcpp::transpose(mattemp);
    }
 
-   Rcpp::rownames(mattemp) = namevec;
-
-   Rcpp::NumericMatrix mout = Rcpp::transpose(mattemp);
-
-   return mout;
+   return Rcpp::List::create( 
+      Rcpp::_["renew"]  = matRen,
+      Rcpp::_["spawn"]  = matRec);
 }

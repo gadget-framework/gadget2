@@ -1,6 +1,8 @@
 #ifndef agebandmatrix_h
 #define agebandmatrix_h
 
+#include <Rcpp.h>
+
 #include "conversionindex.h"
 #include "doublematrix.h"
 #include "popinfomatrix.h"
@@ -157,8 +159,14 @@ public:
    * \param Addition is the AgeBandMatrix that will be added to the current vector
    * \param CI is the ConversionIndex that will convert between the length groups of the 2 vectors
    * \param ratio is a multiplicative constant applied to each entry (default value 1.0)
+   * \param IU: copy is a condition that tells add to copy the added value into renewalInfo (default value 0)
    */
-  void Add(const AgeBandMatrix& Addition, const ConversionIndex& CI, double ratio = 1.0);
+  void Add(const AgeBandMatrix& Addition, const ConversionIndex& CI, double ratio = 1.0, int copy = 0);
+  /**
+   * \brief IU: This function will get the renewalInfo
+   * \return renewalInfo
+   */
+  Rcpp::List getRenewalInfo() { return renewalInfo; };
 protected:
   /**
    * \brief This is the index for the vector
@@ -172,6 +180,10 @@ protected:
    * \brief This is the indexed vector of PopInfoIndexVector values
    */
   PopInfoIndexVector** v;
+  /**
+   * \brief IU: This is a copy for renewal data
+   */
+  Rcpp::List renewalInfo;
 };
 
 #endif

@@ -110,7 +110,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // printRecruitment
-Rcpp::NumericMatrix printRecruitment(Rcpp::IntegerVector stockNo);
+Rcpp::List printRecruitment(Rcpp::IntegerVector stockNo);
 RcppExport SEXP _gadgetr_printRecruitment(SEXP stockNoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

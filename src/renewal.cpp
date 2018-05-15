@@ -521,15 +521,23 @@ int RenewalData::isRenewalStepArea(int area, const TimeClass* const TimeInfo) {
   return 0;
 }
 
+int RenewalData::isRenewalPrevStepArea(int area, const TimeClass* const TimeInfo) {
+  int i;
+  for (i = 0; i < renewalTime.Size(); i++)
+    if ((renewalTime[i] == (TimeInfo->getTime() - 1)) && (renewalArea[i] == area))
+      return 1;
+  return 0;
+}
+
 void RenewalData::addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < renewalTime.Size(); i++) {
     if ((renewalTime[i] == TimeInfo->getTime()) && (renewalArea[i] == area)) {
       index = i;
       if (readoption == 2)
-        Alkeys.Add(renewalDistribution[i], *CI);
+        Alkeys.Add(renewalDistribution[i], *CI, 0.0, 1);
       else if (renewalMult[i] > verysmall)
-        Alkeys.Add(renewalDistribution[i], *CI, renewalMult[i]);
+        Alkeys.Add(renewalDistribution[i], *CI, renewalMult[i], 1);
     }
   }
 }

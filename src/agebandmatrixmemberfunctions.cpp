@@ -8,7 +8,7 @@
 #include "gadget.h"
 #include "global.h"
 
-void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI, double ratio) {
+void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI, double ratio, int copy) {
 
   PopInfo pop;
   int minaddage = max(this->minAge(), Addition.minAge());
@@ -17,6 +17,9 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
 
   if ((maxaddage < minaddage) || (isZero(ratio)))
     return;
+
+  Rcpp::NumericVector vec;
+  Rcpp::List rList;
 
   if (CI.isSameDl()) {
     int offset = CI.getOffset();
@@ -27,7 +30,13 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
         pop = Addition[age][l - offset];
         pop *= ratio;
         (*v[age - minage])[l] += pop;
+        if(copy){
+           vec = Rcpp::NumericVector::create(age, l, (double) pop.N, (double) pop.W);
+           // Append at the end of the DataFrame
+           rList.push_back(clone(vec));
+	}
       }
+
     }
 
   } else {
@@ -40,6 +49,11 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
           pop *= ratio;
           pop.N /= CI.getNumPos(l);  //JMB CI.getNumPos() should never be zero
           (*v[age - minage])[l] += pop;
+          if(copy){
+            vec = Rcpp::NumericVector::create(age, l, (double) pop.N, (double) pop.W);
+            // Append at the end of the DataFrame
+            rList.push_back(clone(vec));
+	  }
         }
       }
 
@@ -53,10 +67,18 @@ void AgeBandMatrix::Add(const AgeBandMatrix& Addition, const ConversionIndex &CI
             pop = Addition[age][l];
             pop *= ratio;
             (*v[age - minage])[CI.getPos(l)] += pop;
+            if(copy){
+              vec = Rcpp::NumericVector::create(age, CI.getPos(l), pop.N, pop.W);
+              // Append at the end of the DataFrame
+              rList.push_back(clone(vec));
+	    }
           }
         }
       }
     }
+  }
+  if(copy){
+    renewalInfo = clone(rList);
   }
 }
 
