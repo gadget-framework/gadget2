@@ -471,13 +471,13 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
   IntVector param(nvars, 0);
   IntVector nacp(nvars, 0);
 
-  EcoSystem->resetVariables();  //JMB need to reset variables in case they have been scaled
-  if (scale) {
-  		EcoSystem->scaleVariables();
-  		int numThr = omp_get_max_threads ( );
-  		for(i = 0; i < numThr; i++) // scale the variables for the ecosystem of every thread
-  			EcoSystems[i]->scaleVariables();
-  	}
+//  EcoSystem->resetVariables();  //JMB need to reset variables in case they have been scaled
+//  if (scale) {
+  EcoSystem->scaleVariables();
+  int numThr = omp_get_max_threads ( );
+  for(i = 0; i < numThr; i++) // scale the variables for the ecosystem of every thread
+  	EcoSystems[i]->scaleVariables();
+//  	}
   EcoSystem->getOptScaledValues(x);
   EcoSystem->getOptLowerBounds(lowerb);
   EcoSystem->getOptUpperBounds(upperb);
@@ -522,7 +522,7 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
 
 
   double timestop;
-  int numThr = omp_get_max_threads ( );
+  numThr = omp_get_max_threads ( );
   int bestId=0;
   int ini=0;
 
@@ -747,7 +747,6 @@ void OptInfoSimann::OptimiseLikelihoodOMP() {
       x[i] = bestx[i];
   }
 
-  printf("END - nvars %d threads %d fbest %.5lf evals %d time %lf\n", nvars, numThr, score, iters, timestop);
 
 }
 //#endif
@@ -1051,14 +1050,10 @@ void OptInfoSimann::OptimiseLikelihoodREP() {
 	DoubleVector vm(nvars, vminit);
 	IntVector param(nvars, 0);
         double timestop;
-	EcoSystem->resetVariables(); //JMB need to reset variables in case they have been scaled
-	if (scale) {
 		EcoSystem->scaleVariables();
-	
 		int numThr = omp_get_max_threads ( );
 		for(i = 0; i < numThr; i++) // scale the variables for the ecosystem of every thread
 			EcoSystems[i]->scaleVariables();
-	}
 	EcoSystem->getOptScaledValues(x);
 	EcoSystem->getOptLowerBounds(lowerb);
 	EcoSystem->getOptUpperBounds(upperb);
@@ -1106,7 +1101,7 @@ void OptInfoSimann::OptimiseLikelihoodREP() {
 	pa(s, x, simanniter);
 
 	// OpenMP parallelization
-	int numThr = omp_get_max_threads ( );
+	numThr = omp_get_max_threads ( );
 	pa.paral_opt_omp(funcval,numThr,numThr);
 	iters = pa.iterations();
 

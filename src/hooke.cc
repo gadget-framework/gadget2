@@ -309,7 +309,8 @@ void OptInfoHooke::OptimiseLikelihoodREP() {
     delta[i] = ((2 * (rand() % 2)) - 1) * rho;  //JMB - randomise the sign
   }
 
-  bestf = EcoSystem->SimulateAndUpdate(trialx);
+  bestf = EcoSystem->SimulateAndUpdate(x);
+
   if (bestf != bestf) { //check for NaN
     handle.logMessage(LOGINFO, "Error starting Hooke & Jeeves optimisation with f(x) = infinity");
     converge = -1;
@@ -328,7 +329,7 @@ void OptInfoHooke::OptimiseLikelihoodREP() {
 
   while (1) {
     if (isZero(bestf)) {
-      iters = EcoSystem->getFuncEval() - offset;
+//      iters = EcoSystem->getFuncEval() - offset;
       handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = 0");
       converge = -1;
       return;
@@ -443,7 +444,7 @@ void OptInfoHooke::OptimiseLikelihoodREP() {
           	handle.logMessage(LOGINFO, "\nStopping Hooke & Jeeves optimisation algorithm\n");
           	handle.logMessage(LOGINFO, "\nThe number of threads must be a multiple of 2\n");
           	return;
-      }
+          }
       if (isEqual(newf, bestf))
         break;
 
@@ -501,11 +502,12 @@ void OptInfoHooke::OptimiseLikelihoodREP() {
 #endif
 
 void OptInfoHooke::OptimiseLikelihood() {
+
   double oldf, newf, bestf, steplength, tmp;
   int    i, offset;
   int    rchange, rcheck, rnumber;  //Used to randomise the order of the parameters
-  double timestop;
-  handle.logMessage(LOGINFO, "\nStarting Hooke & Jeeves optimisation algorithm SEQ\n");
+
+  handle.logMessage(LOGINFO, "\nStarting Hooke & Jeeves optimisation algorithm\n");
   int nvars = EcoSystem->numOptVariables();
   DoubleVector x(nvars);
   DoubleVector trialx(nvars);
@@ -543,7 +545,6 @@ void OptInfoHooke::OptimiseLikelihood() {
   }
 
   bestf = EcoSystem->SimulateAndUpdate(trialx);
-
   if (bestf != bestf) { //check for NaN
     handle.logMessage(LOGINFO, "Error starting Hooke & Jeeves optimisation with f(x) = infinity");
     converge = -1;
@@ -559,9 +560,8 @@ void OptInfoHooke::OptimiseLikelihood() {
     steplength = rho;
 
   iters = 0;
-  int stop=0;
-  while (stop==0) {
 
+  while (1) {
     if (isZero(bestf)) {
       iters = EcoSystem->getFuncEval() - offset;
       handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = 0");
@@ -602,12 +602,11 @@ void OptInfoHooke::OptimiseLikelihood() {
       for (i = 0; i < nvars; i++)
         bestx[i] = trialx[i] * init[i];
       EcoSystem->storeVariables(score, bestx);
-      stop=1;break;
+      return;
     }
 
     /* if we made some improvements, pursue that direction */
     while (newf < bestf) {
-
       for (i = 0; i < nvars; i++) {
         /* if it has been trapped but f has now gotten better (bndcheck) */
         /* we assume that we are out of the trap, reset the counters     */
@@ -685,7 +684,7 @@ void OptInfoHooke::OptimiseLikelihood() {
         for (i = 0; i < nvars; i++)
           bestx[i] = trialx[i] * init[i];
         EcoSystem->storeVariables(score, bestx);
-        stop=1;break;
+        return;
       }
     } // while (newf < bestf)
 
@@ -721,10 +720,6 @@ void OptInfoHooke::OptimiseLikelihood() {
     for (i = 0; i < nvars; i++)
       delta[i] *= rho;
   }
-
-  timestop = RUNID.returnTime();
-  printf("END - nvars %d threads 1 fbest %.5lf evals %d time %lf\n", nvars, bestf, iters, timestop);
-
 }
 
 /* Functions to perform the parallelization of the algorithm of HJ with OpenMP*/
@@ -821,11 +816,11 @@ double OptInfoHooke::bestNearbySpec(DoubleVector& delta, DoubleVector& point, do
 }
 
   void OptInfoHooke::OptimiseLikelihoodOMP() {
-	   double oldf, newf, bestf, steplength, tmp;
+	  double oldf, newf, bestf, steplength, tmp;
 	   int    i, offset;
 	   int    rchange, rcheck, rnumber;  //Used to randomise the order of the parameters
-	   double timestop;
-	   handle.logMessage(LOGINFO, "\nStarting Hooke & Jeeves optimisation algorithm OMP\n");
+
+	   handle.logMessage(LOGINFO, "\nStarting Hooke & Jeeves optimisation algorithm\n");
 	   int nvars = EcoSystem->numOptVariables();
 	   DoubleVector x(nvars);
 	   DoubleVector trialx(nvars);
@@ -865,7 +860,7 @@ double OptInfoHooke::bestNearbySpec(DoubleVector& delta, DoubleVector& point, do
 	     delta[i] = ((2 * (rand() % 2)) - 1) * rho;  //JMB - randomise the sign
 	   }
 
-	   bestf = EcoSystem->SimulateAndUpdate(trialx);
+	   bestf = EcoSystem->SimulateAndUpdate(x);
 	   if (bestf != bestf) { //check for NaN
 	     handle.logMessage(LOGINFO, "Error starting Hooke & Jeeves optimisation with f(x) = infinity");
 	     converge = -1;
@@ -882,17 +877,15 @@ double OptInfoHooke::bestNearbySpec(DoubleVector& delta, DoubleVector& point, do
 
 	   iters = 0;
 
-	   int stop=0;
-	   while (stop == 0) {
-
-	     	if (isZero(bestf)) {
+	   while (1) {
+	     if (isZero(bestf)) {
 //	 #ifndef _OPENMP
 //	       iters = EcoSystem->getFuncEval() - offset;
 //	 #endif
-	       		handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = 0");
-	       		converge = -1;
-	       		return;
-	     	}
+	       handle.logMessage(LOGINFO, "Error in Hooke & Jeeves optimisation after", iters, "function evaluations, f(x) = 0");
+	       converge = -1;
+	       return;
+	     }
 
 	     /* randomize the order of the parameters once in a while */
 	     rchange = 0;
@@ -938,7 +931,7 @@ double OptInfoHooke::bestNearbySpec(DoubleVector& delta, DoubleVector& point, do
 	       for (i = 0; i < nvars; i++)
 	         bestx[i] = trialx[i] * init[i];
 	       EcoSystem->storeVariables(score, bestx);
-	       stop=1;break;
+	       return;
 	     }
 
 	     /* if we made some improvements, pursue that direction */
@@ -1020,9 +1013,9 @@ double OptInfoHooke::bestNearbySpec(DoubleVector& delta, DoubleVector& point, do
 	         break;
 
 	       /* if too many function evaluations occur, terminate the algorithm */
-	 #ifndef _OPENMP
-	       iters = EcoSystem->getFuncEval() - offset;
-	 #endif
+//	 #ifndef _OPENMP
+//	       iters = EcoSystem->getFuncEval() - offset;
+//	 #endif
 	       if (iters > hookeiter) {
 	         handle.logMessage(LOGINFO, "\nStopping Hooke & Jeeves optimisation algorithm\n");
 	         handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
@@ -1035,13 +1028,13 @@ double OptInfoHooke::bestNearbySpec(DoubleVector& delta, DoubleVector& point, do
 	         for (i = 0; i < nvars; i++)
 	           bestx[i] = trialx[i] * init[i];
 	         EcoSystem->storeVariables(score, bestx);
-		 stop=1;break;
+	         return;
 	       }
 	     }
 
-	 #ifndef _OPENMP
-	     iters = EcoSystem->getFuncEval() - offset;
-	 #endif
+//	 #ifndef _OPENMP
+//	     iters = EcoSystem->getFuncEval() - offset;
+//	 #endif
 	     if (newf < bestf) {
 	       for (i = 0; i < nvars; i++)
 	         bestx[i] = x[i] * init[i];
@@ -1073,9 +1066,6 @@ double OptInfoHooke::bestNearbySpec(DoubleVector& delta, DoubleVector& point, do
 	     for (i = 0; i < nvars; i++)
 	       delta[i] *= rho;
 	   }
-	   timestop = RUNID.returnTime();
-	   printf("END - nvars %d threads %d fbest %.5lf evals %d time %lf\n", nvars, numThr, bestf, iters, timestop);
-
   }
 //#endif
 #endif

@@ -19,7 +19,7 @@ void OptInfoSimann::read(CommentStream& infile, char* text) {
   unsigned s3 = 0;
 
   int count = 0;
-  while (!infile.eof() && strcasecmp(text,"[pso]") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
+  while (!infile.eof() && strcasecmp(text, "[PSO]") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]") && strcasecmp(text, "[DE]")) {
     infile >> ws;
     if (strcasecmp(text, "seed") == 0) {
       int s = 0;

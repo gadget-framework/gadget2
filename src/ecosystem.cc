@@ -147,9 +147,9 @@ void Ecosystem::Optimise() {
 #ifdef _OPENMP
           if (runParallel){
 	  	int j, numThr = omp_get_max_threads ( ); //AGT REMOVED
-	  	DoubleVector v = this->getValues();
-	  	for (j = 0; j < numThr; j++)
-		  	EcoSystems[j]->Update(v);
+	  	//DoubleVector v = this->getValues();
+	  	//for (j = 0; j < numThr; j++)
+		//  	EcoSystems[j]->Update(v);
 	  	if(runParallel==SPECULATIVE)
 		{
     			handle.logMessage(LOGINFO, "\nCalling Speculative Optimization");
@@ -162,17 +162,14 @@ void Ecosystem::Optimise() {
 		}
 	  }
 	  else
-	  {
-    			handle.logMessage(LOGINFO, "\nCalling Reproducible serial Optimization");
-		 optvec[i]->OptimiseLikelihood();
+	{
+    		handle.logMessage(LOGINFO, "\nCalling Reproducible serial Optimization");
+		optvec[i]->OptimiseLikelihood();
 	}
 #else
-//#ifdef SPECULATIVE
-//	  optvec[i]->OptimiseLikelihoodOMP();
-//#else
 	  optvec[i]->OptimiseLikelihood();
 #endif
-	  time(&stoptime);
+    time(&stoptime);
     this->writeOptValues();
   }
 }

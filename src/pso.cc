@@ -504,15 +504,14 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
     handle.logMessage(LOGINFO, "Starting PSO with ", size, " particles\n");
     handle.logMessage(LOGINFO, "PSO goal = ", goal, "\n");
 
-    EcoSystem->scaleVariables();
-    int numThr = omp_get_max_threads ( );
-#pragma omp parallel for
-    for (i=0;i<numThr;i++)
-            EcoSystems[i]->scaleVariables();
-    EcoSystem->getOptScaledValues(x);
-    EcoSystem->getOptLowerBounds(lowerb);
-    EcoSystem->getOptUpperBounds(upperb);
-    EcoSystem->getOptInitialValues(init);
+  int numThr = omp_get_max_threads ( );
+                EcoSystem->scaleVariables();
+                for(i = 0; i < numThr; i++) // scale the variables for the ecosystem of every thread
+                        EcoSystems[i]->scaleVariables();
+  EcoSystem->getOptScaledValues(x);
+  EcoSystem->getOptLowerBounds(lowerb);
+  EcoSystem->getOptUpperBounds(upperb);
+  EcoSystem->getOptInitialValues(init);
 
     for (i = 0; i < nvars; ++i) {
         bestx[i] = x[i];
@@ -532,7 +531,6 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
 
     best.bestf = EcoSystems[0]->SimulateAndUpdate(x);
     best.index = 0;
-
     if (best.bestf != best.bestf) { //check for NaN
         handle.logMessage(LOGINFO, "Error starting PSO optimisation with f(x) = infinity");
         converge = -1;
@@ -658,6 +656,7 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
             handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
             score = EcoSystems[0]->SimulateAndUpdate(bestx);
+            score = EcoSystem->SimulateAndUpdate(bestx);
             for (i = 0; i < nvars; i++)
                 bestx[i] = bestx[i] * init[i];
             handle.logMessage(LOGINFO, "\nPSO finished with a likelihood score of", score);
@@ -671,6 +670,7 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
             handle.logMessage(LOGINFO, "\nStopping PSO optimisation algorithm\n");
             handle.logMessage(LOGINFO, "Goal achieved!!! @ step ", psosteps);
             score = EcoSystems[0]->SimulateAndUpdate(bestx);
+            score = EcoSystem->SimulateAndUpdate(bestx);
             handle.logMessage(LOGINFO, "\nPSO finished with a likelihood score of", score);
             break;
         }
@@ -859,7 +859,7 @@ void OptInfoPso::OptimiseLikelihoodOMP() {
         bestx[d] = bestx[d] * init[d];
     EcoSystem->storeVariables(best.bestf, bestx);
     EcoSystem->writeBestValues();
-    
+        
 }
 #endif
 
