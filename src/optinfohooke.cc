@@ -15,7 +15,7 @@ void OptInfoHooke::read(CommentStream& infile, char* text) {
 
   int count = 0;
 
-  while (!infile.eof() && strcasecmp(text,"[pso]")  && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]")) {
+  while (!infile.eof() && strcasecmp(text, "[PSO]") && strcasecmp(text, "[simann]") && strcasecmp(text, "[hooke]") && strcasecmp(text, "[bfgs]") && strcasecmp(text, "[DE]")) {
     infile >> ws;
     if (strcasecmp(text, "seed") == 0) {
       int seed = 0;

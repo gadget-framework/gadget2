@@ -242,7 +242,7 @@ void OptInfoDE::OptimiseLikelihood() {
             handle.logMessage(LOGINFO, "\nStopping DE optimisation algorithm\n");
             handle.logMessage(LOGINFO, "Goal achieved!!! @ step ", steps);
             score = EcoSystem->SimulateAndUpdate(bestx);
-            handle.logMessage(LOGINFO, "\nPSO finished with a likelihood score of", score);
+            handle.logMessage(LOGINFO, "\nDE finished with a likelihood score of", score);
             break;
         }
 
@@ -497,16 +497,18 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
     F=0.8; CR=0.9;
     handle.logMessage(LOGINFO, "DE goal = ", goal, "\n");
 
-    EcoSystem->scaleVariables();
-    int numThr = omp_get_max_threads ( );
-#pragma omp parallel for
-    for (i=0;i<numThr;i++)
+  int numThr = omp_get_max_threads ( );
+  //EcoSystem->resetVariables();  //JMB need to reset variables in case they have been scaled
+  EcoSystem->scaleVariables();
+  for(i = 0; i < numThr; i++) // scale the variables for the ecosystem of every thread
             EcoSystems[i]->scaleVariables();
-    EcoSystem->getOptScaledValues(x);
-    EcoSystem->getOptLowerBounds(lowerb);
-    EcoSystem->getOptUpperBounds(upperb);
-    EcoSystem->getOptInitialValues(init);
+  EcoSystem->getOptScaledValues(x);
+  EcoSystem->getOptLowerBounds(lowerb);
+  EcoSystem->getOptUpperBounds(upperb);
+  EcoSystem->getOptInitialValues(init);
 
+
+  
     for (i = 0; i < nvars; ++i) {
         bestx[i] = x[i];
         param[i] = i;
@@ -523,6 +525,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
             }
      }
 
+   
     best.bestf = EcoSystems[0]->SimulateAndUpdate(x);
     best.index = 0;
 
@@ -644,13 +647,15 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
 
             handle.logMessage(LOGINFO, "\nStopping DE optimisation algorithm\n");
             handle.logMessage(LOGINFO, "The optimisation stopped after", iters, "function evaluations");
-            handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of PSO steps was reached");
+            handle.logMessage(LOGINFO, "The optimisation stopped because the maximum number of DE steps was reached");
             handle.logMessage(LOGINFO, "was reached and NOT because an optimum was found for this run");
 
+
             score = EcoSystems[0]->SimulateAndUpdate(bestx);
+	    score = EcoSystem->SimulateAndUpdate(bestx);
             for (i = 0; i < nvars; i++)
                 bestx[i] = bestx[i] * init[i];
-            handle.logMessage(LOGINFO, "\nPSO finished with a likelihood score of", score);
+            handle.logMessage(LOGINFO, "\nDE finished with a likelihood score of", score);
             EcoSystem->storeVariables(score, bestx);
             return;
         }
@@ -660,7 +665,8 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
             handle.logMessage(LOGINFO, "\nStopping DE optimisation algorithm\n");
             handle.logMessage(LOGINFO, "Goal achieved!!! @ step ", steps);
             score = EcoSystems[0]->SimulateAndUpdate(bestx);
-            handle.logMessage(LOGINFO, "\nPSO finished with a likelihood score of", score);
+            score = EcoSystem->SimulateAndUpdate(bestx);
+            handle.logMessage(LOGINFO, "\nDE finished with a likelihood score of", score);
             break;
         }
 
@@ -824,7 +830,7 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
                 iters = iters - offset;
                 handle.logMessage(LOGINFO, "\nNew optimum found after", iters, "function evaluations");
                 handle.logMessage(LOGINFO, "The likelihood score is", best.bestf, "at the point");
-        EcoSystem->writeBestValues();
+	        EcoSystem->writeBestValues();
 		previous_fbest_fitness=best.bestf;
 	} else {
                 iter_without_improv_global_best++;
@@ -853,7 +859,6 @@ void OptInfoDE::OptimiseLikelihoodOMP() {
         bestx[d] = bestx[d] * init[d];
     EcoSystem->storeVariables(best.bestf, bestx);
     EcoSystem->writeBestValues();
-    
 }
 #endif
 
