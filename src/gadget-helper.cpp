@@ -173,7 +173,14 @@ Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::Integer
    Fleet *fleet = fleetvec[fleetNo[0]-1];
    LengthPredator *predator = fleet->getPredator();
 
-   StockPrey* prey = stock->getPrey();
+   StockPrey* prey;
+
+   if(stock->isEaten())
+     prey = stock->getPrey();
+   else{
+     Rcpp::NumericMatrix m(0,0);
+     return m;
+   }
 
    CI = new ConversionIndex(prey->getLengthGroupDiv(), prey->getLengthGroupDiv());
 
