@@ -334,7 +334,7 @@ Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::Integer
 // [[Rcpp::export]]
 Rcpp::NumericMatrix printStock(Rcpp::IntegerVector stockNo){
 
-   int j, age, len;
+   int j, age, len, minage;
 
    const AgeBandMatrix* alptr;
 
@@ -346,6 +346,7 @@ Rcpp::NumericMatrix printStock(Rcpp::IntegerVector stockNo){
    StockPtrVector stockvec = EcoSystem->getModelStockVector();
    Stock *stock = stockvec[stockNo[0]-1];
 
+   minage = stock->minAge();
 #ifdef DEBUG
    int width = 0;
    int lowwidth = 0;
@@ -360,14 +361,14 @@ Rcpp::NumericMatrix printStock(Rcpp::IntegerVector stockNo){
      for (age = alptr->minAge(); age <= alptr->maxAge(); age++) {
        for (len = alptr->minLength(age); len < alptr->maxLength(age); len++) {
 #ifdef DEBUG
-         Rcpp::Rcout << setw(lowwidth) << TimeInfo->getPrevYear() << sep
-           << setw(lowwidth) << TimeInfo->getPrevStep() << sep
+         Rcpp::Rcout << setw(lowwidth) << TimeInfo->getYear() << sep
+           << setw(lowwidth) << TimeInfo->getStep() << sep
            << setw(lowwidth) << Area->getModelArea(a) << sep << setw(lowwidth)
-           << age << sep << setw(lowwidth)
+           << age + minage << sep << setw(lowwidth)
            << stock->getLengthGroupDiv()->minLength(len) << sep;
 #endif
-         Rcpp::NumericVector v = Rcpp::NumericVector::create(TimeInfo->getPrevYear(),
-            TimeInfo->getPrevStep(), Area->getModelArea(a), age,
+         Rcpp::NumericVector v = Rcpp::NumericVector::create(TimeInfo->getYear(),
+            TimeInfo->getStep(), Area->getModelArea(a), age + minage,
             stock->getLengthGroupDiv()->minLength(len));
          Rcpp::NumericVector w;
 

@@ -24,19 +24,30 @@ processFleetStats <- function(fleets) {
 	return(stats)
 }
 
-processStockStats <- function(stocks) {
+processStockStats <- function(stocks, pre=TRUE) {
 
-	getStats <- function(x) {
+	# For pre (before stepping)
+	getStatsPre <- function(x) {
 		stockNo <- getStockNo(x)
 		ret <- list()
 		ret[["stk"]] <- printStock(stockNo)
-		ret[["ssb"]] <- printSSB(stockNo)
-		ret[["rec"]] <- printRecruitment(stockNo)
-
 		return(ret)
 	}
 
-	stats <- lapply(stocks, getStats)
+	# For post (after stepping)
+	getStatsPost <- function(x) {
+		stockNo <- getStockNo(x)
+		ret <- list()
+		ret[["ssb"]] <- printSSB(stockNo)
+		ret[["rec"]] <- printRecruitment(stockNo)
+		return(ret)
+	}
+
+	if(pre == TRUE)
+		stats <- lapply(stocks, getStatsPre)
+	else
+		stats <- lapply(stocks, getStatsPost)
+
 	names(stats) <- stocks
 	return(stats)
 }
@@ -76,13 +87,21 @@ runYear <- function() {
 	currentYear <- ecoSystem[["time"]][["currentYear"]]
 
 	while(TRUE) {
+		# Get stats from all stocks (before stepping)
+		stockStatPre <- processStockStats(ecoSystem[["stock"]], pre=TRUE)
+
+		# Run forward a single step
 		status <- stepSim()
+
+		# Get stats from all stocks (after stepping)
+		stockStatPost <- processStockStats(ecoSystem[["stock"]], pre=FALSE)
+
+		# Combine both pre and post
+		stockStat <- lapply(ecoSystem[["stock"]], function(x) return(c(stockStatPre[[x]], stockStatPost[[x]])))
+		names(stockStat) <- ecoSystem[["stock"]]
 
 		# Get stats from all fleets
 		fleetStat <- processFleetStats(ecoSystem[["fleet"]])
-
-		# Get stats from all stocks
-		stockStat <- processStockStats(ecoSystem[["stock"]])
 
 		# Make temp list
 		tmp <- list(fleets=fleetStat, stocks=stockStat)
