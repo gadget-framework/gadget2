@@ -193,12 +193,6 @@ Rcpp::IntegerVector finalizeSim(){
 // [[Rcpp::export]]
 Rcpp::List finalize(){
   handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
-  if (mainGlobal.printFinal() && !(mainGlobal.runNetwork()))
-    EcoSystem->writeStatus(mainGlobal.getPrintFinalFile());
-
-  //JMB print final values of parameters
-  if (!(mainGlobal.runNetwork()))
-    EcoSystem->writeParams((mainGlobal.getPI()).getParamOutFile(), (mainGlobal.getPI()).getPrecision());
 
   if (check)
     free(workingdir);
@@ -206,8 +200,6 @@ Rcpp::List finalize(){
   Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
   delete EcoSystem;
   handle.logFinish();
-  //return EXIT_SUCCESS;
-  //
   return z;
 }
 
