@@ -25,8 +25,8 @@ printDetailedSSB <- function(stockNo) {
     .Call(`_gadgetr_printDetailedSSB`, stockNo)
 }
 
-updateRecruitementC <- function(stockNo, recruitParams) {
-    .Call(`_gadgetr_updateRecruitementC`, stockNo, recruitParams)
+updateRecruitmentC <- function(stockNo, recruitParams) {
+    .Call(`_gadgetr_updateRecruitmentC`, stockNo, recruitParams)
 }
 
 printSSB <- function(stockNo) {

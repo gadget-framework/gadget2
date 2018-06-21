@@ -506,7 +506,7 @@ Rcpp::NumericMatrix printDetailedSSB(Rcpp::IntegerVector stockNo){
 }
 
 // [[Rcpp::export]]
-Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo, Rcpp::NumericVector recruitParams){
+Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::NumericVector recruitParams){
 
    int j;
    int functionnumber, paramsize;
@@ -555,22 +555,20 @@ Rcpp::IntegerVector updateRecruitementC(Rcpp::IntegerVector stockNo, Rcpp::Numer
       return Rcpp::IntegerVector(1,55);
    }
 
-#ifdef DEBUG
-   Rcpp::Rcout << functionname << " " << functionnumber << endl;
+   Rcpp::Rcout << ">> Change: " << functionname << " with params: ";
+   for (j = 0 ; j < paramsize ; j++)
+      Rcpp::Rcout << (*spawnparameters)[j] << " ";
+
+   // Don't update value if it's negative
+   for (j = 0 ; j < paramsize ; j++){
+      if(recruitParams[j] > -1)
+         (*spawnparameters)[j].setValue(recruitParams[j]);
+   }
+
+   Rcpp::Rcout << "... into: " << functionname << " with params: ";
    for (j = 0 ; j < paramsize ; j++)
       Rcpp::Rcout << (*spawnparameters)[j] << " ";
    Rcpp::Rcout << endl;
-#endif
-
-   for (j = 0 ; j < paramsize ; j++)
-      (*spawnparameters)[j].setValue(recruitParams[j]);
-
-#ifdef DEBUG
-   Rcpp::Rcout << functionname << " " << functionnumber << endl;
-   for (j = 0 ; j < paramsize ; j++)
-      Rcpp::Rcout << (*spawnparameters)[j] << " ";
-   Rcpp::Rcout << endl;
-#endif
 
    return Rcpp::IntegerVector(1,0);
 }

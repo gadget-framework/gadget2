@@ -158,6 +158,22 @@ updateRenewal <- function(stockName, year, step, area, age, number, mean,
 
 }
 
+updateRecruitment <- function(stockName, ...){
+
+        # Convert name into number
+        stockNo <- getStockNo(stockName)
+
+        # Process params
+        params <- c(...)
+
+        if(is.na(stockNo)){
+                print("Can't find stock")
+                return(1)
+        }
+
+        return (updateRecruitmentC(stockNo, params))
+}
+
 updateSuitability <- function(fleetName, stockName, len, value){
 
 	# Convert stock name into number
