@@ -141,9 +141,9 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
   aggregator->Sum();
   int a, age, len;
 
-  //IU create lists
-  rdata =  Rcpp::List::create();
-  int ri = 0;
+  //IU create lists (disable for now)
+  //rdata =  Rcpp::List::create();
+  //int ri = 0;
 
   alptr = &aggregator->getSum();
   for (a = 0; a < outerareas.Size(); a++) {
@@ -169,8 +169,8 @@ void StockFullPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 	}
 
         //IU Lets try to export to R!
-        Rcpp::NumericVector x =  Rcpp::NumericVector::create( TimeInfo->getYear(), TimeInfo->getStep(), outerareas[a], age + minage, LgrpDiv->meanLength(len), rN, rW);
-        rdata.insert(ri++, clone(x));
+        //Rcpp::NumericVector x =  Rcpp::NumericVector::create( TimeInfo->getYear(), TimeInfo->getStep(), outerareas[a], age + minage, LgrpDiv->meanLength(len), rN, rW);
+        //rdata.insert(ri++, clone(x));
 
       }
     }

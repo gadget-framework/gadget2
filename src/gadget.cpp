@@ -197,10 +197,10 @@ Rcpp::List finalize(){
   if (check)
     free(workingdir);
 
-  Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
+  //Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
   delete EcoSystem;
   handle.logFinish();
-  return z;
+  return Rcpp::List::create(R_NilValue);
 }
 
 // [[Rcpp::export]]
@@ -297,7 +297,7 @@ Rcpp::List gadget(Rcpp::StringVector args) {
       }
 
       // IU: Try to exit here
-      return R_NilValue;
+      return Rcpp::List::create(R_NilValue);
 
       EcoSystem->Simulate(mainGlobal.runPrint());
       if ((mainGlobal.getPI()).getPrint())
@@ -367,12 +367,12 @@ Rcpp::List gadget(Rcpp::StringVector args) {
   if (check)
     free(workingdir);
 
-  Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
+  //Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
   delete EcoSystem;
   handle.logFinish();
   //return EXIT_SUCCESS;
   //
-  return z;
+  return Rcpp::List::create(R_NilValue);
 }
 
 // [[Rcpp::export]]

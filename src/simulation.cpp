@@ -75,7 +75,7 @@ void Ecosystem::Simulate(int print) {
     tagvec[j]->Reset();
 
   // IU create list for print output
-  rdata =  Rcpp::List::create();
+  //rdata =  Rcpp::List::create();
 
   TimeInfo->Reset();
   for (i = 0; i < TimeInfo->numTotalSteps(); i++) {
@@ -113,8 +113,8 @@ void Ecosystem::Simulate(int print) {
     if (print)
       for (j = 0; j < printvec.Size(); j++){
         printvec[j]->Print(TimeInfo, 0);  //end of timestep, so printtime is 0
-	//IU pass to ecosystem
-	rdata.insert(j, clone(printvec[j]->rdata));
+	//IU pass to ecosystem (disable for now)
+	//rdata.insert(j, clone(printvec[j]->rdata));
       }
     for (j = 0; j < Area->numAreas(); j++)
       this->updateAgesOneArea(j);
@@ -169,8 +169,8 @@ void Ecosystem::initSimulation() {
   for (j = 0; j < tagvec.Size(); j++)
     tagvec[j]->Reset();
 
-  // IU create list for print output
-  rdata =  Rcpp::List::create();
+  // IU create list for print output (disable for now)
+  //rdata =  Rcpp::List::create();
 
   TimeInfo->Reset();
 }
@@ -228,8 +228,8 @@ int Ecosystem::stepSimulation(int print) {
     if (print)
       for (j = 0; j < printvec.Size(); j++){
         printvec[j]->Print(TimeInfo, 0);  //end of timestep, so printtime is 0
-	//IU pass to ecosystem
-	rdata.insert(j, clone(printvec[j]->rdata));
+	//IU pass to ecosystem (disable for now)
+	//rdata.insert(j, clone(printvec[j]->rdata));
       }
     for (j = 0; j < Area->numAreas(); j++)
       this->updateAgesOneArea(j);

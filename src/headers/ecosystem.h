@@ -287,9 +287,9 @@ public:
   void finalizeSimulation();
 
   /**
-    * \brief IU: For data communication with R
+    * \brief IU: For data communication with R (disable for now)
     */
-  Rcpp::List rdata;
+  //Rcpp::List rdata;
 
 protected:
   /**
