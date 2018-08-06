@@ -304,7 +304,8 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     tmpout.close();
     tmpout.clear();
   }
-  printinfo.checkPrintInfo(runnetwork);
+  // IU Disable params.out printing once and for all?
+  //printinfo.checkPrintInfo(runnetwork);
 
   //JMB check the value of maxratio
   if ((maxratio < rathersmall) || (maxratio > 1.0)) {
