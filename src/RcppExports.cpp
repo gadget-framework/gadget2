@@ -53,14 +53,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // printPredatorPrey
-Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo);
-RcppExport SEXP _gadgetr_printPredatorPrey(SEXP fleetNoSEXP, SEXP stockNoSEXP) {
+Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector predatorNo, Rcpp::IntegerVector stockNo, Rcpp::StringVector predatorType);
+RcppExport SEXP _gadgetr_printPredatorPrey(SEXP predatorNoSEXP, SEXP stockNoSEXP, SEXP predatorTypeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type predatorNo(predatorNoSEXP);
     Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
-    rcpp_result_gen = Rcpp::wrap(printPredatorPrey(fleetNo, stockNo));
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type predatorType(predatorTypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(printPredatorPrey(predatorNo, stockNo, predatorType));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -245,7 +246,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_gadgetr_getStockInfoC", (DL_FUNC) &_gadgetr_getStockInfoC, 1},
     {"_gadgetr_updateRenewalC", (DL_FUNC) &_gadgetr_updateRenewalC, 12},
     {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},
-    {"_gadgetr_printPredatorPrey", (DL_FUNC) &_gadgetr_printPredatorPrey, 2},
+    {"_gadgetr_printPredatorPrey", (DL_FUNC) &_gadgetr_printPredatorPrey, 3},
     {"_gadgetr_printStock", (DL_FUNC) &_gadgetr_printStock, 1},
     {"_gadgetr_printDetailedSSB", (DL_FUNC) &_gadgetr_printDetailedSSB, 1},
     {"_gadgetr_updateRecruitmentC", (DL_FUNC) &_gadgetr_updateRecruitmentC, 2},

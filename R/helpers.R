@@ -1,31 +1,37 @@
+getPredation <- function(x, type) {
+        ecoSystem <- getEcosystemInfo()
+        stocks <- ecoSystem[["stock"]]
+
+        getConsumption <- function(prey, fleetNo) {
+                stockNo <- getStockNo(prey)
+                tryCatch({
+                        printPredatorPrey(fleetNo, stockNo, type)
+                }, error=function(e){})
+        }
+
+	if(type == "fleet") {
+                fleetNo <- getFleetNo(x)
+	}else if(type == "stock") {
+		fleetNo <- getStockNo(x)
+	}else{
+		print("Type is wrong")
+		return(NULL)
+	}
+
+        ret <- list()
+        catches <- lapply(stocks, getConsumption, fleetNo)
+        names(catches) <- stocks
+        ret[["catch"]] <- catches
+        return(ret)
+}
+
 processFleetStats <- function(fleets) {
-
-	ecoSystem <- getEcosystemInfo()
-	stocks <- ecoSystem[["stock"]]
-
-	getConsumption <- function(prey, fleetNo) {
-		stockNo <- getStockNo(prey)
-		tryCatch({
-			printPredatorPrey(fleetNo, stockNo)
-		}, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
-	}
-
-	getStats <- function(x) {
-		fleetNo <- getFleetNo(x)
-		ret <- list()
-		catches <- lapply(stocks, getConsumption, fleetNo)
-		names(catches) <- stocks
-		ret[["catch"]] <- catches
-		return(ret)
-	}
-
-	stats <- lapply(fleets, getStats)
+	stats <- lapply(fleets, getPredation, "fleet")
 	names(stats) <- fleets
 	return(stats)
 }
 
 processStockStats <- function(stocks, pre=TRUE) {
-
 	# For pre (before stepping)
 	getStatsPre <- function(x) {
 		stockNo <- getStockNo(x)
@@ -40,6 +46,7 @@ processStockStats <- function(stocks, pre=TRUE) {
 		ret <- list()
 		ret[["ssb"]] <- printSSB(stockNo)
 		ret[["rec"]] <- printRecruitment(stockNo)
+		ret[["eat"]] <- getPredation(x, "stock")[["catch"]]
 		return(ret)
 	}
 

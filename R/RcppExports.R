@@ -13,8 +13,8 @@ updateSuitabilityC <- function(fleetNo, stockNo, len, value) {
     .Call(`_gadgetr_updateSuitabilityC`, fleetNo, stockNo, len, value)
 }
 
-printPredatorPrey <- function(fleetNo, stockNo) {
-    .Call(`_gadgetr_printPredatorPrey`, fleetNo, stockNo)
+printPredatorPrey <- function(predatorNo, stockNo, predatorType) {
+    .Call(`_gadgetr_printPredatorPrey`, predatorNo, stockNo, predatorType)
 }
 
 printStock <- function(stockNo) {

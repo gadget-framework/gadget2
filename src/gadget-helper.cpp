@@ -147,7 +147,7 @@ Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::Intege
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo){
+Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector predatorNo, Rcpp::IntegerVector stockNo, Rcpp::StringVector predatorType){
 
    int i, j, k, h, l;
    double ratio;
@@ -169,13 +169,28 @@ Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector fleetNo, Rcpp::Integer
    StockPtrVector stockvec = EcoSystem->getModelStockVector();
    Stock *stock = stockvec[stockNo[0]-1];
 
-   FleetPtrVector& fleetvec = EcoSystem->getModelFleetVector();
-   Fleet *fleet = fleetvec[fleetNo[0]-1];
-   LengthPredator *predator = fleet->getPredator();
+   PopPredator *predator = NULL;
+
+   //check type of predator (can be fleet or another stock)
+   if(strcmp(predatorType[0], "fleet") == 0){
+      Rcpp::IntegerVector fleetNo = predatorNo;
+      FleetPtrVector& fleetvec = EcoSystem->getModelFleetVector();
+      Fleet *fleet = fleetvec[fleetNo[0]-1];
+      predator = fleet->getPredator();
+   }else if(strcmp(predatorType[0], "stock") == 0){
+      Stock *stockPredator = stockvec[predatorNo[0]-1];
+      if(stockPredator->doesEat())
+         predator = stockPredator->getPredator();
+   }else{
+      Rcpp::Rcout << "Error in predatorpreyaggregator - error in predator type, should be either fleet or stock" << std::endl;
+      Rcpp::NumericMatrix m(0,0);
+      return m;
+   }
 
    StockPrey* prey;
 
-   if(stock->isEaten())
+   // Make sure the stock is eaten and predator is defined before continuing
+   if(stock->isEaten() && predator != NULL)
      prey = stock->getPrey();
    else{
      Rcpp::NumericMatrix m(0,0);
