@@ -10,9 +10,15 @@ cpp_sharedlibs := $(patsubst %.cpp, %.o, $(cpp_sources))
 
 OBJECTS = $(cpp_sharedlibs)
 
+ifeq      ($(TARGET_OS),mingw32)
+else ifeq ($(TARGET_OS),cygwin)
+else
+FPIC := -fPIC
+endif
+
 all : gadgetr.so
 
 gadgetr.so: $(OBJECTS)
 
 %.o: %.cpp $(cpp_sources)
-	$(CXX) $< -c -fPIC -g -O3 -Wall -march=native $(PKG_CXXFLAGS) $(RCPPFLAGS) $(RCPPINCL)
+	$(CXX) $< -c $(FPIC) -g -O3 -Wall -march=native $(PKG_CXXFLAGS) $(RCPPFLAGS) $(RCPPINCL)
