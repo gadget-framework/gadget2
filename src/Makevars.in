@@ -1,0 +1,18 @@
+R_HOME := $(shell R RHOME | sed -e "s|\\\\|\/|g")
+
+CXX := $(shell $(R_HOME)/bin/R CMD config CXX)
+
+RCPPFLAGS := $(shell $(R_HOME)/bin/R CMD config --cppflags)
+RCPPINCL := $(shell echo 'Rcpp:::CxxFlags()' | $(R_HOME)/bin/R --vanilla --slave)
+
+cpp_sources := $(wildcard *.cpp)
+cpp_sharedlibs := $(patsubst %.cpp, %.o, $(cpp_sources))
+
+OBJECTS = $(cpp_sharedlibs)
+
+all : gadgetr.so
+
+gadgetr.so: $(OBJECTS)
+
+%.o: %.cpp $(cpp_sources)
+	$(CXX) $< -c -fPIC -g -O3 -Wall -march=native $(PKG_CXXFLAGS) $(RCPPFLAGS) $(RCPPINCL)
