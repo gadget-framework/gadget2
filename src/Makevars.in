@@ -1,4 +1,9 @@
-R_HOME := $(shell R RHOME | sed -e "s|\\\\|\/|g")
+ifeq ($(OS),Windows_NT)
+	R_HOME := $(shell R RHOME | sed -e "s|\\\\|\/|g")
+else
+	R_HOME := $(shell R RHOME)
+	FPIC := -fPIC
+endif
 
 CXX := $(shell $(R_HOME)/bin/R CMD config CXX)
 
@@ -9,12 +14,6 @@ cpp_sources := $(wildcard *.cpp)
 cpp_sharedlibs := $(patsubst %.cpp, %.o, $(cpp_sources))
 
 OBJECTS = $(cpp_sharedlibs)
-
-ifeq      ($(TARGET_OS),mingw32)
-else ifeq ($(TARGET_OS),cygwin)
-else
-FPIC := -fPIC
-endif
 
 all : gadgetr.so
 
