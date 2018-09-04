@@ -1,11 +1,10 @@
-# If shell variable is not set
-SHELL =  sh
-
-# Location of the R HOME
+# Location of the R HOME and which shell to use
 ifeq ($(OS),Windows_NT)
 	R_HOME := $(shell R RHOME | sed -e "s|\\\\|\/|g")
+	SHELL := sh
 else
 	R_HOME := $(shell R RHOME)
+	SHELL := bash
 endif
 
 # If R binary is located in a non-standard location
