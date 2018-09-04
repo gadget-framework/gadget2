@@ -1,5 +1,5 @@
 # If shell variable is not set
-SHELL =  bash
+SHELL =  sh
 
 # Location of the R HOME
 ifeq ($(OS),Windows_NT)
