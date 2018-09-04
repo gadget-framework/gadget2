@@ -1,18 +1,5 @@
-# Location of the R HOME and which shell to use
-ifeq ($(OS),Windows_NT)
-	R_HOME := $(shell R RHOME | sed -e "s|\\\\|\/|g")
-	SHELL := sh
-else
-	R_HOME := $(shell R RHOME)
-	SHELL := bash
-endif
-
-# If R binary is located in a non-standard location
-ifneq ("","$(wildcard $(R_HOME)/bin/R)")
-	R_BIN := $(R_HOME)/bin/R
-else
-	R_BIN := $(shell echo 'cat(R.home("bin"))' | R --vanilla --slave)/R
-endif
+# R Binary
+R_BIN := $(R_HOME)/bin/R
 
 # Various compiler flags
 CXX := $(shell $(R_BIN) CMD config CXX)
