@@ -1,15 +1,28 @@
+# If shell variable is not set
+SHELL =  bash
+
+# Location of the R HOME
 ifeq ($(OS),Windows_NT)
 	R_HOME := $(shell R RHOME | sed -e "s|\\\\|\/|g")
 else
 	R_HOME := $(shell R RHOME)
-	FPIC := -fPIC
 endif
 
-CXX := $(shell $(R_HOME)/bin/R CMD config CXX)
+# If R binary is located in a non-standard location
+ifneq ("","$(wildcard $(R_HOME)/bin/R)")
+	R_BIN := $(R_HOME)/bin/R
+else
+	R_BIN := $(shell echo 'cat(R.home("bin"))' | R --vanilla --slave)/R
+endif
 
-RCPPFLAGS := $(shell $(R_HOME)/bin/R CMD config --cppflags)
-RCPPINCL := $(shell echo 'Rcpp:::CxxFlags()' | $(R_HOME)/bin/R --vanilla --slave)
+# Various compiler flags
+CXX := $(shell $(R_BIN) CMD config CXX)
+FPIC := $(shell $(R_BIN) CMD config CPICFLAGS)
 
+RCPPFLAGS := $(shell $(R_BIN) CMD config --cppflags)
+RCPPINCL := $(shell echo 'Rcpp:::CxxFlags()' | $(R_BIN) --vanilla --slave)
+
+# Source files
 cpp_sources := $(wildcard *.cpp)
 cpp_sharedlibs := $(patsubst %.cpp, %.o, $(cpp_sources))
 
