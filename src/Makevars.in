@@ -19,4 +19,4 @@ all : gadgetr.so
 gadgetr.so: $(OBJECTS)
 
 %.o: %.cpp $(cpp_sources)
-	$(CXX) $< -c $(FPIC) -g -O3 -Wall -march=native $(PKG_CXXFLAGS) $(RCPPFLAGS) $(RCPPINCL)
+	$(CXX) $< -c $(FPIC) -g -O3 -Wall -march=native $(PKG_CXXFLAGS) -I$(R_INCLUDE_DIR) $(RCPPFLAGS) $(RCPPINCL)
