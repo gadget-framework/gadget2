@@ -13,6 +13,7 @@ Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo){
    StockPtrVector stockvec = EcoSystem->getModelStockVector();
    Stock *stock = stockvec[stockNo[0]-1];
 
+   // Get length group labels
    const LengthGroupDivision* lengthGroup = stock->getLengthGroupDiv();
 
    int lSize = lengthGroup->numLengthGroups();
@@ -25,10 +26,22 @@ Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo){
       minLength[i] = lengthGroup->minLength(i);
    }
 
+   // Get renewal and recruitment information
+   bool hasRenew = false;
+   if(stock->getRenewalData()){
+     hasRenew = true;
+   }
+
+   bool hasSpawn = false;
+   if(stock->getSpawnData()){
+     hasSpawn = true;
+   }
+
    return Rcpp::List::create(Rcpp::_("lengthGroup") =
-				   Rcpp::DataFrame::create( Rcpp::_("minLength") = minLength,
-							    Rcpp::_("maxLength") = maxLength)
-				);
+				  Rcpp::DataFrame::create(Rcpp::_("minLength") = minLength,
+                                  Rcpp::_("maxLength") = maxLength),
+          Rcpp::_("hasRenew") = hasRenew,
+          Rcpp::_("hasSpawn") = hasSpawn);
 }
 
 // [[Rcpp::export]]
