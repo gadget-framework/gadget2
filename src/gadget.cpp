@@ -192,14 +192,13 @@ Rcpp::IntegerVector finalizeSim(){
 
 // [[Rcpp::export]]
 Rcpp::List finalize(){
-  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
 
   if (check)
     free(workingdir);
 
-  //Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
   delete EcoSystem;
-  handle.logFinish();
+  EcoSystem = 0;
+
   return Rcpp::List::create(R_NilValue);
 }
 
