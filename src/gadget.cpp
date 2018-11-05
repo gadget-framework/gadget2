@@ -9,13 +9,14 @@
 #include <Rcpp.h>
 
 Ecosystem* EcoSystem;
+
 MainInfo mainGlobal;
 StochasticData* data;
 int check;
 char* workingdir;
 
 // [[Rcpp::export]]
-Rcpp::NumericVector wholeSim(){
+Rcpp::IntegerVector wholeSim(){
       EcoSystem->Simulate(mainGlobal.runPrint());
       if ((mainGlobal.getPI()).getPrint())
         EcoSystem->writeValues();
@@ -29,34 +30,151 @@ Rcpp::NumericVector wholeSim(){
           EcoSystem->writeValues();
       }
       delete data;
-      return NULL;
+      return Rcpp::IntegerVector(1,0);
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector initSim(){
+Rcpp::IntegerVector updateAmountStep(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::NumericVector value){
+
+   int fN = fleetNo[0] - 1;
+   int st = step[0];
+
+   double val = value[0];
+
+   int maxFleet = 0;
+   int maxSteps = 0;
+   int maxArea = 0;
+
+   AreaClass* Area = EcoSystem->getArea();
+   int ar = Area->getInnerArea(area[0]);
+
+   FleetPtrVector& fleetvec = EcoSystem->getModelFleetVector();
+
+   maxFleet = fleetvec.Size();
+
+   if(fN < 0 ||fN > maxFleet-1)
+	   return Rcpp::IntegerVector(1, 55);
+
+   Fleet *fleet = fleetvec[fN];
+	
+   FormulaMatrix& amount = fleet->getAmount();
+
+   Rcpp::Rcout << "Change fleet \"" << fleet->getName() << "\" - Step: " << st << " - Area: " << ar + 1 << " with " << val << std::endl;
+
+   //Rcpp::Rcout << "Row Size " << amount.Nrow() << std::endl; 
+
+   maxSteps = amount.Nrow();
+
+   if(st < 1 || st > maxSteps - 1)
+           return Rcpp::IntegerVector(1, 55);
+
+   //Rcpp::Rcout << "Column size for " << st << " " << amount.Ncol(st) << std::endl;
+
+   maxArea = amount.Ncol(st);
+
+   if(ar < 0 || ar > maxArea-1)
+           return Rcpp::IntegerVector(1, 55);
+
+   Formula& vec = amount[st][ar];
+
+   Rcpp::Rcout << "Value before " << (double) vec << std::endl;
+
+   vec.setValue(val);
+
+   Rcpp::Rcout << "Value after " << (double) vec << std::endl;
+
+   return  Rcpp::IntegerVector(1, 0);
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector updateAmountYear(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::NumericVector value){
+
+   TimeClass* TimeInfo = EcoSystem->getTimeInfo();
+
+   int timeid;
+
+   int yy = year[0];
+   int ss = step[0];
+
+   if (TimeInfo->isWithinPeriod(yy, ss))
+      timeid = TimeInfo->calcSteps(yy, ss);
+   else
+      return Rcpp::IntegerVector(1, 55);
+
+   Rcpp::Rcout << "Step is" << timeid << std::endl;
+
+   Rcpp::IntegerVector timeidvec(1,timeid);
+
+   return updateAmountStep(fleetNo, timeidvec, area, value);
+}
+
+Rcpp::IntegerVector getEcosystemTime(Ecosystem* e){
+   int res = 0;
+
+   if(e->getCurrentYear() == e->getTimeInfo()->getPrevYear() &&
+      e->getCurrentStep() == e->getTimeInfo()->getPrevStep()) res = 1;
+
+   return
+   Rcpp::IntegerVector::create(Rcpp::_["currentTime"] = e->getCurrentTime(),
+                               Rcpp::_["currentYear"] = e->getCurrentYear(),
+                               Rcpp::_["currentStep"] = e->getCurrentStep(),
+                               Rcpp::_["totalSteps"] = e->numTotalSteps(),
+			       Rcpp::_["finished"] = res);
+}
+
+// [[Rcpp::export]]
+Rcpp::List getEcosystemInfo() {
+
+   FleetPtrVector& fleetvec = EcoSystem->getModelFleetVector();
+
+   int maxFleet = fleetvec.Size();
+
+   Rcpp::CharacterVector infoFleet(maxFleet);
+
+   for(int fN=0;fN<maxFleet;fN++){
+      Fleet *fleet = fleetvec[fN];
+      infoFleet[fN] = fleet->getName();
+   }
+
+   StockPtrVector& stockvec = EcoSystem->getModelStockVector();
+   int maxStock = stockvec.Size();
+
+   Rcpp::CharacterVector infoStock(maxStock);
+
+   for(int sN=0;sN<maxStock;sN++){
+      Stock *stock = stockvec[sN];
+      infoStock[sN] = stock->getName();
+   }
+
+   return Rcpp::List::create(Rcpp::Named("fleet") = infoFleet,
+                Rcpp::Named("stock") = infoStock,
+		Rcpp::Named("time") = getEcosystemTime(EcoSystem));
+
+}
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector initSim(){
    EcoSystem->initSimulation();
-   return NULL;
+   return getEcosystemTime(EcoSystem);
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector stepSim(){
+Rcpp::IntegerVector stepSim(){
    int res;
    res = EcoSystem->stepSimulation(mainGlobal.runPrint());
-   Rcpp::NumericVector ret {res};
-   return ret;
+   return getEcosystemTime(EcoSystem);
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector yearSim(){
+Rcpp::IntegerVector yearSim(){
    int res;
    res = EcoSystem->yearSimulation(mainGlobal.runPrint());
-   Rcpp::NumericVector ret {res};
-   return ret;
+   return getEcosystemTime(EcoSystem);
 }
 
 
 // [[Rcpp::export]]
-Rcpp::NumericVector finalizeSim(){
+Rcpp::IntegerVector finalizeSim(){
    EcoSystem->finalizeSimulation();
    if ((mainGlobal.getPI()).getPrint())
         EcoSystem->writeValues();
@@ -69,28 +187,19 @@ Rcpp::NumericVector finalizeSim(){
           EcoSystem->writeValues();
    }
    delete data;
-   return NULL;
+   return Rcpp::IntegerVector(1, 0);
 }
 
 // [[Rcpp::export]]
 Rcpp::List finalize(){
-  handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
-  if (mainGlobal.printFinal() && !(mainGlobal.runNetwork()))
-    EcoSystem->writeStatus(mainGlobal.getPrintFinalFile());
-
-  //JMB print final values of parameters
-  if (!(mainGlobal.runNetwork()))
-    EcoSystem->writeParams((mainGlobal.getPI()).getParamOutFile(), (mainGlobal.getPI()).getPrecision());
 
   if (check)
     free(workingdir);
 
-  Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
   delete EcoSystem;
-  handle.logFinish();
-  //return EXIT_SUCCESS;
-  //
-  return z;
+  EcoSystem = 0;
+
+  return Rcpp::List::create(R_NilValue);
 }
 
 // [[Rcpp::export]]
@@ -108,9 +217,6 @@ Rcpp::List gadget(Rcpp::StringVector args) {
 	aVector[i+1] = tmp;
   }
 
-  //MainInfo main;
-  //StochasticData* data = 0;
-  //int check = 0;
   data = 0;
   check = 0;
 
@@ -190,7 +296,7 @@ Rcpp::List gadget(Rcpp::StringVector args) {
       }
 
       // IU: Try to exit here
-      return NULL;
+      return Rcpp::List::create(R_NilValue);
 
       EcoSystem->Simulate(mainGlobal.runPrint());
       if ((mainGlobal.getPI()).getPrint())
@@ -260,10 +366,18 @@ Rcpp::List gadget(Rcpp::StringVector args) {
   if (check)
     free(workingdir);
 
-  Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
+  //Rcpp::List z = Rcpp::clone(EcoSystem->rdata);
   delete EcoSystem;
   handle.logFinish();
   //return EXIT_SUCCESS;
   //
-  return z;
+  return Rcpp::List::create(R_NilValue);
+}
+
+// [[Rcpp::export]]
+Rcpp::LogicalVector isGadgetInitialized(){
+	if(!EcoSystem)
+		return Rcpp::LogicalVector(1, FALSE);
+	else
+		return Rcpp::LogicalVector(1, TRUE);
 }

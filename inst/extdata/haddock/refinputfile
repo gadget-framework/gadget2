@@ -1,0 +1,42 @@
+;
+; Reference parameter file for this haddock model
+;
+switch   value        lower   upper  optimise
+grq0     6.3421717    1       10     1 ; q0 in growth function
+grq2     17.020301    5       20     1 ; q2, q3 in growth function
+bbeta    11.792983    0.1     5000   1 ; beta in beta-binomial
+inage2   0.011234341  0.00001 1      1 ; initial number of age 2 fish
+inage3   0.0023677952 0.00001 1      1 ; initial number of age 3 fish
+inage4   0.0060429722 0.00001 1      1 ; initial number of age 4 fish
+inage5   0.022761935  0.00001 1      1 ; initial number of age 5 fish
+inage6   0.0014660210 0.00001 1      1 ; initial number of age 6 fish
+inage7   0.0010000000 0.00001 1      1 ; initial number of age 7 fish
+inage8   0.026070485  0.00001 1      1 ; initial number of age 8 fish
+inage9   0.096904951  0.00001 1      1 ; initial number of age 9 fish
+rec78    22.377895    0.2     34     1 ; number of recruits in 1978
+rec79    9.9845325    0.2     34     1 ; number of recruits in 1979
+rec80    1.2187327    0.2     34     1 ; number of recruits in 1980
+rec81    11.258073    0.2     34     1 ; number of recruits in 1981
+rec82    4.8916410    0.2     34     1 ; number of recruits in 1982
+rec83    3.5328430    0.2     34     1 ; number of recruits in 1983
+rec84    8.2212940    0.2     34     1 ; number of recruits in 1984
+rec85    9.0904755    0.2     34     1 ; number of recruits in 1985
+rec86    24.934956    0.2     34     1 ; number of recruits in 1986
+rec87    9.0852408    0.2     34     1 ; number of recruits in 1987
+rec88    5.0242726    0.2     34     1 ; number of recruits in 1988
+rec89    4.3285368    0.2     34     1 ; number of recruits in 1989
+rec90    11.906707    0.2     34     1 ; number of recruits in 1990
+rec91    20.386092    0.2     34     1 ; number of recruits in 1991
+rec92    11.129591    0.2     34     1 ; number of recruits in 1992
+rec93    9.1155295    0.2     34     1 ; number of recruits in 1993
+rec94    11.856131    0.2     34     1 ; number of recruits in 1994
+rec95    6.5406113    0.2     34     1 ; number of recruits in 1995
+rec96    14.777468    0.2     34     1 ; number of recruits in 1996
+rec97    4.2329148    0.2     34     1 ; number of recruits in 1997
+rec98    7.9890151    0.2     34     1 ; number of recruits in 1998
+rec99    24.796618    0.2     34     1 ; number of recruits in 1999
+acomm    -10.342371   -100    -1     1 ; alpha in fleet suitability
+bcomm    0.21405130   0.1     10     1 ; beta in fleet suitability
+asur     -4.3391371   -100    -1     1 ; alpha in survey suitability
+bsur     0.22464659   0.1     10     1 ; beta in survey suitability
+mult     0.5          0.1     1      1 ; multiplier for future fleet

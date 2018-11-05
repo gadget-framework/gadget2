@@ -237,7 +237,7 @@ double Formula::evalFunction() const {
         v = *(argList[1]);
       break;
 
-    case PI:
+    case gPI:
       if (argList.size() != 1)
         handle.logMessage(LOGFAIL, "Error in formula - invalid number of parameters for pi");
       v = *(argList[0]);
@@ -372,7 +372,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
         handle.logMessage(LOGWARN, "Warning in formula - if statement used for optimising run");
 
     } else if (strcasecmp(text, "pi") == 0) {
-      F.functiontype = PI;
+      F.functiontype = gPI;
       Formula* f = new Formula(pivalue);
       F.argList.push_back(f);
 

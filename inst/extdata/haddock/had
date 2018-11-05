@@ -1,0 +1,79 @@
+;
+; Haddock stock file for this haddock model
+;
+stockname       had
+livesonareas    1
+minage          1
+maxage          10
+minlength       4.5
+maxlength       90.5
+dl              1
+refweightfile   had.refweights
+;
+; the growth and consumption can be calculated on a finer scale
+; so the length groups for this are specified here
+;
+growthandeatlengths   len.agg
+;
+; information about the growth of the stock
+;
+doesgrow              1
+growthfunction        weightvb
+;
+; the parameters required for this growth function are
+;
+wgrowthparameters     #grq0  0  #grq2  #grq2  0.666  1
+lgrowthparameters     1  0  0  1  2.2  1.4  8.85e-6  3.0257  0
+;
+beta                  #bbeta
+maxlengthgroupgrowth  20
+;
+; information about the natural mortality of the stock
+; age             1   2    3   4   5   6   7   8   9   10
+naturalmortality  0.5 0.35 0.2 0.2 0.2 0.2 0.2 0.3 0.4 0.7
+;
+; information about the stock acting as a prey
+;
+iseaten           1 ; the fleet is considered a predator
+preylengths       len.agg
+energycontent     1
+;
+; information about the stock acting as a predator
+;
+doeseat           0
+;
+; information about the initial conditions of the stock
+;
+initialconditions
+minage            1
+maxage            10
+minlength         4.5
+maxlength         90.5
+normalcondfile    had.init
+;
+; information about the migration of the stock
+;
+doesmigrate       0
+;
+; information about the maturation of the stock
+;
+doesmature        0
+;
+; information about the movement of the stock
+;
+doesmove          0
+;
+; information about the recruitment to the stock
+;
+doesrenew         1
+minlength         4.5
+maxlength         28.5
+normalparamfile   had.rec
+;
+; information about the spawning of the stock
+;
+doesspawn         0
+;
+; information about the straying of the stock
+;
+doesstray         0

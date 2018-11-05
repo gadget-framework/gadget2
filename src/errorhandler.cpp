@@ -28,16 +28,16 @@ void ErrorHandler::setLogLevel(int level) {
       loglevel = LOGNONE;
       break;
     case 1:
-      //only get the failure messages written to std::cerr
+      //only get the failure messages written to Rcpp::Rcerr
       //gadget will exit with Rcpp::stop(REXIT_FAILURE) once it receives a message here
       loglevel = LOGFAIL;
       break;
     case 2:
-      //also get the information messages written to std::cout
+      //also get the information messages written to Rcpp::Rcout
       loglevel = LOGINFO;
       break;
     case 3:
-      //also get the warning messages written to std::cerr
+      //also get the warning messages written to Rcpp::Rcerr
       loglevel = LOGWARN;
       break;
     case 4:
@@ -53,7 +53,7 @@ void ErrorHandler::setLogLevel(int level) {
       loglevel = LOGDETAIL;
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << level << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << level << endl;
       break;
   }
 }
@@ -95,7 +95,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg) {
         logfile << msg << endl;
         logfile.flush();
       }
-      cerr << msg << endl;
+      Rcpp::Rcerr << msg << endl;
       Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
@@ -103,7 +103,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg) {
         logfile << msg << endl;
         logfile.flush();
       }
-      cout << msg << endl;
+      Rcpp::Rcout << msg << endl;
       break;
     case LOGWARN:
       numwarn++;
@@ -111,7 +111,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg) {
         logfile << msg << endl;
         logfile.flush();
       }
-      cerr << msg << endl;
+      Rcpp::Rcerr << msg << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -122,7 +122,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg) {
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
 }
@@ -139,7 +139,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, const char* msg
         logfile << msg1 << sep << msg2 << endl;
         logfile.flush();
       }
-      cerr << msg1 << sep << msg2 << endl;
+      Rcpp::Rcerr << msg1 << sep << msg2 << endl;
       Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
@@ -147,7 +147,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, const char* msg
         logfile << msg1 << sep << msg2 << endl;
         logfile.flush();
       }
-      cout << msg1 << sep << msg2 << endl;
+      Rcpp::Rcout << msg1 << sep << msg2 << endl;
       break;
     case LOGWARN:
       numwarn++;
@@ -155,7 +155,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, const char* msg
         logfile << msg1 << sep << msg2 << endl;
         logfile.flush();
       }
-      cerr << msg1 << sep << msg2 << endl;
+      Rcpp::Rcerr << msg1 << sep << msg2 << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -166,7 +166,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, const char* msg
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
 }
@@ -183,7 +183,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, int number) {
         logfile << msg << sep << number << endl;
         logfile.flush();
       }
-      cerr << msg << sep << number << endl;
+      Rcpp::Rcerr << msg << sep << number << endl;
       Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
@@ -191,7 +191,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, int number) {
         logfile << msg << sep << number << endl;
         logfile.flush();
       }
-      cout << msg << sep << number << endl;
+      Rcpp::Rcout << msg << sep << number << endl;
       break;
     case LOGWARN:
       numwarn++;
@@ -199,7 +199,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, int number) {
         logfile << msg << sep << number << endl;
         logfile.flush();
       }
-      cerr << msg << sep << number << endl;
+      Rcpp::Rcerr << msg << sep << number << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -210,7 +210,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, int number) {
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
 }
@@ -227,7 +227,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, double number) {
         logfile << msg << sep << number << endl;
         logfile.flush();
       }
-      cerr << msg << sep << number << endl;
+      Rcpp::Rcerr << msg << sep << number << endl;
       Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
@@ -235,7 +235,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, double number) {
         logfile << msg << sep << number << endl;
         logfile.flush();
       }
-      cout << msg << sep << number << endl;
+      Rcpp::Rcout << msg << sep << number << endl;
       break;
     case LOGWARN:
       numwarn++;
@@ -243,7 +243,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, double number) {
         logfile << msg << sep << number << endl;
         logfile.flush();
       }
-      cerr << msg << sep << number << endl;
+      Rcpp::Rcerr << msg << sep << number << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -254,7 +254,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg, double number) {
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
 }
@@ -271,7 +271,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, int number, con
         logfile << msg1 << sep << number << sep << msg2 << endl;
         logfile.flush();
       }
-      cerr << msg1 << sep << number << sep << msg2 << endl;
+      Rcpp::Rcerr << msg1 << sep << number << sep << msg2 << endl;
       Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
@@ -279,7 +279,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, int number, con
         logfile << msg1 << sep << number << sep << msg2 << endl;
         logfile.flush();
       }
-      cout << msg1 << sep << number << sep << msg2 << endl;
+      Rcpp::Rcout << msg1 << sep << number << sep << msg2 << endl;
       break;
     case LOGWARN:
       numwarn++;
@@ -287,7 +287,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, int number, con
         logfile << msg1 << sep << number << sep << msg2 << endl;
         logfile.flush();
       }
-      cerr << msg1 << sep << number << sep << msg2 << endl;
+      Rcpp::Rcerr << msg1 << sep << number << sep << msg2 << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -298,7 +298,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, int number, con
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
 }
@@ -315,7 +315,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, double number, 
         logfile << msg1 << sep << number << sep << msg2 << endl;
         logfile.flush();
       }
-      cerr << msg1 << sep << number << sep << msg2 << endl;
+      Rcpp::Rcerr << msg1 << sep << number << sep << msg2 << endl;
       Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
@@ -323,7 +323,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, double number, 
         logfile << msg1 << sep << number << sep << msg2 << endl;
         logfile.flush();
       }
-      cout << msg1 << sep << number << sep << msg2 << endl;
+      Rcpp::Rcout << msg1 << sep << number << sep << msg2 << endl;
       break;
     case LOGWARN:
       numwarn++;
@@ -331,7 +331,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, double number, 
         logfile << msg1 << sep << number << sep << msg2 << endl;
         logfile.flush();
       }
-      cerr << msg1 << sep << number << sep << msg2 << endl;
+      Rcpp::Rcerr << msg1 << sep << number << sep << msg2 << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -342,7 +342,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, const char* msg1, double number, 
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
 }
@@ -363,8 +363,8 @@ void ErrorHandler::logMessage(LogLevel mlevel, DoubleVector vec) {
         logfile.flush();
       }
       for (i = 0; i < vec.Size(); i++)
-        cerr << vec[i] << sep;
-      cerr << endl;
+        Rcpp::Rcerr << vec[i] << sep;
+      Rcpp::Rcerr << endl;
       Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
@@ -375,8 +375,8 @@ void ErrorHandler::logMessage(LogLevel mlevel, DoubleVector vec) {
         logfile.flush();
       }
       for (i = 0; i < vec.Size(); i++)
-        cout << vec[i] << sep;
-      cout << endl;
+        Rcpp::Rcout << vec[i] << sep;
+      Rcpp::Rcout << endl;
       break;
     case LOGWARN:
       numwarn++;
@@ -387,8 +387,8 @@ void ErrorHandler::logMessage(LogLevel mlevel, DoubleVector vec) {
         logfile.flush();
       }
       for (i = 0; i < vec.Size(); i++)
-        cerr << vec[i] << sep;
-      cerr << endl;
+        Rcpp::Rcerr << vec[i] << sep;
+      Rcpp::Rcerr << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -401,7 +401,7 @@ void ErrorHandler::logMessage(LogLevel mlevel, DoubleVector vec) {
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
 }
@@ -420,7 +420,7 @@ void ErrorHandler::logMessageNaN(LogLevel mlevel, const char* msg) {
         logfile << "Error in model - NaN found" << sep << msg << endl;
         logfile.flush();
       }
-      cerr << "Error in model - NaN found" << sep << msg << endl;
+      Rcpp::Rcerr << "Error in model - NaN found" << sep << msg << endl;
       Rcpp::stop(REXIT_FAILURE);
       break;
     case LOGINFO:
@@ -428,7 +428,7 @@ void ErrorHandler::logMessageNaN(LogLevel mlevel, const char* msg) {
         logfile << "Error in model - NaN found" << sep << msg << endl;
         logfile.flush();
       }
-      cout << "Error in model - NaN found" << sep << msg << endl;
+      Rcpp::Rcout << "Error in model - NaN found" << sep << msg << endl;
       break;
     case LOGWARN:
       numwarn++;
@@ -436,7 +436,7 @@ void ErrorHandler::logMessageNaN(LogLevel mlevel, const char* msg) {
         logfile << "Error in model - NaN found" << sep << msg << endl;
         logfile.flush();
       }
-      cerr << "Error in model - NaN found" << sep << msg << endl;
+      Rcpp::Rcerr << "Error in model - NaN found" << sep << msg << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -447,7 +447,7 @@ void ErrorHandler::logMessageNaN(LogLevel mlevel, const char* msg) {
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
 }
@@ -470,9 +470,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
         logfile.flush();
       }
       if (files->getSize() == 0)
-        cerr << "Error on commandline - " << msg << endl;
+        Rcpp::Rcerr << "Error on commandline - " << msg << endl;
       else
-        cerr << "Error in file " << strFilename << " - " << msg << endl;
+        Rcpp::Rcerr << "Error in file " << strFilename << " - " << msg << endl;
       delete[] strFilename;
       Rcpp::stop(REXIT_FAILURE);
       break;
@@ -486,9 +486,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
         logfile.flush();
       }
       if (files->getSize() == 0)
-        cerr << "Warning on commandline - " << msg << endl;
+        Rcpp::Rcerr << "Warning on commandline - " << msg << endl;
       else
-        cerr << "Warning in file " << strFilename << " - " << msg << endl;
+        Rcpp::Rcerr << "Warning in file " << strFilename << " - " << msg << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -499,7 +499,7 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg) {
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
   delete[] strFilename;
@@ -524,9 +524,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, int number) 
         logfile.flush();
       }
       if (files->getSize() == 0)
-        cerr << "Error on commandline - " << msg << sep << number << endl;
+        Rcpp::Rcerr << "Error on commandline - " << msg << sep << number << endl;
       else
-        cerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
+        Rcpp::Rcerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
       delete[] strFilename;
       Rcpp::stop(REXIT_FAILURE);
       break;
@@ -540,9 +540,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, int number) 
         logfile.flush();
       }
      if (files->getSize() == 0)
-        cerr << "Warning on commandline - " << msg << sep << number << endl;
+        Rcpp::Rcerr << "Warning on commandline - " << msg << sep << number << endl;
       else
-        cerr << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
+        Rcpp::Rcerr << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -553,7 +553,7 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, int number) 
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
   delete[] strFilename;
@@ -577,9 +577,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, double numbe
         logfile.flush();
       }
       if (files->getSize() == 0)
-        cerr << "Error on commandline - " << msg << sep << number << endl;
+        Rcpp::Rcerr << "Error on commandline - " << msg << sep << number << endl;
       else
-        cerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
+        Rcpp::Rcerr << "Error in file " << strFilename << " - " << msg << sep << number << endl;
       delete[] strFilename;
       Rcpp::stop(REXIT_FAILURE);
       break;
@@ -593,9 +593,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, double numbe
         logfile.flush();
       }
       if (files->getSize() == 0)
-        cerr << "Warning on commandline - " << msg << sep << number << endl;
+        Rcpp::Rcerr << "Warning on commandline - " << msg << sep << number << endl;
       else
-        cerr << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
+        Rcpp::Rcerr << "Warning in file " << strFilename << " - " << msg << sep << number << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -606,7 +606,7 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg, double numbe
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
   delete[] strFilename;
@@ -630,9 +630,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg1, const char*
         logfile.flush();
       }
       if (files->getSize() == 0)
-        cerr << "Error on commandline - " << msg1 << sep << msg2 << endl;
+        Rcpp::Rcerr << "Error on commandline - " << msg1 << sep << msg2 << endl;
       else
-        cerr << "Error in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
+        Rcpp::Rcerr << "Error in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
       delete[] strFilename;
       Rcpp::stop(REXIT_FAILURE);
       break;
@@ -646,9 +646,9 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg1, const char*
         logfile.flush();
       }
       if (files->getSize() == 0)
-        cerr << "Warning on commandline - " << msg1 << sep << msg2 << endl;
+        Rcpp::Rcerr << "Warning on commandline - " << msg1 << sep << msg2 << endl;
       else
-        cerr << "Warning in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
+        Rcpp::Rcerr << "Warning in file " << strFilename << " - " << msg1 << sep << msg2 << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -659,7 +659,7 @@ void ErrorHandler::logFileMessage(LogLevel mlevel, const char* msg1, const char*
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
   delete[] strFilename;
@@ -679,7 +679,7 @@ void ErrorHandler::logFileEOFMessage(LogLevel mlevel) {
         logfile << "Unexpected end of file " << strFilename << endl;
         logfile.flush();
       }
-      cerr << "Unexpected end of file " << strFilename << endl;
+      Rcpp::Rcerr << "Unexpected end of file " << strFilename << endl;
       delete[] strFilename;
       Rcpp::stop(REXIT_FAILURE);
       break;
@@ -689,7 +689,7 @@ void ErrorHandler::logFileEOFMessage(LogLevel mlevel) {
         logfile << "Unexpected end of file " << strFilename << endl;
         logfile.flush();
       }
-      cerr << "Unexpected end of file " << strFilename << endl;
+      Rcpp::Rcerr << "Unexpected end of file " << strFilename << endl;
       break;
     case LOGDEBUG:
     case LOGMESSAGE:
@@ -700,7 +700,7 @@ void ErrorHandler::logFileEOFMessage(LogLevel mlevel) {
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
   delete[] strFilename;
@@ -721,7 +721,7 @@ void ErrorHandler::logFileUnexpected(LogLevel mlevel, const char* msg1, const ch
           << "Expected " << msg1 << " but found instead " << msg2 << endl;
         logfile.flush();
       }
-      cerr << "Error in file " << strFilename << endl
+      Rcpp::Rcerr << "Error in file " << strFilename << endl
         << "Expected " << msg1 << " but found instead " << msg2 << endl;
       delete[] strFilename;
       Rcpp::stop(REXIT_FAILURE);
@@ -733,7 +733,7 @@ void ErrorHandler::logFileUnexpected(LogLevel mlevel, const char* msg1, const ch
           << "Expected " << msg1 << " but found instead " << msg2 << endl;
         logfile.flush();
       }
-      cerr << "Warning in file " << strFilename << endl
+      Rcpp::Rcerr << "Warning in file " << strFilename << endl
         << "Expected " << msg1 << " but found instead " << msg2 << endl;
       break;
     case LOGDEBUG:
@@ -746,7 +746,7 @@ void ErrorHandler::logFileUnexpected(LogLevel mlevel, const char* msg1, const ch
       }
       break;
     default:
-      cerr << "Error in errorhandler - invalid log level " << mlevel << endl;
+      Rcpp::Rcerr << "Error in errorhandler - invalid log level " << mlevel << endl;
       break;
   }
   delete[] strFilename;
@@ -787,12 +787,12 @@ void ErrorHandler::logFinish() {
 
   if (loglevel >= LOGINFO) {
     if (runopt) {
-      cout << "\nGadget optimisation finished OK - runtime was ";
+      Rcpp::Rcout << "\nGadget optimisation finished OK - runtime was ";
 #ifndef GADGET_NETWORK
-      RUNID.printTime(cout);
+      RUNID.printTime(Rcpp::Rcout);
 #endif
     } else
-      cout << "\nGadget simulation finished OK\n";
-    cout << endl;
+      Rcpp::Rcout << "\nGadget simulation finished OK\n";
+    Rcpp::Rcout << endl;
   }
 }

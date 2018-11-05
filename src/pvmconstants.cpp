@@ -1,5 +1,6 @@
 #include "pvmconstants.h"
 #include "gadget.h"
+#include <Rcpp.h>
 
 PVMConstants::PVMConstants() {
   stopPVM = 1;
@@ -16,7 +17,7 @@ void PVMConstants::setDataEncode(int dc) {
   if (dc == 0 || dc == 1 || dc == 2)
     dataEncode = dc;
   else {
-    cerr << "Error in pvmconstants - invalid value for dataencode\n";
+    Rcpp::Rcerr << "Error in pvmconstants - invalid value for dataencode\n";
     Rcpp::stop(REXIT_FAILURE);
   }
 }

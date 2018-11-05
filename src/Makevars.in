@@ -1,0 +1,22 @@
+# R Binary
+R_BIN := $(R_HOME)/bin/R
+
+# Various compiler flags
+CXX := $(shell $(R_BIN) CMD config CXX)
+FPIC := $(shell $(R_BIN) CMD config CPICFLAGS)
+
+RCPPFLAGS := $(shell $(R_BIN) CMD config --cppflags)
+RCPPINCL := $(shell echo 'Rcpp:::CxxFlags()' | $(R_BIN) --vanilla --slave)
+
+# Source files
+cpp_sources := $(wildcard *.cpp)
+cpp_sharedlibs := $(patsubst %.cpp, %.o, $(cpp_sources))
+
+OBJECTS = $(cpp_sharedlibs)
+
+all : gadgetr.so
+
+gadgetr.so: $(OBJECTS)
+
+%.o: %.cpp $(cpp_sources)
+	$(CXX) $< -c $(FPIC) -g -O3 -Wall -march=native $(PKG_CXXFLAGS) -I$(R_INCLUDE_DIR) $(RCPPFLAGS) $(RCPPINCL)

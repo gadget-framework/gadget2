@@ -184,6 +184,19 @@ SpawnData::SpawnData(CommentStream& infile, int maxage, const LengthGroupDivisio
   }
   handle.logMessage(LOGMESSAGE, "Read spawning data file");
   keeper->clearLast();
+
+
+  //IU: Init ssb and rec vector
+  int maxarea = 0;
+
+  for (i = 0; i < areas.Size(); i++){
+    int inarea = this->areaNum(spawnArea[i]);
+    if(inarea > maxarea) maxarea = inarea;
+  }
+
+  ssbTotal = Rcpp::NumericVector::create(maxarea + 1);
+  recTotal = Rcpp::NumericVector::create(maxarea + 1);
+
 }
 
 SpawnData::~SpawnData() {
@@ -359,6 +372,19 @@ int SpawnData::isSpawnStepArea(int area, const TimeClass* const TimeInfo) {
   return 0;
 }
 
+int SpawnData::isSpawnStepAreaPrev(int area, const TimeClass* const TimeInfo) {
+  int i, j;
+
+  if ((TimeInfo->getYear() < spawnFirstYear) || (TimeInfo->getYear() > spawnLastYear))
+    return 0;
+
+  for (i = 0; i < spawnStep.Size(); i++)
+    for (j = 0; j < spawnArea.Size(); j++)
+      if ((spawnStep[i] == TimeInfo->getPrevStep()) && (spawnArea[j] == area))
+        return 1;
+  return 0;
+}
+
 void SpawnData::Reset(const TimeClass* const TimeInfo) {
   int i;
 
@@ -491,6 +517,15 @@ double SpawnData::calcRecruitNumber(double temp, int inarea) {
       handle.logMessage(LOGWARN, "Warning in spawner calcrecruit- unrecognised recruitment function", functionname);
       break;
   }
+
+  //IU: Add ssb and recruit values
+  ssbTotal[inarea] = ssb;
+  recTotal[inarea] = total;
+
+#ifdef DEBUG
+  Rcpp::Rcout << "SSB in area " << inarea << " : " << ssb << " - " << ssbTotal[inarea] << endl;
+  Rcpp::Rcout << "Recruitment in area " << inarea << " : " << total << " - " << recTotal[inarea] << endl;
+#endif
 
   return total;
 }

@@ -5,8 +5,136 @@
 
 using namespace Rcpp;
 
+// setEating
+Rcpp::IntegerVector setEating(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector val);
+RcppExport SEXP _gadgetr_setEating(SEXP stockNoSEXP, SEXP valSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type val(valSEXP);
+    rcpp_result_gen = Rcpp::wrap(setEating(stockNo, val));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getStockInfoC
+Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_getStockInfoC(SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(getStockInfoC(stockNo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updateRenewalC
+Rcpp::IntegerVector updateRenewalC(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::IntegerVector age, Rcpp::IntegerVector number, Rcpp::NumericVector mean, Rcpp::NumericVector sdev, Rcpp::NumericVector alpha, Rcpp::NumericVector beta, Rcpp::NumericVector length, Rcpp::NumericVector meanWeight);
+RcppExport SEXP _gadgetr_updateRenewalC(SEXP stockNoSEXP, SEXP yearSEXP, SEXP stepSEXP, SEXP areaSEXP, SEXP ageSEXP, SEXP numberSEXP, SEXP meanSEXP, SEXP sdevSEXP, SEXP alphaSEXP, SEXP betaSEXP, SEXP lengthSEXP, SEXP meanWeightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type year(yearSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type step(stepSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type area(areaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type age(ageSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type number(numberSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type mean(meanSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type sdev(sdevSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type length(lengthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type meanWeight(meanWeightSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateRenewalC(stockNo, year, step, area, age, number, mean, sdev, alpha, beta, length, meanWeight));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updateSuitabilityC
+Rcpp::IntegerVector updateSuitabilityC(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector stockNo, Rcpp::NumericVector len, Rcpp::NumericVector value);
+RcppExport SEXP _gadgetr_updateSuitabilityC(SEXP fleetNoSEXP, SEXP stockNoSEXP, SEXP lenSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type len(lenSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateSuitabilityC(fleetNo, stockNo, len, value));
+    return rcpp_result_gen;
+END_RCPP
+}
+// printPredatorPrey
+Rcpp::NumericMatrix printPredatorPrey(Rcpp::IntegerVector predatorNo, Rcpp::IntegerVector stockNo, Rcpp::StringVector predatorType);
+RcppExport SEXP _gadgetr_printPredatorPrey(SEXP predatorNoSEXP, SEXP stockNoSEXP, SEXP predatorTypeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type predatorNo(predatorNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::StringVector >::type predatorType(predatorTypeSEXP);
+    rcpp_result_gen = Rcpp::wrap(printPredatorPrey(predatorNo, stockNo, predatorType));
+    return rcpp_result_gen;
+END_RCPP
+}
+// printStock
+Rcpp::NumericMatrix printStock(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_printStock(SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(printStock(stockNo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// printDetailedSSB
+Rcpp::NumericMatrix printDetailedSSB(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_printDetailedSSB(SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(printDetailedSSB(stockNo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updateRecruitmentC
+Rcpp::IntegerVector updateRecruitmentC(Rcpp::IntegerVector stockNo, Rcpp::NumericVector recruitParams);
+RcppExport SEXP _gadgetr_updateRecruitmentC(SEXP stockNoSEXP, SEXP recruitParamsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type recruitParams(recruitParamsSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateRecruitmentC(stockNo, recruitParams));
+    return rcpp_result_gen;
+END_RCPP
+}
+// printSSB
+Rcpp::NumericMatrix printSSB(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_printSSB(SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(printSSB(stockNo));
+    return rcpp_result_gen;
+END_RCPP
+}
+// printRecruitment
+Rcpp::List printRecruitment(Rcpp::IntegerVector stockNo);
+RcppExport SEXP _gadgetr_printRecruitment(SEXP stockNoSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    rcpp_result_gen = Rcpp::wrap(printRecruitment(stockNo));
+    return rcpp_result_gen;
+END_RCPP
+}
 // wholeSim
-Rcpp::NumericVector wholeSim();
+Rcpp::IntegerVector wholeSim();
 RcppExport SEXP _gadgetr_wholeSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -15,8 +143,47 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// updateAmountStep
+Rcpp::IntegerVector updateAmountStep(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::NumericVector value);
+RcppExport SEXP _gadgetr_updateAmountStep(SEXP fleetNoSEXP, SEXP stepSEXP, SEXP areaSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type step(stepSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type area(areaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateAmountStep(fleetNo, step, area, value));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updateAmountYear
+Rcpp::IntegerVector updateAmountYear(Rcpp::IntegerVector fleetNo, Rcpp::IntegerVector year, Rcpp::IntegerVector step, Rcpp::IntegerVector area, Rcpp::NumericVector value);
+RcppExport SEXP _gadgetr_updateAmountYear(SEXP fleetNoSEXP, SEXP yearSEXP, SEXP stepSEXP, SEXP areaSEXP, SEXP valueSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type fleetNo(fleetNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type year(yearSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type step(stepSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type area(areaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type value(valueSEXP);
+    rcpp_result_gen = Rcpp::wrap(updateAmountYear(fleetNo, year, step, area, value));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getEcosystemInfo
+Rcpp::List getEcosystemInfo();
+RcppExport SEXP _gadgetr_getEcosystemInfo() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(getEcosystemInfo());
+    return rcpp_result_gen;
+END_RCPP
+}
 // initSim
-Rcpp::NumericVector initSim();
+Rcpp::IntegerVector initSim();
 RcppExport SEXP _gadgetr_initSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -26,7 +193,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // stepSim
-Rcpp::NumericVector stepSim();
+Rcpp::IntegerVector stepSim();
 RcppExport SEXP _gadgetr_stepSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -36,7 +203,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // yearSim
-Rcpp::NumericVector yearSim();
+Rcpp::IntegerVector yearSim();
 RcppExport SEXP _gadgetr_yearSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -46,7 +213,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // finalizeSim
-Rcpp::NumericVector finalizeSim();
+Rcpp::IntegerVector finalizeSim();
 RcppExport SEXP _gadgetr_finalizeSim() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -76,15 +243,39 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// isGadgetInitialized
+Rcpp::LogicalVector isGadgetInitialized();
+RcppExport SEXP _gadgetr_isGadgetInitialized() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(isGadgetInitialized());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_gadgetr_setEating", (DL_FUNC) &_gadgetr_setEating, 2},
+    {"_gadgetr_getStockInfoC", (DL_FUNC) &_gadgetr_getStockInfoC, 1},
+    {"_gadgetr_updateRenewalC", (DL_FUNC) &_gadgetr_updateRenewalC, 12},
+    {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},
+    {"_gadgetr_printPredatorPrey", (DL_FUNC) &_gadgetr_printPredatorPrey, 3},
+    {"_gadgetr_printStock", (DL_FUNC) &_gadgetr_printStock, 1},
+    {"_gadgetr_printDetailedSSB", (DL_FUNC) &_gadgetr_printDetailedSSB, 1},
+    {"_gadgetr_updateRecruitmentC", (DL_FUNC) &_gadgetr_updateRecruitmentC, 2},
+    {"_gadgetr_printSSB", (DL_FUNC) &_gadgetr_printSSB, 1},
+    {"_gadgetr_printRecruitment", (DL_FUNC) &_gadgetr_printRecruitment, 1},
     {"_gadgetr_wholeSim", (DL_FUNC) &_gadgetr_wholeSim, 0},
+    {"_gadgetr_updateAmountStep", (DL_FUNC) &_gadgetr_updateAmountStep, 4},
+    {"_gadgetr_updateAmountYear", (DL_FUNC) &_gadgetr_updateAmountYear, 5},
+    {"_gadgetr_getEcosystemInfo", (DL_FUNC) &_gadgetr_getEcosystemInfo, 0},
     {"_gadgetr_initSim", (DL_FUNC) &_gadgetr_initSim, 0},
     {"_gadgetr_stepSim", (DL_FUNC) &_gadgetr_stepSim, 0},
     {"_gadgetr_yearSim", (DL_FUNC) &_gadgetr_yearSim, 0},
     {"_gadgetr_finalizeSim", (DL_FUNC) &_gadgetr_finalizeSim, 0},
     {"_gadgetr_finalize", (DL_FUNC) &_gadgetr_finalize, 0},
     {"_gadgetr_gadget", (DL_FUNC) &_gadgetr_gadget, 1},
+    {"_gadgetr_isGadgetInitialized", (DL_FUNC) &_gadgetr_isGadgetInitialized, 0},
     {NULL, NULL, 0}
 };
 

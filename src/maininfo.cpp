@@ -6,16 +6,16 @@
 #include <Rcpp.h>
 
 void MainInfo::showCorrectUsage(char* error) {
-  RUNID.Print(cerr);
-  cerr << "\nError in command line value - unrecognised option " << error << endl
+  RUNID.Print(Rcpp::Rcerr);
+  Rcpp::Rcerr << "\nError in command line value - unrecognised option " << error << endl
     << "Common options are -l or -s, -i <filename> -o <filename>\n"
     << "For more information try running Gadget with the -h switch\n";
   Rcpp::stop(REXIT_FAILURE);
 }
 
 void MainInfo::showUsage() {
-  RUNID.Print(cout);
-  cout << "\nOptions for running Gadget:\n"
+  RUNID.Print(Rcpp::Rcout);
+  Rcpp::Rcout << "\nOptions for running Gadget:\n"
     << " -l                           perform a likelihood (optimising) model run\n"
     << " -s                           perform a single (simulation) model run\n"
     << " -n                           perform a network run (using paramin)\n"
@@ -187,7 +187,7 @@ void MainInfo::read(int aNumber, char* const aVector[]) {
       printinfo.setPrecision(atoi(aVector[k]));
 
     } else if ((strcasecmp(aVector[k], "-v") == 0) || (strcasecmp(aVector[k], "--version") == 0)) {
-      RUNID.Print(cout);
+      RUNID.Print(Rcpp::Rcout);
       Rcpp::stop(REXIT_SUCCESS);
 
     } else if ((strcasecmp(aVector[k], "-h") == 0) || (strcasecmp(aVector[k], "--help") == 0)) {
@@ -249,7 +249,7 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
 
   //JMB dont print output if doing a network run
   if (!runnetwork)
-    RUNID.Print(cout);
+    RUNID.Print(Rcpp::Rcout);
   handle.logMessage(LOGINFO, "Starting Gadget from directory:", workingdir);
   handle.logMessage(LOGINFO, "using data from directory:", inputdir);
   handle.logMessage(LOGMESSAGE, ""); //write a blank line to the log file
@@ -304,7 +304,8 @@ void MainInfo::checkUsage(const char* const inputdir, const char* const workingd
     tmpout.close();
     tmpout.clear();
   }
-  printinfo.checkPrintInfo(runnetwork);
+  // IU Disable params.out printing once and for all?
+  //printinfo.checkPrintInfo(runnetwork);
 
   //JMB check the value of maxratio
   if ((maxratio < rathersmall) || (maxratio > 1.0)) {

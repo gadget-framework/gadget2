@@ -521,15 +521,161 @@ int RenewalData::isRenewalStepArea(int area, const TimeClass* const TimeInfo) {
   return 0;
 }
 
+int RenewalData::isRenewalPrevStepArea(int area, const TimeClass* const TimeInfo) {
+  int i;
+  for (i = 0; i < renewalTime.Size(); i++)
+    if ((renewalTime[i] == (TimeInfo->getTime() - 1)) && (renewalArea[i] == area))
+      return 1;
+  return 0;
+}
+
 void RenewalData::addRenewal(AgeBandMatrix& Alkeys, int area, const TimeClass* const TimeInfo) {
   int i;
   for (i = 0; i < renewalTime.Size(); i++) {
     if ((renewalTime[i] == TimeInfo->getTime()) && (renewalArea[i] == area)) {
       index = i;
       if (readoption == 2)
-        Alkeys.Add(renewalDistribution[i], *CI);
+        Alkeys.Add(renewalDistribution[i], *CI, 0.0, 1);
       else if (renewalMult[i] > verysmall)
-        Alkeys.Add(renewalDistribution[i], *CI, renewalMult[i]);
+        Alkeys.Add(renewalDistribution[i], *CI, renewalMult[i], 1);
     }
   }
+}
+
+
+void RenewalData::updateNormalParameterData (int year, int step, int area, int age, int number, double mean, double sdev, double alphaVal, double betaVal,
+  Keeper* const keeper, const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
+
+  int i, id, keepdata;
+  PopInfoIndexVector poptmp(LgrpDiv->numLengthGroups(), 0);
+
+  keepdata = 1;
+
+  if (!(TimeInfo->isWithinPeriod(year, step)))
+    keepdata = 0;
+
+  if (!(this->isInArea(Area->getInnerArea(area))))
+    keepdata = 0;
+
+  if ((age < minage) || (age > maxage))
+    keepdata = 0;
+
+  if (keepdata == 1) {
+    //renewal data is required, so store it
+    id = -1;
+    for (i = 0; i < renewalTime.Size(); i++)
+      if ((renewalTime[i] == TimeInfo->calcSteps(year, step))
+          && (renewalArea[i] == Area->getInnerArea(area))
+          && (renewalAge[i] == age))
+        id = i;
+
+    if (id == -1) {
+      renewalTime.resize(1, TimeInfo->calcSteps(year, step));
+      renewalArea.resize(1, Area->getInnerArea(area));
+      renewalAge.resize(1, age);
+
+      id = renewalTime.Size() - 1;
+
+      renewalMult.resize(1, keeper);
+      meanLength.resize(1, keeper);
+      sdevLength.resize(1, keeper);
+      alpha.resize(1, keeper);
+      beta.resize(1, keeper);
+      renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
+    }
+
+    renewalMult[id] = number;
+    meanLength[id] = mean;
+    sdevLength[id] = sdev;
+    alpha[id] = alphaVal;
+    beta[id] = betaVal;
+  }
+  // Make sure to reset to update the renewalDistribution
+  Reset();
+}
+
+
+void RenewalData::updateNumberData(int year, int step, int area, int age, double length, int number, double meanWeight,
+  Keeper* const keeper, const TimeClass* const TimeInfo, const AreaClass* const Area, int minage, int maxage) {
+
+  int i, id, keepdata, lengthid;
+
+  int numlen = LgrpDiv->numLengthGroups();
+  PopInfoIndexVector poptmp(numlen, 0);
+
+  keepdata = 1;
+  //infile >> year >> step >> area >> age >> length >> ws;
+
+  if (!(TimeInfo->isWithinPeriod(year, step)))
+      keepdata = 0;
+
+  if (!(this->isInArea(Area->getInnerArea(area))))
+      keepdata = 0;
+
+  if ((age < minage) || (age > maxage))
+      keepdata = 0;
+
+  lengthid = -1;
+  for (i = 0; i < numlen; i++)
+    if (isEqual(length, LgrpDiv->minLength(i)))
+      lengthid = i;
+
+  //OK the length doesnt match a minimum length so find the length group it is in
+  if ((lengthid == -1) && (length > LgrpDiv->minLength()) && (length < LgrpDiv->maxLength())) {
+    for (i = 1; i < numlen; i++) {
+      if (length < LgrpDiv->minLength(i)) {
+        lengthid = i - 1;
+        break;
+      }
+    }
+    if (lengthid == -1)
+      lengthid = numlen - 1;  //then this must be the last length group
+  }
+
+  if (lengthid == -1)
+    keepdata = 0;
+
+  if (keepdata == 1) {
+    //renewal data is required, so store it
+    id = -1;
+    for (i = 0; i < renewalTime.Size(); i++)
+      if ((renewalTime[i] == TimeInfo->calcSteps(year, step))
+          && (renewalArea[i] == Area->getInnerArea(area))
+          && (renewalAge[i] == age))
+        id = i;
+
+    if (id == -1) {
+      //this is a new timestep/area combination
+      renewalTime.resize(1, TimeInfo->calcSteps(year, step));
+      renewalArea.resize(1, Area->getInnerArea(area));
+      renewalAge.resize(1, age);
+      id = renewalTime.Size() - 1;
+
+      renewalDistribution.resize(1, new AgeBandMatrix(age, poptmp));
+      renewalNumber.resize(new FormulaMatrix(maxage - minage + 1, numlen, 0.0));
+    }
+
+    // If we want to change the type of the recruitment mid-simulation
+    // shouldn't be necessary?
+    if( renewalNumber.Size() < 1)
+      renewalNumber.resize(new FormulaMatrix(maxage - minage + 1, numlen, 0.0));
+
+//Rcpp::Rcout << renewalDistribution[id][age][lengthid].N << std::endl;
+    renewalDistribution[id][age][lengthid].N = 0.0;
+//Rcpp::Rcout << renewalDistribution[id][age][lengthid].N << std::endl;
+
+//Rcpp::Rcout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
+    (*renewalNumber[id])[age - minage][lengthid] = number;
+//Rcpp::Rcout << (*renewalNumber[id])[age - minage][lengthid] << std::endl;
+
+//Rcpp::Rcout << renewalDistribution[id][age][lengthid].W << std::endl;
+    renewalDistribution[id][age][lengthid].W = meanWeight;
+//Rcpp::Rcout << renewalDistribution[id][age][lengthid].W << std::endl;
+
+  }
+
+  for (i = 0; i < renewalNumber.Size(); i++)
+    (*renewalNumber[i]).Inform(keeper);
+  // Make sure to reset to update the renewalDistribution
+  Reset();
 }

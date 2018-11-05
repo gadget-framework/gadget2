@@ -83,9 +83,9 @@ public:
   PrinterType getType() const { return type; };
 
   /*
-   * \brief IU: Add the rdata
+   * \brief IU: Add the rdata (disable for now)
    */
-  Rcpp::List rdata;
+  //Rcpp::List rdata;
 
 protected:
   /**

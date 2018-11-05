@@ -9,7 +9,7 @@ class Keeper;
 
 enum FormulaType { CONSTANT = 1, PARAMETER, FUNCTION };
 enum FunctionType { NONE = 1, MULT, DIV, PLUS, MINUS, SIN, COS, LOG, EXP,
-  LOG10, POWER, SQRT, RAND, LESS, GREATER, EQUAL, AND, OR, NOT, ABS, IF, PI };
+  LOG10, POWER, SQRT, RAND, LESS, GREATER, EQUAL, AND, OR, NOT, ABS, IF, gPI };
 
 /**
  * \class Formula

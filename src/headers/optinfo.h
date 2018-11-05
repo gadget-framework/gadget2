@@ -23,7 +23,7 @@ public:
   /**
    * \brief This is the default OptInfo destructor
    */
-  ~OptInfo() {};
+  virtual ~OptInfo() {};
   /**
    * \brief This is the function used to read in the optimisation parameters
    * \param infile is the CommentStream to read the optimisation parameters from

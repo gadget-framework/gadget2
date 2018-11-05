@@ -52,6 +52,10 @@ TimeClass::TimeClass(CommentStream& infile, double maxratio) {
   currentstep = firststep;
   currentsubstep = 1;
   handle.logMessage(LOGMESSAGE, "Read time file - number of timesteps", this->numTotalSteps());
+
+  //IU: Init previous variables
+  prevyear = 0;
+  prevstep = 0;
 }
 
 void TimeClass::IncrementTime() {
@@ -59,8 +63,17 @@ void TimeClass::IncrementTime() {
     if (handle.getLogLevel() >= LOGMESSAGE)
       handle.logMessage(LOGMESSAGE, "\nThe simulation has reached the last timestep for the current model run");
 
+    //IU: Make sure prev information is updated as well
+    prevyear = currentyear;
+    prevstep = currentstep;
+
   } else {
     currentsubstep = 1;
+
+    //IU: Increment previous variables
+    prevyear = currentyear;
+    prevstep = currentstep;
+
     if (currentstep == numtimesteps) {
       currentstep = 1;
       currentyear++;
@@ -93,6 +106,11 @@ int TimeClass::didStepSizeChange() const {
 void TimeClass::Reset() {
   currentyear = firstyear;
   currentstep = firststep;
+
+  //IU: Init previous variables
+  prevyear = 0;
+  prevstep = 0;
+
   currentsubstep = 1;
   if (handle.getLogLevel() >= LOGMESSAGE)
     handle.logMessage(LOGMESSAGE, "\nReset time in the simulation to timestep", this->getTime());

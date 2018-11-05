@@ -85,6 +85,12 @@ public:
    * \param d is the DoubleVector to copy
    */
   DoubleVector& operator = (const DoubleVector& d);
+   /**
+   * \brief IU: This operator will set an entry value
+   * \param idx is the index of the entry
+   * \param value is the new value
+   */
+  void set(int idx, double value) const { v[idx] = value; };
 protected:
   /**
    * \brief This is the vector of double values
