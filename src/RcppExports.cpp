@@ -5,6 +5,18 @@
 
 using namespace Rcpp;
 
+// setEating
+Rcpp::IntegerVector setEating(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector val);
+RcppExport SEXP _gadgetr_setEating(SEXP stockNoSEXP, SEXP valSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type stockNo(stockNoSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type val(valSEXP);
+    rcpp_result_gen = Rcpp::wrap(setEating(stockNo, val));
+    return rcpp_result_gen;
+END_RCPP
+}
 // getStockInfoC
 Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo);
 RcppExport SEXP _gadgetr_getStockInfoC(SEXP stockNoSEXP) {
@@ -243,6 +255,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_gadgetr_setEating", (DL_FUNC) &_gadgetr_setEating, 2},
     {"_gadgetr_getStockInfoC", (DL_FUNC) &_gadgetr_getStockInfoC, 1},
     {"_gadgetr_updateRenewalC", (DL_FUNC) &_gadgetr_updateRenewalC, 12},
     {"_gadgetr_updateSuitabilityC", (DL_FUNC) &_gadgetr_updateSuitabilityC, 4},

@@ -8,6 +8,20 @@
 extern Ecosystem* EcoSystem;
 
 // [[Rcpp::export]]
+Rcpp::IntegerVector setEating(Rcpp::IntegerVector stockNo, Rcpp::IntegerVector val){
+
+   StockPtrVector stockvec = EcoSystem->getModelStockVector();
+   Stock *stock = stockvec[stockNo[0]-1];
+
+   stock->setEat(val[0]);
+
+   if(stock->doesEat() == val[0])
+     return Rcpp::IntegerVector(1,0);
+   else
+     return Rcpp::IntegerVector(1,1);
+}
+
+// [[Rcpp::export]]
 Rcpp::List getStockInfoC(Rcpp::IntegerVector stockNo){
 
    StockPtrVector stockvec = EcoSystem->getModelStockVector();

@@ -349,6 +349,10 @@ public:
    * \return spawner
    */
   SpawnData* getSpawnData() { return spawner; };
+   /**
+   * \brief IU: This will set the doesEat attribute
+   */
+  void setEat(int i) { doeseat = i; };
 protected:
   /**
    * \brief This is the AgeBandMatrixPtrVector used to store information about the stock population

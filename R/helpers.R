@@ -216,3 +216,14 @@ updateAmount <- function(fleetName, year, step, area, value){
 
 
 }
+
+stopEating <- function (stockName){
+	# Convert stock name into number
+        stockNo <- getStockNo(stockName)
+
+        if(is.na(stockNo)){
+                print("Can't find stock!")
+                return(1)
+        }
+	return(setEating(stockNo, 0))
+}
