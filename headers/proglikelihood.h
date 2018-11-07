@@ -79,7 +79,7 @@ private:
   int assessmentstep;  // The timestep when quota is calculated
   DoubleVector tachistory;  // The tac each year.  Refers to the assessment year
   double lastyearstac;  // last Tac 
-  double weightoflastyearstac; // Weight of last years tac 0.5 in icecod HCR
+  Formula weightoflastyearstac; // Weight of last years tac 0.5 in icecod HCR
   double maxchange;   // Maximum change allowed 0.2 means lasttac/(1+0.2) < tac > lasttac*(1+0.2) 
   int functionnumber;  // Number of function.
   DoubleVector bio1;  //fishable biomass biocoeffs
@@ -90,6 +90,7 @@ private:
   double calculatedtac; // The tac calculated
   int firsttacyear; // The first year that TAC is compiled.  
   ModelVariable asserr;
+  ModelVariable implerr;
   int firstyear; // First year of simulations just TimeInfo->getFirstYear()
 };
 

@@ -153,15 +153,38 @@ ProgLikelihood::ProgLikelihood(CommentStream& infile, const AreaClass* const Are
     fleetcheck += fleetproportions[i];
   if(fleetcheck < 0.9999 || fleetcheck > 1.0001) 
   handle.logFileMessage(LOGFAIL, "\nError in proglikelihood - sum of fleetproportion on fleets is not 1");   */
-  readWordAndVariable(infile,"weightoflastyearstac",weightoflastyearstac);
+  //readWordAndVariable(infile,"weightoflastyearstac",weightoflastyearstac);
+  
+  infile >> text >> ws;
+  i = 0;
+  if (strcasecmp(text, "weightoflastyearstac") != 0)
+    handle.logFileUnexpected(LOGFAIL, "weightoflastyearstac", text);
+  //while ((infile.peek() == '(' || infile.peek()== '#' || isdigit(infile.peek())) && !infile.eof()) {
+  //weightoflastyearstac.resize(1,keeper);
+  infile >> weightoflastyearstac >> ws;
+  weightoflastyearstac.Inform(keeper);
+    //  i++;
+    //}
+  
+  
   readWordAndVariable(infile,"maxchange",maxchange);
   readWordAndVariable(infile,"functionnumber",functionnumber);
   readWordAndVariable(infile,"firsttacyear",firsttacyear);
   readWordAndVariable(infile,"assessmentstep",assessmentstep);
+
   infile >> ws >> text >> ws;
   if (strcasecmp(text, "asserr") != 0)
     handle.logFileUnexpected(LOGFAIL, "asserr", text);
   asserr.read(infile,TimeInfo,keeper);
+  
+  infile >> ws; 
+  if(infile.peek() == 'i' || infile.peek() == 'I'){
+    infile >> text >> ws;
+    if (strcasecmp(text, "implerr") != 0)
+      handle.logFileUnexpected(LOGFAIL, "implerr", text);
+    implerr.read(infile,TimeInfo,keeper);
+  }
+  
   infile >> ws;
   // Setting vectors
   tachistory.resize(TimeInfo->getLastYear() - TimeInfo->getFirstYear() +1,0.0);
@@ -199,7 +222,7 @@ void ProgLikelihood::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& 
       }
     }
     if (found == 0)
-      handle.logMessage(LOGFAIL, "Error in proglikelihood- unrecognised stock", stocknames[s]);
+      handle.logMessage(LOGFAIL, "Error in proglikelihood - unrecognised stock", stocknames[s]);
   }
 }
 
@@ -252,6 +275,10 @@ void ProgLikelihood::PrintLog(ofstream& outfile) const {
   outfile << endl;
 
   outfile << "weightoflastyearstac" << " " << weightoflastyearstac << endl;
+  
+  if(weightoflastyearstac>1 | weightoflastyearstac<0)
+    handle.logMessage(LOGFAIL, "Error in proglikelihood - value of weightoflastyearstac should be between 0 and 1, value supplied is: ", weightoflastyearstac);
+
   outfile <<  "maxchange"<< " " << maxchange << endl;
   outfile <<  "functionnumber"<< " " << functionnumber << endl;
   outfile <<  "firsttacyear" << " " << firsttacyear << endl;
@@ -265,7 +292,7 @@ void ProgLikelihood::Print(ofstream& outfile) const {}
 void ProgLikelihood::printLikelihood(ofstream& outfile,const TimeClass* const TimeInfo) {
   int i,year;
   if(TimeInfo->getTime()==TimeInfo->calcSteps(TimeInfo->getLastYear(),TimeInfo->getLastStep())){
-      outfile << "\nyear\tbio1\tbio1werr\tbio2\tbio2werr\tharvestrate\ttac" << endl;
+      
       for(i = 0 ; i <= (bio1.Size()-1) ; i++) {
 	outfile << i+firstyear << "\t" << bio1[i] << "\t" << bio1werr[i] << "\t" << bio2[i] << "\t" << bio2werr[i] << 
 	  "\t" << historicalhr[i] << "\t" << tachistory[i] << endl;
@@ -275,6 +302,7 @@ void ProgLikelihood::printLikelihood(ofstream& outfile,const TimeClass* const Ti
 
 void ProgLikelihood::Reset(const TimeClass* const TimeInfo) {
   asserr.Update(TimeInfo); 
+  implerr.Update(TimeInfo); 
 }
 
 
@@ -294,7 +322,8 @@ void ProgLikelihood::AllocateTac(const TimeClass* const TimeInfo){
   int currenttime = TimeInfo->getTime();
   for(i = 0; i < quotasteps.Size(); i++){
     for(j = 0; j < fleets.Size(); j++){
-      tmptac =  calculatedtac*quotaproportions[i]* fleetproportions[j];
+      cout << "calctac: " << calculatedtac << "\nimperr: " << implerr << "\nasserr: " << asserr << '\n'; 
+      tmptac =  calculatedtac*quotaproportions[i]* fleetproportions[j]*implerr;
       fleets[j]->getPredator()->setTimeMultiplier(TimeInfo,quotasteps[i],tmptac);
     }
   }
@@ -326,21 +355,36 @@ void ProgLikelihood::CalcTac(const TimeClass* const TimeInfo) {  // can use func
   
   // 2 triggers and two harvest rations example trigger 0,Bpa HR 0,0.4  
   int index = TimeInfo->getYear() - TimeInfo->getFirstYear();
-  if(bio2werr[index] < triggervalues[0]) hr = harvestrates[0];
-  if((bio2werr[index] >  triggervalues[0]) & (bio2werr[index] < triggervalues[1])) hr = harvestrates[0]+(bio2werr[index]-triggervalues[0])/(triggervalues[1]-triggervalues[0])*(harvestrates[1]-harvestrates[0]);
-  if(bio2werr[index] > triggervalues[1]) hr = harvestrates[1];
+  if(bio2werr[index] < triggervalues[0]) 
+    hr = harvestrates[0];
+  
+  if((bio2werr[index] >  triggervalues[0]) & (bio2werr[index] < triggervalues[1])) 
+    hr = harvestrates[0]+(bio2werr[index]-triggervalues[0])/(triggervalues[1]-triggervalues[0])*(harvestrates[1]-harvestrates[0]);
+  
+  if(bio2werr[index] > triggervalues[1]) 
+    hr = harvestrates[1];
   
   // 2 more triggers+1 harvestratio
   if(triggervalues.Size() == 4) {
-    if(bio2werr[index] > triggervalues[1] & bio2werr[index] < triggervalues[2]) hr = harvestrates[1];
-    if((bio2werr[index] >  triggervalues[2]) & (bio2werr[index] < triggervalues[3])) hr = harvestrates[1]+(bio2werr[index]-triggervalues[2])/(triggervalues[3]-triggervalues[2])*(harvestrates[2]-harvestrates[1]);
-    if(bio2werr[index] > triggervalues[3]) hr = harvestrates[2];
+    if(bio2werr[index] > triggervalues[1] & bio2werr[index] < triggervalues[2]) 
+      hr = harvestrates[1];
+    
+    if((bio2werr[index] >  triggervalues[2]) & (bio2werr[index] < triggervalues[3])) 
+      hr = harvestrates[1]+(bio2werr[index]-triggervalues[2])/(triggervalues[3]-triggervalues[2])*(harvestrates[2]-harvestrates[1]);
+    
+    if(bio2werr[index] > triggervalues[3]) 
+      hr = harvestrates[2];
   }  
+  
   calculatedtac = hr*bio1werr[index];
   historicalhr[index] = hr;
-  if(TimeInfo->getYear() >= firsttacyear)
-     tachistory[index] = calculatedtac;  // not set historically
-
+  if(TimeInfo->getYear() == firsttacyear)
+    tachistory[index] = calculatedtac;  // not set historically
+    
+  if(TimeInfo->getYear() > firsttacyear){
+    tachistory[index] = (1-weightoflastyearstac)*calculatedtac + weightoflastyearstac*tachistory[index-1];  // not set historically
+    calculatedtac = tachistory[index];
+  }
 }
 
 
