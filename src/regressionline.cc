@@ -31,8 +31,8 @@ void Regression::setWeights(const DoubleVector& weights) {
 }
 
 double Regression::getSSE() {
-  if (error)
-    return verybig;
+  //  if (error)
+  //    return verybig;
   return sse;
 }
 
@@ -69,8 +69,8 @@ void Regression::calcFit() {
 }
 
 void Regression::calcSSE() {
-  if (error)
-    return;
+  //if (error)
+  //  return;
 
   int i;
   double tmp;
@@ -113,7 +113,7 @@ void Regression::calcSlope() {
   //JMB - if there is a negative slope for the regression then things are going wrong
   if (b < 0.0) {
     handle.logMessage(LOGWARN, "Warning in regression - negative slope for regression line", b);
-    error = 1;
+    //    error = 1;
   }
 }
 
@@ -207,11 +207,23 @@ void LogLinearRegression::storeVectors(const DoubleVector& modData, const Double
       //omit the point (0.0, 0.0)
       x.Delete(l);
       y.Delete(l);
-      l--;
+      l--;  
     } else if ((modData[i] < verysmall) || (obsData[i] < verysmall)) {
       handle.logMessage(LOGWARN, "Warning in log linear regession - received invalid values");
-      error = 1;
-      return;
+      //error = 1;
+      if((modData[i] < verysmall)) {
+	x[l] = -20.0;
+      } else {
+	x[l] = log(modData[i]);
+      }
+
+      if((obsData[i] < verysmall)) {
+	y[l] = -20.0;
+      } else {
+	y[l] = log(obsData[i]);
+      }
+
+      //return;
     } else {
       x[l] = log(modData[i]);
       y[l] = log(obsData[i]);

@@ -292,7 +292,9 @@ void ProgLikelihood::Print(ofstream& outfile) const {}
 void ProgLikelihood::printLikelihood(ofstream& outfile,const TimeClass* const TimeInfo) {
   int i,year;
   if(TimeInfo->getTime()==TimeInfo->calcSteps(TimeInfo->getLastYear(),TimeInfo->getLastStep())){
-      
+    outfile << "\n; -- data --";
+    outfile << "\n; year reference_biomass reference_biomass_with_error trigger_biomass trigger_biomass_with_error";
+    outfile << "harvest_rate tac\n";
       for(i = 0 ; i <= (bio1.Size()-1) ; i++) {
 	outfile << i+firstyear << "\t" << bio1[i] << "\t" << bio1werr[i] << "\t" << bio2[i] << "\t" << bio2werr[i] << 
 	  "\t" << historicalhr[i] << "\t" << tachistory[i] << endl;
@@ -322,7 +324,7 @@ void ProgLikelihood::AllocateTac(const TimeClass* const TimeInfo){
   int currenttime = TimeInfo->getTime();
   for(i = 0; i < quotasteps.Size(); i++){
     for(j = 0; j < fleets.Size(); j++){
-      cout << "calctac: " << calculatedtac << "\nimperr: " << implerr << "\nasserr: " << asserr << '\n'; 
+      
       tmptac =  calculatedtac*quotaproportions[i]* fleetproportions[j]*implerr;
       fleets[j]->getPredator()->setTimeMultiplier(TimeInfo,quotasteps[i],tmptac);
     }

@@ -24,8 +24,9 @@ SummaryPrinter::SummaryPrinter(CommentStream& infile)
   outfile << "; ";
   RUNID.Print(outfile);
   // print header information
-  outfile << "; Summary likelihood information from the current run" << endl
-    << "; year-step-area-component-weight-likelihood value" << endl;
+  outfile << "; Summary likelihood information from the current run" << endl;
+  outfile << "; -- data --" << endl;
+  outfile << "; year step area component weight likelihood_value" << endl;
   outfile.flush();
 
   //prepare for next printfile component

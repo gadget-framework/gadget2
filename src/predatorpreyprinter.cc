@@ -137,8 +137,8 @@ PredatorPreyPrinter::PredatorPreyPrinter(CommentStream& infile, const TimeClass*
     outfile << "\n; Printing the following information at the end of each timestep";
   else
     outfile << "\n; Printing the following information at the start of each timestep";
-
-  outfile << "\n; year-step-area-age-length-number consumed-biomass consumed-mortality\n";
+  outfile << "\n; -- data --";
+  outfile << "\n; year step area age length number_consumed biomass_consumed mortality\n";
   outfile.flush();
 }
 

@@ -83,7 +83,10 @@ StockFullPrinter::StockFullPrinter(CommentStream& infile, const TimeClass* const
   else
     outfile << "\n; Printing the following information at the start of each timestep";
 
-  outfile << "\n; year-step-area-age-length-number-mean weight\n";
+  // BTHE compatibility with Rgadget::read.gadget.file
+  outfile << "\n; -- data --";
+
+  outfile << "\n; year step area age length number mean_weight\n";
   outfile.flush();
 }
 

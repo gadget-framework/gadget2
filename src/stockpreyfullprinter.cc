@@ -89,7 +89,10 @@ StockPreyFullPrinter::StockPreyFullPrinter(CommentStream& infile, const TimeClas
   else
     outfile << "\n; Printing the following information at the start of each timestep";
 
-  outfile << "\n; year-step-area-age-length-number consumed-biomass consumed\n";
+  // BTHE compatibility with Rgadget::read.gadget.file
+  outfile << "\n; -- data --";
+
+  outfile << "\n; year step area age length number_consumed biomass_consumed\n";
   outfile.flush();
 }
 

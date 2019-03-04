@@ -93,36 +93,49 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
     outfile << "; Likelihood output file for the likelihood component " << like[i]->getName();
     switch (like[i]->getType()) {
       case CATCHDISTRIBUTIONLIKELIHOOD:
-        outfile << "\n; year-step-area-age-length-number\n";
+	outfile << "\n; -- data --";
+        outfile << "\n; year step area age length number\n";
         break;
       case CATCHSTATISTICSLIKELIHOOD:
-        outfile << "\n; year-step-area-age-number-mean[-stddev]\n";
+        outfile << "\n; -- data --";
+	outfile << "\n; year step area age number mean [stddev]\n";
         break;
       case CATCHINKILOSLIKELIHOOD:
-        outfile << "\n; year-step-area-fleet-biomass\n";
+	outfile << "\n; -- data --";
+        outfile << "\n; year step area fleet biomass\n";
         break;
       case SURVEYDISTRIBUTIONLIKELIHOOD:
-        outfile << "\n; year-step-area-age-length-number\n";
+	outfile << "\n; -- data --";
+        outfile << "\n; year step area age length number\n";
         break;
       case STOCKDISTRIBUTIONLIKELIHOOD:
-        outfile << "\n; year-step-area-stock-age-length-number\n";
+        outfile << "\n; -- data --";
+	outfile << "\n; year step area stock age length number\n";
         break;
       case STOMACHCONTENTLIKELIHOOD:
-        outfile << "\n; year-step-area-predator-prey-number[-stddev]\n";
+        outfile << "\n; -- data --";
+	outfile << "\n; year step area predator prey number [stddev]\n";
         break;
       case SURVEYINDICESLIKELIHOOD:
-        outfile << "\n; year-step-area-label-number\n";
+	outfile << "\n; -- data --";
+        outfile << "\n; year step area label number\n";
         break;
       case TAGLIKELIHOOD:
-        outfile << "\n; tagid-year-step-area-length-number\n";
+	outfile << "\n; -- data --";
+        outfile << "\n; tagid year step area length number\n";
         break;
       case RECSTATISTICSLIKELIHOOD:
-        outfile << "\n; tagid-year-step-area-number-mean[-stddev]\n";
+	outfile << "\n; -- data --";
+        outfile << "\n; tagid year step area number mean [stddev]\n";
         break;
       case MIGRATIONPROPORTIONLIKELIHOOD:
-        outfile << "\n; year-step-area-ratio\n";
+	outfile << "\n; -- data --";
+        outfile << "\n; year step area ratio\n";
         break;
       case PROGLIKELIHOOD:
+	outfile << "\n; -- data --";
+	outfile << "\n; year reference_biomass reference_biomass_with_error trigger_biomass trigger_biomass_with_error";
+	outfile << "harvest_rate tac\n";
 	break;
       case BOUNDLIKELIHOOD:
       case UNDERSTOCKINGLIKELIHOOD:

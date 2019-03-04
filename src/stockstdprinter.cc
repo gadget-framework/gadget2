@@ -104,8 +104,11 @@ StockStdPrinter::StockStdPrinter(CommentStream& infile, const TimeClass* const T
   else
     outfile << "\n; Printing the following information at the start of each timestep";
 
-  outfile << "\n; year-step-area-age-number-mean length-mean weight-"
-    << "stddev length-number consumed-biomass consumed\n";
+  // BTHE compatibility with Rgadget::read.gadget.file
+  outfile << "\n; -- data --";
+
+  outfile << "\n; year step area age number mean_length mean_weight"
+    << " stddev_length number_consumed biomass_consumed\n";
   outfile.flush();
 }
 
