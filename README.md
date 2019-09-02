@@ -15,7 +15,7 @@ looking at the data input files required shown in the diagram below:
 ![Features](https://hafro.github.io/gadget/docs/features.png)
 
 
-These input data files are in a column-based format, which means that they can easily be generated using simple extraction routines from databases. This means that the construction of a Gadget model can be done reasonably quickly, and the models will be free of any formatting errors in the Gadget input files that could prevent Gadget models from running. The data format is explained in more detail in the [Gadget User Guide](https://hafro.github.io/gadget/userguide).
+These input data files are in a column-based format, which means that they can easily be generated using simple extraction routines from databases. This means that the construction of a Gadget model can be done reasonably quickly, and the models will be free of any formatting errors in the Gadget input files that could prevent Gadget models from running. The data format is explained in more detail in the [Gadget User Guide](https://hafro.github.io/docs/gadget/userguide).
 
 
 # Prerequisites
