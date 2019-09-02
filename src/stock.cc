@@ -200,21 +200,21 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     } else if (strcasecmp(text, "fixedlength") == 0) {
       maturity = new MaturityB(subcomment, TimeInfo, keeper, minage, numage, areas, this->getName(), LgrpDiv);
 
-    } else if (strcasecmp(text, "newconstant") == 0) {
+    } else if (strcasecmp(text, "newconstant") == 0 | strcasecmp(text, "constant") == 0) {
       maturity = new MaturityC(subcomment, TimeInfo, keeper, minage, numage, areas, this->getName(), LgrpDiv, 4);
 
-    } else if (strcasecmp(text, "newconstantweight") == 0) {
+    } else if (strcasecmp(text, "newconstantweight") == 0 | strcasecmp(text, "constantweight") == 0) {
       maturity = new MaturityD(subcomment, TimeInfo, keeper, minage, numage, areas, this->getName(), LgrpDiv, 6, refweight);
 
     } else if (strcasecmp(text, "ageandlength") == 0) {
       handle.logMessage(LOGFAIL, "\nThe ageandlength maturity function is no longer supported");
 
-    } else if (strcasecmp(text, "constant") == 0) {
+      /*   } else if (strcasecmp(text, "constant") == 0) {
       handle.logMessage(LOGFAIL, "\nThe constant maturity function is no longer supported\nUse the newconstant maturity function instead\nNote that this function has had a factor of 4 removed from the source code");
 
     } else if (strcasecmp(text, "constantweight") == 0) {
       handle.logMessage(LOGFAIL, "\nThe constantweight maturity function is no longer supported\nUse the newconstantweight maturity function instead\nNote that this function has had a factor of 4 removed from the source code");
-
+      */
     } else
       handle.logMessage(LOGFAIL, "unrecognised maturity function", text);
 
