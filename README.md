@@ -12,7 +12,7 @@ Gadget allows you to include a number of features into your model: One or more s
 An indication of the features that Gadget can model can be given by
 looking at the data input files required shown in the diagram below:
 
-![Features](docs/features.png)
+![Features](https://hafro.github.io/gadget/docs/features.png)
 
 
 These input data files are in a column-based format, which means that they can easily be generated using simple extraction routines from databases. This means that the construction of a Gadget model can be done reasonably quickly, and the models will be free of any formatting errors in the Gadget input files that could prevent Gadget models from running. The data format is explained in more detail in the [Gadget User Guide](https://hafro.github.io/gadget/userguide).
