@@ -1,23 +1,14 @@
 ---
-author:
-- Edited by James Begley
+output: 
+  html_document:
+    fig_height: 4
+    fig_width: 8
+    highlight: haddock
+    theme: united
+    toc: yes
+    toc_float: yes
 ---
 
-\maketitle
-\setlength{\parindent}{0mm}
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[LO,RE]{}
-\fancyhead[LE,RO]{\nouppercase{\leftmark}}
-\fancyfoot[LE,RO]{\textbf{\thepage}}
-\fancyfoot[LO,RE]{}
-\fancypagestyle{plain}{\fancyhf{}\fancyfoot[LE,RO]{\textbf{\thepage}}\renewcommand{\headrulewidth}{0pt}}
-\thispagestyle{empty}
-\frontmatter
-\pagenumbering{roman}
-\tableofcontents
-\mainmatter
-\pagenumbering{arabic}
 Introduction to Gadget {#chap:intro}
 ======================
 
