@@ -170,13 +170,13 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys, const TimeCl
   int age, len;
   int inarea = this->areaNum(area);
   double straynumber;
-
-  for (age = Storage[inarea].minAge(); age < Storage[inarea].maxAge(); age++) {
+ 
+  for (age = Storage[inarea].minAge(); age <= Storage[inarea].maxAge(); age++) {
     for (len = Storage[inarea].minLength(age); len < Storage[inarea].maxLength(age); len++) {
       straynumber = Alkeys[age][len].N * strayProportion[len];
       Storage[inarea][age][len].N = straynumber;
       Storage[inarea][age][len].W = Alkeys[age][len].W;
-
+ 
       if (len >= minStrayLength)
         Alkeys[age][len].N -= straynumber;
     }
@@ -198,7 +198,7 @@ void StrayData::storeStrayingStock(int area, AgeBandMatrix& Alkeys,
       straynumber = Alkeys[age][len].N * strayProportion[len];
       Storage[inarea][age][len].N = straynumber;
       Storage[inarea][age][len].W = Alkeys[age][len].W;
-
+ 
       if (len >= minStrayLength)
         Alkeys[age][len].N -= straynumber;
 
