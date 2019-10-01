@@ -975,11 +975,14 @@ calculate the growth of the stock. Currently, there are 7 growth
 functions defined, so valid function names are:
 
 \bigskip
-multspec - use the MULTSPEC growth function weightvb - use the WeightVB
-growth function weightjones - use the WeightJones growth function
-weightvbexpanded - use the WeightVBExpanded growth function lengthvb -
-use the LengthVB growth function lengthpower - use the LengthPower
-growth function lengthvbsimple - use the LengthVBSimple growth function
+
+* `multspec` - use the MULTSPEC growth function 
+* `weightvb` - use the WeightVB growth function 
+* `weightjones` - use the WeightJones growth function
+* `weightvbexpanded` - use the WeightVBExpanded growth function 
+* `lengthvb` - use the LengthVB growth function 
+* `lengthpower` - use the LengthPower growth function 
+* `lengthvbsimple` - use the LengthVBSimple growth function
 
 ### MULTSPEC Growth Function {#subsec:growth1}
 
