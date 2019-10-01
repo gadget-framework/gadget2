@@ -1937,10 +1937,11 @@ calculate how the stock will mature. Currently there are 4 maturity
 functions defined, and the valid maturity function names are:
 
 \bigskip
-newconstant - use the Constant maturation function newconstantweight -
-use the ConstantWeight maturation function fixedlength - use the
-FixedLength maturation function continuous - use the Continuous
-maturation function
+
+* `newconstant` - use the Constant maturation function 
+* `newconstantweight` -use the ConstantWeight maturation function 
+* `fixedlength` - use the FixedLength maturation function 
+* `continuous` - use the Continuous maturation function
 
 \bigskip
 The format for the data in the maturity data file is dependent on the

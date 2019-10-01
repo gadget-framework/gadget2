@@ -2273,7 +2273,12 @@ maturityfunction       &lt;maturity function&gt;
 maturityfile           &lt;name of the maturity data file&gt;</code></pre>
 <p>The <span class="math inline">\(&lt;\)</span>maturity function<span class="math inline">\(&gt;\)</span> defines the function that is to be used to calculate how the stock will mature. Currently there are 4 maturity functions defined, and the valid maturity function names are:</p>
 
-<p>newconstant - use the Constant maturation function newconstantweight - use the ConstantWeight maturation function fixedlength - use the FixedLength maturation function continuous - use the Continuous maturation function</p>
+<ul>
+<li><code>newconstant</code> - use the Constant maturation function</li>
+<li><code>newconstantweight</code> -use the ConstantWeight maturation function</li>
+<li><code>fixedlength</code> - use the FixedLength maturation function</li>
+<li><code>continuous</code> - use the Continuous maturation function</li>
+</ul>
 
 <p>The format for the data in the maturity data file is dependent on the maturity function that is to be used. All the maturity functions require the name of the mature stocks that the immature stock will mature into, and the ratio of the maturing part of the immature stock that is to mature into each mature stock. This allows for part of an immature stock to mature into more than one mature stock, so for example, an immature stock could mature into either a male mature stock or a female mature stock.</p>
 
