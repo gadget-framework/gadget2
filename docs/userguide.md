@@ -3068,9 +3068,10 @@ To define likelihood files in the Gadget model, the "main" file must
 contain a list of the data files that contain the description of the
 likelihood classes required, and the format for this is shown below:
 
-\small
-    [likelihood]
-    likelihoodfiles      <names of the likelihood files>
+```
+[likelihood]
+likelihoodfiles      <names of the likelihood files>
+```
 
 The likelihood files contain a list of various type of likelihood
 classes, separated by the keyword \[component\] that control the
@@ -3079,23 +3080,32 @@ that likelihood component and various likelihood data, depending in the
 likelihood component type. The format of the likelihood files is
 follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 <likelihood type>
-    <likelihood data>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 <likelihood type>
+<likelihood data>
+```
 
 The likelihood data for each likelihood type is covered in the sub
 sections below. The $<$likelihood type$>$ defines the type of likelihood
 component that is to be used, and there are currently 12 valid
 likelihood types defined in Gadget. These are:
 
-\bigskip
-BoundLikelihood Understocking CatchDistribution CatchStatistics
-StockDistribution SurveyIndices SurveyDistribution StomachContent
-Recaptures RecStatistics MigrationPenalty MigrationProportion
-CatchInKilos
+* `BoundLikelihood` 
+* `Understocking` 
+* `CatchDistribution` 
+* `CatchStatistics`
+* `StockDistribution` 
+* `SurveyIndices`
+* `SurveyDistribution` 
+* `StomachContent`
+* `Recaptures` 
+* `RecStatistics` 
+* `MigrationPenalty` 
+* `MigrationProportion`
+* `CatchInKilos`
 
 BoundLikelihood ("Penalty") {#sec:boundlike}
 ---------------------------
@@ -3120,12 +3130,13 @@ positive score.
 To specify a BoundLikelihood likelihood component, the format required
 in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 penalty
-    datafile             <name for the datafile>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 penalty
+datafile             <name for the datafile>
+```
 
 The datafile defines the penalty that is to be applied to the parameter
 when it exceeds the bounds, as given by
@@ -3153,8 +3164,9 @@ this equation will give a zero likelihood score.
 The datafile lists these weights and the power that is to be used for
 each parameter. The format for this file is shown below:
 
-\small
-    <switch>  <power>  <lower>  <upper>
+```
+<switch>  <power>  <lower>  <upper>
+```
 
 where $<$lower$>$ is the weighting used when the parameter hits the
 lower bound, and $<$upper$>$ is the weighting used when the parameter
@@ -3166,8 +3178,9 @@ that are not defined separately. To do this, simply enter a line in the
 data file with the switch name given as "default", and then the power,
 lower and upper weights that are required. For example:
 
-\small
-    default    2        1000     1000
+```
+default    2        1000     1000
+```
 
 would define a default penalty, where the lower and upper weights were
 1000, and the power was 2.
@@ -3195,12 +3208,13 @@ fit)
 To specify an Understocking likelihood component, the format required in
 the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 understocking
-    powercoeff           <power>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 understocking
+powercoeff           <power>
+```
 
 The $<$power$>$ value is optional, and if this is not given, the power
 coefficient is assumed to be 2, giving a sum of squares equation for
@@ -3222,22 +3236,23 @@ the sample catches.
 To specify a CatchDistribution likelihood component, the format required
 in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 catchdistribution
-    datafile             <name for the datafile>
-    function             <function name>
-    <multivariate parameters>
-    aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
-    overconsumption      <0 or 1> ; 1 to take overconsumption into account
-    epsilon              <epsilon>
-    areaaggfile          <area aggregation file specifying areas>
-    ageaggfile           <age aggregation file specifying ages>
-    lenaggfile           <length aggregation file specifying lengths>
-    fleetnames           <vector of the names of the fleets>
-    stocknames           <vector of the names of the stocks>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 catchdistribution
+datafile             <name for the datafile>
+function             <function name>
+<multivariate parameters>
+aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
+overconsumption      <0 or 1> ; 1 to take overconsumption into account
+epsilon              <epsilon>
+areaaggfile          <area aggregation file specifying areas>
+ageaggfile           <age aggregation file specifying ages>
+lenaggfile           <length aggregation file specifying lengths>
+fleetnames           <vector of the names of the fleets>
+stocknames           <vector of the names of the stocks>
+```
 
 The optional flag $<$aggregationlevel$>$ is used to specify whether the
 distribution data should be aggregated over the whole year (by setting
@@ -3281,11 +3296,14 @@ age-length catch distribution. Currently, there are 8 likelihood
 functions defined, and the valid function names are:
 
 \bigskip
-sumofsquares - use a sum of squares function stratified - use a
-stratified sum of squares function multinomial - use a multinomial
-function pearson - use a Pearson function gamma - use a gamma function
-log - use a log function mvn - use a multivariate normal function
-mvlogistic - use a multivariate logistic function
+`sumofsquares` - use a sum of squares function 
+`stratified` - use a stratified sum of squares function 
+`multinomial` - use a multinomial function 
+`pearson` - use a Pearson function 
+`gamma` - use a gamma function
+`log` - use a log function
+`mvn` - use a multivariate normal function
+`mvlogistic` - use a multivariate logistic function
 
 \bigskip
 The $<$multivariate parameters$>$ are only required for the multivariate
@@ -3300,8 +3318,9 @@ likelihood function to, aggregated according to the aggregation files
 specified, for the numbers calculated in the model. The format of this
 file is given below:
 
-\small
-    <year>  <step>  <area>  <age>  <length>  <number>
+```
+<year>  <step>  <area>  <age>  <length>  <number>
+```
 
 where $<$number$>$ is the number of samples for the
 timestep/area/age/length combination.
@@ -3428,16 +3447,17 @@ parameters $<\sigma>$ and $<$ lag $>$ and a list of $<$ lag $>$
 correlation parameters. This is done in the likelihood file, as shown
 below:
 
-\small
-    ...
-    function             mvn
-    lag                  <lag>
-    sigma                <sigma>
-    param                <correlation parameter> ; note that a total of
-    param                <correlation parameter> ; <lag> correlation
-    ...                                          ; parameters are required
-    aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
-    ...
+```
+...
+function             mvn
+lag                  <lag>
+sigma                <sigma>
+param                <correlation parameter> ; note that a total of
+param                <correlation parameter> ; <lag> correlation
+...                                          ; parameters are required
+aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
+...
+```
 
 ### Multivariate Logistic Function
 
@@ -3464,12 +3484,13 @@ To specify this likelihood function it is necessary to specify the
 parameter $<\sigma>$. This is done in the likelihood file as shown
 below:
 
-\small
-    ...
-    function             mvlogistic
-    sigma                <sigma>
-    aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
-    ...
+```
+...
+function             mvlogistic
+sigma                <sigma>
+aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
+...
+```
 
 CatchStatistics {#sec:catchstat}
 ---------------
@@ -3485,19 +3506,20 @@ fits to the data from the landings.
 To specify a CatchStatistics likelihood component, the format required
 in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 catchstatistics
-    datafile             <name for the datafile>
-    function             <function name>
-    overconsumption      <0 or 1> ; 1 to take overconsumption into account
-    areaaggfile          <area aggregation file specifying areas>
-    lenaggfile           <length aggregation file specifying lengthes; is optional and used only in weight at length likelihood>
-    ageaggfile           <age aggregation file specifying ages>
-    fleetnames           <vector of the names of the fleets>
-    stocknames           <vector of the names of the stocks>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 catchstatistics
+datafile             <name for the datafile>
+function             <function name>
+overconsumption      <0 or 1> ; 1 to take overconsumption into account
+areaaggfile          <area aggregation file specifying areas>
+lenaggfile           <length aggregation file specifying lengthes; is optional and used only in weight at length likelihood>
+ageaggfile           <age aggregation file specifying ages>
+fleetnames           <vector of the names of the fleets>
+stocknames           <vector of the names of the stocks>
+```
 
 The optional flag $<$overconsumption$>$ is used to specify whether any
 over consumption of the stock is to be taken into account when
@@ -3523,15 +3545,13 @@ the statistical data given in the file specified by $<$datafile$>$
 depends on the likelihood function used. The valid functions are:
 
 \bigskip
-lengthcalcstddev - use a weighted sum of squares of mean length
-lengthgivenstddev - use a weighted sum of squares of mean length with
-given standard deviation weightgivenstddev - use a weighted sum of
-squares of mean weight with given standard deviation weightnostddev -
-use a unweighted sum of squares of mean weight lengthnostddev - use a
-unweighted sum of squares of mean length weightgivenstddevlen - use a
-weighted sum of squares of mean weight at length with given standard
-deviation weightnostddevlen - use a unweighted sum of squares of mean
-weight at length
+* `lengthcalcstddev` - use a weighted sum of squares of mean length
+* `lengthgivenstddev` - use a weighted sum of squares of mean length with given standard deviation 
+* `weightgivenstddev` - use a weighted sum of squares of mean weight with given standard deviation 
+* `weightnostddev` - use a unweighted sum of squares of mean weight 
+* `lengthnostddev` - use a unweighted sum of squares of mean length 
+* `weightgivenstddevlen` - use a weighted sum of squares of mean weight at length with given standard deviation 
+* `weightnostddevlen` - use a unweighted sum of squares of mean weight at length
 
 ### Weighted Sum of Squares of Mean Length
 
@@ -3553,8 +3573,9 @@ sample size
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
-\small
-    <year>  <step>  <area>  <age>  <number>  <mean>
+```
+<year>  <step>  <area>  <age>  <number>  <mean>
+```
 
 where $<$number$>$ is the number of samples for the timestep/area/age
 combination, and $<$mean$>$ is the mean length of these samples.
@@ -3578,8 +3599,9 @@ deviation of the length from the data $<$ N $>$ is the sample size
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
-\small
-    <year>  <step>  <area>  <age>  <number>  <mean>  <stddev>
+```
+<year>  <step>  <area>  <age>  <number>  <mean>  <stddev>
+```
 
 where $<$number$>$ is the number of samples for the timestep/area/age
 combination, $<$mean$>$ is the mean length of these samples and
@@ -3604,8 +3626,9 @@ deviation of the weight from the data $<$ N $>$ is the sample size
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
-\small
-    <year>  <step>  <area>  <age>  <number>  <mean>  <stddev>
+```
+<year>  <step>  <area>  <age>  <number>  <mean>  <stddev>
+```
 
 where $<$number$>$ is the number of samples for the timestep/area/age
 combination, $<$mean$>$ is the mean weight of these samples and
@@ -3629,8 +3652,9 @@ mean weight calculated from the model $<$ N $>$ is the sample size
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
-\small
-    <year>  <step>  <area>  <age>  <number>  <mean>
+```
+<year>  <step>  <area>  <age>  <number>  <mean>
+```
 
 where $<$number$>$ is the number of samples for the timestep/area/age
 combination, and $<$mean$>$ is the mean weight of these samples.
@@ -3653,8 +3677,10 @@ mean length calculated from the model $<$ N $>$ is the sample size
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
-\small
-    <year>  <step>  <area>  <age>  <number>  <mean>
+```
+<year>  <step>  <area>  <age>  <number>  <mean>
+```
+
 
 where $<$number$>$ is the number of samples for the timestep/area/age
 combination, and $<$mean$>$ is the mean length of these samples.
@@ -3678,21 +3704,22 @@ landings.
 To specify a StockDistribution likelihood component, the format required
 in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 stockdistribution
-    datafile             <name for the datafile>
-    function             <function name>
-    aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
-    overconsumption      <0 or 1> ; 1 to take overconsumption into account
-    epsilon              <epsilon>
-    areaaggfile          <area aggregation file specifying areas>
-    ageaggfile           <age aggregation file specifying ages>
-    lenaggfile           <length aggregation file specifying lengths>
-    fleetnames           <vector of the names of the fleets>
-    stocknames           <vector of the names of the stocks>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 stockdistribution
+datafile             <name for the datafile>
+function             <function name>
+aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
+overconsumption      <0 or 1> ; 1 to take overconsumption into account
+epsilon              <epsilon>
+areaaggfile          <area aggregation file specifying areas>
+ageaggfile           <age aggregation file specifying ages>
+lenaggfile           <length aggregation file specifying lengths>
+fleetnames           <vector of the names of the fleets>
+stocknames           <vector of the names of the stocks>
+```
 
 The optional flag $<$aggregationlevel$>$ is used to specify whether the
 distribution data should be aggregated over the whole year (by setting
@@ -3736,9 +3763,8 @@ to compare the modelled age-length stock distribution to the input
 age-length stock distribution. Currently, there are two likelihood
 functions defined, and the valid functions are:
 
-\bigskip
-sumofsquares - use a sum of squares function multinomial - use a
-multinomial function
+* `sumofsquares` - use a sum of squares function 
+* `multinomial` - use a multinomial function
 
 \bigskip
 Finally, the datafile is a list of the age-length catch distribution for
@@ -3746,8 +3772,9 @@ each stock, that Gadget is to use to fit the likelihood function to,
 aggregated according to the aggregation files specified, for the numbers
 calculated in the model. The format of this file is given below:
 
-\small
-    <year>  <step>  <area>  <stock>  <age>  <length>  <number>
+```
+<year>  <step>  <area>  <stock>  <age>  <length>  <number>
+```
 
 where $<$number$>$ is the number of samples for the
 timestep/area/stock/age/length combination.
@@ -3809,15 +3836,16 @@ the modelled data.
 To specify a SurveyIndices likelihood component, the format required in
 the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 surveyindices
-    datafile             <name for the datafile>
-    sitype               <survey index type>
-    biomass              <0 or 1> ; 1 to base index data on biomass
-    <survey index data>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveyindices
+datafile             <name for the datafile>
+sitype               <survey index type>
+biomass              <0 or 1> ; 1 to base index data on biomass
+<survey index data>
+```
 
 The optional flag $<$biomass$>$ is used to specify whether the index
 data should be based on the biomass of the stock or on the population
@@ -3834,38 +3862,40 @@ specified by the value of $<$survey index type$>$. There are currently 5
 valid options, which are:
 
 \bigskip
-lengths - defining a length group based survey index ages - defining an
-age group based survey index fleets - defining a length group based
-survey index, taking the fleet selectivity into account acoustic -
-defining an acoustic based survey index effort - defining an fishing
-effort based survey index
+* `lengths` - defining a length group based survey index 
+* `ages` - defining an age group based survey index 
+* `fleets` - defining a length group based survey index, taking the fleet selectivity into account 
+* `acoustic` - defining an acoustic based survey index 
+* `effort` - defining an fishing effort based survey index
 
 ### SurveyIndices by Length {#subsec:sibylength}
 
 To specify a length group based SurveyIndices likelihood component, the
 format required in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 surveyindices
-    datafile             <name for the datafile>
-    sitype               lengths
-    biomass              <0 or 1> ; 1 to base index data on biomass
-    areaaggfile          <area aggregation file specifying areas>
-    lenaggfile           <length aggregation file specifying lengths>
-    stocknames           <vector of the names of the stocks>
-    fittype              <fit type>
-    <fit type parameters>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveyindices
+datafile             <name for the datafile>
+sitype               lengths
+biomass              <0 or 1> ; 1 to base index data on biomass
+areaaggfile          <area aggregation file specifying areas>
+lenaggfile           <length aggregation file specifying lengths>
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+<fit type parameters>
+```
 
 The datafile is a list of the indices that Gadget is to use to fit the
 linear regression to, aggregated according to the length aggregation
 file specified, for the population numbers calculated in the model. The
 format of this file is given below:
 
-\small
-    <year>  <step>  <area>  <length>  <number>
+```
+<year>  <step>  <area>  <length>  <number>
+```
 
 where $<$number$>$ is the survey index for that timestep/area/length
 combination.
@@ -3880,9 +3910,14 @@ specified here. In total, there are 8 valid entries for $<$fit type$>$,
 and the associated parameters, and these are:
 
 \bigskip
-linearfit loglinearfit fixedslopelinearfit fixedslopeloglinearfit
-fixedinterceptlinearfit fixedinterceptloglinearfit fixedlinearfit
-fixedloglinearfit
+* `linearfit` 
+* `loglinearfit` 
+* `fixedslopelinearfit` 
+* `fixedslopeloglinearfit`
+* `fixedinterceptlinearfit` 
+* `fixedinterceptloglinearfit` 
+* `fixedlinearfit`
+* `fixedloglinearfit`
 
 #### linear regression, estimating both slope and intercept
 
@@ -3890,8 +3925,9 @@ This fit type will fit a linear regression line, with the alpha and beta
 parameter values estimated from the data within the Gadget model. The
 file format for this fit type is given below:
 
-\small
-    fittype              linearfit
+```
+fittype              linearfit
+```
 
 #### log linear regression, estimating both slope and intercept
 
@@ -3899,8 +3935,9 @@ This fit type will fit a log linear regression line, with the alpha and
 beta parameter values estimated from the data within the Gadget model.
 The file format for this fit type is given below:
 
-\small
-    fittype              loglinearfit
+```
+fittype              loglinearfit
+```
 
 #### linear regression, fixing slope and estimating intercept
 
@@ -3909,9 +3946,10 @@ parameter value estimated from the data within the Gadget model, and the
 beta parameter value specified in the input file. The file format for
 this fit type is given below:
 
-\small
-    fittype              fixedslopelinearfit
-    slope                <beta>
+```
+fittype              fixedslopelinearfit
+slope                <beta>
+```
 
 #### log linear regression, fixing slope and estimating intercept
 
@@ -3920,9 +3958,10 @@ parameter value estimated from the data within the Gadget model, and the
 beta parameter value specified in the input file. The file format for
 this fit type is given below:
 
-\small
-    fittype              fixedslopeloglinearfit
-    slope                <beta>
+```
+fittype              fixedslopeloglinearfit
+slope                <beta>
+```
 
 #### linear regression, fixing intercept and estimating slope
 
@@ -3931,9 +3970,10 @@ value estimated from the data within the Gadget model, and the alpha
 parameter value specified in the input file. The file format for this
 fit type is given below:
 
-\small
-    fittype              fixedinterceptlinearfit
-    intercept            <alpha>
+```
+fittype              fixedinterceptlinearfit
+intercept            <alpha>
+```
 
 #### log linear regression, fixing intercept and estimating slope
 
@@ -3942,9 +3982,10 @@ parameter value estimated from the data within the Gadget model, and the
 alpha parameter value specified in the input file. The file format for
 this fit type is given below:
 
-\small
-    fittype              fixedinterceptloglinearfit
-    intercept            <alpha>
+```
+fittype              fixedinterceptloglinearfit
+intercept            <alpha>
+```
 
 #### linear regression, fixing both slope and intercept
 
@@ -3952,10 +3993,11 @@ This fit type will fit a linear regression line, with the alpha and beta
 parameter values specified in the input file. The file format for this
 fit type is given below:
 
-\small
-    fittype              fixedlinearfit
-    slope                <beta>
-    intercept            <alpha>
+```
+fittype              fixedlinearfit
+slope                <beta>
+intercept            <alpha>
+```
 
 #### log linear regression, fixing both slope and intercept
 
@@ -3963,37 +4005,41 @@ This fit type will fit a log linear regression line, with the alpha and
 beta parameter values specified in the input file. The file format for
 this fit type is given below:
 
-\small
-    fittype              fixedloglinearfit
-    slope                <beta>
-    intercept            <alpha>
+```
+fittype              fixedloglinearfit
+slope                <beta>
+intercept            <alpha>
+```
 
 ### SurveyIndices by Age {#subsec:sibyage}
 
 To specify an age group based SurveyIndices likelihood component, the
 format required in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 surveyindices
-    datafile             <name for the datafile>
-    sitype               ages
-    biomass              <0 or 1> ; 1 to base index data on biomass
-    areaaggfile          <area aggregation file specifying areas>
-    ageaggfile           <age aggregation file specifying ages>
-    stocknames           <vector of the names of the stocks>
-    fittype              <fit type>
-    <fit type parameters>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveyindices
+datafile             <name for the datafile>
+sitype               ages
+biomass              <0 or 1> ; 1 to base index data on biomass
+areaaggfile          <area aggregation file specifying areas>
+ageaggfile           <age aggregation file specifying ages>
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+<fit type parameters>
+```
 
 The datafile is a list of the indices that Gadget is to use to fit the
 linear regression to, aggregated according to the age aggregation file
 specified, for the population numbers calculated in the model. The
 format of this file is given below:
 
-\small
-    <year>  <step>  <area>  <age>  <number>
+```
+<year>  <step>  <area>  <age>  <number>
+```
+
 
 where $<$number$>$ is the survey index for that timestep/area/age
 combination.
@@ -4012,28 +4058,30 @@ To specify a length group based SurveyIndices likelihood component
 taking the fleet selectivity into account, the format required in the
 main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 surveyindices
-    datafile             <name for the datafile>
-    sitype               fleets
-    biomass              <0 or 1> ; 1 to base index data on biomass
-    areaaggfile          <area aggregation file specifying areas>
-    lenaggfile           <length aggregation file specifying lengths>
-    fleetnames           <vector of the names of the fleets>
-    stocknames           <vector of the names of the stocks>
-    fittype              <fit type>
-    <fit type parameters>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveyindices
+datafile             <name for the datafile>
+sitype               fleets
+biomass              <0 or 1> ; 1 to base index data on biomass
+areaaggfile          <area aggregation file specifying areas>
+lenaggfile           <length aggregation file specifying lengths>
+fleetnames           <vector of the names of the fleets>
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+<fit type parameters>
+```
 
 The datafile is a list of the indices that Gadget is to use to fit the
 linear regression to, aggregated according to the length aggregation
 file specified, for the population numbers calculated in the model. The
 format of this file is given below:
 
-\small
-    <year>  <step>  <area>  <length>  <number>
+```
+<year>  <step>  <area>  <length>  <number>
+```
 
 where $<$number$>$ is the survey index for that timestep/area/length
 combination.
@@ -4051,26 +4099,28 @@ reference="subsec:sibylength"} above.
 To specify an acoustic based SurveyIndices likelihood component, the
 format required in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 surveyindices
-    datafile             <name for the datafile>
-    sitype               acoustic
-    biomass              <0 or 1> ; 1 to base index data on biomass
-    areaaggfile          <area aggregation file specifying areas>
-    surveynames          <vector of the names of the acoustic surveys>
-    stocknames           <vector of the names of the stocks>
-    fittype              <fit type>
-    <fit type parameters>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveyindices
+datafile             <name for the datafile>
+sitype               acoustic
+biomass              <0 or 1> ; 1 to base index data on biomass
+areaaggfile          <area aggregation file specifying areas>
+surveynames          <vector of the names of the acoustic surveys>
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+<fit type parameters>
+```
 
 The datafile is a list of the acoustic indices that Gadget is to use to
 fit the linear regression to, for the population calculated in the
 model. The format of this file is given below:
 
-\small
-    <year>  <step>  <area>  <survey>  <acoustic>
+```
+<year>  <step>  <area>  <survey>  <acoustic>
+```
 
 where $<$acoustic$>$ is the acoustic index for that timestep/area/survey
 combination.
@@ -4088,26 +4138,28 @@ reference="subsec:sibylength"} above.
 To specify an effort based SurveyIndices likelihood component, the
 format required in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 surveyindices
-    datafile             <name for the datafile>
-    sitype               effort
-    biomass              <0 or 1> ; 1 to base index data on biomass
-    areaaggfile          <area aggregation file specifying areas>
-    fleetnames           <vector of the names of the fleets>
-    stocknames           <vector of the names of the stocks>
-    fittype              <fit type>
-    <fit type parameters>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveyindices
+datafile             <name for the datafile>
+sitype               effort
+biomass              <0 or 1> ; 1 to base index data on biomass
+areaaggfile          <area aggregation file specifying areas>
+fleetnames           <vector of the names of the fleets>
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+<fit type parameters>
+```
 
 The datafile is a list of the fleet effort indices that Gadget is to use
 to fit the linear regression to, for the fishing effort calculated in
 the model. The format of this file is given below:
 
-\small
-    <year>  <step>  <area>  <fleet>  <effort>
+```
+<year>  <step>  <area>  <fleet>  <effort>
+```
 
 where $<$effort$>$ is the effort index for that timestep/area/fleet
 combination.
@@ -4133,21 +4185,22 @@ fits to the data from the calculated survey index distribution.
 To specify a SurveyDistribution likelihood component, the format
 required in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 surveydistribution
-    datafile             <name for the datafile>
-    areaaggfile          <area aggregation file specifying areas>
-    lenaggfile           <length aggregation file specifying lengths>
-    ageaggfile           <age aggregation file specifying ages>
-    stocknames           <vector of the names of the stocks>
-    fittype              <fit type>
-    parameters           <fit type parameters>
-    <suitability parameters>
-    epsilon              <epsilon>
-    likelihoodtype       <likelihood type>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 surveydistribution
+datafile             <name for the datafile>
+areaaggfile          <area aggregation file specifying areas>
+lenaggfile           <length aggregation file specifying lengths>
+ageaggfile           <age aggregation file specifying ages>
+stocknames           <vector of the names of the stocks>
+fittype              <fit type>
+parameters           <fit type parameters>
+<suitability parameters>
+epsilon              <epsilon>
+likelihoodtype       <likelihood type>
+```
 
 The $<$stocknames$>$ vector contains a list of all the stocks to be
 aggregated into a single pseudo stock for the purposes of the data
@@ -4165,7 +4218,8 @@ survey index distribution from the modelled population. Currently, there
 are two functions defined, and the valid function names are:
 
 \bigskip
-linearfit - use a linear function powerfit - use a power function
+* `linearfit` - use a linear function 
+* `powerfit` - use a power function
 
 \bigskip
 The $<$fit type parameters$>$ is a vector of 2 parameters that are used
@@ -4181,8 +4235,10 @@ distribution. Currently, there are 4 functions defined, and the valid
 function names are:
 
 \bigskip
-multinomial - use a multinomial function pearson - use a Pearson
-function gamma - use a gamma function log - use a log function
+* `multinomial` - use a multinomial function 
+* `pearson` - use a Pearson function
+* `gamma` - use a gamma function 
+* `log` - use a log function
 
 \bigskip
 Finally, the file specified by $<$datafile$>$ contains a list of the
@@ -4191,8 +4247,9 @@ function to, aggregated according to the aggregation files specified,
 for the numbers calculated in the model. The format of this file is
 given below:
 
-\small
-    <year>  <step>  <area>  <age>  <length>  <number>
+```
+<year>  <step>  <area>  <age>  <length>  <number>
+```
 
 where $<$number$>$ is the survey index for the timestep/area/age/length
 combination.
@@ -4295,19 +4352,20 @@ about the modelled consumption of the prey by the predator.
 To specify a StomachContent likelihood component, the format required in
 the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 stomachcontent
-    function             <function name>
-    datafile             <name for the datafile>
-    epsilon              <epsilon>
-    areaaggfile          <area aggregation file specifying areas>
-    predatornames        <vector of the names of the predators>
-    predatorlengths
-    lenaggfile           <length aggregation file specifying predator lengths>
-    preyaggfile          <prey aggregation file specifying preys>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 stomachcontent
+function             <function name>
+datafile             <name for the datafile>
+epsilon              <epsilon>
+areaaggfile          <area aggregation file specifying areas>
+predatornames        <vector of the names of the predators>
+predatorlengths
+lenaggfile           <length aggregation file specifying predator lengths>
+preyaggfile          <prey aggregation file specifying preys>
+```
 
 The optional $<$epsilon$>$ value is used whenever the calculated
 probability is very unlikely, although the exact format of this depends
@@ -4329,7 +4387,7 @@ data. Currently, there is only one likelihood function defined, so the
 valid function name is:
 
 \bigskip
-scsimple - use a simple ratio function
+* `scsimple` - use a simple ratio function
 
 \bigskip
 Finally, the file specified by $<$datafile$>$ contains a list of the
@@ -4338,8 +4396,9 @@ function to, aggregated according to the aggregation files specified,
 for the consumption calculated in the model. The format of this file is
 given below:
 
-\small
-    <year>  <step>  <area>  <predator>  <prey>  <ratio>
+```
+<year>  <step>  <area>  <predator>  <prey>  <ratio>
+```
 
 where $<$ratio$>$ is the ratio of prey $<$prey$>$ in the stomachs of
 predator $<$predator$>$ for the timestep/area combination, where
@@ -4375,16 +4434,17 @@ well the data from the model fits the recaptures data.
 To specify a Recaptures likelihood component, the format required in the
 main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 recaptures
-    datafile             <name for the datafile>
-    function             <function name>
-    areaaggfile          <area aggregation file specifying areas>
-    lenaggfile           <length aggregation file specifying recapture lengths>
-    fleetnames           <vector of the names of the fleets>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 recaptures
+datafile             <name for the datafile>
+function             <function name>
+areaaggfile          <area aggregation file specifying areas>
+lenaggfile           <length aggregation file specifying recapture lengths>
+fleetnames           <vector of the names of the fleets>
+```
 
 The $<$fleetnames$>$ vector contains a list of all the fleets to be
 aggregated into a single pseudo fleet for the purposes of the data
@@ -4397,7 +4457,7 @@ Currently, there is only one likelihood function defined, so the only
 valid function name is:
 
 \bigskip
-poisson - use a Poisson function
+* `poisson` - use a Poisson function
 
 \bigskip
 Finally, the datafile is a list of the recaptures that Gadget is to use
@@ -4405,8 +4465,9 @@ to fit the likelihood function to, aggregated according to the
 aggregation files specified, for the numbers calculated in the model.
 The format of this file is given below:
 
-\small
-    <tagid>  <year>  <step>  <area>  <length>  <number>
+```
+<tagid>  <year>  <step>  <area>  <length>  <number>
+```
 
 where $<$number$>$ is the number of recaptures for the
 tag/timestep/area/length combination.
@@ -4441,15 +4502,16 @@ data from the recaptures.
 To specify a RecStatistics likelihood component, the format required in
 the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 recstatistics
-    datafile             <name for the datafile>
-    function             <function name>
-    areaaggfile          <area aggregation file specifying areas>
-    fleetnames           <vector of the names of the fleets>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 recstatistics
+datafile             <name for the datafile>
+function             <function name>
+areaaggfile          <area aggregation file specifying areas>
+fleetnames           <vector of the names of the fleets>
+```
 
 The $<$fleetnames$>$ vector contains a list of all the fleets to be
 aggregated into a single pseudo fleet for the purposes of the data
@@ -4463,10 +4525,9 @@ of the statistical data given in the file specified by $<$datafile$>$
 depends on the likelihood function used. The valid functions are:
 
 \bigskip
-lengthcalcstddev - use a weighted sum of squares of mean length
-lengthgivenstddev - use a weighted sum of squares of mean length with
-given standard deviation lengthnostddev - use a unweighted sum of
-squares of mean length
+* `lengthcalcstddev` - use a weighted sum of squares of mean length
+* `lengthgivenstddev` - use a weighted sum of squares of mean length with given standard deviation 
+* `lengthnostddev` - use a unweighted sum of squares of mean length
 
 ### Weighted Sum of Squares of Mean Length
 
@@ -4488,8 +4549,9 @@ sample size
 For this RecStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
-\small
-    <tagid>  <year>  <step>  <area>  <number>  <mean>
+```
+<tagid>  <year>  <step>  <area>  <number>  <mean>
+```
 
 where $<$number$>$ is the number of samples for the tag/timestep/area
 combination, and $<$mean$>$ is the mean length of these samples.
@@ -4513,8 +4575,9 @@ deviation of the length from the data $<$ N $>$ is the sample size
 For this RecStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
-\small
-    <tagid>  <year>  <step>  <area>  <number>  <mean>  <stddev>
+```
+<tagid>  <year>  <step>  <area>  <number>  <mean>  <stddev>
+```
 
 where $<$number$>$ is the number of samples for the tag/timestep/area
 combination, $<$mean$>$ is the mean length of these samples and
@@ -4538,8 +4601,9 @@ mean length calculated from the model $<$ N $>$ is the sample size
 For this RecStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
-\small
-    <tagid>  <year>  <step>  <area>  <number>  <mean>
+```
+<tagid>  <year>  <step>  <area>  <number>  <mean>
+```
 
 where $<$number$>$ is the number of samples for the tag/timestep/area
 combination, and $<$mean$>$ is the mean length of these samples.
@@ -4572,13 +4636,14 @@ set to 2, and $p_1$ should be set to 1.
 To specify a MigrationPenalty likelihood component, the format required
 in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 migrationpenalty
-    stockname            <name for the stock to check>
-    powercoeffs          <p0>  <p1>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 migrationpenalty
+stockname            <name for the stock to check>
+powercoeffs          <p0>  <p1>
+```
 
 Note that it is not possible to aggregate more than one stock into a
 single pseudo stock for this likelihood component.
@@ -4598,16 +4663,17 @@ model fit to the data from the sample catches.
 To specify a MigrationProportion likelihood component, the format
 required in the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 migrationproportion
-    datafile             <name for the datafile>
-    function             <function name>
-    biomass              <0 or 1> ; 1 to base migration proportion data on biomass
-    areaaggfile          <area aggregation file specifying areas>
-    stocknames           <vector of the names of the stocks>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 migrationproportion
+datafile             <name for the datafile>
+function             <function name>
+biomass              <0 or 1> ; 1 to base migration proportion data on biomass
+areaaggfile          <area aggregation file specifying areas>
+stocknames           <vector of the names of the stocks>
+```
 
 The optional flag $<$biomass$>$ is used to specify whether the migration
 proportion data should be based on the biomass of the stock or on the
@@ -4630,7 +4696,7 @@ proportion data. Currently, there is only one likelihood function
 defined, so the valid function name is:
 
 \bigskip
-sumofsquares - use a simple sum of squares function
+* `sumofsquares` - use a simple sum of squares function
 
 \bigskip
 Finally, the file specified by $<$datafile$>$ contains a list of the
@@ -4639,8 +4705,9 @@ function to, aggregated according to the aggregation files specified,
 for the migration proportions calculated in the model. The format of
 this file is given below:
 
-\small
-    <year>  <step>  <area>  <ratio>
+```
+<year>  <step>  <area>  <ratio>
+```
 
 where $<$ratio$>$ is the proportion of stock that is in area $<$area$>$
 for that timestep.
@@ -4674,18 +4741,19 @@ types).
 To specify a CatchInKilos likelihood component, the format required in
 the main likelihood file is as follows:
 
-\small
-    [component]
-    name                 <name for the likelihood component>
-    weight               <weight for the likelihood component>
-    type                 catchinkilos
-    datafile             <name for the datafile>
-    function             <function name>
-    aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
-    epsilon              <epsilon>
-    areaaggfile          <area aggregation file specifying areas>
-    fleetnames           <vector of the names of the fleets>
-    stocknames           <vector of the names of the stocks>
+```
+[component]
+name                 <name for the likelihood component>
+weight               <weight for the likelihood component>
+type                 catchinkilos
+datafile             <name for the datafile>
+function             <function name>
+aggregationlevel     <0 or 1> ; 1 to aggregate data over the whole year
+epsilon              <epsilon>
+areaaggfile          <area aggregation file specifying areas>
+fleetnames           <vector of the names of the fleets>
+stocknames           <vector of the names of the stocks>
+```
 
 The optional flag $<$aggregationlevel$>$ is used to specify whether the
 catch data should be aggregated over the whole year (by setting
@@ -4715,15 +4783,16 @@ only one likelihood function defined, so the only valid function name
 is:
 
 \bigskip
-sumofsquares - use a log sum of squares function
+* `sumofsquares` - use a log sum of squares function
 
 \bigskip
 Finally, the file specified by $<$datafile$>$ contains the landings data
 that Gadget is to use to fit the likelihood function to for the catch
 calculated in the model. The format of this file is given below:
 
-\small
-    <year>  <step>  <area>  <fleet>  <biomass>
+```
+<year>  <step>  <area>  <fleet>  <biomass>
+```
 
 where $<$biomass$>$ is the catch for the timestep/area/fleet
 combination. The $<$step$>$ column is optional if the
@@ -4731,8 +4800,9 @@ $<$aggregationlevel$>$ flag has been set to 1, since the data will be
 aggregated over the whole year. In this case, it is possible to specify
 the landings data in the following format:
 
-\small
-    <year>  <area>  <fleet>  <biomass>
+```
+<year>  <area>  <fleet>  <biomass>
+```
 
 ### Sum of Squares Function
 
