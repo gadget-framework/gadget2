@@ -1873,7 +1873,15 @@ growthfunction         &lt;growth function&gt;
 &lt;format for the growth implementation&gt;</code></pre>
 <p>The <span class="math inline">\(&lt;\)</span>growth function<span class="math inline">\(&gt;\)</span> defines what growth function is to be used to calculate the growth of the stock. Currently, there are 7 growth functions defined, so valid function names are:</p>
 
-<p>multspec - use the MULTSPEC growth function weightvb - use the WeightVB growth function weightjones - use the WeightJones growth function weightvbexpanded - use the WeightVBExpanded growth function lengthvb - use the LengthVB growth function lengthpower - use the LengthPower growth function lengthvbsimple - use the LengthVBSimple growth function</p>
+<ul>
+<li><code>multspec</code> - use the MULTSPEC growth function</li>
+<li><code>weightvb</code> - use the WeightVB growth function</li>
+<li><code>weightjones</code> - use the WeightJones growth function</li>
+<li><code>weightvbexpanded</code> - use the WeightVBExpanded growth function</li>
+<li><code>lengthvb</code> - use the LengthVB growth function</li>
+<li><code>lengthpower</code> - use the LengthPower growth function</li>
+<li><code>lengthvbsimple</code> - use the LengthVBSimple growth function</li>
+</ul>
 <div id="subsec:growth1" class="section level3">
 <h3>MULTSPEC Growth Function</h3>
 <p>This growth function is a simplified “MULTSPEC” growth equation, with the increase in length for each length group of the stock given by equation <a href="#eq:growth1l" reference-type="ref" reference="eq:growth1l"><span class="math display">\[eq:growth1l\]</span></a>, and the corresponding increase in weight of the stock given by equation <a href="#eq:growth1w" reference-type="ref" reference="eq:growth1w"><span class="math display">\[eq:growth1w\]</span></a> below:</p>
@@ -2265,7 +2273,12 @@ maturityfunction       &lt;maturity function&gt;
 maturityfile           &lt;name of the maturity data file&gt;</code></pre>
 <p>The <span class="math inline">\(&lt;\)</span>maturity function<span class="math inline">\(&gt;\)</span> defines the function that is to be used to calculate how the stock will mature. Currently there are 4 maturity functions defined, and the valid maturity function names are:</p>
 
-<p>newconstant - use the Constant maturation function newconstantweight - use the ConstantWeight maturation function fixedlength - use the FixedLength maturation function continuous - use the Continuous maturation function</p>
+<ul>
+<li><code>newconstant</code> - use the Constant maturation function</li>
+<li><code>newconstantweight</code> -use the ConstantWeight maturation function</li>
+<li><code>fixedlength</code> - use the FixedLength maturation function</li>
+<li><code>continuous</code> - use the Continuous maturation function</li>
+</ul>
 
 <p>The format for the data in the maturity data file is dependent on the maturity function that is to be used. All the maturity functions require the name of the mature stocks that the immature stock will mature into, and the ratio of the maturing part of the immature stock that is to mature into each mature stock. This allows for part of an immature stock to mature into more than one mature stock, so for example, an immature stock could mature into either a male mature stock or a female mature stock.</p>
 
@@ -2676,21 +2689,40 @@ C_{s}(l) = E q_{s} \Delta t S_{s}(l) N_{sl} W_{sl}\]</span></p>
 <p>The likelihood files are used to define the various likelihood components that are used to calculate the “goodness of fit” of the Gadget model to the available data. Each likelihood component will calculate a likelihood score for that individual component, and there is then a weighted sum of all the likelihood scores to calculate an overall likelihood score. It is this overall likelihood score that the optimiser attempts to minimise during an optimising run.</p>
 
 <p>To define likelihood files in the Gadget model, the “main” file must contain a list of the data files that contain the description of the likelihood classes required, and the format for this is shown below:</p>
-
-<p>[likelihood] likelihoodfiles <names of the likelihood files></p>
+<pre><code>[likelihood]
+likelihoodfiles      &lt;names of the likelihood files&gt;</code></pre>
 <p>The likelihood files contain a list of various type of likelihood classes, separated by the keyword <span class="math display">\[component\]</span> that control the different likelihood components in the model, the name and weight for that likelihood component and various likelihood data, depending in the likelihood component type. The format of the likelihood files is follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type <likelihood type> <likelihood data></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 &lt;likelihood type&gt;
+&lt;likelihood data&gt;</code></pre>
 <p>The likelihood data for each likelihood type is covered in the sub sections below. The <span class="math inline">\(&lt;\)</span>likelihood type<span class="math inline">\(&gt;\)</span> defines the type of likelihood component that is to be used, and there are currently 12 valid likelihood types defined in Gadget. These are:</p>
-
-<p>BoundLikelihood Understocking CatchDistribution CatchStatistics StockDistribution SurveyIndices SurveyDistribution StomachContent Recaptures RecStatistics MigrationPenalty MigrationProportion CatchInKilos</p>
+<ul>
+<li><code>BoundLikelihood</code></li>
+<li><code>Understocking</code></li>
+<li><code>CatchDistribution</code></li>
+<li><code>CatchStatistics</code></li>
+<li><code>StockDistribution</code></li>
+<li><code>SurveyIndices</code></li>
+<li><code>SurveyDistribution</code></li>
+<li><code>StomachContent</code></li>
+<li><code>Recaptures</code></li>
+<li><code>RecStatistics</code></li>
+<li><code>MigrationPenalty</code></li>
+<li><code>MigrationProportion</code></li>
+<li><code>CatchInKilos</code></li>
+</ul>
 <div id="sec:boundlike" class="section level2">
 <h2>BoundLikelihood (“Penalty”)</h2>
 <p>The BoundLikelihood likelihood component is used to give a penalty weight to parameters that have moved beyond the bounds, as specified in the parameter file, in the optimisation process. This file does not specify the bounds that are to be used, only the penalty that is to be applied when these bounds are exceeded. Since the Simmulated Annealing (see section <a href="#sec:simann" reference-type="ref" reference="sec:simann">11.2</a>) algorithm will always choose a value for the parameter that is within the bounds, this likelihood component will return a zero likelihood score during an optimisation using that algorithm. However, both the Hooke &amp; Jeeves (see section <a href="#sec:hooke" reference-type="ref" reference="sec:hooke">11.1</a>) and the BFGS (see section <a href="#sec:bfgs" reference-type="ref" reference="sec:bfgs">11.3</a>) algorithms can choose a parameter outside the specified bounds, and so this likelihood component can then return a positive score.</p>
 
 <p>To specify a BoundLikelihood likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type penalty datafile <name for the datafile></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 penalty
+datafile             &lt;name for the datafile&gt;</code></pre>
 <p>The datafile defines the penalty that is to be applied to the parameter when it exceeds the bounds, as given by equation <a href="#eq:bound" reference-type="ref" reference="eq:bound"><span class="math display">\[eq:bound\]</span></a> below:</p>
 <p><span class="math display">\[\label{eq:bound}
 \ell_{i} =
@@ -2703,14 +2735,11 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>Note that when the value of the parameter is exactly equal to the bound, this equation will give a zero likelihood score.</p>
 
 <p>The datafile lists these weights and the power that is to be used for each parameter. The format for this file is shown below:</p>
-
-<switch>
-<p><power> <lower> <upper></p>
+<pre><code>&lt;switch&gt;  &lt;power&gt;  &lt;lower&gt;  &lt;upper&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>lower<span class="math inline">\(&gt;\)</span> is the weighting used when the parameter hits the lower bound, and <span class="math inline">\(&lt;\)</span>upper<span class="math inline">\(&gt;\)</span> is the weighting used when the parameter hits the upper bound, for the parameter with the name <span class="math inline">\(&lt;\)</span>switch<span class="math inline">\(&gt;\)</span>.</p>
 
 <p>It is possible to define a default penalty that is used for all switches that are not defined separately. To do this, simply enter a line in the data file with the switch name given as “default”, and then the power, lower and upper weights that are required. For example:</p>
-
-<p>default 2 1000 1000</p>
+<pre><code>default    2        1000     1000</code></pre>
 <p>would define a default penalty, where the lower and upper weights were 1000, and the power was 2.</p>
 </div>
 <div id="sec:understocking" class="section level2">
@@ -2721,8 +2750,11 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> U <span class="math inline">\(&gt;\)</span> is the understocking that has occurred in the model <span class="math inline">\(&lt;\)</span> p <span class="math inline">\(&gt;\)</span> is the power coefficient (which should be 2 for sum of squares fit)</p>
 
 <p>To specify an Understocking likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type understocking powercoeff <power></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 understocking
+powercoeff           &lt;power&gt;</code></pre>
 <p>The <span class="math inline">\(&lt;\)</span>power<span class="math inline">\(&gt;\)</span> value is optional, and if this is not given, the power coefficient is assumed to be 2, giving a sum of squares equation for this likelihood component.</p>
 </div>
 <div id="sec:catchdist" class="section level2">
@@ -2730,8 +2762,21 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The CatchDistribution likelihood component is used to compare distribution data sampled from the model with distribution data sampled from landings or surveys. The distribution data can either be aggregated into age groups (giving a distribution of length groups for each age), length groups (giving a distribution of age groups for each length) or into age-length groups. The likelihood score that is calculated gives some measure as to how well the data from the model fit to the data from the sample catches.</p>
 
 <p>To specify a CatchDistribution likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type catchdistribution datafile <name for the datafile> function <function name> <multivariate parameters> aggregationlevel &lt;0 or 1&gt; ; 1 to aggregate data over the whole year overconsumption &lt;0 or 1&gt; ; 1 to take overconsumption into account epsilon <epsilon> areaaggfile <area aggregation file specifying areas> ageaggfile <age aggregation file specifying ages> lenaggfile <length aggregation file specifying lengths> fleetnames <vector of the names of the fleets> stocknames <vector of the names of the stocks></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 catchdistribution
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+&lt;multivariate parameters&gt;
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+overconsumption      &lt;0 or 1&gt; ; 1 to take overconsumption into account
+epsilon              &lt;epsilon&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
 <p>The optional flag <span class="math inline">\(&lt;\)</span>aggregationlevel<span class="math inline">\(&gt;\)</span> is used to specify whether the distribution data should be aggregated over the whole year (by setting aggregation level to 1) or not aggregated, and calculated for each timestep (by setting aggregation level to 0). If this line is not specified, then an aggregation level of 0 is assumed, and the distribution data is not aggregated over the whole year. Note that not all of the functions used to compare the data can aggregate the data over the whole year.</p>
 
 <p>The optional flag <span class="math inline">\(&lt;\)</span>overconsumption<span class="math inline">\(&gt;\)</span> is used to specify whether any over consumption of the stock is to be taken into account when calculating the model distribution. If this is set to 1, then the model catch data will be adjusted to ensure that the fleets don’t catch more stock than is available, by applying a bound to the catch of the fleets. If this line is not specified, then an overconsumption of 0 is assumed and any understocking that is present in the model is ignored, which can lead to an unrealistic result if the understocking likelihood component is not specified.</p>
@@ -2742,13 +2787,12 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 
 <p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used to compare the modelled age-length catch distribution to the input age-length catch distribution. Currently, there are 8 likelihood functions defined, and the valid function names are:</p>
 
-<p>sumofsquares - use a sum of squares function stratified - use a stratified sum of squares function multinomial - use a multinomial function pearson - use a Pearson function gamma - use a gamma function log - use a log function mvn - use a multivariate normal function mvlogistic - use a multivariate logistic function</p>
+<p><code>sumofsquares</code> - use a sum of squares function <code>stratified</code> - use a stratified sum of squares function <code>multinomial</code> - use a multinomial function <code>pearson</code> - use a Pearson function <code>gamma</code> - use a gamma function <code>log</code> - use a log function <code>mvn</code> - use a multivariate normal function <code>mvlogistic</code> - use a multivariate logistic function</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>multivariate parameters<span class="math inline">\(&gt;\)</span> are only required for the multivariate functions, and Gadget will generate an error if they are specified when they are not required. These parameters are described in the following sections.</p>
 
 <p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains a list of the age-length catch distribution that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the numbers calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <age> <length> <number></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age/length combination.</p>
 <div id="sum-of-squares-function" class="section level3">
 <h3>Sum of Squares Function</h3>
@@ -2808,8 +2852,15 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>In equation <a href="#eq:cdsigma2" reference-type="ref" reference="eq:cdsigma2"><span class="math display">\[eq:cdsigma2\]</span></a> it is assumed that the number in each length group is autocorrelated with lag <span class="math inline">\(&lt;\)</span> lag <span class="math inline">\(&gt;\)</span>. Note that setting the lag to be zero simplifies the multivariate normal distribution to a univariate one.</p>
 
 <p>To specify this likelihood function, it is necessary to specify the parameters <span class="math inline">\(&lt;\sigma&gt;\)</span> and <span class="math inline">\(&lt;\)</span> lag <span class="math inline">\(&gt;\)</span> and a list of <span class="math inline">\(&lt;\)</span> lag <span class="math inline">\(&gt;\)</span> correlation parameters. This is done in the likelihood file, as shown below:</p>
-
-<p>… function mvn lag <lag> sigma <sigma> param <correlation parameter> ; note that a total of param <correlation parameter> ; <lag> correlation … ; parameters are required aggregationlevel &lt;0 or 1&gt; ; 1 to aggregate data over the whole year …</p>
+<pre><code>...
+function             mvn
+lag                  &lt;lag&gt;
+sigma                &lt;sigma&gt;
+param                &lt;correlation parameter&gt; ; note that a total of
+param                &lt;correlation parameter&gt; ; &lt;lag&gt; correlation
+...                                          ; parameters are required
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+...</code></pre>
 </div>
 <div id="multivariate-logistic-function" class="section level3">
 <h3>Multivariate Logistic Function</h3>
@@ -2821,8 +2872,11 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> L <span class="math inline">\(&gt;\)</span> is the number of length groups <span class="math inline">\(&lt;\)</span> P <span class="math inline">\(&gt;\)</span> is the proportion of the data sample for that time/area/age/length combination <span class="math inline">\(&lt;\pi&gt;\)</span> is the proportion of the model sample for that time/area/age/length combination</p>
 
 <p>To specify this likelihood function it is necessary to specify the parameter <span class="math inline">\(&lt;\sigma&gt;\)</span>. This is done in the likelihood file as shown below:</p>
-
-<p>… function mvlogistic sigma <sigma> aggregationlevel &lt;0 or 1&gt; ; 1 to aggregate data over the whole year …</p>
+<pre><code>...
+function             mvlogistic
+sigma                &lt;sigma&gt;
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+...</code></pre>
 </div>
 </div>
 <div id="sec:catchstat" class="section level2">
@@ -2830,15 +2884,33 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The CatchStatistics likelihood component is used to compare statistical data sampled from the model with statistical data sampled from landings or surveys. This is typically used to compare biological data, such as the mean length at age or mean weight at age. The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the landings.</p>
 
 <p>To specify a CatchStatistics likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type catchstatistics datafile <name for the datafile> function <function name> overconsumption &lt;0 or 1&gt; ; 1 to take overconsumption into account areaaggfile <area aggregation file specifying areas> lenaggfile &lt;length aggregation file specifying lengthes; is optional and used only in weight at length likelihood&gt; ageaggfile <age aggregation file specifying ages> fleetnames <vector of the names of the fleets> stocknames <vector of the names of the stocks></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 catchstatistics
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+overconsumption      &lt;0 or 1&gt; ; 1 to take overconsumption into account
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying lengthes; is optional and used only in weight at length likelihood&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
 <p>The optional flag <span class="math inline">\(&lt;\)</span>overconsumption<span class="math inline">\(&gt;\)</span> is used to specify whether any over consumption of the stock is to be taken into account when calculating the model statistical data. If this is set to 1, then the model catch data will be adjusted to ensure that the fleets don’t catch more stock than is available, by applying a bound to the catch of the fleets. If this line is not specified, then an overconsumption of 0 is assumed and any understocking that is present in the model is ignored, which can lead to an unrealistic result if the understocking likelihood component is not specified.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison. Similarly, the <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of all the stocks to be aggregated into a single pseudo stock.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used to compare the modelled statistical data to the input statistical data. Currently, there are 5 likelihood functions defined, and the format of the statistical data given in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> depends on the likelihood function used. The valid functions are:</p>
 
-<p>lengthcalcstddev - use a weighted sum of squares of mean length lengthgivenstddev - use a weighted sum of squares of mean length with given standard deviation weightgivenstddev - use a weighted sum of squares of mean weight with given standard deviation weightnostddev - use a unweighted sum of squares of mean weight lengthnostddev - use a unweighted sum of squares of mean length weightgivenstddevlen - use a weighted sum of squares of mean weight at length with given standard deviation weightnostddevlen - use a unweighted sum of squares of mean weight at length</p>
+<ul>
+<li><code>lengthcalcstddev</code> - use a weighted sum of squares of mean length</li>
+<li><code>lengthgivenstddev</code> - use a weighted sum of squares of mean length with given standard deviation</li>
+<li><code>weightgivenstddev</code> - use a weighted sum of squares of mean weight with given standard deviation</li>
+<li><code>weightnostddev</code> - use a unweighted sum of squares of mean weight</li>
+<li><code>lengthnostddev</code> - use a unweighted sum of squares of mean length</li>
+<li><code>weightgivenstddevlen</code> - use a weighted sum of squares of mean weight at length with given standard deviation</li>
+<li><code>weightnostddevlen</code> - use a unweighted sum of squares of mean weight at length</li>
+</ul>
 <div id="weighted-sum-of-squares-of-mean-length" class="section level3">
 <h3>Weighted Sum of Squares of Mean Length</h3>
 <p>This likelihood function calculates the likelihood score based on a weighted sum of squares of the mean length, with the weighting given by calculating the variance of length of the modelled population, as shown in equation <a href="#eq:catchstat1" reference-type="ref" reference="eq:catchstat1"><span class="math display">\[eq:catchstat1\]</span></a> below:</p>
@@ -2847,8 +2919,7 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the mean length calculated from the model <span class="math inline">\(&lt;\sigma&gt;\)</span> is the standard deviation of the length, calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
 
 <p>For this CatchStatistics function, the format of the statistical data required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
-
-<p><year> <step> <area> <age> <number> <mean></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples.</p>
 </div>
 <div id="weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation" class="section level3">
@@ -2859,8 +2930,7 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the mean length calculated from the model <span class="math inline">\(&lt;\)</span> s <span class="math inline">\(&gt;\)</span> is the standard deviation of the length from the data <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
 
 <p>For this CatchStatistics function, the format of the statistical data required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
-
-<p><year> <step> <area> <age> <number> <mean> <stddev></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age combination, <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples and <span class="math inline">\(&lt;\)</span>stddev<span class="math inline">\(&gt;\)</span> is the standard deviation of the length of these samples.</p>
 </div>
 <div id="weighted-sum-of-squares-of-mean-weightwith-given-standard-deviation" class="section level3">
@@ -2871,8 +2941,7 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean weight from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the mean weight calculated from the model <span class="math inline">\(&lt;\)</span> s <span class="math inline">\(&gt;\)</span> is the standard deviation of the weight from the data <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
 
 <p>For this CatchStatistics function, the format of the statistical data required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
-
-<p><year> <step> <area> <age> <number> <mean> <stddev></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age combination, <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean weight of these samples and <span class="math inline">\(&lt;\)</span>stddev<span class="math inline">\(&gt;\)</span> is the standard deviation of the weight of these samples.</p>
 </div>
 <div id="unweighted-sum-of-squares-of-mean-weight" class="section level3">
@@ -2883,8 +2952,7 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean weight from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the mean weight calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
 
 <p>For this CatchStatistics function, the format of the statistical data required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
-
-<p><year> <step> <area> <age> <number> <mean></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean weight of these samples.</p>
 </div>
 <div id="unweighted-sum-of-squares-of-mean-length" class="section level3">
@@ -2895,8 +2963,7 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the mean length calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
 
 <p>For this CatchStatistics function, the format of the statistical data required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
-
-<p><year> <step> <area> <age> <number> <mean></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples.</p>
 </div>
 </div>
@@ -2905,8 +2972,20 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The StockDistribution likelihood component is used to compare distribution data sampled from the model with distribution data sampled from landings or surveys for different stocks within the Gadget model. This is typically used to compare Gadget stocks that are based on the same species, but have differing biological properties (eg. immature and mature fish). The distribution data can either be aggregated into age groups (giving a distribution of length groups for each age), length groups (giving a distribution of age groups for each length) or into age-length groups. The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the landings.</p>
 
 <p>To specify a StockDistribution likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type stockdistribution datafile <name for the datafile> function <function name> aggregationlevel &lt;0 or 1&gt; ; 1 to aggregate data over the whole year overconsumption &lt;0 or 1&gt; ; 1 to take overconsumption into account epsilon <epsilon> areaaggfile <area aggregation file specifying areas> ageaggfile <age aggregation file specifying ages> lenaggfile <length aggregation file specifying lengths> fleetnames <vector of the names of the fleets> stocknames <vector of the names of the stocks></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 stockdistribution
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+overconsumption      &lt;0 or 1&gt; ; 1 to take overconsumption into account
+epsilon              &lt;epsilon&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
 <p>The optional flag <span class="math inline">\(&lt;\)</span>aggregationlevel<span class="math inline">\(&gt;\)</span> is used to specify whether the distribution data should be aggregated over the whole year (by setting aggregation level to 1) or not aggregated, and calculated for each timestep (by setting aggregation level to 0). If this line is not specified, then an aggregation level of 0 is assumed, and the distribution data is not aggregated over the whole year. Note that not all of the functions used to compare the data can aggregate the data over the whole year.</p>
 
 <p>The optional flag <span class="math inline">\(&lt;\)</span>overconsumption<span class="math inline">\(&gt;\)</span> is used to specify whether any over consumption of the stock is to be taken into account when calculating the model distribution. If this is set to 1, then the model catch data will be adjusted to ensure that the fleets don’t catch more stock than is available, by applying a bound to the catch of the fleets. If this line is not specified, then an overconsumption of 0 is assumed and any understocking that is present in the model is ignored, which can lead to an unrealistic result if the understocking likelihood component is not specified.</p>
@@ -2916,12 +2995,13 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison. However, the <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of all the stocks to be compared for the data comparison. These stocks are not aggregated into a single pseudo stock.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used to compare the modelled age-length stock distribution to the input age-length stock distribution. Currently, there are two likelihood functions defined, and the valid functions are:</p>
-
-<p>sumofsquares - use a sum of squares function multinomial - use a multinomial function</p>
+<ul>
+<li><code>sumofsquares</code> - use a sum of squares function</li>
+<li><code>multinomial</code> - use a multinomial function</li>
+</ul>
 
 <p>Finally, the datafile is a list of the age-length catch distribution for each stock, that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the numbers calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <stock> <age> <length> <number></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;stock&gt;  &lt;age&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/stock/age/length combination.</p>
 <div id="sum-of-squares-function-1" class="section level3">
 <h3>Sum of Squares Function</h3>
@@ -2948,83 +3028,122 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The exact format of this linear regression equation will vary, depending on survey index data available. It is possible to take the log of the indices and the modelled data before fitting the linear regression line. The slope and intercept of the linear regression line are controlled by the parameters alpha and beta, and it is possible to fix these to specified numbers, or let Gadget calculate these to get the best fit to the modelled data.</p>
 
 <p>To specify a SurveyIndices likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type surveyindices datafile <name for the datafile> sitype <survey index type> biomass &lt;0 or 1&gt; ; 1 to base index data on biomass <survey index data></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               &lt;survey index type&gt;
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+&lt;survey index data&gt;</code></pre>
 <p>The optional flag <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is used to specify whether the index data should be based on the biomass of the stock or on the population numbers for the stock. If this is set to 1, then the index data calculated in the model will be based on the available biomass of the stock. If this line is not specified, then a biomass value of 0 is assumed and the index data calculated in the model will be based on the available population numbers for the stock.</p>
 
 <p>The format of the survey index data, and the contents of the datafile, depend on the type of survey index that is to be used, which is specified by the value of <span class="math inline">\(&lt;\)</span>survey index type<span class="math inline">\(&gt;\)</span>. There are currently 5 valid options, which are:</p>
 
-<p>lengths - defining a length group based survey index ages - defining an age group based survey index fleets - defining a length group based survey index, taking the fleet selectivity into account acoustic - defining an acoustic based survey index effort - defining an fishing effort based survey index</p>
+<ul>
+<li><code>lengths</code> - defining a length group based survey index</li>
+<li><code>ages</code> - defining an age group based survey index</li>
+<li><code>fleets</code> - defining a length group based survey index, taking the fleet selectivity into account</li>
+<li><code>acoustic</code> - defining an acoustic based survey index</li>
+<li><code>effort</code> - defining an fishing effort based survey index</li>
+</ul>
 <div id="subsec:sibylength" class="section level3">
 <h3>SurveyIndices by Length</h3>
 <p>To specify a length group based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type surveyindices datafile <name for the datafile> sitype lengths biomass &lt;0 or 1&gt; ; 1 to base index data on biomass areaaggfile <area aggregation file specifying areas> lenaggfile <length aggregation file specifying lengths> stocknames <vector of the names of the stocks> fittype <fit type> <fit type parameters></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               lengths
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
 <p>The datafile is a list of the indices that Gadget is to use to fit the linear regression to, aggregated according to the length aggregation file specified, for the population numbers calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <length> <number></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the survey index for that timestep/area/length combination.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component. These options specify whether or not the log of the numbers is to be used, and whether the parameters alpha and beta are to be estimated by Gadget, or fixed. If these parameters are to be fixed, then they are specified here. In total, there are 8 valid entries for <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span>, and the associated parameters, and these are:</p>
 
-<p>linearfit loglinearfit fixedslopelinearfit fixedslopeloglinearfit fixedinterceptlinearfit fixedinterceptloglinearfit fixedlinearfit fixedloglinearfit</p>
+<ul>
+<li><code>linearfit</code></li>
+<li><code>loglinearfit</code></li>
+<li><code>fixedslopelinearfit</code></li>
+<li><code>fixedslopeloglinearfit</code></li>
+<li><code>fixedinterceptlinearfit</code></li>
+<li><code>fixedinterceptloglinearfit</code></li>
+<li><code>fixedlinearfit</code></li>
+<li><code>fixedloglinearfit</code></li>
+</ul>
 <div id="linear-regression-estimating-both-slope-and-intercept" class="section level4">
 <h4>linear regression, estimating both slope and intercept</h4>
 <p>This fit type will fit a linear regression line, with the alpha and beta parameter values estimated from the data within the Gadget model. The file format for this fit type is given below:</p>
-
-<p>fittype linearfit</p>
+<pre><code>fittype              linearfit</code></pre>
 </div>
 <div id="log-linear-regression-estimating-both-slope-and-intercept" class="section level4">
 <h4>log linear regression, estimating both slope and intercept</h4>
 <p>This fit type will fit a log linear regression line, with the alpha and beta parameter values estimated from the data within the Gadget model. The file format for this fit type is given below:</p>
-
-<p>fittype loglinearfit</p>
+<pre><code>fittype              loglinearfit</code></pre>
 </div>
 <div id="linear-regression-fixing-slope-and-estimating-intercept" class="section level4">
 <h4>linear regression, fixing slope and estimating intercept</h4>
 <p>This fit type will fit a linear regression line, with the alpha parameter value estimated from the data within the Gadget model, and the beta parameter value specified in the input file. The file format for this fit type is given below:</p>
-
-<p>fittype fixedslopelinearfit slope <beta></p>
+<pre><code>fittype              fixedslopelinearfit
+slope                &lt;beta&gt;</code></pre>
 </div>
 <div id="log-linear-regression-fixing-slope-and-estimating-intercept" class="section level4">
 <h4>log linear regression, fixing slope and estimating intercept</h4>
 <p>This fit type will fit a log linear regression line, with the alpha parameter value estimated from the data within the Gadget model, and the beta parameter value specified in the input file. The file format for this fit type is given below:</p>
-
-<p>fittype fixedslopeloglinearfit slope <beta></p>
+<pre><code>fittype              fixedslopeloglinearfit
+slope                &lt;beta&gt;</code></pre>
 </div>
 <div id="linear-regression-fixing-intercept-and-estimating-slope" class="section level4">
 <h4>linear regression, fixing intercept and estimating slope</h4>
 <p>This fit type will fit a linear regression line, with the beta parameter value estimated from the data within the Gadget model, and the alpha parameter value specified in the input file. The file format for this fit type is given below:</p>
-
-<p>fittype fixedinterceptlinearfit intercept <alpha></p>
+<pre><code>fittype              fixedinterceptlinearfit
+intercept            &lt;alpha&gt;</code></pre>
 </div>
 <div id="log-linear-regression-fixing-intercept-and-estimating-slope" class="section level4">
 <h4>log linear regression, fixing intercept and estimating slope</h4>
 <p>This fit type will fit a log linear regression line, with the beta parameter value estimated from the data within the Gadget model, and the alpha parameter value specified in the input file. The file format for this fit type is given below:</p>
-
-<p>fittype fixedinterceptloglinearfit intercept <alpha></p>
+<pre><code>fittype              fixedinterceptloglinearfit
+intercept            &lt;alpha&gt;</code></pre>
 </div>
 <div id="linear-regression-fixing-both-slope-and-intercept" class="section level4">
 <h4>linear regression, fixing both slope and intercept</h4>
 <p>This fit type will fit a linear regression line, with the alpha and beta parameter values specified in the input file. The file format for this fit type is given below:</p>
-
-<p>fittype fixedlinearfit slope <beta> intercept <alpha></p>
+<pre><code>fittype              fixedlinearfit
+slope                &lt;beta&gt;
+intercept            &lt;alpha&gt;</code></pre>
 </div>
 <div id="log-linear-regression-fixing-both-slope-and-intercept" class="section level4">
 <h4>log linear regression, fixing both slope and intercept</h4>
 <p>This fit type will fit a log linear regression line, with the alpha and beta parameter values specified in the input file. The file format for this fit type is given below:</p>
-
-<p>fittype fixedloglinearfit slope <beta> intercept <alpha></p>
+<pre><code>fittype              fixedloglinearfit
+slope                &lt;beta&gt;
+intercept            &lt;alpha&gt;</code></pre>
 </div>
 </div>
 <div id="subsec:sibyage" class="section level3">
 <h3>SurveyIndices by Age</h3>
 <p>To specify an age group based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type surveyindices datafile <name for the datafile> sitype ages biomass &lt;0 or 1&gt; ; 1 to base index data on biomass areaaggfile <area aggregation file specifying areas> ageaggfile <age aggregation file specifying ages> stocknames <vector of the names of the stocks> fittype <fit type> <fit type parameters></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               ages
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
 <p>The datafile is a list of the indices that Gadget is to use to fit the linear regression to, aggregated according to the age aggregation file specified, for the population numbers calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <age> <number></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the survey index for that timestep/area/age combination.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component. The valid fit type options are the same as for the length based survey indices, given in section <a href="#subsec:sibylength" reference-type="ref" reference="subsec:sibylength">8.6.1</a> above.</p>
@@ -3032,11 +3151,21 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <div id="subsec:sibyfleet" class="section level3">
 <h3>SurveyIndices by Fleet</h3>
 <p>To specify a length group based SurveyIndices likelihood component taking the fleet selectivity into account, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type surveyindices datafile <name for the datafile> sitype fleets biomass &lt;0 or 1&gt; ; 1 to base index data on biomass areaaggfile <area aggregation file specifying areas> lenaggfile <length aggregation file specifying lengths> fleetnames <vector of the names of the fleets> stocknames <vector of the names of the stocks> fittype <fit type> <fit type parameters></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               fleets
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
 <p>The datafile is a list of the indices that Gadget is to use to fit the linear regression to, aggregated according to the length aggregation file specified, for the population numbers calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <length> <number></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the survey index for that timestep/area/length combination.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component. The valid fit type options are the same as for the length based survey indices, given in section <a href="#subsec:sibylength" reference-type="ref" reference="subsec:sibylength">8.6.1</a> above.</p>
@@ -3044,11 +3173,20 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <div id="subsec:sibyacoustic" class="section level3">
 <h3>SurveyIndices by Acoustic</h3>
 <p>To specify an acoustic based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type surveyindices datafile <name for the datafile> sitype acoustic biomass &lt;0 or 1&gt; ; 1 to base index data on biomass areaaggfile <area aggregation file specifying areas> surveynames <vector of the names of the acoustic surveys> stocknames <vector of the names of the stocks> fittype <fit type> <fit type parameters></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               acoustic
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+surveynames          &lt;vector of the names of the acoustic surveys&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
 <p>The datafile is a list of the acoustic indices that Gadget is to use to fit the linear regression to, for the population calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <survey> <acoustic></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;survey&gt;  &lt;acoustic&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>acoustic<span class="math inline">\(&gt;\)</span> is the acoustic index for that timestep/area/survey combination.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component. The valid fit type options are the same as for the length based survey indices, given in section <a href="#subsec:sibylength" reference-type="ref" reference="subsec:sibylength">8.6.1</a> above.</p>
@@ -3056,11 +3194,20 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <div id="subsec:sibyeffort" class="section level3">
 <h3>SurveyIndices by Effort</h3>
 <p>To specify an effort based SurveyIndices likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type surveyindices datafile <name for the datafile> sitype effort biomass &lt;0 or 1&gt; ; 1 to base index data on biomass areaaggfile <area aggregation file specifying areas> fleetnames <vector of the names of the fleets> stocknames <vector of the names of the stocks> fittype <fit type> <fit type parameters></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               effort
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
 <p>The datafile is a list of the fleet effort indices that Gadget is to use to fit the linear regression to, for the fishing effort calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <fleet> <effort></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;fleet&gt;  &lt;effort&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>effort<span class="math inline">\(&gt;\)</span> is the effort index for that timestep/area/fleet combination.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be used to calculate the likelihood score for this likelihood component. The valid fit type options are the same as for the length based survey indices, given in section <a href="#subsec:sibylength" reference-type="ref" reference="subsec:sibylength">8.6.1</a> above.</p>
@@ -3071,23 +3218,42 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The SurveyDistribution likelihood component is used to compare the development of a stock in the Gadget model to age-length indices calculated from a survey for that stock. The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the calculated survey index distribution.</p>
 
 <p>To specify a SurveyDistribution likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type surveydistribution datafile <name for the datafile> areaaggfile <area aggregation file specifying areas> lenaggfile <length aggregation file specifying lengths> ageaggfile <age aggregation file specifying ages> stocknames <vector of the names of the stocks> fittype <fit type> parameters <fit type parameters> <suitability parameters> epsilon <epsilon> likelihoodtype <likelihood type></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveydistribution
+datafile             &lt;name for the datafile&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+parameters           &lt;fit type parameters&gt;
+&lt;suitability parameters&gt;
+epsilon              &lt;epsilon&gt;
+likelihoodtype       &lt;likelihood type&gt;</code></pre>
 <p>The <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of all the stocks to be aggregated into a single pseudo stock for the purposes of the data comparison. The <span class="math inline">\(&lt;\)</span>suitability parameters<span class="math inline">\(&gt;\)</span> define the suitability of the survey fleet that was used to collect the survey index data. This is the same format as the suitability functions for the stock, as discussed in section <a href="#sec:suitability" reference-type="ref" reference="sec:suitability">4.9</a> above. Note that only one set of suitability values is defined, which will be applied to all the stocks for this likelihood component.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines what function is to be used to calculate the survey index distribution from the modelled population. Currently, there are two functions defined, and the valid function names are:</p>
 
-<p>linearfit - use a linear function powerfit - use a power function</p>
+<ul>
+<li><code>linearfit</code> - use a linear function</li>
+<li><code>powerfit</code> - use a power function</li>
+</ul>
 
 <p>The <span class="math inline">\(&lt;\)</span>fit type parameters<span class="math inline">\(&gt;\)</span> is a vector of 2 parameters that are used to calculate the survey index values from the modelled population. The <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> value is used whenever the calculated probability is very unlikely, although the exact format of this depends on the likelihood type that is to be used when calculating the likelihood score.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>likelihood type<span class="math inline">\(&gt;\)</span> defines what function is to be used to compare the modelled survey index distribution to the input survey index distribution. Currently, there are 4 functions defined, and the valid function names are:</p>
 
-<p>multinomial - use a multinomial function pearson - use a Pearson function gamma - use a gamma function log - use a log function</p>
+<ul>
+<li><code>multinomial</code> - use a multinomial function</li>
+<li><code>pearson</code> - use a Pearson function</li>
+<li><code>gamma</code> - use a gamma function</li>
+<li><code>log</code> - use a log function</li>
+</ul>
 
 <p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains a list of the age-length survey indices that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the numbers calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <age> <length> <number></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the survey index for the timestep/area/age/length combination.</p>
 <div id="linear-fit" class="section level3">
 <h3>Linear Fit</h3>
@@ -3137,19 +3303,30 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The StomachContent likelihood component is used to compare consumption data sampled from the model with stomach content data obtained by analysing the stomach contents of various predators. This data can be used to give an indication of the diet composition of the stock. The likelihood score that is calculated gives some measure as to how well the consumption data from the model fits to the data from the stomach contents. Care is needed when making this comparison, since the data will give information on the stomach content at the time of capture of the predator, where as the Gadget simulation can only give information about the modelled consumption of the prey by the predator.</p>
 
 <p>To specify a StomachContent likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type stomachcontent function <function name> datafile <name for the datafile> epsilon <epsilon> areaaggfile <area aggregation file specifying areas> predatornames <vector of the names of the predators> predatorlengths lenaggfile <length aggregation file specifying predator lengths> preyaggfile <prey aggregation file specifying preys></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 stomachcontent
+function             &lt;function name&gt;
+datafile             &lt;name for the datafile&gt;
+epsilon              &lt;epsilon&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+predatornames        &lt;vector of the names of the predators&gt;
+predatorlengths
+lenaggfile           &lt;length aggregation file specifying predator lengths&gt;
+preyaggfile          &lt;prey aggregation file specifying preys&gt;</code></pre>
 <p>The optional <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> value is used whenever the calculated probability is very unlikely, although the exact format of this depends on the function that is to be used when calculating the likelihood score. This means that the likelihood component is not dominated by one or two stray values, since these will be reset back to less unlikely values. The default value for <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> is 10, which is used whenever it is not defined in the input file.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>predatornames<span class="math inline">\(&gt;\)</span> vector contains a list of all the predators to be aggregated into a single pseudo predator for the purposes of the data comparison.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used to compare the modelled consumption data to the input stomach content data. Currently, there is only one likelihood function defined, so the valid function name is:</p>
 
-<p>scsimple - use a simple ratio function</p>
+<ul>
+<li><code>scsimple</code> - use a simple ratio function</li>
+</ul>
 
 <p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains a list of the stomach content data that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the consumption calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <predator> <prey> <ratio></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;predator&gt;  &lt;prey&gt;  &lt;ratio&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>ratio<span class="math inline">\(&gt;\)</span> is the ratio of prey <span class="math inline">\(&lt;\)</span>prey<span class="math inline">\(&gt;\)</span> in the stomachs of predator <span class="math inline">\(&lt;\)</span>predator<span class="math inline">\(&gt;\)</span> for the timestep/area combination, where <span class="math inline">\(&lt;\)</span>prey<span class="math inline">\(&gt;\)</span> is defined in the prey aggregation file, and <span class="math inline">\(&lt;\)</span>predator<span class="math inline">\(&gt;\)</span> is defined in the predator length aggregation file.</p>
 <div id="scsimple-function" class="section level3">
 <h3>SCSimple Function</h3>
@@ -3164,17 +3341,25 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The Recaptures likelihood component is used to compare recaptures data from tagging experiments within the model with recaptures data obtained from tagging experiments, aggregated according to length at recapture. The likelihood score that is calculated gives some measure as to how well the data from the model fits the recaptures data.</p>
 
 <p>To specify a Recaptures likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type recaptures datafile <name for the datafile> function <function name> areaaggfile <area aggregation file specifying areas> lenaggfile <length aggregation file specifying recapture lengths> fleetnames <vector of the names of the fleets></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 recaptures
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying recapture lengths&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;</code></pre>
 <p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used to compare the modelled recaptures data to the input recaptures data. Currently, there is only one likelihood function defined, so the only valid function name is:</p>
 
-<p>poisson - use a Poisson function</p>
+<ul>
+<li><code>poisson</code> - use a Poisson function</li>
+</ul>
 
 <p>Finally, the datafile is a list of the recaptures that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the numbers calculated in the model. The format of this file is given below:</p>
-
-<p><tagid> <year> <step> <area> <length> <number></p>
+<pre><code>&lt;tagid&gt;  &lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of recaptures for the tag/timestep/area/length combination.</p>
 <div id="poisson-function" class="section level3">
 <h3>Poisson Function</h3>
@@ -3189,13 +3374,23 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The RecStatistics likelihood component is used to compare statistical data sampled from tagged subpopulations within the model with statistical data obtained from the fish returned from tagging experiments. This is used to compare biological data, such as the mean length at age, and is similar to the CatchStatistics likelihood component (see section <a href="#sec:catchstat" reference-type="ref" reference="sec:catchstat">8.4</a>). The likelihood score that is calculated gives some measure as to how well the data from the model fits to the data from the recaptures.</p>
 
 <p>To specify a RecStatistics likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type recstatistics datafile <name for the datafile> function <function name> areaaggfile <area aggregation file specifying areas> fleetnames <vector of the names of the fleets></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 recstatistics
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;</code></pre>
 <p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used to compare the modelled statistical data to the input statistical data. Currently, there are three likelihood functions defined, and the format of the statistical data given in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> depends on the likelihood function used. The valid functions are:</p>
 
-<p>lengthcalcstddev - use a weighted sum of squares of mean length lengthgivenstddev - use a weighted sum of squares of mean length with given standard deviation lengthnostddev - use a unweighted sum of squares of mean length</p>
+<ul>
+<li><code>lengthcalcstddev</code> - use a weighted sum of squares of mean length</li>
+<li><code>lengthgivenstddev</code> - use a weighted sum of squares of mean length with given standard deviation</li>
+<li><code>lengthnostddev</code> - use a unweighted sum of squares of mean length</li>
+</ul>
 <div id="weighted-sum-of-squares-of-mean-length-1" class="section level3">
 <h3>Weighted Sum of Squares of Mean Length</h3>
 <p>This likelihood function calculates the likelihood score based on a weighted sum of squares of the mean length, with the weighting given by calculating the variance of length of the modelled population, as shown in equation <a href="#eq:recstat1" reference-type="ref" reference="eq:recstat1"><span class="math display">\[eq:recstat1\]</span></a> below:</p>
@@ -3204,8 +3399,7 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the mean length calculated from the model <span class="math inline">\(&lt;\sigma&gt;\)</span> is the standard deviation of the length, calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
 
 <p>For this RecStatistics function, the format of the statistical data required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
-
-<p><tagid> <year> <step> <area> <number> <mean></p>
+<pre><code>&lt;tagid&gt;  &lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the tag/timestep/area combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples.</p>
 </div>
 <div id="weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation-1" class="section level3">
@@ -3216,8 +3410,7 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the mean length calculated from the model <span class="math inline">\(&lt;\)</span> s <span class="math inline">\(&gt;\)</span> is the standard deviation of the length from the data <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
 
 <p>For this RecStatistics function, the format of the statistical data required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
-
-<p><tagid> <year> <step> <area> <number> <mean> <stddev></p>
+<pre><code>&lt;tagid&gt;  &lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the tag/timestep/area combination, <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples and <span class="math inline">\(&lt;\)</span>stddev<span class="math inline">\(&gt;\)</span> is the standard deviation of the length of these samples.</p>
 </div>
 <div id="unweighted-sum-of-squares-of-mean-length-1" class="section level3">
@@ -3228,8 +3421,7 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the mean length calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
 
 <p>For this RecStatistics function, the format of the statistical data required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
-
-<p><tagid> <year> <step> <area> <number> <mean></p>
+<pre><code>&lt;tagid&gt;  &lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the tag/timestep/area combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples.</p>
 </div>
 </div>
@@ -3242,8 +3434,12 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The use of 2 power coefficients gives increased flexibility for the likelihood component. In general, a higher value of <span class="math inline">\(p_1\)</span> applies a higher penalty to “many small negative values”, where as a higher value of <span class="math inline">\(p_0\)</span> applies a higher penalty to “few large negative values”. For a simple sum of squares of the migration matrix values, <span class="math inline">\(p_0\)</span> should be set to 2, and <span class="math inline">\(p_1\)</span> should be set to 1.</p>
 
 <p>To specify a MigrationPenalty likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type migrationpenalty stockname <name for the stock to check> powercoeffs <p0> <p1></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 migrationpenalty
+stockname            &lt;name for the stock to check&gt;
+powercoeffs          &lt;p0&gt;  &lt;p1&gt;</code></pre>
 <p>Note that it is not possible to aggregate more than one stock into a single pseudo stock for this likelihood component.</p>
 </div>
 <div id="sec:migpro" class="section level2">
@@ -3251,19 +3447,27 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The MigrationProportion likelihood component is used to compare population proportion data sampled from the model with population proportion data sampled from landings or surveys. The populations proportion data gives the proportion of the population is that is present on each area on a given timestep. The likelihood score that is calculated gives some measure as to how well the migration data from the model fit to the data from the sample catches.</p>
 
 <p>To specify a MigrationProportion likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type migrationproportion datafile <name for the datafile> function <function name> biomass &lt;0 or 1&gt; ; 1 to base migration proportion data on biomass areaaggfile <area aggregation file specifying areas> stocknames <vector of the names of the stocks></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 migrationproportion
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+biomass              &lt;0 or 1&gt; ; 1 to base migration proportion data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
 <p>The optional flag <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is used to specify whether the migration proportion data should be based on the biomass of the stock or on the population numbers for the stock. If this is set to 0, then the migration proportion data calculated in the model will be based on the available population numbers for the stock. If this line is not specified, then a biomass value of 1 is assumed and the migration proportion data calculated in the model will be based on the available population biomass of the stock.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of all the stocks to be aggregated into a single pseudo stock for the purposes of the data comparison.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used to compare the modelled migration proportion data to the input migration proportion data. Currently, there is only one likelihood function defined, so the valid function name is:</p>
 
-<p>sumofsquares - use a simple sum of squares function</p>
+<ul>
+<li><code>sumofsquares</code> - use a simple sum of squares function</li>
+</ul>
 
 <p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains a list of the migration proportion data that Gadget is to use to fit the likelihood function to, aggregated according to the aggregation files specified, for the migration proportions calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <ratio></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;ratio&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>ratio<span class="math inline">\(&gt;\)</span> is the proportion of stock that is in area <span class="math inline">\(&lt;\)</span>area<span class="math inline">\(&gt;\)</span> for that timestep.</p>
 <div id="sum-of-squares-function-2" class="section level3">
 <h3>Sum of Squares Function</h3>
@@ -3278,8 +3482,17 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 <p>The CatchInKilos likelihood component is used to compare the overall catch from the modelled fleets with landings data. This can be done for any fleet that has landings data available, but will give more useful information when used with fleets of type “LinearFleet”, since the “TotalFleet” fleet type will catch the amount specified in the input file (see section <a href="#chap:fleet" reference-type="ref" reference="chap:fleet">7</a> for more information on the available fleet types).</p>
 
 <p>To specify a CatchInKilos likelihood component, the format required in the main likelihood file is as follows:</p>
-
-<p>[component] name <name for the likelihood component> weight <weight for the likelihood component> type catchinkilos datafile <name for the datafile> function <function name> aggregationlevel &lt;0 or 1&gt; ; 1 to aggregate data over the whole year epsilon <epsilon> areaaggfile <area aggregation file specifying areas> fleetnames <vector of the names of the fleets> stocknames <vector of the names of the stocks></p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 catchinkilos
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+epsilon              &lt;epsilon&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
 <p>The optional flag <span class="math inline">\(&lt;\)</span>aggregationlevel<span class="math inline">\(&gt;\)</span> is used to specify whether the catch data should be aggregated over the whole year (by setting aggregation level to 1) or not aggregated, and calculated for each timestep (by setting aggregation level to 0). If this line is not specified, then an aggregation level of 0 is assumed, and the catch data is not aggregated over the whole year.</p>
 
 <p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be aggregated into a single pseudo fleet for the purposes of the data comparison. Similarly, the <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of all the stocks to be aggregated into a single pseudo stock.</p>
@@ -3288,14 +3501,14 @@ uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
 
 <p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used to compare the modelled catch to the input catch. Currently, there is only one likelihood function defined, so the only valid function name is:</p>
 
-<p>sumofsquares - use a log sum of squares function</p>
+<ul>
+<li><code>sumofsquares</code> - use a log sum of squares function</li>
+</ul>
 
 <p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains the landings data that Gadget is to use to fit the likelihood function to for the catch calculated in the model. The format of this file is given below:</p>
-
-<p><year> <step> <area> <fleet> <biomass></p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;fleet&gt;  &lt;biomass&gt;</code></pre>
 <p>where <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is the catch for the timestep/area/fleet combination. The <span class="math inline">\(&lt;\)</span>step<span class="math inline">\(&gt;\)</span> column is optional if the <span class="math inline">\(&lt;\)</span>aggregationlevel<span class="math inline">\(&gt;\)</span> flag has been set to 1, since the data will be aggregated over the whole year. In this case, it is possible to specify the landings data in the following format:</p>
-
-<p><year> <area> <fleet> <biomass></p>
+<pre><code>&lt;year&gt;  &lt;area&gt;  &lt;fleet&gt;  &lt;biomass&gt;</code></pre>
 <div id="sum-of-squares-function-3" class="section level3">
 <h3>Sum of Squares Function</h3>
 <p>The sum of squares function calculates the likelihood component from equation <a href="#eq:catchtons" reference-type="ref" reference="eq:catchtons"><span class="math display">\[eq:catchtons\]</span></a> below:</p>
