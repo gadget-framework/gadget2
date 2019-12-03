@@ -332,7 +332,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
     } else if (strcasecmp(text, "log10") == 0) {
       F.functiontype = LOG10;
 
-    } else if ((strcasecmp(text, "power") == 0) || (strcasecmp(text, "**") == 0)) {
+    } else if ((strcasecmp(text, "power") == 0) || (strcasecmp(text, "**") == 0) || (strcasecmp(text, "^") == 0)) {
       F.functiontype = POWER;
 
     } else if (strcasecmp(text, "sqrt") == 0) {
