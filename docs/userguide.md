@@ -1,12 +1,11 @@
 ---
-output: 
-  html_document:
-    fig_height: 4
-    fig_width: 8
-    highlight: haddock
-    theme: united
-    toc: yes
-    toc_float: yes
+title: "Gadget userguide"
+author: "MFRI"
+site: bookdown::bookdown_site
+documentclass: book
+output:
+  bookdown::gitbook: default
+  #bookdown::pdf_book: default
 ---
 
 Introduction to Gadget {#chap:intro}
@@ -50,7 +49,7 @@ predation between and within species; growth; maturation; reproduction
 and recruitment; multiple commercial and survey fleets taking catches
 from the populations.
 
-\bigskip
+
 Like any large piece of code, Gadget is based on previous ideas by
 several authors. Conceptually the modelling framework extends earlier
 multi species programming work such as MSVPA and MULTSPEC into a more
@@ -58,7 +57,7 @@ generic statistical framework. Alternatively, Gadget is a conceptual
 extension of the Stock Synthesis statistical assessment single-species
 framework into a multi species setting.
 
-\bigskip
+
 The initial BORMICON code was developed as part of a multi species
 programme implemented at the Marine Research Institute in Reykjavik,
 Iceland, starting in 1992 with Ólafur K Pálsson as project coordinator
@@ -74,7 +73,7 @@ Modelling Approach"). Developement work for 2010-2012 was partly funded
 by EU project "Defineit" under the MariFish ERA-NET (grant
 ERAC-CT-2006-025989)
 
-\bigskip
+
 The Gadget code is derived from the original BORMICON code of Halldór
 Narfi Stefánsson, Höskuldur Björnsson and Hersir Sigurgeirsson.
 Subsequent contributions include program additions by Morten Nygaard
@@ -86,7 +85,7 @@ Several mathematical additions and changes to allow for parallel
 minimisation on a network were implemented by órdís Linda órarinsdóttir
 and Kristjana Ýr Jónsdóttir.
 
-\bigskip
+
 More recent changes include the work to use information from tagging
 experiments, which was implemented primarily by Sigurur Hannesson. The
 work on multivariate distributions was implemented by Bjarki ór
@@ -276,7 +275,6 @@ reference="sec:mainfile"}, for more information on the format of this
 file). If Gadget is started without the -main switch, Gadget will use
 the default filename "main" as the name for the main file.
 
-\newpage 
     gadget -p <filename>
 
 Starting Gadget with the -p switch specifies the file that Gadget will
@@ -349,7 +347,6 @@ can read the other command line options. This file should contain a
 simple list of the switches and their values, as they would be entered
 from the command line.
 
-\newpage 
     gadget -printinitial <filename>
 
 Starting Gadget with the -printinitial switch will specify a file to
@@ -377,7 +374,7 @@ by any fleets. The default value is 0.95, which ensures that no more
 than 95% of the available stock biomass is consumed on a single
 timestep.
 
-\bigskip
+
 Most of these switches can be combined to specify more information about
 the Gadget run that will be performed. For instance:
 
@@ -389,7 +386,7 @@ optimisation being done in accordance with the information in
 optinfo.txt, and printing likelihood information (every 10 iterations)
 to the file likelihood.txt.
 
-\bigskip
+
 Note that it is not possible to do both a simulation run and a
 likelihood run at the same time, and starting Gadget with both the -l
 and -s switches will result in a warning, after which Gadget will
@@ -406,7 +403,7 @@ The case of any text in an input file is ignored by Gadget, so for
 example, "Stock" and "stock" would be interpreted by Gadget as being the
 same.
 
-\bigskip
+
 Unless stated otherwise, all the input and output files use the
 following measurement units:
 
@@ -453,7 +450,7 @@ whitespace either before or after the '\#' character. Also note that the
 name of the switch cannot contain a hyphen, since this will be
 interpreted by Gadget as the mathematical subtraction symbol.
 
-\bigskip
+
 Any initial value specified in the data files will be overwritten by the
 initial value given in the parameter file (see
 chapter [10](#chap:param){reference-type="ref" reference="chap:param"}).
@@ -461,7 +458,7 @@ If the initial value is not given, then a value of 1 with be assumed by
 Gadget. A switch can appear in more than one place in the data files,
 but needs to be defined with the same initial value each time.
 
-\bigskip
+
 Examples of valid switches in the data files can include:
 
 1.  defining a simple switch (called "age2") without an initial value
@@ -487,7 +484,7 @@ trigonometric functions ('sin' and 'cos', with the argument in radians),
 logarithmic functions ('log', 'log10' and 'exp'), square root ('sqrt')
 and a function to generate a random number between 0 and 1 ('rand').
 
-\bigskip
+
 Examples of valid functions for the switches in the data files can
 include:
 
@@ -570,7 +567,7 @@ that datasets covering only part of the overall run can be used. Gadget
 splits each year up into a number of time steps, but these time steps
 need not all be the same length.
 
-\bigskip
+
 The format for this file is a list of the first year and timestep, and
 the last year and timestep, and how each year is to be divided into
 timesteps. This is done by specifying first the number of timesteps in a
@@ -608,7 +605,7 @@ time dependent temperature for each area. Note that although the
 temperature data must be provided it need not actually be used,
 depending on the growth and feeding options chosen for the stock file.
 
-\bigskip
+
 The format for this file is a list of the areas that are to be used (by
 specifying a numeric identifier for each area), followed by the size of
 each area (in square kilometres) and then a listing of the temperature
@@ -715,10 +712,11 @@ The digestion coefficients define a multiplier used when calculating the
 consumption of the prey. This multiplier is length dependant, and is
 calculated according to the digestion equation given below:
 
-$$\label{eq:digestion}
-D = d_{0} + d_{1}l^{d_{2}}$$
+\begin{equation}
+(\#eq:digestion)
+D = d_{0} + d_{1}l^{d_{2}}\end{equation}
 
-\bigskip
+
 An example of a prey aggregation file is:
 
     ; for the first prey
@@ -756,7 +754,7 @@ of the value or parameter in the input file. TimeVariable files can
 contain comments and blank lines, to make the format easier to view in a
 text editor.
 
-\bigskip
+
 TimeVariable files consist of a one word description of the data,
 followed by an optional multipler value and then the keyword "timedata",
 and then a list of the timesteps when the value of TimeVariable changes,
@@ -798,7 +796,7 @@ in place of the value or parameter in the input file. StockVariable
 files can contain comments and blank lines, to make the format easier to
 view in a text editor.
 
-\bigskip
+
 StockVariable files consist of a one word description of the data,
 followed by an optional multipler value and then the keyword
 "stockdata", and then a list of the stocks to use when caluclating the
@@ -818,7 +816,7 @@ not specified, then a biomass value of 1 is assumed and the
 StockVariable value will be based on the available population numbers
 for the stock(s).
 
-\bigskip
+
 An example of a StockVariable file is:
 
     capelinconsumption
@@ -842,7 +840,7 @@ The format for this is:
 where year and step are either a valid timestep or the keyword "all".
 These can be grouped together to specify a more complex time period.
 
-\bigskip
+
 Examples of valid ActionAtTime entries in the data files include:
 
 1.  the action taking place on the first timestep of 2002
@@ -974,7 +972,7 @@ The $<$growth function$>$ defines what growth function is to be used to
 calculate the growth of the stock. Currently, there are 7 growth
 functions defined, so valid function names are:
 
-\bigskip
+
 
 * `multspec` - use the MULTSPEC growth function 
 * `weightvb` - use the WeightVB growth function 
@@ -988,24 +986,24 @@ functions defined, so valid function names are:
 
 This growth function is a simplified "MULTSPEC" growth equation, with
 the increase in length for each length group of the stock given by
-equation [\[eq:growth1l\]](#eq:growth1l){reference-type="ref"
-reference="eq:growth1l"}, and the corresponding increase in weight of
-the stock given by
-equation [\[eq:growth1w\]](#eq:growth1w){reference-type="ref"
-reference="eq:growth1w"} below:
+equation\@ref(eq:growth1l), and the corresponding increase in weight of
+the stock given by equation \@ref(eq:growth1w) below:
 
-$$\label{eq:growth1l}
-\Delta L_{i} = \Delta t p_{0} {L_{i}}^{p_{1}} \psi (p_{2} T + p_{3})$$
+\begin{equation}
+(\#eq:growth1l)
+\Delta L_{i} = \Delta t p_{0} {L_{i}}^{p_{1}} \psi (p_{2} T + p_{3})
+\end{equation}
 
-$$\label{eq:growth1w}
-\Delta W_{i} = \Delta t p_{4} {W_{i}}^{p_{5}} (\psi - p_{6}) (p_{7} T + p_{8})$$
+\begin{equation}
+(\#eq:growth1w)
+\Delta W_{i} = \Delta t p_{4} {W_{i}}^{p_{5}} (\psi - p_{6}) (p_{7} T + p_{8})\end{equation}
 
 where: $<\Delta t>$ is the length of the timestep $<$ T $>$ is the
 temperature $<\psi>$ is the feeding level (see
 section [4.8](#sec:consumption){reference-type="ref"
 reference="sec:consumption"})
 
-\bigskip
+
 There are 4 parameters in the length equation, and 5 in the weight
 equation, giving a total of 9 parameters to be declared to define this
 growth function. This is given in the main stock file by declaring a
@@ -1025,27 +1023,31 @@ of the stock is given by
 equation [\[eq:growth3lc\]](#eq:growth3lc){reference-type="ref"
 reference="eq:growth3lc"} below:
 
-$$\label{eq:growth3w}
-\Delta W_{i} = \Delta t q_{0} e^{q_{1} T} \left( \left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} - \left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)$$
+\begin{equation}
+(\#eq:growth3w)
+\Delta W_{i} = \Delta t q_{0} e^{q_{1} T} \left( \left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} - \left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)\end{equation}
 
-$$\label{eq:growth3la}
-r = \frac{W - \left( p_{0} + p_{8} \left( p_{1} + p_{2}p_{8} \right) \right) W_{ref}}{W}$$
+\begin{equation}
+(\#eq:growth3la)
+r = \frac{W - \left( p_{0} + p_{8} \left( p_{1} + p_{2}p_{8} \right) \right) W_{ref}}{W}\end{equation}
 
-$$\label{eq:growth3lb}
+\begin{equation}
+(\#eq:growth3lb)
 f(x) =
 \begin{cases}
 0 & \textrm{if $p_{3} + p_{4}x \leq 0$} \\
 p_{5} & \textrm{if $p_{3} + p_{4}x \geq p_{5}$} \\
 p_{3} + p_{4}x & \textrm{otherwise}
-\end{cases}$$
+\end{cases}\end{equation}
 
-$$\label{eq:growth3lc}
-\Delta L_{i} = \frac{\Delta W_{i}} {p_{6} p_{7} l^{p_{7} - 1}} f(r)$$
+\begin{equation}
+(\#eq:growth3lc)
+\Delta L_{i} = \frac{\Delta W_{i}} {p_{6} p_{7} l^{p_{7} - 1}} f(r)\end{equation}
 
 where: $<\Delta t>$ is the length of the timestep $<$ T $>$ is the
 temperature $<W_{ref}>$ is the reference weight
 
-\bigskip
+
 Comparing the weight to the reference weight (by using
 equations [\[eq:growth3la\]](#eq:growth3la){reference-type="ref"
 reference="eq:growth3la"} and
@@ -1055,7 +1057,7 @@ Gadget model. When the weight of the population is less than a function
 of the reference weight, there is no length increase (ensuring that the
 growth only has an effect on the weight).
 
-\bigskip
+
 There are 6 parameters for the equation for increase of the weight, and
 a further 9 parameters for the increase in length. These are declared in
 2 vectors, as shown below:
@@ -1074,22 +1076,26 @@ of the stock is given by
 equation [\[eq:growth4lc\]](#eq:growth4lc){reference-type="ref"
 reference="eq:growth4lc"} below:
 
-$$\label{eq:growth4w}
-\Delta W_{i} = \Delta t \left( \frac{C}{q_{0} W_{i}^{q_{1}}} - q_{2} W_{i}^{q_{3}} e^{(q_{4} T + q_{5})} \right)$$
+\begin{equation}
+(\#eq:growth4w)
+\Delta W_{i} = \Delta t \left( \frac{C}{q_{0} W_{i}^{q_{1}}} - q_{2} W_{i}^{q_{3}} e^{(q_{4} T + q_{5})} \right)\end{equation}
 
-$$\label{eq:growth4la}
-r = \frac{W - \left( p_{0} + \psi \left( p_{1} + p_{2}\psi \right) \right) W_{ref}}{W}$$
+\begin{equation}
+(\#eq:growth4la)
+r = \frac{W - \left( p_{0} + \psi \left( p_{1} + p_{2}\psi \right) \right) W_{ref}}{W}\end{equation}
 
-$$\label{eq:growth4lb}
+\begin{equation}
+(\#eq:growth4lb)
 f(x) =
 \begin{cases}
 0 & \textrm{if $p_{3} + p_{4}x \leq 0$} \\
 p_{5} & \textrm{if $p_{3} + p_{4}x \geq p_{5}$} \\
 p_{3} + p_{4}x & \textrm{otherwise}
-\end{cases}$$
+\end{cases}\end{equation}
 
-$$\label{eq:growth4lc}
-\Delta L_{i} = \frac{\Delta W_{i}} {p_{6} p_{7} l^{p_{7} - 1}} f(r)$$
+\begin{equation}
+(\#eq:growth4lc)
+\Delta L_{i} = \frac{\Delta W_{i}} {p_{6} p_{7} l^{p_{7} - 1}} f(r)\end{equation}
 
 where: $<\Delta t>$ is the length of the timestep $<$ C $>$ is the
 consumption (see section [4.8](#sec:consumption){reference-type="ref"
@@ -1098,7 +1104,7 @@ the feeding level (see
 section [4.8](#sec:consumption){reference-type="ref"
 reference="sec:consumption"}) $<W_{ref}>$ is the reference weight
 
-\bigskip
+
 There are 6 parameters for the equation for increase of the weight, and
 a further 8 parameters for the increase in length. These are declared in
 2 vectors, as shown below:
@@ -1120,14 +1126,15 @@ reference="subsec:growth3"}) given by
 equation [\[eq:growth3lc\]](#eq:growth3lc){reference-type="ref"
 reference="eq:growth3lc"}:
 
-$$\label{eq:growth5w}
-\Delta W_{i} = \Delta t Y_{y} S_{s} A_{a} q_{0} e^{q_{1}T} \left( \left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} - \left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)$$
+\begin{equation}
+(\#eq:growth5w)
+\Delta W_{i} = \Delta t Y_{y} S_{s} A_{a} q_{0} e^{q_{1}T} \left( \left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} - \left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)\end{equation}
 
 where: $<\Delta t>$ is the length of the timestep $<$ T $>$ is the
 temperature $<Y_{y}>$ is a multiplier for year y $<S_{s}>$ is a
 multiplier for step s $<A_{a}>$ is a multiplier for area a
 
-\bigskip
+
 There are 6 parameters for the equation for increase of the weight, and
 a further 9 parameters for the increase in length and these are declared
 in 2 vectors. Additionally there are vectors for the year, step and area
@@ -1151,12 +1158,13 @@ given by equation [\[eq:growth6\]](#eq:growth6){reference-type="ref"
 reference="eq:growth6"}, with the corresponding increase in the weight
 of the stock read in from a data file:
 
-$$\label{eq:growth6}
-\Delta L_{i} = \left( L_{\infty} - L_{i} \right) \left( 1 - e^{-\kappa \Delta t} \right)$$
+\begin{equation}
+(\#eq:growth6)
+\Delta L_{i} = \left( L_{\infty} - L_{i} \right) \left( 1 - e^{-\kappa \Delta t} \right)\end{equation}
 
 where: $<\Delta t>$ is the length of the timestep
 
-\bigskip
+
 There are a total of 2 parameters for the equation for increase in
 length. These are declared in a single vector, as shown below:
 
@@ -1171,7 +1179,7 @@ will result in Gadget printing a warning message. To avoid this, the
 user should ensure that the value of $L_{\infty}$ is always greater than
 the mean length of the largest length group.
 
-\bigskip
+
 The weight data file consists of a list of the year, timestep, area and
 length group label, followed by the mean increase in weight for that
 timestep/area/length combination. The length group label used must match
@@ -1189,12 +1197,13 @@ equation [\[eq:growth7\]](#eq:growth7){reference-type="ref"
 reference="eq:growth7"}, with the corresponding increase in the weight
 of the stock read in from a data file:
 
-$$\label{eq:growth7}
-\Delta L_{i} = L_{i}^{q_{0}} e^{q_{1} \Delta t}$$
+\begin{equation}
+(\#eq:growth7)
+\Delta L_{i} = L_{i}^{q_{0}} e^{q_{1} \Delta t}\end{equation}
 
 where: $<\Delta t>$ is the length of the timestep
 
-\bigskip
+
 There are a total of 2 parameters for the equation for increase in
 length. These are declared in a single vector, as shown below:
 
@@ -1219,15 +1228,17 @@ of the stock is given by
 equation [\[eq:growth8w\]](#eq:growth8w){reference-type="ref"
 reference="eq:growth8w"} below:
 
-$$\label{eq:growth8l}
-\Delta L_{i} = \left( L_{\infty} - L_{i} \right) \left( 1 - e^{-\kappa \Delta t} \right)$$
+\begin{equation}
+(\#eq:growth8l)
+\Delta L_{i} = \left( L_{\infty} - L_{i} \right) \left( 1 - e^{-\kappa \Delta t} \right)\end{equation}
 
-$$\label{eq:growth8w}
-\Delta W_{i} = \alpha \left( \left( L_{i} + \Delta L_{i} \right) ^{\beta} - {L_{i}}^{\beta} \right)$$
+\begin{equation}
+(\#eq:growth8w)
+\Delta W_{i} = \alpha \left( \left( L_{i} + \Delta L_{i} \right) ^{\beta} - {L_{i}}^{\beta} \right)\end{equation}
 
 where: $<\Delta t>$ is the length of the timestep
 
-\bigskip
+
 There are a total of 4 parameters for the equation for increase in
 length and weight. These are declared in a single vector, as shown
 below:
@@ -1251,7 +1262,7 @@ distribution of actual growths around that mean. Currently there is only
 one statistical distribution implemented with Gadget, the beta-binomial,
 which is described below.
 
-\bigskip
+
 Note that regardless of the results of the implementation function there
 is a minimum width to the possible distribution implemented in Gadget -
 where growth is allocated between two adjacent length categories. This
@@ -1267,8 +1278,9 @@ beta-binomial, an extension of the binomial distribution with the
 flexibility to produce non-symmetrical distributions, which is defined
 for integers, x = 0, ..., n as:
 
-$$\label{eq:betabin1}
-{n \choose x} p^x (1 - p)^{n - x} = \frac{\Gamma(n + 1)}{\Gamma(x + 1)\Gamma(n - x + 1)} p^x (1 - p)^{n - x}$$
+\begin{equation}
+(\#eq:betabin1)
+{n \choose x} p^x (1 - p)^{n - x} = \frac{\Gamma(n + 1)}{\Gamma(x + 1)\Gamma(n - x + 1)} p^x (1 - p)^{n - x}\end{equation}
 
 For more flexibility, this can be re-arranged by calculating the
 parameter $<$p$>$ from a second beta-binomial distribution, leading to
@@ -1276,10 +1288,12 @@ equation [\[eq:betabin2\]](#eq:betabin2){reference-type="ref"
 reference="eq:betabin2"} shown below, which is defined for 0 $\le$ p
 $\le$ 1:
 
-$$\label{eq:betabin2}
-f(p) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)}p^{\alpha - 1}(1 - p)^{\beta - 1}$$
-$$\label{eq:betabin3}
-\alpha = \frac{\beta \Delta L}{n - \Delta L}$$
+\begin{equation}
+(\#eq:betabin2)
+f(p) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)}p^{\alpha - 1}(1 - p)^{\beta - 1}\end{equation}
+\begin{equation}
+(\#eq:betabin3)
+\alpha = \frac{\beta \Delta L}{n - \Delta L}\end{equation}
 
 The distribution is governed by three parameters; the mean length growth
 computed by the growth function scaled by dividing by the width of the
@@ -1303,7 +1317,7 @@ equation [\[eq:betabin3\]](#eq:betabin3){reference-type="ref"
 reference="eq:betabin3"}) can lead to unexpected results and should be
 avoided.
 
-\bigskip
+
 The $<$max length group growth$>$ value is the maximum number of length
 categories a fish is permitted to grow in a single timestep within the
 model. This should be set to be several length groups larger than any
@@ -1323,12 +1337,13 @@ group, on each timestep, as shown in
 equation [\[eq:natmort\]](#eq:natmort){reference-type="ref"
 reference="eq:natmort"} below:
 
-$$\label{eq:natmort}
-N_{a} = e^{-m_{a} \Delta t}$$
+\begin{equation}
+(\#eq:natmort)
+N_{a} = e^{-m_{a} \Delta t}\end{equation}
 
 where: $<\Delta t>$ is the length of the timestep
 
-\bigskip
+
 The natural mortality parameters $<m_{a}>$ are specified in the stock
 file as a vector, with one parameter per age group, as shown below:
 
@@ -1405,17 +1420,21 @@ of prey $p$ is given by
 equation [\[eq:totalcons\]](#eq:totalcons){reference-type="ref"
 reference="eq:totalcons"} below:
 
-$$\label{eq:totalcons}
-C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{\displaystyle \sum_{\it preys} F_{p}(l, L)}$$
+\begin{equation}
+(\#eq:totalcons)
+C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{\displaystyle \sum_{\it preys} F_{p}(l, L)}\end{equation}
 
-$$\label{eq:preycons}
-F_{p}(l, L) =\Big( S_{p}(l, L) E_{p} N_{l} W_{l} \Big) ^{d_{p}}$$
+\begin{equation}
+(\#eq:preycons)
+F_{p}(l, L) =\Big( S_{p}(l, L) E_{p} N_{l} W_{l} \Big) ^{d_{p}}\end{equation}
 
-$$\label{eq:maxcons}
-M_{L} = m_{0} \Delta t e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}$$
+\begin{equation}
+(\#eq:maxcons)
+M_{L} = m_{0} \Delta t e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}\end{equation}
 
-$$\label{eq:feedlevel}
-\psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H \Delta t + \displaystyle \sum_{\it preys} F_{p}(l, L)}$$
+\begin{equation}
+(\#eq:feedlevel)
+\psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H \Delta t + \displaystyle \sum_{\it preys} F_{p}(l, L)}\end{equation}
 
 where: $<$ L $>$ is the length of the predator $<$ l $>$ is the length
 of the prey $<$ H $>$ is the half feeding value $<$ d $>$ is the
@@ -1428,7 +1447,7 @@ section [4.9](#sec:suitability){reference-type="ref"
 reference="sec:suitability"}) $<\Delta t>$ is the length of the timestep
 $<$ T $>$ is the temperature of the area that the feeding takes place on
 
-\bigskip
+
 In equation [\[eq:totalcons\]](#eq:totalcons){reference-type="ref"
 reference="eq:totalcons"}, the parameter $<$ F $>$ gives the amount of a
 given prey that is consumed by the predator, given by multiplying the
@@ -1443,7 +1462,7 @@ reference="chap:other"}. The value of $<$ C $>$ can have an affect on
 the growth of the predator when the growth function has been set to
 "WeightJones".
 
-\bigskip
+
 In equation [\[eq:preycons\]](#eq:preycons){reference-type="ref"
 reference="eq:preycons"}, the parameter $<$ d $>$ gives the preference
 of the predator for the prey, controlling the form of the functional
@@ -1470,7 +1489,7 @@ parameters specified by the $<$maximum consumption$>$ vector in the
 input file. Note that the maximum consumption should be specified in
 kilojoules per month.
 
-\bigskip
+
 In equation [\[eq:feedlevel\]](#eq:feedlevel){reference-type="ref"
 reference="eq:feedlevel"}, the parameter $<\psi>$ gives the "feeding
 level" which denotes the fraction of the available food that the
@@ -1493,7 +1512,7 @@ suitability values can be thought of as the proportion of the prey
 length group that the predator length group can consume, and as such the
 suitability values should be between 0 and 1.
 
-\bigskip
+
 To define a suitability relationship based on a suitability function,
 the stock file (for the predator) needs to contain the following data:
 
@@ -1505,7 +1524,7 @@ to calculate the suitability for the predator acting on the prey.
 Currently there are 7 suitability functions defined, and the valid
 suitability function names are:
 
-\bigskip
+
 constant - use the Constant suitabilty function straightline - use the
 StraightLine suitabilty function exponential - use the Exponential
 suitabilty function newexponentiall50 - use the ExponentialL50
@@ -1514,7 +1533,7 @@ andersen - use the Andersen suitabilty function andersenfleet - use the
 Andersen suitabilty function, modified for fleets gamma - use the Gamma
 suitabilty function
 
-\bigskip
+
 For the following suitability functions, the convention used is to
 represent the length group of the prey by l, and the length group of the
 predator by L.
@@ -1525,8 +1544,9 @@ This is a constant suitability function, where there is no dependence on
 either the length of the predator or the length of the prey as given by
 the following equation:
 
-$$\label{eq:constsuit}
-S(l, L) = \alpha$$
+\begin{equation}
+(\#eq:constsuit)
+S(l, L) = \alpha\end{equation}
 
 Hence, to specify a constant suitability function, the file format
 required is:
@@ -1539,8 +1559,9 @@ This is a suitability function that has no dependence on the length of
 the predator, and a linear dependence on the length of the prey as given
 by the following equation:
 
-$$\label{eq:straightsuit}
-S(l, L) = \alpha l + \beta$$
+\begin{equation}
+(\#eq:straightsuit)
+S(l, L) = \alpha l + \beta\end{equation}
 
 Hence, to specify a straight line suitability function, the file format
 required is:
@@ -1553,8 +1574,9 @@ This is a suitability function that has a logarithmic dependence on both
 the length of the predator and the length of the prey as given by the
 following equation:
 
-$$\label{eq:expsuit}
-S(l, L) = {\frac{\delta}{1 + e^{(- \alpha - \beta l - \gamma  L)}}}$$
+\begin{equation}
+(\#eq:expsuit)
+S(l, L) = {\frac{\delta}{1 + e^{(- \alpha - \beta l - \gamma  L)}}}\end{equation}
 
 Hence, to specify this suitability function, the file format required
 is:
@@ -1567,8 +1589,9 @@ This is a suitability function that has no dependence on the length of
 the predator, and a logarithmic dependence on the length of the prey as
 given by the following equation:
 
-$$\label{eq:l50suit}
-S(l, L) = { \frac{1}{1 + e^{ -\alpha (l - l_{50})}}}$$
+\begin{equation}
+(\#eq:l50suit)
+S(l, L) = { \frac{1}{1 + e^{ -\alpha (l - l_{50})}}}\end{equation}
 
 Note that the prey length dependence is actually dependant on the
 difference between the length of the prey and $l_{50}$, which is the
@@ -1584,8 +1607,9 @@ suitiability function, and has a logarithmic dependence on both the
 length of the predator and the length of the prey as given by the
 following equation:
 
-$$\label{eq:richsuit}
-S(l, L) = \left({\frac{p_3}{1 + e^{(- p_0 - p_1 l - p_2  L)}}}\right) ^ {\frac{1}{p_4}}$$
+\begin{equation}
+(\#eq:richsuit)
+S(l, L) = \left({\frac{p_3}{1 + e^{(- p_0 - p_1 l - p_2  L)}}}\right) ^ {\frac{1}{p_4}}\end{equation}
 
 Hence, to specify this suitability function, the file format required
 is:
@@ -1598,12 +1622,13 @@ This is a more general suitability function that is dependant on the
 ratio of the predator length to the prey length as given by the
 following equation:
 
-$$\label{eq:andersensuit}
+\begin{equation}
+(\#eq:andersensuit)
 S(l, L) =
 \begin{cases}
 p_0 + p_2e^{-\frac{(\ln\frac{L}{l} - p_1)^2}{p_4}} & \textrm{if $\ln\frac{L}{l} \leq p_1$} \\
 p_0 + p_2e^{-\frac{(\ln\frac{L}{l} - p_1)^2}{p_3}} & \textrm{if $\ln\frac{L}{l} > p_1$}
-\end{cases}$$
+\end{cases}\end{equation}
 
 Note that the log of the ratio of the predator/prey lengths is bounded,
 to ensure that the suitability function is always well defined. To
@@ -1617,12 +1642,13 @@ This is a modified version of the Andersen suitability function that is
 dependant on the ratio of a parameter to the prey length as given by the
 following equation:
 
-$$\label{eq:andersenfleetsuit}
+\begin{equation}
+(\#eq:andersenfleetsuit)
 S(l, L) =
 \begin{cases}
 p_0 + p_2e^{-\frac{(\ln\frac{p_5}{l} - p_1)^2}{p_4}} & \textrm{if $\ln\frac{p_5}{l} \leq p_1$} \\
 p_0 + p_2e^{-\frac{(\ln\frac{p_5}{l} - p_1)^2}{p_3}} & \textrm{if $\ln\frac{p_5}{l} > p_1$}
-\end{cases}$$
+\end{cases}\end{equation}
 
 Note that the log of the ratio of the fleet parameter/prey length is
 bounded, to ensure that the suitability function is always well defined.
@@ -1638,8 +1664,9 @@ function, the file format required is:
 This is a suitability function that is only dependant on the prey length
 as given by the following equation:
 
-$$\label{eq:gammasuit}
-S(l, L) = \left(\frac{l}{(\alpha - 1) \beta\gamma}\right) ^ {(\alpha - 1)}e ^ {(\alpha - 1 - \frac{l}{\beta\gamma})}$$
+\begin{equation}
+(\#eq:gammasuit)
+S(l, L) = \left(\frac{l}{(\alpha - 1) \beta\gamma}\right) ^ {(\alpha - 1)}e ^ {(\alpha - 1 - \frac{l}{\beta\gamma})}\end{equation}
 
 Hence, to specify this suitability function, the file format required
 is:
@@ -1666,7 +1693,7 @@ parameters to allow Gadget to create a stock distribution based on a
 Normal distribution, or the numbers that make up the stock distribution
 required.
 
-\bigskip
+
 The format for the initial conditions section of the stock file is given
 below:
 
@@ -1689,11 +1716,11 @@ specified, then it is assumed that the initial population will have the
 same value for $<$dl$>$ as for the stock, as specified in the main stock
 file.
 
-\bigskip
+
 There are three formats for the initial stock distribution data, as
 given below:
 
-\bigskip
+
 Normal Condition - use a Normal function to generate the length
 distribution, with a relative condition factor to assign a mean weight
 to the initial population Normal Parametric - use a Normal function to
@@ -1721,12 +1748,12 @@ initial population is calculated by multiplying the reference weight
 (specified in the main stock file) by a relative conditioning factor
 (which is typically set to 1).
 
-\bigskip
+
 To get from a population with 10,000 fish in each age group (for each
 area) to the initial population used in the model, each age group is
 multiplied by an age weighting factor and an area weighting factor.
 
-\bigskip
+
 Hence, the format for the initial stock file is given below:
 
     <age>  <area>  <age factor>  <area factor>  <mean>  <stddev>  <relcond>
@@ -1751,15 +1778,16 @@ relationship, as given in
 equation [\[eq:wlen\]](#eq:wlen){reference-type="ref"
 reference="eq:wlen"} below:
 
-$$\label{eq:wlen}
-W = \alpha L^{\beta}$$
+\begin{equation}
+(\#eq:wlen)
+W = \alpha L^{\beta}\end{equation}
 
-\bigskip
+
 To get from a population with 10,000 fish in each age group (for each
 area) to the initial population used in the model, each age group is
 multiplied by an age weighting factor and an area weighting factor.
 
-\bigskip
+
 Hence, the format for the initial stock file is given below:
 
     <age>  <area>  <age factor>  <area factor>  <mean>  <stddev>  <alpha>  <beta>
@@ -1800,7 +1828,7 @@ reference="sec:stockmature"} below. If the stock does migrate, then
 further information about the migration is required. There are currently
 2 formats for the migration data, as given in the list below:
 
-\bigskip
+
 Migration Matrices - specify the migration matrices to be used Migration
 Ratios - specify the ratio of the stock that moves between areas, and
 let Gadget calculate the required matrices based on these ratios
@@ -1840,7 +1868,7 @@ the $n$ areas that the stock is defined on, with the proportion moving
 total number of fish in the model, each column in the matrix should sum
 to one.
 
-\bigskip
+
 An example of a migration matrix data for a stock that is defined on two
 areas is given below:
 
@@ -1874,7 +1902,7 @@ migration will take place on, along with the name of the migration
 matrix that is to be used on each timestep, in the same format as for
 the Migration Matrices, as shown above.
 
-\bigskip
+
 The migration ratio file contains the ratios to be used by Gadget to
 construct the migration matrices to move the stock between the various
 areas within the Gadget model. Each matrix is listed, starting with the
@@ -1894,7 +1922,7 @@ incomplete, Gadget will assume that there is no migration between areas
 timestep). If Gadget cannot construct a (unique) migration matrix, then
 the model will stop the current simulation and display an error message.
 
-\bigskip
+
 An example of a migration ratio data for a stock that is defined on two
 areas is given below:
 
@@ -1936,14 +1964,14 @@ The $<$maturity function$>$ defines the function that is to be used to
 calculate how the stock will mature. Currently there are 4 maturity
 functions defined, and the valid maturity function names are:
 
-\bigskip
+
 
 * `newconstant` - use the Constant maturation function 
 * `newconstantweight` -use the ConstantWeight maturation function 
 * `fixedlength` - use the FixedLength maturation function 
 * `continuous` - use the Continuous maturation function
 
-\bigskip
+
 The format for the data in the maturity data file is dependent on the
 maturity function that is to be used. All the maturity functions require
 the name of the mature stocks that the immature stock will mature into,
@@ -1953,7 +1981,7 @@ to mature into more than one mature stock, so for example, an immature
 stock could mature into either a male mature stock or a female mature
 stock.
 
-\bigskip
+
 The maturity functions calculate the proportion of the fish in each
 age-length group that will become mature, and then move these fish from
 the age-length group for the current stock into the corresponding
@@ -1969,8 +1997,9 @@ of an immature stock that becomes mature according to the maturity
 equation [\[eq:mat3\]](#eq:mat3){reference-type="ref"
 reference="eq:mat3"} given below:
 
-$$\label{eq:mat3}
-P(l, a) = \frac{1}{ 1 + e^{-\alpha(l - l_{50}) -\beta(a - a_{50})}}$$
+\begin{equation}
+(\#eq:mat3)
+P(l, a) = \frac{1}{ 1 + e^{-\alpha(l - l_{50}) -\beta(a - a_{50})}}\end{equation}
 
 The maturity term is a function of $l_{50}$ and $a_{50}$, which are the
 length and age where 50% of the stock are mature. For this maturation
@@ -1993,8 +2022,9 @@ function, with the maturity proportion being calculated according to the
 maturity equation [\[eq:mat4\]](#eq:mat4){reference-type="ref"
 reference="eq:mat4"} given below:
 
-$$\label{eq:mat4}
-P(l, a) = \frac{1}{ 1 + e^{-\alpha(l - l_{50}) -\beta(a - a_{50}) -\gamma(k - k_{50})}}$$
+\begin{equation}
+(\#eq:mat4)
+P(l, a) = \frac{1}{ 1 + e^{-\alpha(l - l_{50}) -\beta(a - a_{50}) -\gamma(k - k_{50})}}\end{equation}
 
 The maturity function has been extended to include the relative
 condition of the stock (calculated by dividing the current weight by the
@@ -2017,12 +2047,13 @@ proportion of the immature stock that matures is given by the
 equation [\[eq:mat2\]](#eq:mat2){reference-type="ref"
 reference="eq:mat2"} below:
 
-$$\label{eq:mat2}
+\begin{equation}
+(\#eq:mat2)
 P(l, a) =
 \begin{cases}
 1 & \textrm{if there is an $i$ such that $s_i$ is the current step and $l > l_i$} \\
 0 & \textrm{otherwise}
-\end{cases}$$
+\end{cases}\end{equation}
 
 For each timestep in the year, the stock is assumed to mature when the
 length of the fish reaches a certain value. This length can change for
@@ -2044,13 +2075,15 @@ equations [\[eq:mat1a\]](#eq:mat1a){reference-type="ref"
 reference="eq:mat1a"} and [\[eq:mat1b\]](#eq:mat1b){reference-type="ref"
 reference="eq:mat1b"} given below:
 
-$$\label{eq:mat1a}
-P(l, a) = {\frac{1}{1 - M}}{\frac{dM}{dt}}$$
+\begin{equation}
+(\#eq:mat1a)
+P(l, a) = {\frac{1}{1 - M}}{\frac{dM}{dt}}\end{equation}
 
-$$\label{eq:mat1b}
-M(l_{t},a_{t}) = \frac{1}{1 + e^{-\alpha(l_{t} - l_{50}) - \beta(a_{t} - a_{50})}}$$
+\begin{equation}
+(\#eq:mat1b)
+M(l_{t},a_{t}) = \frac{1}{1 + e^{-\alpha(l_{t} - l_{50}) - \beta(a_{t} - a_{50})}}\end{equation}
 
-\bigskip
+
 The maturity term is a function of $l_{50}$ and $a_{50}$, which are the
 length and age where 50% of the stock are mature. This is a continuous
 process, with the maturity proportion being calculated on every
@@ -2127,13 +2160,13 @@ step size for the recruits than for the stock that the recruits will be
 added to. If this value is not specified here then the recruits will be
 given the same step length as for the stock they will be added to.
 
-\bigskip
+
 In a similar manner to the format for the initial population (see
 section [4.10](#sec:stockinitial){reference-type="ref"
 reference="sec:stockinitial"}) there are three formats for the renewal
 distribution data, as given below:
 
-\bigskip
+
 Normal Condition - use a Normal function to generate the length
 distribution, with a relative condition factor to assign a mean weight
 to the new recruits Normal Parametric - use a Normal function to
@@ -2160,7 +2193,7 @@ the Normal distribution for length groups of the recruits, and the
 relative condition factor, used along with the reference weight to
 assign a mean weight for the recruits.
 
-\bigskip
+
 Hence, the format for the renewal file is given below:
 
     <year>  <step>  <area>  <age>  <number>  <mean>  <stddev>  <relcond>
@@ -2182,7 +2215,7 @@ number of recruits (in units of 10,000 fish), parameters used to define
 the Normal distribution for length groups of the recruits, and
 parameters to define the weight-length relationship for these recruits.
 
-\bigskip
+
 Hence, the format for the renewal file is given below:
 
     <year>  <step>  <area>  <age>  <number>  <mean>  <stddev>  <alpha>  <beta>
@@ -2237,11 +2270,13 @@ reference="eq:spawn1"} and
 [\[eq:spawn2\]](#eq:spawn2){reference-type="ref" reference="eq:spawn2"}
 below:
 
-$$\label{eq:spawn1}
-N = N {\left(1 + P {(e^{-m} - 1)}\right)}$$
+\begin{equation}
+(\#eq:spawn1)
+N = N {\left(1 + P {(e^{-m} - 1)}\right)}\end{equation}
 
-$$\label{eq:spawn2}
-W = W \frac{\left(1 + P {((2 - w)e^{-m} - 1)}\right)}{\left(1 + P {(2e^{-m} - 1)}\right)}$$
+\begin{equation}
+(\#eq:spawn2)
+W = W \frac{\left(1 + P {((2 - w)e^{-m} - 1)}\right)}{\left(1 + P {(2e^{-m} - 1)}\right)}\end{equation}
 
 where: $<$ N $>$ is the population of the age-length group $<$ W $>$ is
 the mean weight of the population of the age-length group $<$ P $>$ is
@@ -2249,7 +2284,7 @@ the proportion of the length group that will spawn $<m>$ is the spawning
 mortality for that length group $<w>$ is the spawning weight loss for
 that length group
 
-\bigskip
+
 In equation [\[eq:spawn1\]](#eq:spawn1){reference-type="ref"
 reference="eq:spawn1"}, the population of the age-length cell of the
 mature stock is reduced due to the spawning mortality of the fish that
@@ -2258,7 +2293,7 @@ reference="eq:spawn2"}, the mean weight of the population in the
 age-length cell is adjusted to take the reduction in weight of the fish
 that spawn, and the change in population, into account.
 
-\bigskip
+
 Spawning is considered to be an annual event, that takes place on the
 same timestep and the same area in each year that the spawning occurs.
 To model the spawning process as it affects the parent (without the
@@ -2268,7 +2303,7 @@ functions to determine proportion of each length group that will spawn,
 and the spawning mortality and weight loss of those that spawn. This is
 done in the spawning data file, as shown below:
 
-\small
+
     spawnsteps             <vector of timesteps>
     spawnareas             <vector of areas>
     firstspawnyear         <first year that the spawning occurs>
@@ -2288,7 +2323,7 @@ in the input file, then it assumed that the spawning process will take
 place on all years in the simulation, and these will default to the
 first year and last year in the simulation.
 
-\bigskip
+
 Alternatively, it is possible to consider the spawning process as part
 of a through life-cycle model, and so the spawning process can create
 recruits to be added to one or more stocks (in a similar manner to the
@@ -2306,7 +2341,7 @@ spawning data file. Hence, if the spawning process is to calculate a
 number of recruits to the model, the format for the spawning data file
 is shown below:
 
-\small
+
     spawnsteps             <vector of timesteps>
     spawnareas             <vector of areas>
     firstspawnyear         <first year that the spawning occurs>
@@ -2323,7 +2358,7 @@ use to calculate the number of recruits to be added to the spawned
 stock. Currently there are 4 recruitment functions defined, and the
 valid recruitment function names are:
 
-\bigskip
+
 fecundity - use the Fecundity recruitment function simplessb - use the
 SimpleSSB recruitment function ricker - use the Ricker recruitment
 function bevertonholt - use the BevertonHolt recruitment function
@@ -2334,32 +2369,35 @@ This recruitment function calculates the number of recruits to be added
 to the spawned stock as a function of the length, age, number and weight
 of the spawning stock, given by the following equation:
 
-$$\label{eq:rec1}
-R = p_{0} \sum_{\it ages}\sum_{\it lengths} l ^{p_{1}} a ^{p_{2}} N_{al} ^{p_{3}} W_{al} ^{p_{4}}$$
+\begin{equation}
+(\#eq:rec1)
+R = p_{0} \sum_{\it ages}\sum_{\it lengths} l ^{p_{1}} a ^{p_{2}} N_{al} ^{p_{3}} W_{al} ^{p_{4}}\end{equation}
 
 Hence, to specify this recruitment function, the file format required
 is:
 
-\small
+
     recruitment            fecundity  <vector of 5 parameters>
 
-\newpage 
+ 
 ### SimpleSSB Recruitment Function
 
 This recruitment function calculates the number of recruits to be added
 to the spawned stock as a simple proportion of the spawning stock
 biomass, given by the following equations:
 
-$$\label{eq:ssb}
-S = \sum_{\it ages}\sum_{\it lengths} N_{al} W_{al}$$
+\begin{equation}
+(\#eq:ssb)
+S = \sum_{\it ages}\sum_{\it lengths} N_{al} W_{al}\end{equation}
 
-$$\label{eq:rec2}
-R = \mu S$$
+\begin{equation}
+(\#eq:rec2)
+R = \mu S\end{equation}
 
 Hence, to specify this recruitment function, the file format required
 is:
 
-\small
+
     recruitment            simplessb  <mu>
 
 ### Ricker Recruitment Function
@@ -2370,13 +2408,14 @@ equation [\[eq:ssb\]](#eq:ssb){reference-type="ref"
 reference="eq:ssb"}), based on the Ricker recruitment relationship given
 by the following equation:
 
-$$\label{eq:rec3}
-R = \mu S e ^{-\lambda S}$$
+\begin{equation}
+(\#eq:rec3)
+R = \mu S e ^{-\lambda S}\end{equation}
 
 Hence, to specify this recruitment function, the file format required
 is:
 
-\small
+
     recruitment            ricker  <mu>  <lambda>
 
 ### BevertonHolt Recruitment Function
@@ -2387,13 +2426,14 @@ equation [\[eq:ssb\]](#eq:ssb){reference-type="ref"
 reference="eq:ssb"}), based on the Beverton Holt recruitment
 relationship given by the following equation:
 
-$$\label{eq:rec4}
-R = \frac{\mu S}{\lambda + S}$$
+\begin{equation}
+(\#eq:rec4)
+R = \frac{\mu S}{\lambda + S}\end{equation}
 
 Hence, to specify this recruitment function, the file format required
 is:
 
-\small
+
     recruitment            bevertonholt  <mu>  <lambda>
 
 ### Hockey stick Recruitment Function
@@ -2404,16 +2444,17 @@ equation [\[eq:ssb\]](#eq:ssb){reference-type="ref"
 reference="eq:ssb"}), based on the Hockey stick recruitment relationship
 given by the following equation:
 
-$$\label{eq:rec5}
+\begin{equation}
+(\#eq:rec5)
 R =  \begin{cases}
 R_0,&\text{If } B_{lim} \leq S \\
 \frac{R_0S}{B_{lim}} & \text{If } 0 \leq S \leq B_{lim}
-\end{cases}$$
+\end{cases}\end{equation}
 
 Hence, to specify this recruitment function, the file format required
 is:
 
-\small
+
     recruitment            hockeystick  <R_0>  <B_lim>
 
 Note that to be in-line with definition of renewals and initial
@@ -2429,7 +2470,7 @@ reference="sec:suitability"} above). To define a length selection
 function, it is necessary to specify the function, the name of the
 function ans the parameters for the function, as shown below:
 
-\small
+
     <function>    <functionname> <parameters>
 
 The $<$function$>$ defines how the length selection function will be
@@ -2440,7 +2481,7 @@ selection function is to be used to calculate the selection of the
 stock. Currently there are three selection functions defined, and the
 valid length selection function names are:
 
-\bigskip
+
 constant - use the Constant selection function straightline - use the
 StraightLine selection function exponential - use the Exponential
 selection function
@@ -2450,13 +2491,14 @@ selection function
 This is a selection function, where there is no dependence on the length
 of the stock is given by the following equation:
 
-$$\label{eq:constsel}
-S(l) = \alpha$$
+\begin{equation}
+(\#eq:constsel)
+S(l) = \alpha\end{equation}
 
 Hence, to specify a constant selection function, the file format
 required is:
 
-\small
+
     <function>    constant  <alpha>
 
 ### StraightLine Selection Function
@@ -2464,14 +2506,15 @@ required is:
 This is a selection function that has a linear dependence on the length
 of the stock is given by the following equation:
 
-$$\label{eq:straightsel}
-S(l) = \alpha l + \beta$$
+\begin{equation}
+(\#eq:straightsel)
+S(l) = \alpha l + \beta\end{equation}
 
-\bigskip
+
 Hence, to specify a straight line selection function, the file format
 required is:
 
-\small
+
     <function>    straightline  <alpha>  <beta>
 
 ### Exponential Selection Function
@@ -2479,16 +2522,17 @@ required is:
 This is a selection function that has a logarithmic dependence on the
 length of the stock is given by the following equation:
 
-$$\label{eq:expsel}
-S(l) = \frac{1}{1 + e^{ \alpha (l - l_{50})}}$$
+\begin{equation}
+(\#eq:expsel)
+S(l) = \frac{1}{1 + e^{ \alpha (l - l_{50})}}\end{equation}
 
-\bigskip
+
 Note that the stock length dependence is actually dependant on the
 difference between the length of the stock and $l_{50}$, which is the
 length of the stock with a 50% probability of selection. Hence, to
 specify this selection function, the file format required is:
 
-\small
+
     <function>    exponential  <alpha>  <l50>
 
 Straying {#sec:stockstray}
@@ -2499,7 +2543,7 @@ will stray from one substock to another substock in the Gadget model.
 The format for the first part of the straying section of the stock file
 is given below:
 
-\small
+
     doesstray              <0 or 1> ; 0 for no straying, 1 for straying
 
 If the stock does not stray, then the following section doesn't apply,
@@ -2508,7 +2552,7 @@ information is required about the straying data. This is given in a
 separate file, so the format for the straying data, in the main stock
 file, is given below:
 
-\small
+
     doesstray              1
     strayfile              <name of the straying data file>
 
@@ -2520,7 +2564,7 @@ thought of as an extension to the transition process (see
 section [4.13](#sec:stockmove){reference-type="ref"
 reference="sec:stockmove"}).
 
-\bigskip
+
 Straying is considered to be an annual event, that takes place on the
 same timestep and the same area in each year. To model the straying
 process in Gadget, it is necessary to specify the timestep and the area
@@ -2531,7 +2575,7 @@ the transition process) and the length selection function to determine
 the proportion of the length group that will stray. This is done in the
 straying data file, as shown below:
 
-\small
+
     straysteps             <vector of timesteps>
     strayareas             <vector of areas>
     straystocksandratios   <stockname i> <ratio i> ; for each stock i
@@ -2549,12 +2593,12 @@ likelihood score (see Recaptures,
 section [8.9](#sec:recaptures){reference-type="ref"
 reference="sec:recaptures"}).
 
-\bigskip
+
 To define tagged populations in the Gadget model, the "main" file must
 contain a list of the data files that contain the description of the
 tagging experiments, and the format for this is shown below:
 
-\small
+
     [tagging]
     tagfiles               <names of the tag files>
 
@@ -2564,7 +2608,7 @@ contains information about the number of fish tagged for the tagging
 experiment. The format for this file shown below, with each new tagging
 experiment starting with the keyword \[component\]:
 
-\small
+
     [component]
     tagid                  <name of the tagging experiment>
     stock                  <name of the tagged stock>
@@ -2578,14 +2622,14 @@ experiment, the stock that is tagged for the tagging experiment, and the
 area that the tagging took place on. Note that it is currently possible
 to only tag one stock, on one area, for each tagging experiment.
 
-\bigskip
+
 The optional $<$endyear$>$ value is used to define the end of a tagging
 experiment, and should be set to the year of the last expected recapture
 from the tagging experiment. This can be used to reduce the calculation
 time. If this is not specified, then it is assumed that the tagging
 experiment will run until the end of the simulation.
 
-\newpage 
+
 The $<$tagloss$>$ value is used to remove tagged fish from the model.
 For each time step, a number of tags can be lost from the tagging
 experiment. The number of tagged fish that remain in the tagging
@@ -2593,8 +2637,9 @@ experiment is given by the
 equation [\[eq:tagloss\]](#eq:tagloss){reference-type="ref"
 reference="eq:tagloss"} below:
 
-$$\label{eq:tagloss}
-N = N (e^{-t})$$
+\begin{equation}
+(\#eq:tagloss)
+N = N (e^{-t})\end{equation}
 
 where: $<$ N $>$ is the number of tagged fish in an age-length group
 $<t>$ is the proportion of tagged fish that are lost, as specified in
@@ -2608,14 +2653,14 @@ the tagging experiment. This is given in a column format in a separate
 file, so the main tag file simply gives the name of this tag data file,
 as shown in the example below:
 
-\small
+
     numbers                <name of data file>
 
 For the tag datafile, this is a simple list of tag identifier, timestep,
 length and then the number of fish tagged, for that tag/timestep/length
 combination. This format is shown below:
 
-\small
+
     <tagid>  <year>  <step>  <length>  <number>
 
 Note that the $<$length$>$ value refers to the minimum length of the
@@ -2630,12 +2675,12 @@ that is always available, and it is used to avoid the situation where
 the non-availability of a prey stock prevents the predators from growing
 as expected.
 
-\bigskip
+
 To define otherfood in the Gadget model, the "main" file must contain a
 list of the data files that contain the description of the otherfood,
 and the format for this is shown below:
 
-\small
+
     [otherfood]
     otherfoodfiles         <names of the otherfood files>
 
@@ -2645,7 +2690,7 @@ information about the amount of food that is available for the predators
 to eat. The format for this file shown below, with each new otherfood
 starting with the keyword \[component\]:
 
-\small
+
     [component]
     foodname               <food name>
     livesonareas           <areas>
@@ -2667,7 +2712,7 @@ column format in a separate file, so the main otherfood file simply
 gives the name of this otherfood data file, as shown in the example
 below:
 
-\small
+
     amount                 <name of data file>
 
 For the otherfood datafile, this is a simple list of year, timestep,
@@ -2675,7 +2720,7 @@ area, food name and then the biomass of the food available for the
 predators to eat, for that timestep/area combination. This format is
 shown below:
 
-\small
+
     <year>  <step>  <area>  <food name>  <amount>
 
 Fleet Files {#chap:fleet}
@@ -2686,12 +2731,12 @@ reducing the population of the stocks in the Gadget model. The fleets
 act as a simple predator in the model, with the landings data treated as
 the fleets "consumption" of the stock that is caught.
 
-\bigskip
+
 To define fleets in the Gadget model, the "main" file must contain a
 list of the data files that contain the description of the fleets, and
 the format for this is shown below:
 
-\small
+
     [fleet]
     fleetfiles             <names of the fleet files>
 
@@ -2701,7 +2746,7 @@ fleet and the name of the datafile that contains information about the
 landings. The format for this file shown below, with each new fleet
 starting with the keyword \[component\]:
 
-\small
+
     [component]
     <type>                 <fleetname>
     <fleet data>
@@ -2710,7 +2755,7 @@ The fleet data for each fleet type is covered in the sub sections below.
 The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet,
 and the 5 valid fleet types that can used in Gadget are:
 
-\bigskip
+
 TotalFleet NumberFleet LinearFleet EffortFleet QuotaFleet
 
 TotalFleet {#sec:totalfleet}
@@ -2723,8 +2768,9 @@ the stocks, according to
 equation [\[eq:tcons\]](#eq:tcons){reference-type="ref"
 reference="eq:tcons"} below:
 
-$$\label{eq:tcons}
-C_{s}(l) = \frac{E S_{s}(l) N_{sl} W_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl} W_{sl}}$$
+\begin{equation}
+(\#eq:tcons)
+C_{s}(l) = \frac{E S_{s}(l) N_{sl} W_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl} W_{sl}}\end{equation}
 
 where: $<$ E $>$ is the biomass caught by the fleet $<$ N $>$ is the
 number of stock in the length cell $<$ W $>$ is the mean weight of the
@@ -2732,13 +2778,13 @@ stock in the length cell $<$ S $>$ is the suitability function (see
 section [7.6](#sec:fleetsuit){reference-type="ref"
 reference="sec:fleetsuit"})
 
-\bigskip
+
 This fleet type is defined by specifying the fleet name and areas it
 operates on, along with a suitability function for each stock that the
 fleet will catch and a data file listing the biomass that the fleet will
 catch. The file format for the TotalFleet is given below:
 
-\small
+
     [component]
     totalfleet             <fleetname>
     livesonareas           <areas>
@@ -2750,7 +2796,7 @@ The optional $<$multi$>$ value is a multiplicative constant used to
 scale the data if required - the default value for this multiplier is 1
 (ie. no scaling).
 
-\bigskip
+
 The fleets act as a predator, so Gadget also requires a suitability
 function to be defined for the predation of the stocks in the model. The
 total amount that has been landed by the fleet is also required - this
@@ -2767,21 +2813,22 @@ groups of the stocks, according to
 equation [\[eq:ncons\]](#eq:ncons){reference-type="ref"
 reference="eq:ncons"} below:
 
-$$\label{eq:ncons}
-C_{s}(l) = \frac{E S_{s}(l) N_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl}}$$
+\begin{equation}
+(\#eq:ncons)
+C_{s}(l) = \frac{E S_{s}(l) N_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl}}\end{equation}
 
 where: $<$ E $>$ is the number caught by the fleet $<$ N $>$ is the
 number of stock in the length cell $<$ S $>$ is the suitability function
 (see section [7.6](#sec:fleetsuit){reference-type="ref"
 reference="sec:fleetsuit"})
 
-\bigskip
+
 This fleet type is defined by specifying the fleet name and areas it
 operates on, along with a suitability function for each stock that the
 fleet will catch and a data file listing the numbers that the fleet will
 catch. The file format for the NumberFleet is given below:
 
-\small
+
     [component]
     numberfleet            <fleetname>
     livesonareas           <areas>
@@ -2793,7 +2840,7 @@ The optional $<$multi$>$ value is a multiplicative constant used to
 scale the data if required - the default value for this multiplier is 1
 (ie. no scaling).
 
-\bigskip
+
 The fleets act as a predator, so Gadget also requires a suitability
 function to be defined for the predation of the stocks in the model. The
 total number of fish that has been caught by the fleet is also required
@@ -2810,8 +2857,9 @@ the various stocks, and length groups of the stocks, according to
 equation [\[eq:lcons\]](#eq:lcons){reference-type="ref"
 reference="eq:lcons"} below:
 
-$$\label{eq:lcons}
-C_{s}(l) = E \Delta t S_{s}(l) N_{sl} W_{sl}$$
+\begin{equation}
+(\#eq:lcons)
+C_{s}(l) = E \Delta t S_{s}(l) N_{sl} W_{sl}\end{equation}
 
 where: $<$ E $>$ is the scaling factor for the stock that is to be
 caught, per month $<\Delta t>$ is the length of the timestep $<$ N $>$
@@ -2820,13 +2868,13 @@ of the stock in the length cell $<$ S $>$ is the suitability function
 (see section [7.6](#sec:fleetsuit){reference-type="ref"
 reference="sec:fleetsuit"})
 
-\bigskip
+
 This fleet type is defined by specifying the fleet name and areas it
 operates on, along with a suitability function for each stock that the
 fleet will catch and a data file listing the fishing level for the
 fleet. The file format for the LinearFleet is given below:
 
-\small
+
     [component]
     linearfleet            <fleetname>
     livesonareas           <areas>
@@ -2838,13 +2886,13 @@ The optional $<$multi$>$ value is a multiplicative constant used to
 scale the data if required - the default value for this multiplier is 1
 (ie. no scaling).
 
-\bigskip
+
 The fleets act as a predator, so Gadget also requires a suitability
 function to be defined for the predation of the stocks in the model. The
 scaling factor to be used when calculating the amount that the fleet
 will catch is also required, and this is specified in a separate file.
 
-\bigskip
+
 The fleet of type LinearFleet acts a simple predator, and can be used
 for fleets acting in the future, when the landings data is not
 available.
@@ -2860,8 +2908,9 @@ stocks, and length groups of the stocks, according to
 equation [\[eq:econs\]](#eq:econs){reference-type="ref"
 reference="eq:econs"} below:
 
-$$\label{eq:econs}
-C_{s}(l) = E q_{s} \Delta t S_{s}(l) N_{sl} W_{sl}$$
+\begin{equation}
+(\#eq:econs)
+C_{s}(l) = E q_{s} \Delta t S_{s}(l) N_{sl} W_{sl}\end{equation}
 
 where: $<$ E $>$ is the scaling factor for the stock that is to be
 caught, per month $<$ q $>$ is the catchability parameter for that stock
@@ -2871,14 +2920,14 @@ the length cell $<$ S $>$ is the suitability function (see
 section [7.6](#sec:fleetsuit){reference-type="ref"
 reference="sec:fleetsuit"})
 
-\bigskip
+
 This fleet type is defined by specifying the fleet name and areas it
 operates on, along with a suitability function and catchability
 parameter for each stock that the fleet will catch and a data file
 listing the proportion of each stock that the fleet will catch. The file
 format for the EffortFleet is given below:
 
-\small
+
     [component]
     effortfleet            <fleetname>
     livesonareas           <areas>
@@ -2891,13 +2940,13 @@ The optional $<$multi$>$ value is a multiplicative constant used to
 scale the data if required - the default value for this multiplier is 1
 (ie. no scaling).
 
-\bigskip
+
 The fleets act as a predator, so Gadget also requires a suitability
 function to be defined for the predation of the stocks in the model. The
 scaling factor to be used when calculating the amount that the fleet
 will catch is also required, and this is specified in a separate file.
 
-\bigskip
+
 The fleet of type EffortFleet is a multi-species extension to the fleet
 of type LinearFleet (see
 section [7.3](#sec:linearfleet){reference-type="ref"
@@ -2907,7 +2956,7 @@ different catchability for these species can be taken into account. This
 catchability parameter is specified by listing the names of the prey and
 the associated preference value, as shown in the example below:
 
-\small
+
     ...
     catchability
     <name of stock 1>      <catchability for stock 1>
@@ -2930,14 +2979,14 @@ reference="sec:linearfleet"} above). The scaling factor (the parameter
 "E" in the equation above) is set according to a simple harvest control
 rule.
 
-\bigskip
+
 This fleet type is defined by specifying the fleet name and areas it
 operates on, along with a suitability function for each stock that the
 fleet will catch, a simple harvest control rule and a data file listing
 the proportion of each stock that the fleet will catch. The file format
 for the QuotaFleet is given below:
 
-\small
+
     [component]
     quotafleet             <fleetname>
     livesonareas           <areas>
@@ -2952,7 +3001,7 @@ The optional $<$multi$>$ value is a multiplicative constant used to
 scale the data if required - the default value for this multiplier is 1
 (ie. no scaling).
 
-\bigskip
+
 The fleets act as a predator, so Gadget also requires a suitability
 function to be defined for the predation of the stocks in the model. A
 scaling factor that can be used when calculating the amount that the
@@ -2961,14 +3010,14 @@ file (although this is usually set to 1, since the scaling factor to be
 used is multiplied by that calculated using the simple harvest control
 rule below).
 
-\bigskip
+
 The simple harvest control rule that is used to calculate the scaling
 factor to be used to determine the fishing level is defined by the
 $<$function name$>$ value, along with the $<$biomasslevel$>$ and
 $<$quotalevel$>$ vectors. Currently there are 6 quota functions defined,
 and the valid function names are:
 
-\bigskip
+
 simple - use a simple harvest control rule, based on the biomass of each
 stock annual - use a annual harvest control rule, based on the biomass
 of each stock simplesum - use a simple harvest control rule, based on
@@ -2978,14 +3027,14 @@ harvest control rule, based on the biomass of selected stocks
 annualselect - use a annual harvest control rule, based on the biomass
 of selected stocks
 
-\bigskip
+
 Note that if the $<$function name$>$ value is set to either simpleselect
 or annualselect, then it is necessary to define which stocks to use to
 determine the fishing level. This is done be additionally specifying a
 $<$selectstocks$>$ vector which is a list of the stocks to use, as given
 in the list below:
 
-\small
+
     ...
     biomasslevel           <vector of biomass levels>
     quotalevel             <vector of quota levels>
@@ -2999,10 +3048,10 @@ quotalevel value corresponds to the fishing level that will be used when
 the biomass is between 0 and the first biomasslevel value, so the
 quotalevel vector must have one more entry than the biomasslevel vector.
 
-\bigskip
+
 An example of valid biomasslevel and quotalevel vectors is given below:
 
-\small
+
     biomasslevel           10000  250000
     quotalevel             0.1  0.4  0.9
 
@@ -3033,7 +3082,7 @@ fleets. This data is listed in a column format in a separate file, so
 the main fleet file simply gives the name of this fleet data file, as
 shown in the example below:
 
-\small
+
     amount                 <name of data file>
 
 For fleets of type TotalFleet or NumberFleet, the data file is a list of
@@ -3041,7 +3090,7 @@ year, timestep, area, fleetname and then the amount of catch landed
 (either biomass or number), taken from landings data, for that
 timestep/area/fleet combination:
 
-\small
+
     <year>  <step>  <area>  <fleetname>  <amount>
 
 For fleets of type LinearFleet, EffortFleet or QuotaFleet, the data file
@@ -3049,7 +3098,7 @@ is a list of year, timestep, area, fleetname and then the scaling factor
 to be used when calculating the amount of the catch for that
 timestep/area/fleet combination:
 
-\small
+
     <year>  <step>  <area>  <fleetname>  <scaling factor>
 
 Likelihood Files {#chap:like}
@@ -3063,7 +3112,7 @@ then a weighted sum of all the likelihood scores to calculate an overall
 likelihood score. It is this overall likelihood score that the optimiser
 attempts to minimise during an optimising run.
 
-\bigskip
+
 To define likelihood files in the Gadget model, the "main" file must
 contain a list of the data files that contain the description of the
 likelihood classes required, and the format for this is shown below:
@@ -3126,7 +3175,7 @@ reference="sec:bfgs"}) algorithms can choose a parameter outside the
 specified bounds, and so this likelihood component can then return a
 positive score.
 
-\bigskip
+
 To specify a BoundLikelihood likelihood component, the format required
 in the main likelihood file is as follows:
 
@@ -3143,13 +3192,14 @@ when it exceeds the bounds, as given by
 equation [\[eq:bound\]](#eq:bound){reference-type="ref"
 reference="eq:bound"} below:
 
-$$\label{eq:bound}
+\begin{equation}
+(\#eq:bound)
 \ell_{i} =
 \begin{cases}
 lw_{i} (val_{i} - lb_{i})^{p_{i}} & \textrm{if $val_{i} < lb_i$} \\
 uw_{i} (val_{i} - ub_{i})^{p_{i}} & \textrm{if $val_{i} > ub_i$} \\
 0 & \textrm{otherwise}
-\end{cases}$$
+\end{cases}\end{equation}
 
 where: $<val_i>$ is the value of the parameter $<lw_i>$ is the weight
 applied when the parameter exceeds the lower bound $<uw_i>$ is the
@@ -3160,7 +3210,7 @@ coefficient
 Note that when the value of the parameter is exactly equal to the bound,
 this equation will give a zero likelihood score.
 
-\bigskip
+
 The datafile lists these weights and the power that is to be used for
 each parameter. The format for this file is shown below:
 
@@ -3172,7 +3222,7 @@ where $<$lower$>$ is the weighting used when the parameter hits the
 lower bound, and $<$upper$>$ is the weighting used when the parameter
 hits the upper bound, for the parameter with the name $<$switch$>$.
 
-\bigskip
+
 It is possible to define a default penalty that is used for all switches
 that are not defined separately. To do this, simply enter a line in the
 data file with the switch name given as "default", and then the power,
@@ -3197,14 +3247,15 @@ well defined model will have a zero likelihood score from this
 component. The likelihood component that is used is the sum of squares
 of the overconsumption, given by the equation below:
 
-$$\label{eq:understocking}
-\ell = \sum_{\it time}\sum_{\it areas} \Big(\sum_{\it preys} U_{trp} \Big)^p$$
+\begin{equation}
+(\#eq:understocking)
+\ell = \sum_{\it time}\sum_{\it areas} \Big(\sum_{\it preys} U_{trp} \Big)^p\end{equation}
 
 where: $<$ U $>$ is the understocking that has occurred in the model $<$
 p $>$ is the power coefficient (which should be 2 for sum of squares
 fit)
 
-\bigskip
+
 To specify an Understocking likelihood component, the format required in
 the main likelihood file is as follows:
 
@@ -3232,7 +3283,7 @@ into age-length groups. The likelihood score that is calculated gives
 some measure as to how well the data from the model fit to the data from
 the sample catches.
 
-\bigskip
+
 To specify a CatchDistribution likelihood component, the format required
 in the main likelihood file is as follows:
 
@@ -3263,7 +3314,7 @@ distribution data is not aggregated over the whole year. Note that not
 all of the functions used to compare the data can aggregate the data
 over the whole year.
 
-\bigskip
+
 The optional flag $<$overconsumption$>$ is used to specify whether any
 over consumption of the stock is to be taken into account when
 calculating the model distribution. If this is set to 1, then the model
@@ -3274,7 +3325,7 @@ and any understocking that is present in the model is ignored, which can
 lead to an unrealistic result if the understocking likelihood component
 is not specified.
 
-\bigskip
+
 The optional $<$epsilon$>$ value is used whenever the calculated
 probability is very unlikely, although the exact format of this depends
 on the function that is to be used when calculating the likelihood
@@ -3283,19 +3334,19 @@ or two stray values, since these will be reset back to less unlikely
 values. The default value for $<$epsilon$>$ is 10, which is used
 whenever it is not defined in the input file.
 
-\bigskip
+
 The $<$fleetnames$>$ vector contains a list of all the fleets to be
 aggregated into a single pseudo fleet for the purposes of the data
 comparison. Similarly, the $<$stocknames$>$ vector contains a list of
 all the stocks to be aggregated into a single pseudo stock.
 
-\bigskip
+
 The $<$function name$>$ defines what likelihood function is to be used
 to compare the modelled age-length catch distribution to the input
 age-length catch distribution. Currently, there are 8 likelihood
 functions defined, and the valid function names are:
 
-\bigskip
+
 `sumofsquares` - use a sum of squares function 
 `stratified` - use a stratified sum of squares function 
 `multinomial` - use a multinomial function 
@@ -3305,13 +3356,13 @@ functions defined, and the valid function names are:
 `mvn` - use a multivariate normal function
 `mvlogistic` - use a multivariate logistic function
 
-\bigskip
+
 The $<$multivariate parameters$>$ are only required for the multivariate
 functions, and Gadget will generate an error if they are specified when
 they are not required. These parameters are described in the following
 sections.
 
-\bigskip
+
 Finally, the file specified by $<$datafile$>$ contains a list of the
 age-length catch distribution that Gadget is to use to fit the
 likelihood function to, aggregated according to the aggregation files
@@ -3331,8 +3382,9 @@ The sum of squares function calculates the likelihood component from
 equation [\[eq:catchdist4\]](#eq:catchdist4){reference-type="ref"
 reference="eq:catchdist4"} below:
 
-$$\label{eq:catchdist4}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( P_{tral} - \pi_{tral} \Big) ^2$$
+\begin{equation}
+(\#eq:catchdist4)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( P_{tral} - \pi_{tral} \Big) ^2\end{equation}
 
 where: $<$ P $>$ is the proportion of the data sample for that
 time/area/age/length combination $<\pi>$ is the proportion of the model
@@ -3357,8 +3409,9 @@ The multinomial function calculates the likelihood component from
 equation [\[eq:catchdist1\]](#eq:catchdist1){reference-type="ref"
 reference="eq:catchdist1"} below:
 
-$$\label{eq:catchdist1}
-\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Bigg( \log N_{tra}! - \sum_{\it lengths} \log N_{tral}! + \sum_{\it lengths} \Big( N_{tral} \log {\frac{\nu_{tral}}{\sum \nu_{tral}}} \Big) \Bigg)$$
+\begin{equation}
+(\#eq:catchdist1)
+\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Bigg( \log N_{tra}! - \sum_{\it lengths} \log N_{tral}! + \sum_{\it lengths} \Big( N_{tral} \log {\frac{\nu_{tral}}{\sum \nu_{tral}}} \Big) \Bigg)\end{equation}
 
 where: $<$ N $>$ is the data sample size for that time/area/age/length
 combination $<\nu>$ is the model sample size for that
@@ -3370,8 +3423,9 @@ The Pearson function calculates the likelihood component from
 equation [\[eq:catchdist2\]](#eq:catchdist2){reference-type="ref"
 reference="eq:catchdist2"} below:
 
-$$\label{eq:catchdist2}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ ( N_{tral} - \nu_{tral} ) ^2} {\nu_{tral} + \epsilon}} \Big)$$
+\begin{equation}
+(\#eq:catchdist2)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ ( N_{tral} - \nu_{tral} ) ^2} {\nu_{tral} + \epsilon}} \Big)\end{equation}
 
 where: $<$ N $>$ is the data sample size for that time/area/age/length
 combination $<\nu>$ is the model sample size for that
@@ -3383,8 +3437,9 @@ The gamma function calculates the likelihood component from
 equation [\[eq:catchdist3\]](#eq:catchdist3){reference-type="ref"
 reference="eq:catchdist3"} below:
 
-$$\label{eq:catchdist3}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ N_{tral}} { (\nu_{tral} + \epsilon )} + \log ({\nu_{tral} + \epsilon}}) \Big)$$
+\begin{equation}
+(\#eq:catchdist3)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ N_{tral}} { (\nu_{tral} + \epsilon )} + \log ({\nu_{tral} + \epsilon}}) \Big)\end{equation}
 
 where: $<$ N $>$ is the data sample size for that time/area/age/length
 combination $<\nu>$ is the model sample size for that
@@ -3396,8 +3451,9 @@ The log function calculates the likelihood component from
 equation [\[eq:catchdist7\]](#eq:catchdist7){reference-type="ref"
 reference="eq:catchdist7"} below:
 
-$$\label{eq:catchdist7}
-\ell = \sum_{\it time}\sum_{\it areas} \Big( \log \Big( {\frac{ \displaystyle \sum_{\it ages}\sum_{\it lengths} \nu_{tral}} { \displaystyle \sum_{\it ages}\sum_{\it lengths} N_{tral}}} \Big) \Big) ^2$$
+\begin{equation}
+(\#eq:catchdist7)
+\ell = \sum_{\it time}\sum_{\it areas} \Big( \log \Big( {\frac{ \displaystyle \sum_{\it ages}\sum_{\it lengths} \nu_{tral}} { \displaystyle \sum_{\it ages}\sum_{\it lengths} N_{tral}}} \Big) \Big) ^2\end{equation}
 
 where: $<$ N $>$ is the data sample size for that time/area/age/length
 combination $<\nu>$ is the model sample size for that
@@ -3409,15 +3465,16 @@ The multivariate normal function calculates the likelihood component
 from equation [\[eq:catchdist5\]](#eq:catchdist5){reference-type="ref"
 reference="eq:catchdist5"} below:
 
-$$\label{eq:catchdist5}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big( log|\Sigma| + (P_{tra} - \pi_{tra})^T \Sigma^{-1}(P_{tra} - \pi_{tra}) \Big)$$
+\begin{equation}
+(\#eq:catchdist5)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big( log|\Sigma| + (P_{tra} - \pi_{tra})^T \Sigma^{-1}(P_{tra} - \pi_{tra}) \Big)\end{equation}
 
 where: $<\Sigma>$ is the variance-covariance matrix for the multivariate
 normal distribution $<$ P $>$ is the proportion of the data sample for
 that time/area/age combination $<\pi>$ is the proportion of the model
 sample for that time/area/age combination
 
-\bigskip
+
 For the formulation of the variance-covariance matrix, $<\Sigma>$ is
 calculated from equations
 [\[eq:cdsigma1\]](#eq:cdsigma1){reference-type="ref"
@@ -3425,15 +3482,17 @@ reference="eq:cdsigma1"} and
 [\[eq:cdsigma2\]](#eq:cdsigma2){reference-type="ref"
 reference="eq:cdsigma2"} below:
 
-$$\label{eq:cdsigma1}
-\Sigma = (\sigma_{ij})_{ij}$$
+\begin{equation}
+(\#eq:cdsigma1)
+\Sigma = (\sigma_{ij})_{ij}\end{equation}
 
-$$\label{eq:cdsigma2}
+\begin{equation}
+(\#eq:cdsigma2)
 \sigma_{ij} =
 \begin{cases}
 \displaystyle \sum^{lag}_{l=1} c_l \sigma_{i-l,j} + \delta^i_{j} \sigma^2 & \textrm{if $i \geq j$} \\
 \displaystyle \sum^{lag}_{l=1} c_l \sigma_{j,i-l} & \textrm{otherwise}
-\end{cases}$$
+\end{cases}\end{equation}
 
 In equation [\[eq:cdsigma2\]](#eq:cdsigma2){reference-type="ref"
 reference="eq:cdsigma2"} it is assumed that the number in each length
@@ -3441,7 +3500,7 @@ group is autocorrelated with lag $<$ lag $>$. Note that setting the lag
 to be zero simplifies the multivariate normal distribution to a
 univariate one.
 
-\bigskip
+
 To specify this likelihood function, it is necessary to specify the
 parameters $<\sigma>$ and $<$ lag $>$ and a list of $<$ lag $>$
 correlation parameters. This is done in the likelihood file, as shown
@@ -3468,18 +3527,20 @@ reference="eq:catchdist6a"} and
 [\[eq:catchdist6b\]](#eq:catchdist6b){reference-type="ref"
 reference="eq:catchdist6b"} below:
 
-$$\label{eq:catchdist6a}
-\ell = \frac{1}{2\sigma^2} \sum_{\it time} \Big((L - 1) log(\sigma)+\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \tau_{tral}^2 \Big)$$
+\begin{equation}
+(\#eq:catchdist6a)
+\ell = \frac{1}{2\sigma^2} \sum_{\it time} \Big((L - 1) log(\sigma)+\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \tau_{tral}^2 \Big)\end{equation}
 
-$$\label{eq:catchdist6b}
-\tau_{tral} = log(P_{tral}) - log(\pi_{tral}) - \frac{1}{L}\sum_{\it lengths} \Big(log(P_{tral}) - log(\pi_{tral}) \Big)$$
+\begin{equation}
+(\#eq:catchdist6b)
+\tau_{tral} = log(P_{tral}) - log(\pi_{tral}) - \frac{1}{L}\sum_{\it lengths} \Big(log(P_{tral}) - log(\pi_{tral}) \Big)\end{equation}
 
 where: $<$ L $>$ is the number of length groups $<$ P $>$ is the
 proportion of the data sample for that time/area/age/length combination
 $<\pi>$ is the proportion of the model sample for that
 time/area/age/length combination
 
-\bigskip
+
 To specify this likelihood function it is necessary to specify the
 parameter $<\sigma>$. This is done in the likelihood file as shown
 below:
@@ -3502,7 +3563,7 @@ the mean length at age or mean weight at age. The likelihood score that
 is calculated gives some measure as to how well the data from the model
 fits to the data from the landings.
 
-\bigskip
+
 To specify a CatchStatistics likelihood component, the format required
 in the main likelihood file is as follows:
 
@@ -3531,20 +3592,20 @@ assumed and any understocking that is present in the model is ignored,
 which can lead to an unrealistic result if the understocking likelihood
 component is not specified.
 
-\bigskip
+
 The $<$fleetnames$>$ vector contains a list of all the fleets to be
 aggregated into a single pseudo fleet for the purposes of the data
 comparison. Similarly, the $<$stocknames$>$ vector contains a list of
 all the stocks to be aggregated into a single pseudo stock.
 
-\bigskip
+
 The $<$function name$>$ defines what likelihood function is to be used
 to compare the modelled statistical data to the input statistical data.
 Currently, there are 5 likelihood functions defined, and the format of
 the statistical data given in the file specified by $<$datafile$>$
 depends on the likelihood function used. The valid functions are:
 
-\bigskip
+
 * `lengthcalcstddev` - use a weighted sum of squares of mean length
 * `lengthgivenstddev` - use a weighted sum of squares of mean length with given standard deviation 
 * `weightgivenstddev` - use a weighted sum of squares of mean weight with given standard deviation 
@@ -3561,15 +3622,16 @@ calculating the variance of length of the modelled population, as shown
 in equation [\[eq:catchstat1\]](#eq:catchstat1){reference-type="ref"
 reference="eq:catchstat1"} below:
 
-$$\label{eq:catchstat1}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {\sigma_{tra}^2} N_{tra}\Big)$$
+\begin{equation}
+(\#eq:catchstat1)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {\sigma_{tra}^2} N_{tra}\Big)\end{equation}
 
 where: $<$ x $>$ is the sample mean length from the data $<\mu>$ is the
 mean length calculated from the model $<\sigma>$ is the standard
 deviation of the length, calculated from the model $<$ N $>$ is the
 sample size
 
-\bigskip
+
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
@@ -3588,14 +3650,15 @@ variance of length of the input population, as shown in
 equation [\[eq:catchstat2\]](#eq:catchstat2){reference-type="ref"
 reference="eq:catchstat2"} below:
 
-$$\label{eq:catchstat2}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)$$
+\begin{equation}
+(\#eq:catchstat2)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)\end{equation}
 
 where: $<$ x $>$ is the sample mean length from the data $<\mu>$ is the
 mean length calculated from the model $<$ s $>$ is the standard
 deviation of the length from the data $<$ N $>$ is the sample size
 
-\bigskip
+
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
@@ -3615,14 +3678,15 @@ variance of weight of the input population, as shown in
 equation [\[eq:catchstat3\]](#eq:catchstat3){reference-type="ref"
 reference="eq:catchstat3"} below:
 
-$$\label{eq:catchstat3}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)$$
+\begin{equation}
+(\#eq:catchstat3)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)\end{equation}
 
 where: $<$ x $>$ is the sample mean weight from the data $<\mu>$ is the
 mean weight calculated from the model $<$ s $>$ is the standard
 deviation of the weight from the data $<$ N $>$ is the sample size
 
-\bigskip
+
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
@@ -3642,13 +3706,14 @@ weight of the population assumed to be 1, as shown in
 equation [\[eq:catchstat4\]](#eq:catchstat4){reference-type="ref"
 reference="eq:catchstat4"} below:
 
-$$\label{eq:catchstat4}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)$$
+\begin{equation}
+(\#eq:catchstat4)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)\end{equation}
 
 where: $<$ x $>$ is the sample mean weight from the data $<\mu>$ is the
 mean weight calculated from the model $<$ N $>$ is the sample size
 
-\bigskip
+
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
@@ -3667,13 +3732,14 @@ length of the population assumed to be 1, as shown in
 equation [\[eq:catchstat5\]](#eq:catchstat5){reference-type="ref"
 reference="eq:catchstat5"} below:
 
-$$\label{eq:catchstat5}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)$$
+\begin{equation}
+(\#eq:catchstat5)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)\end{equation}
 
 where: $<$ x $>$ is the sample mean length from the data $<\mu>$ is the
 mean length calculated from the model $<$ N $>$ is the sample size
 
-\bigskip
+
 For this CatchStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
@@ -3700,7 +3766,7 @@ age-length groups. The likelihood score that is calculated gives some
 measure as to how well the data from the model fits to the data from the
 landings.
 
-\bigskip
+
 To specify a StockDistribution likelihood component, the format required
 in the main likelihood file is as follows:
 
@@ -3730,7 +3796,7 @@ distribution data is not aggregated over the whole year. Note that not
 all of the functions used to compare the data can aggregate the data
 over the whole year.
 
-\bigskip
+
 The optional flag $<$overconsumption$>$ is used to specify whether any
 over consumption of the stock is to be taken into account when
 calculating the model distribution. If this is set to 1, then the model
@@ -3741,7 +3807,7 @@ and any understocking that is present in the model is ignored, which can
 lead to an unrealistic result if the understocking likelihood component
 is not specified.
 
-\bigskip
+
 The optional $<$epsilon$>$ value is used whenever the calculated
 probability is very unlikely, although the exact format of this depends
 on the function that is to be used when calculating the likelihood
@@ -3750,14 +3816,14 @@ or two stray values, since these will be reset back to less unlikely
 values. The default value for $<$epsilon$>$ is 10, which is used
 whenever it is not defined in the input file.
 
-\bigskip
+
 The $<$fleetnames$>$ vector contains a list of all the fleets to be
 aggregated into a single pseudo fleet for the purposes of the data
 comparison. However, the $<$stocknames$>$ vector contains a list of all
 the stocks to be compared for the data comparison. These stocks are not
 aggregated into a single pseudo stock.
 
-\bigskip
+
 The $<$function name$>$ defines what likelihood function is to be used
 to compare the modelled age-length stock distribution to the input
 age-length stock distribution. Currently, there are two likelihood
@@ -3766,7 +3832,7 @@ functions defined, and the valid functions are:
 * `sumofsquares` - use a sum of squares function 
 * `multinomial` - use a multinomial function
 
-\bigskip
+
 Finally, the datafile is a list of the age-length catch distribution for
 each stock, that Gadget is to use to fit the likelihood function to,
 aggregated according to the aggregation files specified, for the numbers
@@ -3785,8 +3851,9 @@ The sum of squares function calculates the likelihood component from
 equation [\[eq:stockdist2\]](#eq:stockdist2){reference-type="ref"
 reference="eq:stockdist2"} below:
 
-$$\label{eq:stockdist2}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths}\sum_{\it stocks} ( P_{trals} - \pi_{trals} ) ^2$$
+\begin{equation}
+(\#eq:stockdist2)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths}\sum_{\it stocks} ( P_{trals} - \pi_{trals} ) ^2\end{equation}
 
 where: $<$ P $>$ is the proportion of the data sample for that
 time/area/age/length/stock combination $<\pi>$ is the proportion of the
@@ -3798,8 +3865,9 @@ The multinomial function calculates the likelihood component from
 equation [\[eq:stockdist1\]](#eq:stockdist1){reference-type="ref"
 reference="eq:stockdist1"} below:
 
-$$\label{eq:stockdist1}
-\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Bigg( \log N_{tral}! - \sum_{\it stocks} \log N_{trals}! + \sum_{\it stocks} \Big( N_{trals} \log {\frac{\nu_{tral}}{\sum \nu_{trals}}} \Big)\Bigg)$$
+\begin{equation}
+(\#eq:stockdist1)
+\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Bigg( \log N_{tral}! - \sum_{\it stocks} \log N_{trals}! + \sum_{\it stocks} \Big( N_{trals} \log {\frac{\nu_{tral}}{\sum \nu_{trals}}} \Big)\Bigg)\end{equation}
 
 where: $<$ N $>$ is the data sample size for that
 time/area/age/length/stock combination $<\nu>$ is the model sample size
@@ -3817,13 +3885,14 @@ between the modelled data and the specified index, given by
 equation [\[eq:surveyindex\]](#eq:surveyindex){reference-type="ref"
 reference="eq:surveyindex"} below:
 
-$$\label{eq:surveyindex}
-\ell = \sum_{\it time}\Big(I_{t} - (\alpha + \beta N_{t})\Big)^2$$
+\begin{equation}
+(\#eq:surveyindex)
+\ell = \sum_{\it time}\Big(I_{t} - (\alpha + \beta N_{t})\Big)^2\end{equation}
 
 where: $<$ I $>$ is the observed survey index $<$ N $>$ is the
 corresponding index calculated in the Gadget model
 
-\bigskip
+
 The exact format of this linear regression equation will vary, depending
 on survey index data available. It is possible to take the log of the
 indices and the modelled data before fitting the linear regression line.
@@ -3832,7 +3901,7 @@ the parameters alpha and beta, and it is possible to fix these to
 specified numbers, or let Gadget calculate these to get the best fit to
 the modelled data.
 
-\bigskip
+
 To specify a SurveyIndices likelihood component, the format required in
 the main likelihood file is as follows:
 
@@ -3855,13 +3924,13 @@ stock. If this line is not specified, then a biomass value of 0 is
 assumed and the index data calculated in the model will be based on the
 available population numbers for the stock.
 
-\bigskip
+
 The format of the survey index data, and the contents of the datafile,
 depend on the type of survey index that is to be used, which is
 specified by the value of $<$survey index type$>$. There are currently 5
 valid options, which are:
 
-\bigskip
+
 * `lengths` - defining a length group based survey index 
 * `ages` - defining an age group based survey index 
 * `fleets` - defining a length group based survey index, taking the fleet selectivity into account 
@@ -3900,7 +3969,7 @@ format of this file is given below:
 where $<$number$>$ is the survey index for that timestep/area/length
 combination.
 
-\bigskip
+
 The $<$fit type$>$ defines the type of linear regression equation to be
 used to calculate the likelihood score for this likelihood component.
 These options specify whether or not the log of the numbers is to be
@@ -3909,7 +3978,7 @@ Gadget, or fixed. If these parameters are to be fixed, then they are
 specified here. In total, there are 8 valid entries for $<$fit type$>$,
 and the associated parameters, and these are:
 
-\bigskip
+
 * `linearfit` 
 * `loglinearfit` 
 * `fixedslopelinearfit` 
@@ -4044,7 +4113,7 @@ format of this file is given below:
 where $<$number$>$ is the survey index for that timestep/area/age
 combination.
 
-\bigskip
+
 The $<$fit type$>$ defines the type of linear regression equation to be
 used to calculate the likelihood score for this likelihood component.
 The valid fit type options are the same as for the length based survey
@@ -4086,7 +4155,7 @@ format of this file is given below:
 where $<$number$>$ is the survey index for that timestep/area/length
 combination.
 
-\bigskip
+
 The $<$fit type$>$ defines the type of linear regression equation to be
 used to calculate the likelihood score for this likelihood component.
 The valid fit type options are the same as for the length based survey
@@ -4125,7 +4194,7 @@ model. The format of this file is given below:
 where $<$acoustic$>$ is the acoustic index for that timestep/area/survey
 combination.
 
-\bigskip
+
 The $<$fit type$>$ defines the type of linear regression equation to be
 used to calculate the likelihood score for this likelihood component.
 The valid fit type options are the same as for the length based survey
@@ -4164,7 +4233,7 @@ the model. The format of this file is given below:
 where $<$effort$>$ is the effort index for that timestep/area/fleet
 combination.
 
-\bigskip
+
 The $<$fit type$>$ defines the type of linear regression equation to be
 used to calculate the likelihood score for this likelihood component.
 The valid fit type options are the same as for the length based survey
@@ -4181,7 +4250,7 @@ calculated from a survey for that stock. The likelihood score that is
 calculated gives some measure as to how well the data from the model
 fits to the data from the calculated survey index distribution.
 
-\bigskip
+
 To specify a SurveyDistribution likelihood component, the format
 required in the main likelihood file is as follows:
 
@@ -4212,35 +4281,35 @@ reference="sec:suitability"} above. Note that only one set of
 suitability values is defined, which will be applied to all the stocks
 for this likelihood component.
 
-\bigskip
+
 The $<$fit type$>$ defines what function is to be used to calculate the
 survey index distribution from the modelled population. Currently, there
 are two functions defined, and the valid function names are:
 
-\bigskip
+
 * `linearfit` - use a linear function 
 * `powerfit` - use a power function
 
-\bigskip
+
 The $<$fit type parameters$>$ is a vector of 2 parameters that are used
 to calculate the survey index values from the modelled population. The
 $<$epsilon$>$ value is used whenever the calculated probability is very
 unlikely, although the exact format of this depends on the likelihood
 type that is to be used when calculating the likelihood score.
 
-\bigskip
+
 The $<$likelihood type$>$ defines what function is to be used to compare
 the modelled survey index distribution to the input survey index
 distribution. Currently, there are 4 functions defined, and the valid
 function names are:
 
-\bigskip
+
 * `multinomial` - use a multinomial function 
 * `pearson` - use a Pearson function
 * `gamma` - use a gamma function 
 * `log` - use a log function
 
-\bigskip
+
 Finally, the file specified by $<$datafile$>$ contains a list of the
 age-length survey indices that Gadget is to use to fit the likelihood
 function to, aggregated according to the aggregation files specified,
@@ -4261,8 +4330,9 @@ population from
 equation [\[eq:surveydistfit1\]](#eq:surveydistfit1){reference-type="ref"
 reference="eq:surveydistfit1"} below:
 
-$$\label{eq:surveydistfit1}
-\widehat{I}_{tral} = q_{0} S_{l} \big( N_{tral} + q_{1} \big)$$
+\begin{equation}
+(\#eq:surveydistfit1)
+\widehat{I}_{tral} = q_{0} S_{l} \big( N_{tral} + q_{1} \big)\end{equation}
 
 where: $<$ S $>$ is the calculated suitability value for that length
 group $<$ N $>$ is the model population for that time/area/age/length
@@ -4275,8 +4345,9 @@ population from
 equation [\[eq:surveydistfit1\]](#eq:surveydistfit1){reference-type="ref"
 reference="eq:surveydistfit1"} below:
 
-$$\label{eq:surveydistfit2}
-\widehat{I}_{tral} = q_{0} S_{l} N_{tral} ^{q_{1}}$$
+\begin{equation}
+(\#eq:surveydistfit2)
+\widehat{I}_{tral} = q_{0} S_{l} N_{tral} ^{q_{1}}\end{equation}
 
 where: $<$ S $>$ is the calculated suitability value for that length
 group $<$ N $>$ is the model population for that time/area/age/length
@@ -4288,8 +4359,9 @@ The multinomial function calculates the likelihood component from
 equation [\[eq:surveydist1\]](#eq:surveydist1){reference-type="ref"
 reference="eq:surveydist1"} below:
 
-$$\label{eq:surveydist1}
-\ell = \sum_{\it time}\sum_{\it areas} \bigg( \log \big(\sum_{\it ages}\sum_{\it lengths} \widehat{I}_{tral} \big) - {\frac { \displaystyle \sum_{\it ages}\sum_{\it lengths} \big(\widehat{I}_{tral} \log (I_{tral} + \epsilon) \big)} { \displaystyle \sum_{\it ages}\sum_{\it lengths} I_{tral}} } \bigg)$$
+\begin{equation}
+(\#eq:surveydist1)
+\ell = \sum_{\it time}\sum_{\it areas} \bigg( \log \big(\sum_{\it ages}\sum_{\it lengths} \widehat{I}_{tral} \big) - {\frac { \displaystyle \sum_{\it ages}\sum_{\it lengths} \big(\widehat{I}_{tral} \log (I_{tral} + \epsilon) \big)} { \displaystyle \sum_{\it ages}\sum_{\it lengths} I_{tral}} } \bigg)\end{equation}
 
 where: $<$ I $>$ is the data survey index for that time/area/age/length
 combination $<\widehat{I}>$ is the model survey index for that
@@ -4301,8 +4373,9 @@ The Pearson function calculates the likelihood component from
 equation [\[eq:surveydist2\]](#eq:surveydist2){reference-type="ref"
 reference="eq:surveydist2"} below:
 
-$$\label{eq:surveydist2}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ ( I_{tral} - \widehat{I}_{tral} ) ^2} {\widehat{I}_{tral} + \epsilon}} \Big)$$
+\begin{equation}
+(\#eq:surveydist2)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ ( I_{tral} - \widehat{I}_{tral} ) ^2} {\widehat{I}_{tral} + \epsilon}} \Big)\end{equation}
 
 where: $<$ I $>$ is the data survey index for that time/area/age/length
 combination $<\widehat{I}>$ is the model survey index for that
@@ -4314,8 +4387,9 @@ The gamma function calculates the likelihood component from
 equation [\[eq:surveydist3\]](#eq:surveydist3){reference-type="ref"
 reference="eq:surveydist3"} below:
 
-$$\label{eq:surveydist3}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ I_{tral}} { (\widehat{I}_{tral} + \epsilon )} + \log ({\widehat{I}_{tral} + \epsilon}}) \Big)$$
+\begin{equation}
+(\#eq:surveydist3)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ I_{tral}} { (\widehat{I}_{tral} + \epsilon )} + \log ({\widehat{I}_{tral} + \epsilon}}) \Big)\end{equation}
 
 where: $<$ I $>$ is the data survey index for that time/area/age/length
 combination $<\widehat{I}>$ is the model survey index for that
@@ -4327,8 +4401,9 @@ The log function calculates the likelihood component from
 equation [\[eq:surveydist4\]](#eq:surveydist4){reference-type="ref"
 reference="eq:surveydist4"} below:
 
-$$\label{eq:surveydist4}
-\ell = \sum_{\it time}\sum_{\it areas} \Big(  \log \Big( {\frac{ \displaystyle \sum_{\it ages}\sum_{\it lengths}  \widehat{I}_{tral}} { \displaystyle \sum_{\it ages}\sum_{\it lengths} I_{tral}}} \Big) \Big) ^2$$
+\begin{equation}
+(\#eq:surveydist4)
+\ell = \sum_{\it time}\sum_{\it areas} \Big(  \log \Big( {\frac{ \displaystyle \sum_{\it ages}\sum_{\it lengths}  \widehat{I}_{tral}} { \displaystyle \sum_{\it ages}\sum_{\it lengths} I_{tral}}} \Big) \Big) ^2\end{equation}
 
 where: $<$ I $>$ is the data survey index for that time/area/age/length
 combination $<\widehat{I}>$ is the model survey index for that
@@ -4348,7 +4423,7 @@ will give information on the stomach content at the time of capture of
 the predator, where as the Gadget simulation can only give information
 about the modelled consumption of the prey by the predator.
 
-\bigskip
+
 To specify a StomachContent likelihood component, the format required in
 the main likelihood file is as follows:
 
@@ -4375,21 +4450,21 @@ or two stray values, since these will be reset back to less unlikely
 values. The default value for $<$epsilon$>$ is 10, which is used
 whenever it is not defined in the input file.
 
-\bigskip
+
 The $<$predatornames$>$ vector contains a list of all the predators to
 be aggregated into a single pseudo predator for the purposes of the data
 comparison.
 
-\bigskip
+
 The $<$function name$>$ defines what likelihood function is to be used
 to compare the modelled consumption data to the input stomach content
 data. Currently, there is only one likelihood function defined, so the
 valid function name is:
 
-\bigskip
+
 * `scsimple` - use a simple ratio function
 
-\bigskip
+
 Finally, the file specified by $<$datafile$>$ contains a list of the
 stomach content data that Gadget is to use to fit the likelihood
 function to, aggregated according to the aggregation files specified,
@@ -4414,8 +4489,9 @@ specified in the input file, as shown in
 equation [\[eq:stomach1\]](#eq:stomach1){reference-type="ref"
 reference="eq:stomach1"} below:
 
-$$\label{eq:stomach1}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it predators}\sum_{\it preys} \Big( P_{trpp} - \pi_{trpp} \Big) ^2$$
+\begin{equation}
+(\#eq:stomach1)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it predators}\sum_{\it preys} \Big( P_{trpp} - \pi_{trpp} \Big) ^2\end{equation}
 
 where: $<$ P $>$ is the ratio of the stomach content data for that
 time/area/predator/prey combination $<\pi>$ is the ratio of the modelled
@@ -4430,7 +4506,7 @@ from tagging experiments, aggregated according to length at recapture.
 The likelihood score that is calculated gives some measure as to how
 well the data from the model fits the recaptures data.
 
-\bigskip
+
 To specify a Recaptures likelihood component, the format required in the
 main likelihood file is as follows:
 
@@ -4450,16 +4526,16 @@ The $<$fleetnames$>$ vector contains a list of all the fleets to be
 aggregated into a single pseudo fleet for the purposes of the data
 comparison.
 
-\bigskip
+
 The $<$function name$>$ defines what likelihood function is to be used
 to compare the modelled recaptures data to the input recaptures data.
 Currently, there is only one likelihood function defined, so the only
 valid function name is:
 
-\bigskip
+
 * `poisson` - use a Poisson function
 
-\bigskip
+
 Finally, the datafile is a list of the recaptures that Gadget is to use
 to fit the likelihood function to, aggregated according to the
 aggregation files specified, for the numbers calculated in the model.
@@ -4478,8 +4554,9 @@ The Poisson function calculates the likelihood component from
 equation [\[eq:recap1\]](#eq:recap1){reference-type="ref"
 reference="eq:recap1"} below:
 
-$$\label{eq:recap1}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it lengths} \Big( N_{trl} + \log \nu_{trl}! - N_{trl} \log \nu_{trl} \Big)$$
+\begin{equation}
+(\#eq:recap1)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it lengths} \Big( N_{trl} + \log \nu_{trl}! - N_{trl} \log \nu_{trl} \Big)\end{equation}
 
 where: $<$ N $>$ is the number of observed recaptures for that
 time/area/length combination $<\nu>$ is the number of modelled
@@ -4498,7 +4575,7 @@ reference="sec:catchstat"}). The likelihood score that is calculated
 gives some measure as to how well the data from the model fits to the
 data from the recaptures.
 
-\bigskip
+
 To specify a RecStatistics likelihood component, the format required in
 the main likelihood file is as follows:
 
@@ -4517,14 +4594,14 @@ The $<$fleetnames$>$ vector contains a list of all the fleets to be
 aggregated into a single pseudo fleet for the purposes of the data
 comparison.
 
-\bigskip
+
 The $<$function name$>$ defines what likelihood function is to be used
 to compare the modelled statistical data to the input statistical data.
 Currently, there are three likelihood functions defined, and the format
 of the statistical data given in the file specified by $<$datafile$>$
 depends on the likelihood function used. The valid functions are:
 
-\bigskip
+
 * `lengthcalcstddev` - use a weighted sum of squares of mean length
 * `lengthgivenstddev` - use a weighted sum of squares of mean length with given standard deviation 
 * `lengthnostddev` - use a unweighted sum of squares of mean length
@@ -4537,15 +4614,16 @@ calculating the variance of length of the modelled population, as shown
 in equation [\[eq:recstat1\]](#eq:recstat1){reference-type="ref"
 reference="eq:recstat1"} below:
 
-$$\label{eq:recstat1}
-\ell = \sum_{\it tags}\sum_{\it time}\sum_{\it areas} \Big(\frac{(x-\mu)^2} {\sigma^2} N\Big)$$
+\begin{equation}
+(\#eq:recstat1)
+\ell = \sum_{\it tags}\sum_{\it time}\sum_{\it areas} \Big(\frac{(x-\mu)^2} {\sigma^2} N\Big)\end{equation}
 
 where: $<$ x $>$ is the sample mean length from the data $<\mu>$ is the
 mean length calculated from the model $<\sigma>$ is the standard
 deviation of the length, calculated from the model $<$ N $>$ is the
 sample size
 
-\bigskip
+
 For this RecStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
@@ -4564,14 +4642,15 @@ variance of length of the input population, as shown in
 equation [\[eq:recstat2\]](#eq:recstat2){reference-type="ref"
 reference="eq:recstat2"} below:
 
-$$\label{eq:recstat2}
-\ell = \sum_{\it tags}\sum_{\it time}\sum_{\it areas} \Big(\frac{(x-\mu)^2} {s^2} N\Big)$$
+\begin{equation}
+(\#eq:recstat2)
+\ell = \sum_{\it tags}\sum_{\it time}\sum_{\it areas} \Big(\frac{(x-\mu)^2} {s^2} N\Big)\end{equation}
 
 where: $<$ x $>$ is the sample mean length from the data $<\mu>$ is the
 mean length calculated from the model $<$ s $>$ is the standard
 deviation of the length from the data $<$ N $>$ is the sample size
 
-\bigskip
+
 For this RecStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
@@ -4591,13 +4670,14 @@ length of the population assumed to be 1, as shown in
 equation [\[eq:recstat3\]](#eq:recstat3){reference-type="ref"
 reference="eq:recstat3"} below:
 
-$$\label{eq:recstat3}
-\ell = \sum_{\it tags}\sum_{\it time}\sum_{\it areas} \Big((x-\mu)^2 N\Big)$$
+\begin{equation}
+(\#eq:recstat3)
+\ell = \sum_{\it tags}\sum_{\it time}\sum_{\it areas} \Big((x-\mu)^2 N\Big)\end{equation}
 
 where: $<$ x $>$ is the sample mean length from the data $<\mu>$ is the
 mean length calculated from the model $<$ N $>$ is the sample size
 
-\bigskip
+
 For this RecStatistics function, the format of the statistical data
 required in the file specified by $<$datafile$>$ is given below:
 
@@ -4621,10 +4701,11 @@ combination of the parameters that give the migration matrix value that
 is wrong. The likelihood component that is used is based on the sum of
 squares of the migration values, given by the equation below:
 
-$$\label{eq:migpenalty}
-\ell = \left( \sum_{ij}^{} M_{ij}^{p_0} \right)^{p_1}$$
+\begin{equation}
+(\#eq:migpenalty)
+\ell = \left( \sum_{ij}^{} M_{ij}^{p_0} \right)^{p_1}\end{equation}
 
-\bigskip
+
 The use of 2 power coefficients gives increased flexibility for the
 likelihood component. In general, a higher value of $p_1$ applies a
 higher penalty to "many small negative values", where as a higher value
@@ -4632,7 +4713,7 @@ of $p_0$ applies a higher penalty to "few large negative values". For a
 simple sum of squares of the migration matrix values, $p_0$ should be
 set to 2, and $p_1$ should be set to 1.
 
-\bigskip
+
 To specify a MigrationPenalty likelihood component, the format required
 in the main likelihood file is as follows:
 
@@ -4659,7 +4740,7 @@ present on each area on a given timestep. The likelihood score that is
 calculated gives some measure as to how well the migration data from the
 model fit to the data from the sample catches.
 
-\bigskip
+
 To specify a MigrationProportion likelihood component, the format
 required in the main likelihood file is as follows:
 
@@ -4684,21 +4765,21 @@ specified, then a biomass value of 1 is assumed and the migration
 proportion data calculated in the model will be based on the available
 population biomass of the stock.
 
-\bigskip
+
 The $<$stocknames$>$ vector contains a list of all the stocks to be
 aggregated into a single pseudo stock for the purposes of the data
 comparison.
 
-\bigskip
+
 The $<$function name$>$ defines what likelihood function is to be used
 to compare the modelled migration proportion data to the input migration
 proportion data. Currently, there is only one likelihood function
 defined, so the valid function name is:
 
-\bigskip
+
 * `sumofsquares` - use a simple sum of squares function
 
-\bigskip
+
 Finally, the file specified by $<$datafile$>$ contains a list of the
 migration proportion data that Gadget is to use to fit the likelihood
 function to, aggregated according to the aggregation files specified,
@@ -4718,8 +4799,9 @@ The sum of squares function calculates the likelihood component from
 equation [\[eq:migpro1\]](#eq:migpro1){reference-type="ref"
 reference="eq:migpro1"} below:
 
-$$\label{eq:migpro1}
-\ell = \sum_{\it time}\sum_{\it areas} \Big( P_{tr} - \pi_{tr} \Big) ^2$$
+\begin{equation}
+(\#eq:migpro1)
+\ell = \sum_{\it time}\sum_{\it areas} \Big( P_{tr} - \pi_{tr} \Big) ^2\end{equation}
 
 where: $<$ P $>$ is the proportion of the data sample for that time/area
 combination $<\pi>$ is the proportion of the model sample for that
@@ -4737,7 +4819,7 @@ file (see section [7](#chap:fleet){reference-type="ref"
 reference="chap:fleet"} for more information on the available fleet
 types).
 
-\bigskip
+
 To specify a CatchInKilos likelihood component, the format required in
 the main likelihood file is as follows:
 
@@ -4762,13 +4844,13 @@ timestep (by setting aggregation level to 0). If this line is not
 specified, then an aggregation level of 0 is assumed, and the catch data
 is not aggregated over the whole year.
 
-\bigskip
+
 The $<$fleetnames$>$ vector contains a list of all the fleets to be
 aggregated into a single pseudo fleet for the purposes of the data
 comparison. Similarly, the $<$stocknames$>$ vector contains a list of
 all the stocks to be aggregated into a single pseudo stock.
 
-\bigskip
+
 The optional $<$epsilon$>$ value is used in the likelihood function to
 avoid problems that would arise from taking the logarithm of zero.
 Epsilon is added to both the modelled and observed landings data, to
@@ -4776,16 +4858,16 @@ ensure that these values are always positive, and thus should be set to
 a small number. The default value for $<$epsilon$>$ is 10, which is used
 whenever it is not defined in the input file.
 
-\bigskip
+
 The $<$function name$>$ defines what likelihood function is to be used
 to compare the modelled catch to the input catch. Currently, there is
 only one likelihood function defined, so the only valid function name
 is:
 
-\bigskip
+
 * `sumofsquares` - use a log sum of squares function
 
-\bigskip
+
 Finally, the file specified by $<$datafile$>$ contains the landings data
 that Gadget is to use to fit the likelihood function to for the catch
 calculated in the model. The format of this file is given below:
@@ -4810,8 +4892,9 @@ The sum of squares function calculates the likelihood component from
 equation [\[eq:catchtons\]](#eq:catchtons){reference-type="ref"
 reference="eq:catchtons"} below:
 
-$$\label{eq:catchtons}
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it fleets} (\log(N_{trf} + \epsilon) - \log(\nu_{trf} + \epsilon))^2$$
+\begin{equation}
+(\#eq:catchtons)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it fleets} (\log(N_{trf} + \epsilon) - \log(\nu_{trf} + \epsilon))^2\end{equation}
 
 where: $<$ N $>$ is the catch biomass for that time/area/fleet
 combination $<\nu>$ is the modelled catch biomass for that
@@ -4826,12 +4909,12 @@ model output from each iteration of a optimising process (and thus
 generating very large files), any printfile settings are ignored if
 Gadget is started with the -l switch.
 
-\bigskip
+
 To define print files in the Gadget model, the "main" file must contain
 a list of the data files that contain the description of the printer
 classes required, and the format for this is shown below:
 
-\small
+
     printfiles           <names of the print files>
 
 The print files contain a list of various type of printer classes,
@@ -4841,7 +4924,7 @@ information is to be written to. All the output is written as a plain
 ASCII text file that can be viewed in any text editor. The format of the
 print file is follows:
 
-\small
+
     [component]
     type                 <printer type>
     <printer data>
@@ -4851,13 +4934,13 @@ below. The $<$printer type$>$ defines the type of output that will be
 generated from the Gadget model, and there are currently 11 valid
 printer types defined in Gadget. These are:
 
-\bigskip
+
 StockStdPrinter StockFullPrinter StockPrinter PredatorPrinter
 PredatorOverPrinter PreyOverPrinter StockPreyFullPrinter
 StockPreyPrinter PredatorPreyPrinter LikelihoodPrinter
 LikelihoodSummaryPrinter
 
-\newpage 
+ 
 StockStdPrinter {#sec:stockstdprinter}
 ---------------
 
@@ -4866,7 +4949,7 @@ The printer type to output the standard details of a stock is called
 and timesteps of interest. The file format for this component is given
 below:
 
-\small
+
     [component]
     type                 stockstdprinter
     stockname            <name of the stock>
@@ -4881,12 +4964,12 @@ which can be used to display the stock in terms of thousands of fish,
 for example. The default value for this parameter is 1, which will
 ensure that no scaling will take place.
 
-\bigskip
+
 The optional $<$precision$>$ value is used to specify the number of
 digits to be used when printing the information to the specified output
 file, overriding the default settings for this printer type.
 
-\bigskip
+
 The optional flag $<$printatstart$>$ is used to specify whether the
 information about the stock should be printed at the start or the end of
 the timestep. If this is set to 1, then the stock information as it is
@@ -4897,12 +4980,12 @@ calculations). The default value for $<$printatstart$>$ is 0, which
 means that the information at the end of the timestep is printed, and is
 used whenever the flag is not specified in the input file.
 
-\bigskip
+
 The output that is generated from this printer type is a file containing
 the following information for the stock specified on the $<$stockname$>$
 line:
 
-\small
+
     year-step-area-age-number-length-weight-stddev-consumed-biomass
 
 where: $<$number$>$ is the stock population for that timestep/area/age
@@ -4923,7 +5006,7 @@ is called "StockFullPrinter". This printer type is defined by specifying
 the stock and timesteps of interest. The file format for this component
 is given below:
 
-\small
+
     [component]
     type                 stockfullprinter
     stockname            <name of the stock>
@@ -4936,7 +5019,7 @@ The optional $<$precision$>$ value is used to specify the number of
 digits to be used when printing the information to the specified output
 file, overriding the default settings for this printer type.
 
-\bigskip
+
 The optional flag $<$printatstart$>$ is used to specify whether the
 information about the stock should be printed at the start or the end of
 the timestep. If this is set to 1, then the stock information as it is
@@ -4947,12 +5030,12 @@ calculations). The default value for $<$printatstart$>$ is 0, which
 means that the information at the end of the timestep is printed, and is
 used whenever the flag is not specified in the input file.
 
-\bigskip
+
 The output that is generated from this printer type is a file containing
 the following information for the stock specified on the $<$stockname$>$
 line:
 
-\small
+
     year-step-area-age-length-number-weight
 
 where: $<$number$>$ is the population for that timestep/area/age/length
@@ -4968,7 +5051,7 @@ the information aggregated into a convenient grouping, is called
 areas, age groups, length groups and timesteps of interest. The file
 format for this component is given below:
 
-\small
+
     [component]
     type                 stockprinter
     stocknames           <vector of the names of the stocks>
@@ -4983,12 +5066,12 @@ format for this component is given below:
 Note that this printer type can aggregate more than one stock into a
 combined pseudo stock for the output file.
 
-\bigskip
+
 The optional $<$precision$>$ value is used to specify the number of
 digits to be used when printing the information to the specified output
 file, overriding the default settings for this printer type.
 
-\bigskip
+
 The optional flag $<$printatstart$>$ is used to specify whether the
 information about the stock should be printed at the start or the end of
 the timestep. If this is set to 1, then the stock information as it is
@@ -4999,12 +5082,12 @@ calculations). The default value for $<$printatstart$>$ is 0, which
 means that the information at the end of the timestep is printed, and is
 used whenever the flag is not specified in the input file.
 
-\bigskip
+
 The output that is generated from this printer type is a file containing
 the following information for all the stocks specified on the
 $<$stocknames$>$ line:
 
-\small
+
     year-step-area-age-length-number-weight
 
 where: $<$area$>$ is the label for the area from the area aggregation
@@ -5023,7 +5106,7 @@ information aggregated into a convenient grouping, is called
 predators, preys, areas, length groups and timesteps of interest. The
 file format for this component is given below:
 
-\small
+
     [component]
     type                 predatorprinter
     predatornames        <vector of the names of the predators>
@@ -5040,7 +5123,7 @@ Note that this printer type can aggregate more than one predator into a
 combined pseudo predator, and more than one prey into a pseudo prey, for
 the output file.
 
-\bigskip
+
 The optional flag $<$biomass$>$ is used to specify whether the
 information about the consumption of the preys by the predators is
 printed by biomass consumed or by number consumed. If this is set to 1
@@ -5050,18 +5133,18 @@ The default value for $<$biomass$>$ is 1, which means that the
 consumption by biomass will be printed if this flag is not specified in
 the input file.
 
-\bigskip
+
 The optional $<$precision$>$ value is used to specify the number of
 digits to be used when printing the information to the specified output
 file, overriding the default settings for this printer type.
 
-\bigskip
+
 The output that is generated from this printer type is a file containing
 the following predation information for all the predators specified on
 the $<$predatornames$>$ line, consuming all the preys specified on the
 $<$preynames$>$ line:
 
-\small
+
     year-step-area-pred-prey-amount
 
 where: $<$area$>$ is the label for the area from the area aggregation
@@ -5083,7 +5166,7 @@ is defined by specifying the predators, areas, length groups and
 timesteps of interest. The file format for this component is given
 below:
 
-\small
+
     [component]
     type                 predatoroverprinter
     predatornames        <vector of the names of the predators>
@@ -5096,17 +5179,17 @@ below:
 Note that this printer type can aggregate more than one predator into a
 combined pseudo predator for the output file.
 
-\bigskip
+
 The optional $<$precision$>$ value is used to specify the number of
 digits to be used when printing the information to the specified output
 file, overriding the default settings for this printer type.
 
-\bigskip
+
 The output that is generated from this printer type is a file containing
 the following over-consumption information for all the predators
 specified on the $<$predatornames$>$ line:
 
-\small
+
     year-step-area-length-biomass
 
 where: $<$area$>$ is the label for the area from the area aggregation
@@ -5127,7 +5210,7 @@ type is defined by specifying the preys, areas, length groups and
 timesteps of interest. The file format for this component is given
 below:
 
-\small
+
     [component]
     type                 preyoverprinter
     preynames            <vector of the names of the preys>
@@ -5140,17 +5223,17 @@ below:
 Note that this printer type can aggregate more than one prey into a
 combined pseudo prey for the output file.
 
-\bigskip
+
 The optional $<$precision$>$ value is used to specify the number of
 digits to be used when printing the information to the specified output
 file, overriding the default settings for this printer type.
 
-\bigskip
+
 The output that is generated from this printer type is a file containing
 the following over-consumption information for all the preys specified
 on the $<$preynames$>$ line:
 
-\small
+
     year-step-area-length-biomass
 
 where: $<$area$>$ is the label for the area from the area aggregation
@@ -5166,7 +5249,7 @@ The printer type to output detailed information about a prey is called
 prey and timesteps of interest. The file format for this component is
 given below:
 
-\small
+
     [component]
     type                 stockpreyfullprinter
     preyname             <name of the prey>
@@ -5178,12 +5261,12 @@ The optional $<$precision$>$ value is used to specify the number of
 digits to be used when printing the information to the specified output
 file, overriding the default settings for this printer type.
 
-\bigskip
+
 The output that is generated from this printer type is a file containing
 the following information for the prey specified on the $<$preyname$>$
 line:
 
-\small
+
     year-step-area-age-length-number-biomass
 
 where: $<$number$>$ is the total population consumed for that
@@ -5199,7 +5282,7 @@ the information aggregated into a convenient grouping, is called
 preys, areas, age groups, length groups and timesteps of interest. The
 file format for this component is given below:
 
-\small
+
     [component]
     type                 stockpreyprinter
     preynames            <vector of the names of the preys>
@@ -5213,17 +5296,17 @@ file format for this component is given below:
 Note that this printer type can aggregate more than one prey into a
 combined pseudo prey for the output file.
 
-\bigskip
+
 The optional $<$precision$>$ value is used to specify the number of
 digits to be used when printing the information to the specified output
 file, overriding the default settings for this printer type.
 
-\bigskip
+
 The output that is generated from this printer type is a file containing
 the following information for all the preys specified on the
 $<$preynames$>$ line:
 
-\small
+
     year-step-area-age-length-number-biomass
 
 where: $<$area$>$ is the label for the area from the area aggregation
@@ -5243,7 +5326,7 @@ by specifying the predators, preys, areas, age groups, length groups and
 timesteps of interest. The file format for this component is given
 below:
 
-\small
+
     [component]
     type                 predatorpreyprinter
     predatornames        <vector of the names of the predators>
@@ -5259,18 +5342,18 @@ Note that this printer type can aggregate more than one predator into a
 combined pseudo predator, and more than one prey into a pseudo prey, for
 the output file.
 
-\bigskip
+
 The optional $<$precision$>$ value is used to specify the number of
 digits to be used when printing the information to the specified output
 file, overriding the default settings for this printer type.
 
-\bigskip
+
 The output that is generated from this printer type is a file containing
 the following predation information for all the predators specified on
 the $<$predatornames$>$ line, consuming all the preys specified on the
 $<$preynames$>$ line:
 
-\small
+
     year-step-area-age-length-number-biomass-mortality
 
 where: $<$age$>$ is the label for the prey age group from the age
@@ -5289,7 +5372,7 @@ component is called "LikelihoodPrinter". This printer type is defined by
 specifying the likelihood component and timesteps of interest. The file
 format for this component is given below:
 
-\small
+
     [component]
     type                 likelihoodprinter
     likelihood           <name of the likelihood component>
@@ -5307,21 +5390,21 @@ output are:
     section [8.3](#sec:catchdist){reference-type="ref"
     reference="sec:catchdist"})
 
-    \small
+    
         year-step-area-age-length-number
 
 2.  CatchStatistics likelihood component (see
     section [8.4](#sec:catchstat){reference-type="ref"
     reference="sec:catchstat"})
 
-    \small
+    
         year-step-area-age-number-mean[-stddev]
 
 3.  SurveyIndices likelihood component (see
     section [8.6](#sec:surveyindices){reference-type="ref"
     reference="sec:surveyindices"})
 
-    \small
+    
         year-step-area-index-number
 
 LikelihoodSummaryPrinter {#sec:likelihoodsummaryprinter}
@@ -5332,7 +5415,7 @@ components that are in use for the current simulation is called
 "LikelihoodSummaryPrinter". The file format for this component is given
 below:
 
-\small
+
     [component]
     type                 likelihoodsummaryprinter
     printfile            <name for the output file to be created>
@@ -5341,7 +5424,7 @@ The output that is generated from this printer type is a file containing
 summary information for all the likelihood components that have been
 defined for the current simulation:
 
-\small
+
     year-step-area-component-weight-score
 
 where: $<$component$>$ is the name of the likelihood component
@@ -5360,7 +5443,7 @@ $<$filename$>$" command line option when Gadget is started, for example,
 this would take the parameter information from a file called
 "inputfile.txt":
 
-\small
+
     gadget -s -i inputfile.txt
 
 This file contains a list of all the switches, their initial value, the
@@ -5369,7 +5452,7 @@ optimise that switch or not. The first line of this file must contain
 the column headings, and then subsequent lines should list all switches
 that are used. An example of this file format is shown below:
 
-\small
+
     switch  value    lower    upper    optimise
     <name>  <value>  <lower>  <upper>  <0 or 1> ; 1 to optimise this parameter
 
@@ -5377,7 +5460,7 @@ Note that if Gadget is performing a simulation run, then the "optimise"
 column is still required, although the value of the optimise flag will
 have no affect on the outcome of the simulation.
 
-\bigskip
+
 In some cases an initial value for a parameter is not known, or a random
 starting point is wanted (for example, to ensure that the value of the
 starting point has little affect on the outcome of the optimisation).
@@ -5387,7 +5470,7 @@ parameter to a random point within the bounds. This is shown in the
 example below, where the initial value for the parameter "age2" will be
 set to a random point between 1 and 10:
 
-\small
+
     age2    random   1        10       1 ; random value between 1 and 10
 
 Optimisation File {#chap:optim}
@@ -5399,7 +5482,7 @@ algorithm. This file is specified by a "-opt $<$filename$>$" command
 line option when Gadget is started, for example, this would take the
 optimisation information from a file called "optinfo.txt":
 
-\small
+
     gadget -l -opt optinfo.txt
 
 There are three types of optimisation algorithms currently implemented
@@ -5410,7 +5493,7 @@ are described in more detail in the following sections. Gadget can also
 combine two or more of these algorithms into a single hybrid algorithm,
 that should result in a more efficient search for an optimum solution.
 
-\bigskip
+
 All the optimisation techniques used by Gadget attempt to minimise the
 likelihood function. That is, they look for the best set of parameters
 to run the model with, in order to get the best fit according to the
@@ -5418,7 +5501,7 @@ likelihood functions you have specified. Thus, the optimiser is
 attempting to minimize a single one-dimensional measure of fit between
 the model output and the data, which can lead to unexpected results.
 
-\bigskip
+
 The optimisation process will tend to produce realistic values for the
 most significant parameters (typically growth, recruitment in large year
 classes and fishing selectivity) before finding realistic values for
@@ -5456,7 +5539,7 @@ result twice in a row does not guarantee it is the best possible
 solution, but finding different results certainly indicates that the
 larger result is not the solution you are seeking.
 
-\bigskip
+
 The Hooke & Jeeves algorithm used in Gadget is derived from that
 originally presented by R. Hooke and T. A. Jeeves, "Direct Search
 Solution of Numerical and Statistical Problems" in the April 1961 (Vol.
@@ -5464,7 +5547,7 @@ Solution of Numerical and Statistical Problems" in the April 1961 (Vol.
 presented by Arthur F Kaupe Jr., "Algorithm 178: Direct Search" in the
 June 1963 (Vol 6, pp.313-314) issue of the Communications of the ACM.
 
-\bigskip
+
 Hooke & Jeeves is the default optimisation method used for Gadget, and
 will be used if no optimisation information file is specified.
 
@@ -5477,7 +5560,7 @@ not specified in the file are given default values, which work
 reasonably well for simple Gadget models. The format for this file, and
 the default values for the optimisation parameters, are shown below:
 
-\small
+
     [hooke]
     hookeiter  1000  ; number of hooke & jeeves iterations
     hookeeps   1e-04 ; minimum epsilon, hooke & jeeves halt criteria
@@ -5517,7 +5600,7 @@ the risk of 'stepping over' an excellent point. When no improvements to
 the minimum can be made by taking steps of the current length, the step
 length is reduced by multiplying it by rho.
 
-\bigskip
+
 Small values of rho correspond to big step length changes, which make
 the algorithm run more quickly. However, there is a chance that these
 big changes will accidentally overlook a promising point, leading to
@@ -5555,27 +5638,28 @@ improved on with a small step in any direction, and the Metropolis
 Criteria rejects all the steps away from the current best point. The
 best point is then accepted as being the 'solution'.
 
-\bigskip
+
 The Metropolis Criteria will accept a move in an uphill direction (ie. a
 point with a worse likelihood score) based on a function of both the
 size of the move and a parameter termed "temperature", and is given in
 equation [\[eq:metropolis\]](#eq:metropolis){reference-type="ref"
 reference="eq:metropolis"} below:
 
-$$\begin{aligned}
-\label{eq:metropolis}
+\begin{equation}
+\begin{aligned}
+(\#eq:metropolis)
 M & = & e^{\displaystyle \frac{-\Delta F} {t}} \nonumber \\
 P & = &
 \begin{cases}
 1 & \textrm{if $M$ > $r$} \\
 0 & \textrm{otherwise}
-\end{cases}\end{aligned}$$
+\end{cases}\end{aligned}\end{equation}
 
 where: $<\Delta F>$ is the change in likelihood score $<$ t $>$ is the
 "temperature" of the algorithm $<$ r $>$ is a random number between 0
 and 1
 
-\bigskip
+
 Note that when the "temperature" is very high (t $\rightarrow \infty$),
 the Metropolis Criteria will always accept any 'uphill' move, and the
 Simulated Annealing algorithm will simplify to a form of a random search
@@ -5586,7 +5670,7 @@ hill-climbing algorithm, similar to Hooke & Jeeves. By slowly reducing
 the temperature of the algorithm, the number of uphill moves that are
 accepted are reduced and the algorithm will find a minimum.
 
-\bigskip
+
 The terminology for the Simulated Annealing algorithm comes from a
 metaphor with the thermodynamic process of cooling molten metals. At
 very high temperatures, the atoms in molten metals move very fast, and
@@ -5596,7 +5680,7 @@ ordered, strong, crystalline structure. If the metal is cooled too
 quickly ("quenching") the resulting solid will have a weaker, less
 ordered, structure.
 
-\bigskip
+
 In comparison to the Hooke & Jeeves optimisation algorithm, where Hooke
 & Jeeves performs a 'local' stepwise search, Simulated Annealing
 searches much more widely over the surface in order to find the best
@@ -5605,7 +5689,7 @@ by a local minimum, and more likely to home in on the true optimum.
 However the price to paid for doing this is that it can take
 considerably more computer time to reach a solution.
 
-\bigskip
+
 The Simulated Annealing algorithm used in Gadget is derived from that
 presented by Corana et al, "Minimising Multimodal Functions of
 Continuous Variables with the 'Simulated Annealing' Algorithm" in the
@@ -5623,7 +5707,7 @@ that are not specified in the file are given default values, which work
 reasonably well for simple Gadget models. The format for this file, and
 the default values for the optimisation parameters, are shown below:
 
-\small
+
     [simann]
     simanniter 2000  ; number of simulated annealing iterations
     simanneps  1e-04 ; minimum epsilon, simann halt criteria
@@ -5706,7 +5790,7 @@ periodically adjusted so that approximately half of all moves are
 accepted, since too many, or too few, accepted moves is a waste of
 computational effort.
 
-\bigskip
+
 When the algorithm adjusts the maximum step length, the ratio of
 accepted moves to rejected moves since the last adjustment of the
 maximum step length is taken into account. If more moves are accepted
@@ -5723,7 +5807,7 @@ optimisation process. Note that each of the steps taken by the Simulated
 Annealing algorithm are not uniform, and will have a random length of
 between zero and the maximum step length.
 
-\bigskip
+
 It is important to note that unlike the Hooke & Jeeves algorithm, the
 parameters are not scaled during the optimisation process, and so the
 maximum step length should be selected so that the initial search area
@@ -5744,13 +5828,14 @@ each direction is adjusted according to
 equation [\[eq:vm\]](#eq:vm){reference-type="ref" reference="eq:vm"}
 below:
 
-$$\label{eq:vm}
+\begin{equation}
+(\#eq:vm)
 vm_{i} =
 \begin{cases}
 vm_{i} * (1 + \frac{C (R_{i} - U)}{L}) & \textrm{if $R_{i} > U$} \\
 vm_{i} / (1 + \frac{C (L - R_{i})}{L}) & \textrm{if $R_{i} < L$} \\
 vm_{i} & \textrm{otherwise}
-\end{cases}$$
+\end{cases}\end{equation}
 
 where: $< R_{i} >$ is the ratio of accepted moves for direction i $<$ C
 $>$ is the value of the "cstep" parameter $<$ U $>$ is the value of the
@@ -5775,7 +5860,7 @@ BFGS algorithm can iteratively calculate a better approximation to the
 inverse Hessian matrix, which will lead to a better approximation of the
 minimum value.
 
-\bigskip
+
 From an initial starting point, the gradient of the function is
 calculated and then the algorithm uses this information to calculate the
 best direction to perform a linesearch for a point that is "sufficiently
@@ -5786,7 +5871,7 @@ restart from this new point. If a better point cannot be found, then the
 inverse Hessian matrix is reset and the algorithm restarts from the last
 accepted point.
 
-\bigskip
+
 For a point at a stable minimum, the magnitude of the gradient vector
 will be zero, since there is no direction that the algorithm can move in
 to find a better local point. However, finding such a point using an
@@ -5794,7 +5879,7 @@ iterative process can take an infinite number of steps, so the algorithm
 exits when the magnitude of the gradient vector is less than a small
 number. The current point is then accepted as being the 'solution'.
 
-\bigskip
+
 The "Armijo" linesearch calculates the stepsize that is to be used to
 move to a point that is "sufficiently better", along the search
 direction vector calculated from the gradient, to be $\beta^n$, where n
@@ -5802,13 +5887,14 @@ is the first integer that satisfies the Armijo rule given by
 inequality [\[eq:armijo\]](#eq:armijo){reference-type="ref"
 reference="eq:armijo"} below:
 
-$$\label{eq:armijo}
-f(x) - f(x + \beta^{n}d) \geq - \sigma \beta^{n}d \nabla f(x) ^{T}$$
+\begin{equation}
+(\#eq:armijo)
+f(x) - f(x + \beta^{n}d) \geq - \sigma \beta^{n}d \nabla f(x) ^{T}\end{equation}
 
 where: $<\nabla f(x)>$ is the gradient of the function at the current
 point $<$ d $>$ is the search direction vector
 
-\bigskip
+
 In comparison to the other optimising algorithms that are currently
 implemented in Gadget, BFGS performs a local search, and so it doesn't
 cover the wide search area that the Simulated Annealing algorithm can
@@ -5820,7 +5906,7 @@ be better than that found by the Hooke & Jeeves algorithm, since a
 gradient search method is usually more accurate than a stepwise search
 method.
 
-\bigskip
+
 The BFGS algorithm used in Gadget is derived from that presented by
 Dimitri P Bertsekas, "Nonlinear Programming" ($2^{nd}$ edition, pp22-61)
 published by Athena Scientific. The forward difference gradient
@@ -5838,7 +5924,7 @@ specified in the file are given default values, which work reasonably
 well for simple Gadget models. The format for this file, and the default
 values for the optimisation parameters, are shown below:
 
-\small
+
     [bfgs]
     bfgsiter   10000 ; number of bfgs iterations
     bfgseps    0.01  ; minimum epsilon, bfgs halt criteria
@@ -5904,12 +5990,13 @@ Gadget using a forward difference algorithm, as shown in
 equation [\[eq:grad\]](#eq:grad){reference-type="ref"
 reference="eq:grad"} below:
 
-$$\label{eq:grad}
-\nabla f(x) \approx \frac{f(x + \delta x) - f(x)} {\delta x}$$
+\begin{equation}
+(\#eq:grad)
+\nabla f(x) \approx \frac{f(x + \delta x) - f(x)} {\delta x}\end{equation}
 
 where: $<\delta>$ is the value of the "gradacc" parameter
 
-\bigskip
+
 When the BFGS algorithm is reset (that is, if the Armijo linesearch
 fails to find a better point) the gradient accuracy parameter is made
 smaller to increase the level of accuracy that is used in the gradient
@@ -5933,7 +6020,7 @@ observation that the likelihood function for many Gadget models consists
 of a large 'valley' in which the best solution lies, surrounded by much
 more 'rugged' terrain.
 
-\bigskip
+
 A period of Simulated Annealing at the start of the optimisation run
 serves to move the search into this valley, at which point the Simulated
 Annealing algorithm becomes inefficient so the Hooke & Jeeves algorithm
@@ -5952,7 +6039,7 @@ reasonably well for simple Gadget models. As an example, the format for
 this file used to specify all three optimisation algorithms, and the
 default values for the optimisation parameters, is shown below:
 
-\small
+
     [simann]
     simanniter 2000  ; number of simulated annealing iterations
     simanneps  1e-04 ; minimum epsilon, simann halt criteria
@@ -6006,7 +6093,7 @@ solution. For the Simulated Annealing algorithm, this is also affects
 the Metropolis criteria used to accept any changes in an 'uphill'
 direction.
 
-\bigskip
+
 The use of a random number generator means that it is unlikely that two
 optimising runs will produce exactly the same 'optimum', even if they
 start from the same point (although it is hoped that the optima would be
@@ -6017,7 +6104,7 @@ random number generator with an integer to avoid this problem. To
 specify a seed for the random number generator, an extra line must be
 added to the optimisation file, as shown below:
 
-\small
+
     seed       n     ; seed the random number generator with n
 
 It is also possible to specify the value that is used to seed the random
@@ -6051,7 +6138,7 @@ iterations. There is then the information about the switches used in the
 Gadget run - the name, value, lower bound, upper bound and whether the
 switch is to be optimised.
 
-\bigskip
+
 This file is written in the same format as the parameter input file, and
 it can be used as the starting point for a subsequent Gadget run.
 
@@ -6063,7 +6150,7 @@ The likelihood output file is generated when Gadget is started with the
 specified after that option, so, for example, this would write the
 output to a file called "likelihood.txt":
 
-\small
+
     gadget -l -o likelihood.txt
 
 The likelihood output file is split into three sections, separated by a
@@ -6071,13 +6158,13 @@ line containing a brief comment. The first section lists the names of
 the switches used in the model, together with some information about
 where that switch is used.
 
-\bigskip
+
 The second part of the likelihood output file contains information about
 the likelihood components used in the optimisation of the model. The
 names of the components are listed, along with an identifier to the type
 and the weight assigned to the component.
 
-\bigskip
+
 The final part of the likelihood output file contains the output from
 the optimisation process. There is a single line for each iteration of
 the optimisation, containing the iteration number followed by a tab
@@ -6086,14 +6173,14 @@ characters), followed by the value of each of the likelihood components,
 followed by another gap (again, 2 tab characters) followed by the
 overall likelihood score for that iteration.
 
-\bigskip
+
 For a long optimisation run, this can result in this file being quite
 large. The default option is for this line to be written for each
 iteration, but this can be changed using the "-print $<$number$>$"
 option, which will only write out this line every $<$number$>$
 iterations, as shown in the example below:
 
-\small
+
     gadget -l -o likelihood.txt -print 10
 
 which will set Gadget to write this information, to the file
@@ -6107,7 +6194,7 @@ $<$filename$>$" option, and the output is written to the file specified
 after that option, so, for example, this would write the output to a
 file called "gadget.log":
 
-\small
+
     gadget -log gadget.log
 
 The log file contains a listing of the actions that Gadget is
@@ -6118,14 +6205,14 @@ debugging a Gadget model, since it makes it easy to trace what Gadget is
 doing, so, for example, the details of the last actions that were
 performed before displayed a warning message are recorded.
 
-\bigskip
+
 This log file that is generated can be a large file if Gadget is
 performing an optimising run. It is possible to control the amount of
 information that is written to the log file using the "-loglevel
 $<$number$>$" command line option. The valid values for the loglevel
 number, and the associated meanings, are given in the list below:
 
-\bigskip
+
   -------------- --------------------------------------------------------------------------
    **loglevel**  **meaning**
         0        no output, only used in conjunction with the Paramin optimiser
@@ -6136,7 +6223,7 @@ number, and the associated meanings, are given in the list below:
         5        also output detailed messages (default value if a log file is specified)
   -------------- --------------------------------------------------------------------------
 
-\bigskip
+
 Examples of valid loglevel values include:
 
 1.  specifying a log file (called "gadget.log") for an optimising run
@@ -6144,14 +6231,14 @@ Examples of valid loglevel values include:
     more detailed messages that would be written to the log file by
     default)
 
-    \small
+    
         gadget -l -log gadget.log -loglevel 2
 
 2.  specifying a log file for a simulation run that includes error and
     warning messages (note that it is not possible to disable the
     warning messages during a simulation run)
 
-    \small
+    
         gadget -s -log gadget.log -loglevel 3
 
 Paramin {#chap:paramin}
@@ -6183,7 +6270,7 @@ executable, let's assume it's called gadget-PARA. Now paramin is
 dependent on some Gadget objects, so you now need to type the following
 in the console:
 
-\small
+
     make libgadgetinput.a
 
 Now you are ready to start compiling paramin. Download the newest
@@ -6202,7 +6289,7 @@ can also copy the executables to the directory of PATH, but you probably
 need root access to do that. Now you can call the functions from the
 console. Here is an example of a typical paramin run:
 
-\small
+
     mpirun paramin -i <filename> -opt <filename> -network <filename> 
         -o <filename> -function gadget-PARA -s -n -i <filename> > <filename>
 
@@ -6231,7 +6318,7 @@ but then one should have access to at least that many processing cores.
 A sample file which tells paramin to spawn 30 subprocesses looks like
 this:
 
-\small
+
     ;
     ;Sample network file
     ;
@@ -6293,7 +6380,7 @@ numproc is the desired number of processes one wants to start. This
 argument is **not** necessary with paramin because we define the number
 of subprocesses in the network file and paramin spawns them dynamically.
 The next optional argument we will discuss is the
-$-$$-$`hostfile <filename>`. `<filename>` is a name of a file which
+$-\end{equation}-$`hostfile <filename>`. `<filename>` is a name of a file which
 holds the name of the hosts in the cluster and how many processors are
 available on each node. The authentication in the execution process is
 done via ssh, so public keys have to be shared to allow for remote login
@@ -6303,7 +6390,7 @@ see the FAQ entries on the OPEN-MPI webpage, there are more things that
 need to be taken into consideration. Here is an example hostfile from
 the open-mpi FAQ:
 
-\small
+
     # This is an example hostfile.  Comments begin with #
     #
     # The following node is a single processor machine:

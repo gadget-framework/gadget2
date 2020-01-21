@@ -10,7 +10,7 @@ GCCWARNINGS = -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wformat \
 ifeq ($(OS),Windows_NT)
 	DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -I headers/ 
 else
-	DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -I headers/ -D NOT_WINDOWS
+	DEFINE_FLAGS = -D NDEBUG -D INTERRUPT_HANDLER -O3 -I headers/ -D NOT_WINDOWS 
 endif
 #-s
 
@@ -39,7 +39,7 @@ _LIBOBJ = $(GADGETINPUT) $(EXTRAINPUT)
 LIBOBJ = $(patsubst %,$(SRC_DIR)/%,$(_LIBOBJ))
 ##########################################################################
 # 2. Linux, Mac, Cgwin or Solaris, without MPI, using g++ compiler
-CXX = g++
+CXX = clang++
 LIBDIRS = -L. -L/usr/local/lib -I $(INC_DIR)
 LIBRARIES = -lm
 CXXFLAGS = $(DEFINE_FLAGS)
