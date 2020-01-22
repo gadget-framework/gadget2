@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # Build docs into given directory
-if(!require(bookdown)) install.packages('bookdown')
+library(bookdown)
 
 args <- commandArgs(trailingOnly=TRUE)
 project_dir <- getwd()
