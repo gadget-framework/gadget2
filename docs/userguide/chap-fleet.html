@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>7 Fleet Files | Gadget userguide</title>
+  <meta name="description" content="7 Fleet Files | Gadget userguide" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="7 Fleet Files | Gadget userguide" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="7 Fleet Files | Gadget userguide" />
+  
+  
+  
+
+<meta name="author" content="MFRI" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chap-other.html"/>
+<link rel="next" href="chap-like.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction to Gadget</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#sec:whatisgadget"><i class="fa fa-check"></i><b>1.1</b> What is Gadget?</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#sec:gettinggadget"><i class="fa fa-check"></i><b>1.2</b> Getting Gadget</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#sec:runninggadget"><i class="fa fa-check"></i><b>1.3</b> Running Gadget</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sec:starting"><i class="fa fa-check"></i><b>1.4</b> Starting Switches</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chap-input.html"><a href="chap-input.html"><i class="fa fa-check"></i><b>2</b> Input Files</a><ul>
+<li class="chapter" data-level="2.1" data-path="chap-input.html"><a href="chap-input.html#sec:comments"><i class="fa fa-check"></i><b>2.1</b> Comments in Input Files</a></li>
+<li class="chapter" data-level="2.2" data-path="chap-input.html"><a href="chap-input.html#sec:whatdoeshash"><i class="fa fa-check"></i><b>2.2</b> What Does The # Mean?</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="chap-input.html"><a href="chap-input.html#switches"><i class="fa fa-check"></i><b>2.2.1</b> Switches</a></li>
+<li class="chapter" data-level="2.2.2" data-path="chap-input.html"><a href="chap-input.html#functions"><i class="fa fa-check"></i><b>2.2.2</b> Functions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chap-model.html"><a href="chap-model.html"><i class="fa fa-check"></i><b>3</b> Model Files</a><ul>
+<li class="chapter" data-level="3.1" data-path="chap-model.html"><a href="chap-model.html#sec:mainfile"><i class="fa fa-check"></i><b>3.1</b> Main File</a></li>
+<li class="chapter" data-level="3.2" data-path="chap-model.html"><a href="chap-model.html#sec:timefile"><i class="fa fa-check"></i><b>3.2</b> Time File</a></li>
+<li class="chapter" data-level="3.3" data-path="chap-model.html"><a href="chap-model.html#sec:areafile"><i class="fa fa-check"></i><b>3.3</b> Area File</a></li>
+<li class="chapter" data-level="3.4" data-path="chap-model.html"><a href="chap-model.html#sec:otherinputfile"><i class="fa fa-check"></i><b>3.4</b> Other Input Data Files</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="chap-model.html"><a href="chap-model.html#aggregation-files"><i class="fa fa-check"></i><b>3.4.1</b> Aggregation Files</a></li>
+<li class="chapter" data-level="3.4.2" data-path="chap-model.html"><a href="chap-model.html#subsec:timevar"><i class="fa fa-check"></i><b>3.4.2</b> TimeVariable Files</a></li>
+<li class="chapter" data-level="3.4.3" data-path="chap-model.html"><a href="chap-model.html#subsec:stockvar"><i class="fa fa-check"></i><b>3.4.3</b> StockVariable Files</a></li>
+<li class="chapter" data-level="3.4.4" data-path="chap-model.html"><a href="chap-model.html#subsec:aat"><i class="fa fa-check"></i><b>3.4.4</b> ActionAtTime</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chap-stock.html"><a href="chap-stock.html"><i class="fa fa-check"></i><b>4</b> Stock Files</a><ul>
+<li class="chapter" data-level="4.1" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockrefweight"><i class="fa fa-check"></i><b>4.1</b> Reference Weight</a></li>
+<li class="chapter" data-level="4.2" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockgrowthlength"><i class="fa fa-check"></i><b>4.2</b> Growth and Eat Lengths</a></li>
+<li class="chapter" data-level="4.3" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockgrowth"><i class="fa fa-check"></i><b>4.3</b> Growth</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth1"><i class="fa fa-check"></i><b>4.3.1</b> MULTSPEC Growth Function</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth3"><i class="fa fa-check"></i><b>4.3.2</b> WeightVB Growth Function</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth4"><i class="fa fa-check"></i><b>4.3.3</b> WeightJones Growth Function</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth5"><i class="fa fa-check"></i><b>4.3.4</b> WeightVBExpanded Growth Function</a></li>
+<li class="chapter" data-level="4.3.5" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth6"><i class="fa fa-check"></i><b>4.3.5</b> LengthVB Growth Function</a></li>
+<li class="chapter" data-level="4.3.6" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth7"><i class="fa fa-check"></i><b>4.3.6</b> LengthPower Growth Function</a></li>
+<li class="chapter" data-level="4.3.7" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth8"><i class="fa fa-check"></i><b>4.3.7</b> LengthVBSimple Growth Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockgrowthimplement"><i class="fa fa-check"></i><b>4.4</b> Growth Implementation</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="chap-stock.html"><a href="chap-stock.html#beta-binomial"><i class="fa fa-check"></i><b>4.4.1</b> Beta-Binomial</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="chap-stock.html"><a href="chap-stock.html#sec:stocknatmort"><i class="fa fa-check"></i><b>4.5</b> Natural Mortality</a></li>
+<li class="chapter" data-level="4.6" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockprey"><i class="fa fa-check"></i><b>4.6</b> Stock Prey</a></li>
+<li class="chapter" data-level="4.7" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockpredator"><i class="fa fa-check"></i><b>4.7</b> Stock Predator</a></li>
+<li class="chapter" data-level="4.8" data-path="chap-stock.html"><a href="chap-stock.html#sec:consumption"><i class="fa fa-check"></i><b>4.8</b> Consumption</a></li>
+<li class="chapter" data-level="4.9" data-path="chap-stock.html"><a href="chap-stock.html#sec:suitability"><i class="fa fa-check"></i><b>4.9</b> Suitability</a><ul>
+<li class="chapter" data-level="4.9.1" data-path="chap-stock.html"><a href="chap-stock.html#constant-suitability-function"><i class="fa fa-check"></i><b>4.9.1</b> Constant Suitability Function</a></li>
+<li class="chapter" data-level="4.9.2" data-path="chap-stock.html"><a href="chap-stock.html#straightline-suitability-function"><i class="fa fa-check"></i><b>4.9.2</b> StraightLine Suitability Function</a></li>
+<li class="chapter" data-level="4.9.3" data-path="chap-stock.html"><a href="chap-stock.html#exponential-suitability-function"><i class="fa fa-check"></i><b>4.9.3</b> Exponential Suitability Function</a></li>
+<li class="chapter" data-level="4.9.4" data-path="chap-stock.html"><a href="chap-stock.html#exponentiall50-suitability-function"><i class="fa fa-check"></i><b>4.9.4</b> ExponentialL50 Suitability Function</a></li>
+<li class="chapter" data-level="4.9.5" data-path="chap-stock.html"><a href="chap-stock.html#richards-suitability-function"><i class="fa fa-check"></i><b>4.9.5</b> Richards Suitability Function</a></li>
+<li class="chapter" data-level="4.9.6" data-path="chap-stock.html"><a href="chap-stock.html#andersen-suitability-function"><i class="fa fa-check"></i><b>4.9.6</b> Andersen Suitability Function</a></li>
+<li class="chapter" data-level="4.9.7" data-path="chap-stock.html"><a href="chap-stock.html#andersen-fleet-suitability-function"><i class="fa fa-check"></i><b>4.9.7</b> Andersen Fleet Suitability Function</a></li>
+<li class="chapter" data-level="4.9.8" data-path="chap-stock.html"><a href="chap-stock.html#gamma-suitability-function"><i class="fa fa-check"></i><b>4.9.8</b> Gamma Suitability Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockinitial"><i class="fa fa-check"></i><b>4.10</b> Initial Conditions</a><ul>
+<li class="chapter" data-level="4.10.1" data-path="chap-stock.html"><a href="chap-stock.html#normal-condition-distribution"><i class="fa fa-check"></i><b>4.10.1</b> Normal Condition Distribution</a></li>
+<li class="chapter" data-level="4.10.2" data-path="chap-stock.html"><a href="chap-stock.html#normal-parametric-distribution"><i class="fa fa-check"></i><b>4.10.2</b> Normal Parametric Distribution</a></li>
+<li class="chapter" data-level="4.10.3" data-path="chap-stock.html"><a href="chap-stock.html#numerical-distribution"><i class="fa fa-check"></i><b>4.10.3</b> Numerical Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.11" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockmigrate"><i class="fa fa-check"></i><b>4.11</b> Migration</a><ul>
+<li class="chapter" data-level="4.11.1" data-path="chap-stock.html"><a href="chap-stock.html#migration-matrices"><i class="fa fa-check"></i><b>4.11.1</b> Migration Matrices</a></li>
+<li class="chapter" data-level="4.11.2" data-path="chap-stock.html"><a href="chap-stock.html#migration-ratios"><i class="fa fa-check"></i><b>4.11.2</b> Migration Ratios</a></li>
+</ul></li>
+<li class="chapter" data-level="4.12" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockmature"><i class="fa fa-check"></i><b>4.12</b> Maturation</a><ul>
+<li class="chapter" data-level="4.12.1" data-path="chap-stock.html"><a href="chap-stock.html#constant-maturity-function"><i class="fa fa-check"></i><b>4.12.1</b> Constant Maturity Function</a></li>
+<li class="chapter" data-level="4.12.2" data-path="chap-stock.html"><a href="chap-stock.html#constantweight-maturity-function"><i class="fa fa-check"></i><b>4.12.2</b> ConstantWeight Maturity Function</a></li>
+<li class="chapter" data-level="4.12.3" data-path="chap-stock.html"><a href="chap-stock.html#fixedlength-maturity-function"><i class="fa fa-check"></i><b>4.12.3</b> FixedLength Maturity Function</a></li>
+<li class="chapter" data-level="4.12.4" data-path="chap-stock.html"><a href="chap-stock.html#continuous-maturity-function"><i class="fa fa-check"></i><b>4.12.4</b> Continuous Maturity Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.13" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockmove"><i class="fa fa-check"></i><b>4.13</b> Movement (“Transition”)</a></li>
+<li class="chapter" data-level="4.14" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockrenew"><i class="fa fa-check"></i><b>4.14</b> Renewal (“Recruitment”)</a><ul>
+<li class="chapter" data-level="4.14.1" data-path="chap-stock.html"><a href="chap-stock.html#normal-condition-distribution-1"><i class="fa fa-check"></i><b>4.14.1</b> Normal Condition Distribution</a></li>
+<li class="chapter" data-level="4.14.2" data-path="chap-stock.html"><a href="chap-stock.html#normal-parametric-distribution-1"><i class="fa fa-check"></i><b>4.14.2</b> Normal Parametric Distribution</a></li>
+<li class="chapter" data-level="4.14.3" data-path="chap-stock.html"><a href="chap-stock.html#numerical-distribution-1"><i class="fa fa-check"></i><b>4.14.3</b> Numerical Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.15" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockspawn"><i class="fa fa-check"></i><b>4.15</b> Spawning</a><ul>
+<li class="chapter" data-level="4.15.1" data-path="chap-stock.html"><a href="chap-stock.html#fecundity-recruitment-function"><i class="fa fa-check"></i><b>4.15.1</b> Fecundity Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.2" data-path="chap-stock.html"><a href="chap-stock.html#simplessb-recruitment-function"><i class="fa fa-check"></i><b>4.15.2</b> SimpleSSB Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.3" data-path="chap-stock.html"><a href="chap-stock.html#ricker-recruitment-function"><i class="fa fa-check"></i><b>4.15.3</b> Ricker Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.4" data-path="chap-stock.html"><a href="chap-stock.html#bevertonholt-recruitment-function"><i class="fa fa-check"></i><b>4.15.4</b> BevertonHolt Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.5" data-path="chap-stock.html"><a href="chap-stock.html#hockey-stick-recruitment-function"><i class="fa fa-check"></i><b>4.15.5</b> Hockey stick Recruitment Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.16" data-path="chap-stock.html"><a href="chap-stock.html#sec:lselection"><i class="fa fa-check"></i><b>4.16</b> Length Selection</a><ul>
+<li class="chapter" data-level="4.16.1" data-path="chap-stock.html"><a href="chap-stock.html#constant-selection-function"><i class="fa fa-check"></i><b>4.16.1</b> Constant Selection Function</a></li>
+<li class="chapter" data-level="4.16.2" data-path="chap-stock.html"><a href="chap-stock.html#straightline-selection-function"><i class="fa fa-check"></i><b>4.16.2</b> StraightLine Selection Function</a></li>
+<li class="chapter" data-level="4.16.3" data-path="chap-stock.html"><a href="chap-stock.html#exponential-selection-function"><i class="fa fa-check"></i><b>4.16.3</b> Exponential Selection Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.17" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockstray"><i class="fa fa-check"></i><b>4.17</b> Straying</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chap-tag.html"><a href="chap-tag.html"><i class="fa fa-check"></i><b>5</b> Tag Files</a><ul>
+<li class="chapter" data-level="5.1" data-path="chap-tag.html"><a href="chap-tag.html#sec:tagnumbers"><i class="fa fa-check"></i><b>5.1</b> Tagging Numbers</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chap-other.html"><a href="chap-other.html"><i class="fa fa-check"></i><b>6</b> Otherfood Files</a><ul>
+<li class="chapter" data-level="6.1" data-path="chap-other.html"><a href="chap-other.html#sec:foodamounts"><i class="fa fa-check"></i><b>6.1</b> Food Amounts</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chap-fleet.html"><a href="chap-fleet.html"><i class="fa fa-check"></i><b>7</b> Fleet Files</a><ul>
+<li class="chapter" data-level="7.1" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:totalfleet"><i class="fa fa-check"></i><b>7.1</b> TotalFleet</a></li>
+<li class="chapter" data-level="7.2" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:numberfleet"><i class="fa fa-check"></i><b>7.2</b> NumberFleet</a></li>
+<li class="chapter" data-level="7.3" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:linearfleet"><i class="fa fa-check"></i><b>7.3</b> LinearFleet</a></li>
+<li class="chapter" data-level="7.4" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:effortfleet"><i class="fa fa-check"></i><b>7.4</b> EffortFleet</a></li>
+<li class="chapter" data-level="7.5" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:quotafleet"><i class="fa fa-check"></i><b>7.5</b> QuotaFleet</a></li>
+<li class="chapter" data-level="7.6" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:fleetsuit"><i class="fa fa-check"></i><b>7.6</b> Fleet Suitability</a></li>
+<li class="chapter" data-level="7.7" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:fleetamount"><i class="fa fa-check"></i><b>7.7</b> Fleet Amounts</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chap-like.html"><a href="chap-like.html"><i class="fa fa-check"></i><b>8</b> Likelihood Files</a><ul>
+<li class="chapter" data-level="8.1" data-path="chap-like.html"><a href="chap-like.html#sec:boundlike"><i class="fa fa-check"></i><b>8.1</b> BoundLikelihood (“Penalty”)</a></li>
+<li class="chapter" data-level="8.2" data-path="chap-like.html"><a href="chap-like.html#sec:understocking"><i class="fa fa-check"></i><b>8.2</b> Understocking</a></li>
+<li class="chapter" data-level="8.3" data-path="chap-like.html"><a href="chap-like.html#sec:catchdist"><i class="fa fa-check"></i><b>8.3</b> CatchDistribution</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="chap-like.html"><a href="chap-like.html#sum-of-squares-function"><i class="fa fa-check"></i><b>8.3.1</b> Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.3.2" data-path="chap-like.html"><a href="chap-like.html#stratified-sum-of-squares-function"><i class="fa fa-check"></i><b>8.3.2</b> Stratified Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.3.3" data-path="chap-like.html"><a href="chap-like.html#multinomial-function"><i class="fa fa-check"></i><b>8.3.3</b> Multinomial Function</a></li>
+<li class="chapter" data-level="8.3.4" data-path="chap-like.html"><a href="chap-like.html#pearson-function"><i class="fa fa-check"></i><b>8.3.4</b> Pearson Function</a></li>
+<li class="chapter" data-level="8.3.5" data-path="chap-like.html"><a href="chap-like.html#gamma-function"><i class="fa fa-check"></i><b>8.3.5</b> Gamma Function</a></li>
+<li class="chapter" data-level="8.3.6" data-path="chap-like.html"><a href="chap-like.html#log-function"><i class="fa fa-check"></i><b>8.3.6</b> Log Function</a></li>
+<li class="chapter" data-level="8.3.7" data-path="chap-like.html"><a href="chap-like.html#multivariate-normal-function"><i class="fa fa-check"></i><b>8.3.7</b> Multivariate Normal Function</a></li>
+<li class="chapter" data-level="8.3.8" data-path="chap-like.html"><a href="chap-like.html#multivariate-logistic-function"><i class="fa fa-check"></i><b>8.3.8</b> Multivariate Logistic Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="chap-like.html"><a href="chap-like.html#sec:catchstat"><i class="fa fa-check"></i><b>8.4</b> CatchStatistics</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-length"><i class="fa fa-check"></i><b>8.4.1</b> Weighted Sum of Squares of Mean Length</a></li>
+<li class="chapter" data-level="8.4.2" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation"><i class="fa fa-check"></i><b>8.4.2</b> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.4.3" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-weightwith-given-standard-deviation"><i class="fa fa-check"></i><b>8.4.3</b> Weighted Sum of Squares of Mean WeightWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.4.4" data-path="chap-like.html"><a href="chap-like.html#unweighted-sum-of-squares-of-mean-weight"><i class="fa fa-check"></i><b>8.4.4</b> Unweighted Sum of Squares of Mean Weight</a></li>
+<li class="chapter" data-level="8.4.5" data-path="chap-like.html"><a href="chap-like.html#unweighted-sum-of-squares-of-mean-length"><i class="fa fa-check"></i><b>8.4.5</b> Unweighted Sum of Squares of Mean Length</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="chap-like.html"><a href="chap-like.html#sec:stockdist"><i class="fa fa-check"></i><b>8.5</b> StockDistribution</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="chap-like.html"><a href="chap-like.html#sum-of-squares-function-1"><i class="fa fa-check"></i><b>8.5.1</b> Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.5.2" data-path="chap-like.html"><a href="chap-like.html#multinomial-function-1"><i class="fa fa-check"></i><b>8.5.2</b> Multinomial Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="chap-like.html"><a href="chap-like.html#sec:surveyindices"><i class="fa fa-check"></i><b>8.6</b> SurveyIndices</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="chap-like.html"><a href="chap-like.html#subsec:sibylength"><i class="fa fa-check"></i><b>8.6.1</b> SurveyIndices by Length</a></li>
+<li class="chapter" data-level="8.6.2" data-path="chap-like.html"><a href="chap-like.html#subsec:sibyage"><i class="fa fa-check"></i><b>8.6.2</b> SurveyIndices by Age</a></li>
+<li class="chapter" data-level="8.6.3" data-path="chap-like.html"><a href="chap-like.html#subsec:sibyfleet"><i class="fa fa-check"></i><b>8.6.3</b> SurveyIndices by Fleet</a></li>
+<li class="chapter" data-level="8.6.4" data-path="chap-like.html"><a href="chap-like.html#subsec:sibyacoustic"><i class="fa fa-check"></i><b>8.6.4</b> SurveyIndices by Acoustic</a></li>
+<li class="chapter" data-level="8.6.5" data-path="chap-like.html"><a href="chap-like.html#subsec:sibyeffort"><i class="fa fa-check"></i><b>8.6.5</b> SurveyIndices by Effort</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="chap-like.html"><a href="chap-like.html#sec:surveydistribution"><i class="fa fa-check"></i><b>8.7</b> SurveyDistribution</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="chap-like.html"><a href="chap-like.html#linear-fit"><i class="fa fa-check"></i><b>8.7.1</b> Linear Fit</a></li>
+<li class="chapter" data-level="8.7.2" data-path="chap-like.html"><a href="chap-like.html#power-fit"><i class="fa fa-check"></i><b>8.7.2</b> Power Fit</a></li>
+<li class="chapter" data-level="8.7.3" data-path="chap-like.html"><a href="chap-like.html#multinomial-function-2"><i class="fa fa-check"></i><b>8.7.3</b> Multinomial Function</a></li>
+<li class="chapter" data-level="8.7.4" data-path="chap-like.html"><a href="chap-like.html#pearson-function-1"><i class="fa fa-check"></i><b>8.7.4</b> Pearson Function</a></li>
+<li class="chapter" data-level="8.7.5" data-path="chap-like.html"><a href="chap-like.html#gamma-function-1"><i class="fa fa-check"></i><b>8.7.5</b> Gamma Function</a></li>
+<li class="chapter" data-level="8.7.6" data-path="chap-like.html"><a href="chap-like.html#log-function-1"><i class="fa fa-check"></i><b>8.7.6</b> Log Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="chap-like.html"><a href="chap-like.html#sec:stomach"><i class="fa fa-check"></i><b>8.8</b> StomachContent</a><ul>
+<li class="chapter" data-level="8.8.1" data-path="chap-like.html"><a href="chap-like.html#scsimple-function"><i class="fa fa-check"></i><b>8.8.1</b> SCSimple Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.9" data-path="chap-like.html"><a href="chap-like.html#sec:recaptures"><i class="fa fa-check"></i><b>8.9</b> Recaptures</a><ul>
+<li class="chapter" data-level="8.9.1" data-path="chap-like.html"><a href="chap-like.html#poisson-function"><i class="fa fa-check"></i><b>8.9.1</b> Poisson Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.10" data-path="chap-like.html"><a href="chap-like.html#sec:recstat"><i class="fa fa-check"></i><b>8.10</b> RecStatistics</a><ul>
+<li class="chapter" data-level="8.10.1" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-length-1"><i class="fa fa-check"></i><b>8.10.1</b> Weighted Sum of Squares of Mean Length</a></li>
+<li class="chapter" data-level="8.10.2" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation-1"><i class="fa fa-check"></i><b>8.10.2</b> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.10.3" data-path="chap-like.html"><a href="chap-like.html#unweighted-sum-of-squares-of-mean-length-1"><i class="fa fa-check"></i><b>8.10.3</b> Unweighted Sum of Squares of Mean Length</a></li>
+</ul></li>
+<li class="chapter" data-level="8.11" data-path="chap-like.html"><a href="chap-like.html#sec:migpenalty"><i class="fa fa-check"></i><b>8.11</b> MigrationPenalty</a></li>
+<li class="chapter" data-level="8.12" data-path="chap-like.html"><a href="chap-like.html#sec:migpro"><i class="fa fa-check"></i><b>8.12</b> MigrationProportion</a><ul>
+<li class="chapter" data-level="8.12.1" data-path="chap-like.html"><a href="chap-like.html#sum-of-squares-function-2"><i class="fa fa-check"></i><b>8.12.1</b> Sum of Squares Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.13" data-path="chap-like.html"><a href="chap-like.html#sec:catchinkilos"><i class="fa fa-check"></i><b>8.13</b> CatchInKilos</a><ul>
+<li class="chapter" data-level="8.13.1" data-path="chap-like.html"><a href="chap-like.html#sum-of-squares-function-3"><i class="fa fa-check"></i><b>8.13.1</b> Sum of Squares Function</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chap-print.html"><a href="chap-print.html"><i class="fa fa-check"></i><b>9</b> Print Files</a><ul>
+<li class="chapter" data-level="9.1" data-path="chap-print.html"><a href="chap-print.html#sec:stockstdprinter"><i class="fa fa-check"></i><b>9.1</b> StockStdPrinter</a></li>
+<li class="chapter" data-level="9.2" data-path="chap-print.html"><a href="chap-print.html#sec:stockfullprinter"><i class="fa fa-check"></i><b>9.2</b> StockFullPrinter</a></li>
+<li class="chapter" data-level="9.3" data-path="chap-print.html"><a href="chap-print.html#sec:stockprinter"><i class="fa fa-check"></i><b>9.3</b> StockPrinter</a></li>
+<li class="chapter" data-level="9.4" data-path="chap-print.html"><a href="chap-print.html#sec:predatorprinter"><i class="fa fa-check"></i><b>9.4</b> PredatorPrinter</a></li>
+<li class="chapter" data-level="9.5" data-path="chap-print.html"><a href="chap-print.html#sec:predatoroverprinter"><i class="fa fa-check"></i><b>9.5</b> PredatorOverPrinter</a></li>
+<li class="chapter" data-level="9.6" data-path="chap-print.html"><a href="chap-print.html#sec:preyoverprinter"><i class="fa fa-check"></i><b>9.6</b> PreyOverPrinter</a></li>
+<li class="chapter" data-level="9.7" data-path="chap-print.html"><a href="chap-print.html#sec:stockpreyfullprinter"><i class="fa fa-check"></i><b>9.7</b> StockPreyFullPrinter</a></li>
+<li class="chapter" data-level="9.8" data-path="chap-print.html"><a href="chap-print.html#sec:stockpreyprinter"><i class="fa fa-check"></i><b>9.8</b> StockPreyPrinter</a></li>
+<li class="chapter" data-level="9.9" data-path="chap-print.html"><a href="chap-print.html#sec:predatorpreyprinter"><i class="fa fa-check"></i><b>9.9</b> PredatorPreyPrinter</a></li>
+<li class="chapter" data-level="9.10" data-path="chap-print.html"><a href="chap-print.html#sec:likelihoodprinter"><i class="fa fa-check"></i><b>9.10</b> LikelihoodPrinter</a></li>
+<li class="chapter" data-level="9.11" data-path="chap-print.html"><a href="chap-print.html#sec:likelihoodsummaryprinter"><i class="fa fa-check"></i><b>9.11</b> LikelihoodSummaryPrinter</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chap-param.html"><a href="chap-param.html"><i class="fa fa-check"></i><b>10</b> Parameter File</a></li>
+<li class="chapter" data-level="11" data-path="chap-optim.html"><a href="chap-optim.html"><i class="fa fa-check"></i><b>11</b> Optimisation File</a><ul>
+<li class="chapter" data-level="11.1" data-path="chap-optim.html"><a href="chap-optim.html#sec:hooke"><i class="fa fa-check"></i><b>11.1</b> Hooke &amp; Jeeves</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="chap-optim.html"><a href="chap-optim.html#subsec:hookeover"><i class="fa fa-check"></i><b>11.1.1</b> Overview</a></li>
+<li class="chapter" data-level="11.1.2" data-path="chap-optim.html"><a href="chap-optim.html#subsec:hookefile"><i class="fa fa-check"></i><b>11.1.2</b> File Format</a></li>
+<li class="chapter" data-level="11.1.3" data-path="chap-optim.html"><a href="chap-optim.html#subsec:hookepar"><i class="fa fa-check"></i><b>11.1.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="chap-optim.html"><a href="chap-optim.html#sec:simann"><i class="fa fa-check"></i><b>11.2</b> Simulated Annealing</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="chap-optim.html"><a href="chap-optim.html#subsec:simannover"><i class="fa fa-check"></i><b>11.2.1</b> Overview</a></li>
+<li class="chapter" data-level="11.2.2" data-path="chap-optim.html"><a href="chap-optim.html#subsec:simannfile"><i class="fa fa-check"></i><b>11.2.2</b> File Format</a></li>
+<li class="chapter" data-level="11.2.3" data-path="chap-optim.html"><a href="chap-optim.html#subsec:simannpar"><i class="fa fa-check"></i><b>11.2.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="chap-optim.html"><a href="chap-optim.html#sec:bfgs"><i class="fa fa-check"></i><b>11.3</b> BFGS</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="chap-optim.html"><a href="chap-optim.html#subsec:bfgsover"><i class="fa fa-check"></i><b>11.3.1</b> Overview</a></li>
+<li class="chapter" data-level="11.3.2" data-path="chap-optim.html"><a href="chap-optim.html#subsec:bfgsfile"><i class="fa fa-check"></i><b>11.3.2</b> File Format</a></li>
+<li class="chapter" data-level="11.3.3" data-path="chap-optim.html"><a href="chap-optim.html#subsec:bfgspar"><i class="fa fa-check"></i><b>11.3.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="chap-optim.html"><a href="chap-optim.html#sec:combine"><i class="fa fa-check"></i><b>11.4</b> Combining Optimisation Algorithms</a><ul>
+<li class="chapter" data-level="11.4.1" data-path="chap-optim.html"><a href="chap-optim.html#subsec:combineover"><i class="fa fa-check"></i><b>11.4.1</b> Overview</a></li>
+<li class="chapter" data-level="11.4.2" data-path="chap-optim.html"><a href="chap-optim.html#subsec:combinefile"><i class="fa fa-check"></i><b>11.4.2</b> File Format</a></li>
+<li class="chapter" data-level="11.4.3" data-path="chap-optim.html"><a href="chap-optim.html#subsec:combinepar"><i class="fa fa-check"></i><b>11.4.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="chap-optim.html"><a href="chap-optim.html#sec:repeat"><i class="fa fa-check"></i><b>11.5</b> Repeatability</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chap-output.html"><a href="chap-output.html"><i class="fa fa-check"></i><b>12</b> Output Files</a><ul>
+<li class="chapter" data-level="12.1" data-path="chap-output.html"><a href="chap-output.html#sec:paramoutput"><i class="fa fa-check"></i><b>12.1</b> Parameter Output</a></li>
+<li class="chapter" data-level="12.2" data-path="chap-output.html"><a href="chap-output.html#sec:likelihoodoutput"><i class="fa fa-check"></i><b>12.2</b> Likelihood Output</a></li>
+<li class="chapter" data-level="12.3" data-path="chap-output.html"><a href="chap-output.html#sec:logoutput"><i class="fa fa-check"></i><b>12.3</b> Log Output</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chap-paramin.html"><a href="chap-paramin.html"><i class="fa fa-check"></i><b>13</b> Paramin</a><ul>
+<li class="chapter" data-level="13.1" data-path="chap-paramin.html"><a href="chap-paramin.html#sec:paramininstall"><i class="fa fa-check"></i><b>13.1</b> Installation</a></li>
+<li class="chapter" data-level="13.2" data-path="chap-paramin.html"><a href="chap-paramin.html#sec:runparamin"><i class="fa fa-check"></i><b>13.2</b> Running paramin</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="chap-paramin.html"><a href="chap-paramin.html#additional-information"><i class="fa fa-check"></i><b>13.2.1</b> Additional information</a></li>
+<li class="chapter" data-level="13.2.2" data-path="chap-paramin.html"><a href="chap-paramin.html#running-paramin-on-multiple-hostscluster"><i class="fa fa-check"></i><b>13.2.2</b> Running paramin on multiple hosts/cluster</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chap-reference.html"><a href="chap-reference.html"><i class="fa fa-check"></i><b>14</b> References</a></li>
+<li class="chapter" data-level="15" data-path="chap-order.html"><a href="chap-order.html"><i class="fa fa-check"></i><b>15</b> Order of Calculations</a></li>
+<li class="chapter" data-level="16" data-path="chap-change.html"><a href="chap-change.html"><i class="fa fa-check"></i><b>16</b> Recent Changes</a><ul>
+<li class="chapter" data-level="16.1" data-path="chap-change.html"><a href="chap-change.html#sec:v2101"><i class="fa fa-check"></i><b>16.1</b> Gadget version 2.1.01</a></li>
+<li class="chapter" data-level="16.2" data-path="chap-change.html"><a href="chap-change.html#sec:v2102"><i class="fa fa-check"></i><b>16.2</b> Gadget version 2.1.02</a></li>
+<li class="chapter" data-level="16.3" data-path="chap-change.html"><a href="chap-change.html#sec:v2103"><i class="fa fa-check"></i><b>16.3</b> Gadget version 2.1.03</a></li>
+<li class="chapter" data-level="16.4" data-path="chap-change.html"><a href="chap-change.html#sec:v2104"><i class="fa fa-check"></i><b>16.4</b> Gadget version 2.1.04</a></li>
+<li class="chapter" data-level="16.5" data-path="chap-change.html"><a href="chap-change.html#sec:v2105"><i class="fa fa-check"></i><b>16.5</b> Gadget version 2.1.05</a></li>
+<li class="chapter" data-level="16.6" data-path="chap-change.html"><a href="chap-change.html#sec:v2106"><i class="fa fa-check"></i><b>16.6</b> Gadget version 2.1.06</a></li>
+<li class="chapter" data-level="16.7" data-path="chap-change.html"><a href="chap-change.html#sec:v2200"><i class="fa fa-check"></i><b>16.7</b> Gadget version 2.2.00</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Gadget userguide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chap:fleet" class="section level1">
+<h1><span class="header-section-number">7</span> Fleet Files</h1>
+<p>The fleet files contain the information about the fleets that are
+reducing the population of the stocks in the Gadget model. The fleets
+act as a simple predator in the model, with the landings data treated as
+the fleets “consumption” of the stock that is caught.</p>
+<p>To define fleets in the Gadget model, the “main” file must contain a
+list of the data files that contain the description of the fleets, and
+the format for this is shown below:</p>
+<pre><code>[fleet]
+fleetfiles             &lt;names of the fleet files&gt;</code></pre>
+<p>There are 5 types of fleets implemented in Gadget, and the main fleet
+file lists the fleets and their type, along with information about the
+fleet and the name of the datafile that contains information about the
+landings. The format for this file shown below, with each new fleet
+starting with the keyword [component]:</p>
+<pre><code>[component]
+&lt;type&gt;                 &lt;fleetname&gt;
+&lt;fleet data&gt;</code></pre>
+<p>The fleet data for each fleet type is covered in the sub sections below.
+The <span class="math inline">\(&lt;\)</span>type<span class="math inline">\(&gt;\)</span> defines the type of fleet for the <span class="math inline">\(&lt;\)</span>fleetname<span class="math inline">\(&gt;\)</span> fleet,
+and the 5 valid fleet types that can used in Gadget are:</p>
+<pre><code>TotalFleet 
+NumberFleet 
+LinearFleet 
+EffortFleet 
+QuotaFleet</code></pre>
+<div id="sec:totalfleet" class="section level2">
+<h2><span class="header-section-number">7.1</span> TotalFleet</h2>
+<p>The fleet type used that creates a predator based on the landings data
+(by biomass) for the fleet is called “TotalFleet”. This total amount
+landed is then split between the various stocks, and length groups of
+the stocks, according to
+equation <a href="chap-fleet.html#eq:tcons">(7.1)</a> below:</p>
+<p><span class="math display" id="eq:tcons">\[\begin{equation}
+\tag{7.1}
+C_{s}(l) = \frac{E S_{s}(l) N_{sl} W_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl} W_{sl}}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> E <span class="math inline">\(&gt;\)</span> is the biomass caught by the fleet <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the
+number of stock in the length cell <span class="math inline">\(&lt;\)</span> W <span class="math inline">\(&gt;\)</span> is the mean weight of the
+stock in the length cell <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the suitability function (see
+section <a href="chap-fleet.html#sec:fleetsuit">7.6</a>)</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function for each stock that the
+fleet will catch and a data file listing the biomass that the fleet will
+catch. The file format for the TotalFleet is given below:</p>
+<pre><code>[component]
+totalfleet             &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. The
+total amount that has been landed by the fleet is also required - this
+is taken from the landings data, based on timestep and area, and is
+specified in a separate file.</p>
+</div>
+<div id="sec:numberfleet" class="section level2">
+<h2><span class="header-section-number">7.2</span> NumberFleet</h2>
+<p>The fleet type used that creates a predator based on the number of the
+stock landed (not the biomass) is called “NumberFleet”. This total
+number caught is then split between the various stocks, and length
+groups of the stocks, according to
+equation <a href="chap-fleet.html#eq:ncons">(7.2)</a> below:</p>
+<p><span class="math display" id="eq:ncons">\[\begin{equation}
+\tag{7.2}
+C_{s}(l) = \frac{E S_{s}(l) N_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl}}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> E <span class="math inline">\(&gt;\)</span> is the number caught by the fleet <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the
+number of stock in the length cell <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the suitability function
+(see section <a href="chap-fleet.html#sec:fleetsuit">7.6</a>)</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function for each stock that the
+fleet will catch and a data file listing the numbers that the fleet will
+catch. The file format for the NumberFleet is given below:</p>
+<pre><code>[component]
+numberfleet            &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. The
+total number of fish that has been caught by the fleet is also required
+- this is taken from the landings data, based on timestep and area, and
+is specified in a separate file.</p>
+</div>
+<div id="sec:linearfleet" class="section level2">
+<h2><span class="header-section-number">7.3</span> LinearFleet</h2>
+<p>The fleet type used that creates a predator that removes the caught fish
+based on the available biomass of the stock multiplied by a scaling
+factor is called “LinearFleet”. The biomass caught is then split between
+the various stocks, and length groups of the stocks, according to
+equation <a href="chap-fleet.html#eq:lcons">(7.3)</a> below:</p>
+<p><span class="math display" id="eq:lcons">\[\begin{equation}
+\tag{7.3}
+C_{s}(l) = E \Delta t S_{s}(l) N_{sl} W_{sl}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> E <span class="math inline">\(&gt;\)</span> is the scaling factor for the stock that is to be
+caught, per month <span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span>
+is the number of stock in the length cell <span class="math inline">\(&lt;\)</span> W <span class="math inline">\(&gt;\)</span> is the mean weight
+of the stock in the length cell <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the suitability function
+(see section <a href="chap-fleet.html#sec:fleetsuit">7.6</a>)</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function for each stock that the
+fleet will catch and a data file listing the fishing level for the
+fleet. The file format for the LinearFleet is given below:</p>
+<pre><code>[component]
+linearfleet            &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. The
+scaling factor to be used when calculating the amount that the fleet
+will catch is also required, and this is specified in a separate file.</p>
+<p>The fleet of type LinearFleet acts a simple predator, and can be used
+for fleets acting in the future, when the landings data is not
+available.</p>
+</div>
+<div id="sec:effortfleet" class="section level2">
+<h2><span class="header-section-number">7.4</span> EffortFleet</h2>
+<p>The fleet type used that creates a predator that removes the caught fish
+based on the available biomass of the stock multiplied by a scaling
+factor and a ‘catchability’ parameter for that stock is called
+“EffortFleet”. The biomass caught is then split between the various
+stocks, and length groups of the stocks, according to
+equation <a href="chap-fleet.html#eq:econs">(7.4)</a> below:</p>
+<p><span class="math display" id="eq:econs">\[\begin{equation}
+\tag{7.4}
+C_{s}(l) = E q_{s} \Delta t S_{s}(l) N_{sl} W_{sl}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> E <span class="math inline">\(&gt;\)</span> is the scaling factor for the stock that is to be
+caught, per month <span class="math inline">\(&lt;\)</span> q <span class="math inline">\(&gt;\)</span> is the catchability parameter for that stock
+<span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the number of
+stock in the length cell <span class="math inline">\(&lt;\)</span> W <span class="math inline">\(&gt;\)</span> is the mean weight of the stock in
+the length cell <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the suitability function (see
+section <a href="chap-fleet.html#sec:fleetsuit">7.6</a>)</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function and catchability
+parameter for each stock that the fleet will catch and a data file
+listing the proportion of each stock that the fleet will catch. The file
+format for the EffortFleet is given below:</p>
+<pre><code>[component]
+effortfleet            &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+catchability           &lt;stock catchability parameters&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. The
+scaling factor to be used when calculating the amount that the fleet
+will catch is also required, and this is specified in a separate file.</p>
+<p>The fleet of type EffortFleet is a multi-species extension to the fleet
+of type LinearFleet (see
+section <a href="chap-fleet.html#sec:linearfleet">7.3</a> above). This means that when a fleet is
+used to catch more than one species (either directly or as bycatch) the
+different catchability for these species can be taken into account. This
+catchability parameter is specified by listing the names of the prey and
+the associated preference value, as shown in the example below:</p>
+<pre><code>...
+catchability
+&lt;name of stock 1&gt;      &lt;catchability for stock 1&gt;
+&lt;name of stock 2&gt;      &lt;catchability for stock 2&gt;
+amount
+...</code></pre>
+</div>
+<div id="sec:quotafleet" class="section level2">
+<h2><span class="header-section-number">7.5</span> QuotaFleet</h2>
+<p>The fleet type used that creates a predator that removes the caught fish
+based on the available biomass of the stock multiplied by a scaling
+factor set according to a simple harvest control rule is called
+“QuotaFleet”. The biomass caught is then split between the various
+stocks, and length groups of the stocks, according to
+equation <a href="chap-fleet.html#eq:lcons">(7.3)</a> (see
+section <a href="chap-fleet.html#sec:linearfleet">7.3</a> above). The scaling factor (the parameter
+“E” in the equation above) is set according to a simple harvest control
+rule.</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function for each stock that the
+fleet will catch, a simple harvest control rule and a data file listing
+the proportion of each stock that the fleet will catch. The file format
+for the QuotaFleet is given below:</p>
+<pre><code>[component]
+quotafleet             &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+quotafunction          &lt;function name&gt;
+biomasslevel           &lt;vector of biomass levels&gt;
+quotalevel             &lt;vector of quota levels&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. A
+scaling factor that can be used when calculating the amount that the
+fleet will catch is also required, and this is specified in a separate
+file (although this is usually set to 1, since the scaling factor to be
+used is multiplied by that calculated using the simple harvest control
+rule below).</p>
+<p>The simple harvest control rule that is used to calculate the scaling
+factor to be used to determine the fishing level is defined by the
+<span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> value, along with the <span class="math inline">\(&lt;\)</span>biomasslevel<span class="math inline">\(&gt;\)</span> and
+<span class="math inline">\(&lt;\)</span>quotalevel<span class="math inline">\(&gt;\)</span> vectors. Currently there are 6 quota functions defined,
+and the valid function names are:</p>
+<p>simple - use a simple harvest control rule, based on the biomass of each
+stock annual - use a annual harvest control rule, based on the biomass
+of each stock simplesum - use a simple harvest control rule, based on
+the biomass of all the stocks annualsum - use a annual harvest control
+rule, based on the biomass of all the stocks simpleselect - use a simple
+harvest control rule, based on the biomass of selected stocks
+annualselect - use a annual harvest control rule, based on the biomass
+of selected stocks</p>
+<p>Note that if the <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> value is set to either simpleselect
+or annualselect, then it is necessary to define which stocks to use to
+determine the fishing level. This is done be additionally specifying a
+<span class="math inline">\(&lt;\)</span>selectstocks<span class="math inline">\(&gt;\)</span> vector which is a list of the stocks to use, as given
+in the list below:</p>
+<pre><code>...
+biomasslevel           &lt;vector of biomass levels&gt;
+quotalevel             &lt;vector of quota levels&gt;
+selectstocks           &lt;vector of stocks to base the quote on&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>biomasslevel<span class="math inline">\(&gt;\)</span> vector is a list of <span class="math inline">\(n\)</span> biomass points at which
+the fishing level will change, and the <span class="math inline">\(&lt;\)</span>quotalevel<span class="math inline">\(&gt;\)</span> vector is the
+corresponding list of <span class="math inline">\(n+1\)</span> fishing levels. Note that the first
+quotalevel value corresponds to the fishing level that will be used when
+the biomass is between 0 and the first biomasslevel value, so the
+quotalevel vector must have one more entry than the biomasslevel vector.</p>
+<p>An example of valid biomasslevel and quotalevel vectors is given below:</p>
+<pre><code>biomasslevel           10000  250000
+quotalevel             0.1  0.4  0.9</code></pre>
+<p>The fishing level for the stock in the example shown above would be set
+to 0.1 if the biomass of the stock is less than 10,000 kilogrammes, 0.4
+if the biomass is between 10,000 and 250,000 kilogrammes and 0.9 if the
+biomass is above 250,000 kilogrammes. Note that the biomasslevel vector
+has 2 entries, and that the quotalevel vector has a third entry.</p>
+</div>
+<div id="sec:fleetsuit" class="section level2">
+<h2><span class="header-section-number">7.6</span> Fleet Suitability</h2>
+<p>The suitability determines how the fleets act on the stocks that are
+caught. Since Gadget treats the fleets as predators of the stocks, the
+format for the suitability functions for the fleets is the same as the
+format for the suitability functions of the stock when they are acting
+as a predator. The format for the suitability functions as discussed in
+section <a href="chap-stock.html#sec:suitability">4.9</a> above. Note that in the equations for the
+suitability functions, the ‘length’ of the predator is a meaningless
+concept when the predator is a fleet.</p>
+</div>
+<div id="sec:fleetamount" class="section level2">
+<h2><span class="header-section-number">7.7</span> Fleet Amounts</h2>
+<p>The amounts section of the fleet file gives the landings data for the
+fleets. This data is listed in a column format in a separate file, so
+the main fleet file simply gives the name of this fleet data file, as
+shown in the example below:</p>
+<pre><code>amount                 &lt;name of data file&gt;</code></pre>
+<p>For fleets of type TotalFleet or NumberFleet, the data file is a list of
+year, timestep, area, fleetname and then the amount of catch landed
+(either biomass or number), taken from landings data, for that
+timestep/area/fleet combination:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;fleetname&gt;  &lt;amount&gt;</code></pre>
+<p>For fleets of type LinearFleet, EffortFleet or QuotaFleet, the data file
+is a list of year, timestep, area, fleetname and then the scaling factor
+to be used when calculating the amount of the catch for that
+timestep/area/fleet combination:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;fleetname&gt;  &lt;scaling factor&gt;</code></pre>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chap-other.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chap-like.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

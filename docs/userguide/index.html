@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Gadget userguide</title>
+  <meta name="description" content="Gadget userguide" />
+  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Gadget userguide" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Gadget userguide" />
+  
+  
+  
+
+<meta name="author" content="MFRI" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+
+<link rel="next" href="chap-input.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction to Gadget</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#sec:whatisgadget"><i class="fa fa-check"></i><b>1.1</b> What is Gadget?</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#sec:gettinggadget"><i class="fa fa-check"></i><b>1.2</b> Getting Gadget</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#sec:runninggadget"><i class="fa fa-check"></i><b>1.3</b> Running Gadget</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sec:starting"><i class="fa fa-check"></i><b>1.4</b> Starting Switches</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chap-input.html"><a href="chap-input.html"><i class="fa fa-check"></i><b>2</b> Input Files</a><ul>
+<li class="chapter" data-level="2.1" data-path="chap-input.html"><a href="chap-input.html#sec:comments"><i class="fa fa-check"></i><b>2.1</b> Comments in Input Files</a></li>
+<li class="chapter" data-level="2.2" data-path="chap-input.html"><a href="chap-input.html#sec:whatdoeshash"><i class="fa fa-check"></i><b>2.2</b> What Does The # Mean?</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="chap-input.html"><a href="chap-input.html#switches"><i class="fa fa-check"></i><b>2.2.1</b> Switches</a></li>
+<li class="chapter" data-level="2.2.2" data-path="chap-input.html"><a href="chap-input.html#functions"><i class="fa fa-check"></i><b>2.2.2</b> Functions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chap-model.html"><a href="chap-model.html"><i class="fa fa-check"></i><b>3</b> Model Files</a><ul>
+<li class="chapter" data-level="3.1" data-path="chap-model.html"><a href="chap-model.html#sec:mainfile"><i class="fa fa-check"></i><b>3.1</b> Main File</a></li>
+<li class="chapter" data-level="3.2" data-path="chap-model.html"><a href="chap-model.html#sec:timefile"><i class="fa fa-check"></i><b>3.2</b> Time File</a></li>
+<li class="chapter" data-level="3.3" data-path="chap-model.html"><a href="chap-model.html#sec:areafile"><i class="fa fa-check"></i><b>3.3</b> Area File</a></li>
+<li class="chapter" data-level="3.4" data-path="chap-model.html"><a href="chap-model.html#sec:otherinputfile"><i class="fa fa-check"></i><b>3.4</b> Other Input Data Files</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="chap-model.html"><a href="chap-model.html#aggregation-files"><i class="fa fa-check"></i><b>3.4.1</b> Aggregation Files</a></li>
+<li class="chapter" data-level="3.4.2" data-path="chap-model.html"><a href="chap-model.html#subsec:timevar"><i class="fa fa-check"></i><b>3.4.2</b> TimeVariable Files</a></li>
+<li class="chapter" data-level="3.4.3" data-path="chap-model.html"><a href="chap-model.html#subsec:stockvar"><i class="fa fa-check"></i><b>3.4.3</b> StockVariable Files</a></li>
+<li class="chapter" data-level="3.4.4" data-path="chap-model.html"><a href="chap-model.html#subsec:aat"><i class="fa fa-check"></i><b>3.4.4</b> ActionAtTime</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chap-stock.html"><a href="chap-stock.html"><i class="fa fa-check"></i><b>4</b> Stock Files</a><ul>
+<li class="chapter" data-level="4.1" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockrefweight"><i class="fa fa-check"></i><b>4.1</b> Reference Weight</a></li>
+<li class="chapter" data-level="4.2" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockgrowthlength"><i class="fa fa-check"></i><b>4.2</b> Growth and Eat Lengths</a></li>
+<li class="chapter" data-level="4.3" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockgrowth"><i class="fa fa-check"></i><b>4.3</b> Growth</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth1"><i class="fa fa-check"></i><b>4.3.1</b> MULTSPEC Growth Function</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth3"><i class="fa fa-check"></i><b>4.3.2</b> WeightVB Growth Function</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth4"><i class="fa fa-check"></i><b>4.3.3</b> WeightJones Growth Function</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth5"><i class="fa fa-check"></i><b>4.3.4</b> WeightVBExpanded Growth Function</a></li>
+<li class="chapter" data-level="4.3.5" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth6"><i class="fa fa-check"></i><b>4.3.5</b> LengthVB Growth Function</a></li>
+<li class="chapter" data-level="4.3.6" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth7"><i class="fa fa-check"></i><b>4.3.6</b> LengthPower Growth Function</a></li>
+<li class="chapter" data-level="4.3.7" data-path="chap-stock.html"><a href="chap-stock.html#subsec:growth8"><i class="fa fa-check"></i><b>4.3.7</b> LengthVBSimple Growth Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockgrowthimplement"><i class="fa fa-check"></i><b>4.4</b> Growth Implementation</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="chap-stock.html"><a href="chap-stock.html#beta-binomial"><i class="fa fa-check"></i><b>4.4.1</b> Beta-Binomial</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="chap-stock.html"><a href="chap-stock.html#sec:stocknatmort"><i class="fa fa-check"></i><b>4.5</b> Natural Mortality</a></li>
+<li class="chapter" data-level="4.6" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockprey"><i class="fa fa-check"></i><b>4.6</b> Stock Prey</a></li>
+<li class="chapter" data-level="4.7" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockpredator"><i class="fa fa-check"></i><b>4.7</b> Stock Predator</a></li>
+<li class="chapter" data-level="4.8" data-path="chap-stock.html"><a href="chap-stock.html#sec:consumption"><i class="fa fa-check"></i><b>4.8</b> Consumption</a></li>
+<li class="chapter" data-level="4.9" data-path="chap-stock.html"><a href="chap-stock.html#sec:suitability"><i class="fa fa-check"></i><b>4.9</b> Suitability</a><ul>
+<li class="chapter" data-level="4.9.1" data-path="chap-stock.html"><a href="chap-stock.html#constant-suitability-function"><i class="fa fa-check"></i><b>4.9.1</b> Constant Suitability Function</a></li>
+<li class="chapter" data-level="4.9.2" data-path="chap-stock.html"><a href="chap-stock.html#straightline-suitability-function"><i class="fa fa-check"></i><b>4.9.2</b> StraightLine Suitability Function</a></li>
+<li class="chapter" data-level="4.9.3" data-path="chap-stock.html"><a href="chap-stock.html#exponential-suitability-function"><i class="fa fa-check"></i><b>4.9.3</b> Exponential Suitability Function</a></li>
+<li class="chapter" data-level="4.9.4" data-path="chap-stock.html"><a href="chap-stock.html#exponentiall50-suitability-function"><i class="fa fa-check"></i><b>4.9.4</b> ExponentialL50 Suitability Function</a></li>
+<li class="chapter" data-level="4.9.5" data-path="chap-stock.html"><a href="chap-stock.html#richards-suitability-function"><i class="fa fa-check"></i><b>4.9.5</b> Richards Suitability Function</a></li>
+<li class="chapter" data-level="4.9.6" data-path="chap-stock.html"><a href="chap-stock.html#andersen-suitability-function"><i class="fa fa-check"></i><b>4.9.6</b> Andersen Suitability Function</a></li>
+<li class="chapter" data-level="4.9.7" data-path="chap-stock.html"><a href="chap-stock.html#andersen-fleet-suitability-function"><i class="fa fa-check"></i><b>4.9.7</b> Andersen Fleet Suitability Function</a></li>
+<li class="chapter" data-level="4.9.8" data-path="chap-stock.html"><a href="chap-stock.html#gamma-suitability-function"><i class="fa fa-check"></i><b>4.9.8</b> Gamma Suitability Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockinitial"><i class="fa fa-check"></i><b>4.10</b> Initial Conditions</a><ul>
+<li class="chapter" data-level="4.10.1" data-path="chap-stock.html"><a href="chap-stock.html#normal-condition-distribution"><i class="fa fa-check"></i><b>4.10.1</b> Normal Condition Distribution</a></li>
+<li class="chapter" data-level="4.10.2" data-path="chap-stock.html"><a href="chap-stock.html#normal-parametric-distribution"><i class="fa fa-check"></i><b>4.10.2</b> Normal Parametric Distribution</a></li>
+<li class="chapter" data-level="4.10.3" data-path="chap-stock.html"><a href="chap-stock.html#numerical-distribution"><i class="fa fa-check"></i><b>4.10.3</b> Numerical Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.11" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockmigrate"><i class="fa fa-check"></i><b>4.11</b> Migration</a><ul>
+<li class="chapter" data-level="4.11.1" data-path="chap-stock.html"><a href="chap-stock.html#migration-matrices"><i class="fa fa-check"></i><b>4.11.1</b> Migration Matrices</a></li>
+<li class="chapter" data-level="4.11.2" data-path="chap-stock.html"><a href="chap-stock.html#migration-ratios"><i class="fa fa-check"></i><b>4.11.2</b> Migration Ratios</a></li>
+</ul></li>
+<li class="chapter" data-level="4.12" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockmature"><i class="fa fa-check"></i><b>4.12</b> Maturation</a><ul>
+<li class="chapter" data-level="4.12.1" data-path="chap-stock.html"><a href="chap-stock.html#constant-maturity-function"><i class="fa fa-check"></i><b>4.12.1</b> Constant Maturity Function</a></li>
+<li class="chapter" data-level="4.12.2" data-path="chap-stock.html"><a href="chap-stock.html#constantweight-maturity-function"><i class="fa fa-check"></i><b>4.12.2</b> ConstantWeight Maturity Function</a></li>
+<li class="chapter" data-level="4.12.3" data-path="chap-stock.html"><a href="chap-stock.html#fixedlength-maturity-function"><i class="fa fa-check"></i><b>4.12.3</b> FixedLength Maturity Function</a></li>
+<li class="chapter" data-level="4.12.4" data-path="chap-stock.html"><a href="chap-stock.html#continuous-maturity-function"><i class="fa fa-check"></i><b>4.12.4</b> Continuous Maturity Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.13" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockmove"><i class="fa fa-check"></i><b>4.13</b> Movement (“Transition”)</a></li>
+<li class="chapter" data-level="4.14" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockrenew"><i class="fa fa-check"></i><b>4.14</b> Renewal (“Recruitment”)</a><ul>
+<li class="chapter" data-level="4.14.1" data-path="chap-stock.html"><a href="chap-stock.html#normal-condition-distribution-1"><i class="fa fa-check"></i><b>4.14.1</b> Normal Condition Distribution</a></li>
+<li class="chapter" data-level="4.14.2" data-path="chap-stock.html"><a href="chap-stock.html#normal-parametric-distribution-1"><i class="fa fa-check"></i><b>4.14.2</b> Normal Parametric Distribution</a></li>
+<li class="chapter" data-level="4.14.3" data-path="chap-stock.html"><a href="chap-stock.html#numerical-distribution-1"><i class="fa fa-check"></i><b>4.14.3</b> Numerical Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.15" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockspawn"><i class="fa fa-check"></i><b>4.15</b> Spawning</a><ul>
+<li class="chapter" data-level="4.15.1" data-path="chap-stock.html"><a href="chap-stock.html#fecundity-recruitment-function"><i class="fa fa-check"></i><b>4.15.1</b> Fecundity Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.2" data-path="chap-stock.html"><a href="chap-stock.html#simplessb-recruitment-function"><i class="fa fa-check"></i><b>4.15.2</b> SimpleSSB Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.3" data-path="chap-stock.html"><a href="chap-stock.html#ricker-recruitment-function"><i class="fa fa-check"></i><b>4.15.3</b> Ricker Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.4" data-path="chap-stock.html"><a href="chap-stock.html#bevertonholt-recruitment-function"><i class="fa fa-check"></i><b>4.15.4</b> BevertonHolt Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.5" data-path="chap-stock.html"><a href="chap-stock.html#hockey-stick-recruitment-function"><i class="fa fa-check"></i><b>4.15.5</b> Hockey stick Recruitment Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.16" data-path="chap-stock.html"><a href="chap-stock.html#sec:lselection"><i class="fa fa-check"></i><b>4.16</b> Length Selection</a><ul>
+<li class="chapter" data-level="4.16.1" data-path="chap-stock.html"><a href="chap-stock.html#constant-selection-function"><i class="fa fa-check"></i><b>4.16.1</b> Constant Selection Function</a></li>
+<li class="chapter" data-level="4.16.2" data-path="chap-stock.html"><a href="chap-stock.html#straightline-selection-function"><i class="fa fa-check"></i><b>4.16.2</b> StraightLine Selection Function</a></li>
+<li class="chapter" data-level="4.16.3" data-path="chap-stock.html"><a href="chap-stock.html#exponential-selection-function"><i class="fa fa-check"></i><b>4.16.3</b> Exponential Selection Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.17" data-path="chap-stock.html"><a href="chap-stock.html#sec:stockstray"><i class="fa fa-check"></i><b>4.17</b> Straying</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chap-tag.html"><a href="chap-tag.html"><i class="fa fa-check"></i><b>5</b> Tag Files</a><ul>
+<li class="chapter" data-level="5.1" data-path="chap-tag.html"><a href="chap-tag.html#sec:tagnumbers"><i class="fa fa-check"></i><b>5.1</b> Tagging Numbers</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chap-other.html"><a href="chap-other.html"><i class="fa fa-check"></i><b>6</b> Otherfood Files</a><ul>
+<li class="chapter" data-level="6.1" data-path="chap-other.html"><a href="chap-other.html#sec:foodamounts"><i class="fa fa-check"></i><b>6.1</b> Food Amounts</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chap-fleet.html"><a href="chap-fleet.html"><i class="fa fa-check"></i><b>7</b> Fleet Files</a><ul>
+<li class="chapter" data-level="7.1" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:totalfleet"><i class="fa fa-check"></i><b>7.1</b> TotalFleet</a></li>
+<li class="chapter" data-level="7.2" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:numberfleet"><i class="fa fa-check"></i><b>7.2</b> NumberFleet</a></li>
+<li class="chapter" data-level="7.3" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:linearfleet"><i class="fa fa-check"></i><b>7.3</b> LinearFleet</a></li>
+<li class="chapter" data-level="7.4" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:effortfleet"><i class="fa fa-check"></i><b>7.4</b> EffortFleet</a></li>
+<li class="chapter" data-level="7.5" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:quotafleet"><i class="fa fa-check"></i><b>7.5</b> QuotaFleet</a></li>
+<li class="chapter" data-level="7.6" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:fleetsuit"><i class="fa fa-check"></i><b>7.6</b> Fleet Suitability</a></li>
+<li class="chapter" data-level="7.7" data-path="chap-fleet.html"><a href="chap-fleet.html#sec:fleetamount"><i class="fa fa-check"></i><b>7.7</b> Fleet Amounts</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chap-like.html"><a href="chap-like.html"><i class="fa fa-check"></i><b>8</b> Likelihood Files</a><ul>
+<li class="chapter" data-level="8.1" data-path="chap-like.html"><a href="chap-like.html#sec:boundlike"><i class="fa fa-check"></i><b>8.1</b> BoundLikelihood (“Penalty”)</a></li>
+<li class="chapter" data-level="8.2" data-path="chap-like.html"><a href="chap-like.html#sec:understocking"><i class="fa fa-check"></i><b>8.2</b> Understocking</a></li>
+<li class="chapter" data-level="8.3" data-path="chap-like.html"><a href="chap-like.html#sec:catchdist"><i class="fa fa-check"></i><b>8.3</b> CatchDistribution</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="chap-like.html"><a href="chap-like.html#sum-of-squares-function"><i class="fa fa-check"></i><b>8.3.1</b> Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.3.2" data-path="chap-like.html"><a href="chap-like.html#stratified-sum-of-squares-function"><i class="fa fa-check"></i><b>8.3.2</b> Stratified Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.3.3" data-path="chap-like.html"><a href="chap-like.html#multinomial-function"><i class="fa fa-check"></i><b>8.3.3</b> Multinomial Function</a></li>
+<li class="chapter" data-level="8.3.4" data-path="chap-like.html"><a href="chap-like.html#pearson-function"><i class="fa fa-check"></i><b>8.3.4</b> Pearson Function</a></li>
+<li class="chapter" data-level="8.3.5" data-path="chap-like.html"><a href="chap-like.html#gamma-function"><i class="fa fa-check"></i><b>8.3.5</b> Gamma Function</a></li>
+<li class="chapter" data-level="8.3.6" data-path="chap-like.html"><a href="chap-like.html#log-function"><i class="fa fa-check"></i><b>8.3.6</b> Log Function</a></li>
+<li class="chapter" data-level="8.3.7" data-path="chap-like.html"><a href="chap-like.html#multivariate-normal-function"><i class="fa fa-check"></i><b>8.3.7</b> Multivariate Normal Function</a></li>
+<li class="chapter" data-level="8.3.8" data-path="chap-like.html"><a href="chap-like.html#multivariate-logistic-function"><i class="fa fa-check"></i><b>8.3.8</b> Multivariate Logistic Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="chap-like.html"><a href="chap-like.html#sec:catchstat"><i class="fa fa-check"></i><b>8.4</b> CatchStatistics</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-length"><i class="fa fa-check"></i><b>8.4.1</b> Weighted Sum of Squares of Mean Length</a></li>
+<li class="chapter" data-level="8.4.2" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation"><i class="fa fa-check"></i><b>8.4.2</b> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.4.3" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-weightwith-given-standard-deviation"><i class="fa fa-check"></i><b>8.4.3</b> Weighted Sum of Squares of Mean WeightWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.4.4" data-path="chap-like.html"><a href="chap-like.html#unweighted-sum-of-squares-of-mean-weight"><i class="fa fa-check"></i><b>8.4.4</b> Unweighted Sum of Squares of Mean Weight</a></li>
+<li class="chapter" data-level="8.4.5" data-path="chap-like.html"><a href="chap-like.html#unweighted-sum-of-squares-of-mean-length"><i class="fa fa-check"></i><b>8.4.5</b> Unweighted Sum of Squares of Mean Length</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="chap-like.html"><a href="chap-like.html#sec:stockdist"><i class="fa fa-check"></i><b>8.5</b> StockDistribution</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="chap-like.html"><a href="chap-like.html#sum-of-squares-function-1"><i class="fa fa-check"></i><b>8.5.1</b> Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.5.2" data-path="chap-like.html"><a href="chap-like.html#multinomial-function-1"><i class="fa fa-check"></i><b>8.5.2</b> Multinomial Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="chap-like.html"><a href="chap-like.html#sec:surveyindices"><i class="fa fa-check"></i><b>8.6</b> SurveyIndices</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="chap-like.html"><a href="chap-like.html#subsec:sibylength"><i class="fa fa-check"></i><b>8.6.1</b> SurveyIndices by Length</a></li>
+<li class="chapter" data-level="8.6.2" data-path="chap-like.html"><a href="chap-like.html#subsec:sibyage"><i class="fa fa-check"></i><b>8.6.2</b> SurveyIndices by Age</a></li>
+<li class="chapter" data-level="8.6.3" data-path="chap-like.html"><a href="chap-like.html#subsec:sibyfleet"><i class="fa fa-check"></i><b>8.6.3</b> SurveyIndices by Fleet</a></li>
+<li class="chapter" data-level="8.6.4" data-path="chap-like.html"><a href="chap-like.html#subsec:sibyacoustic"><i class="fa fa-check"></i><b>8.6.4</b> SurveyIndices by Acoustic</a></li>
+<li class="chapter" data-level="8.6.5" data-path="chap-like.html"><a href="chap-like.html#subsec:sibyeffort"><i class="fa fa-check"></i><b>8.6.5</b> SurveyIndices by Effort</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="chap-like.html"><a href="chap-like.html#sec:surveydistribution"><i class="fa fa-check"></i><b>8.7</b> SurveyDistribution</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="chap-like.html"><a href="chap-like.html#linear-fit"><i class="fa fa-check"></i><b>8.7.1</b> Linear Fit</a></li>
+<li class="chapter" data-level="8.7.2" data-path="chap-like.html"><a href="chap-like.html#power-fit"><i class="fa fa-check"></i><b>8.7.2</b> Power Fit</a></li>
+<li class="chapter" data-level="8.7.3" data-path="chap-like.html"><a href="chap-like.html#multinomial-function-2"><i class="fa fa-check"></i><b>8.7.3</b> Multinomial Function</a></li>
+<li class="chapter" data-level="8.7.4" data-path="chap-like.html"><a href="chap-like.html#pearson-function-1"><i class="fa fa-check"></i><b>8.7.4</b> Pearson Function</a></li>
+<li class="chapter" data-level="8.7.5" data-path="chap-like.html"><a href="chap-like.html#gamma-function-1"><i class="fa fa-check"></i><b>8.7.5</b> Gamma Function</a></li>
+<li class="chapter" data-level="8.7.6" data-path="chap-like.html"><a href="chap-like.html#log-function-1"><i class="fa fa-check"></i><b>8.7.6</b> Log Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="chap-like.html"><a href="chap-like.html#sec:stomach"><i class="fa fa-check"></i><b>8.8</b> StomachContent</a><ul>
+<li class="chapter" data-level="8.8.1" data-path="chap-like.html"><a href="chap-like.html#scsimple-function"><i class="fa fa-check"></i><b>8.8.1</b> SCSimple Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.9" data-path="chap-like.html"><a href="chap-like.html#sec:recaptures"><i class="fa fa-check"></i><b>8.9</b> Recaptures</a><ul>
+<li class="chapter" data-level="8.9.1" data-path="chap-like.html"><a href="chap-like.html#poisson-function"><i class="fa fa-check"></i><b>8.9.1</b> Poisson Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.10" data-path="chap-like.html"><a href="chap-like.html#sec:recstat"><i class="fa fa-check"></i><b>8.10</b> RecStatistics</a><ul>
+<li class="chapter" data-level="8.10.1" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-length-1"><i class="fa fa-check"></i><b>8.10.1</b> Weighted Sum of Squares of Mean Length</a></li>
+<li class="chapter" data-level="8.10.2" data-path="chap-like.html"><a href="chap-like.html#weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation-1"><i class="fa fa-check"></i><b>8.10.2</b> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.10.3" data-path="chap-like.html"><a href="chap-like.html#unweighted-sum-of-squares-of-mean-length-1"><i class="fa fa-check"></i><b>8.10.3</b> Unweighted Sum of Squares of Mean Length</a></li>
+</ul></li>
+<li class="chapter" data-level="8.11" data-path="chap-like.html"><a href="chap-like.html#sec:migpenalty"><i class="fa fa-check"></i><b>8.11</b> MigrationPenalty</a></li>
+<li class="chapter" data-level="8.12" data-path="chap-like.html"><a href="chap-like.html#sec:migpro"><i class="fa fa-check"></i><b>8.12</b> MigrationProportion</a><ul>
+<li class="chapter" data-level="8.12.1" data-path="chap-like.html"><a href="chap-like.html#sum-of-squares-function-2"><i class="fa fa-check"></i><b>8.12.1</b> Sum of Squares Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.13" data-path="chap-like.html"><a href="chap-like.html#sec:catchinkilos"><i class="fa fa-check"></i><b>8.13</b> CatchInKilos</a><ul>
+<li class="chapter" data-level="8.13.1" data-path="chap-like.html"><a href="chap-like.html#sum-of-squares-function-3"><i class="fa fa-check"></i><b>8.13.1</b> Sum of Squares Function</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chap-print.html"><a href="chap-print.html"><i class="fa fa-check"></i><b>9</b> Print Files</a><ul>
+<li class="chapter" data-level="9.1" data-path="chap-print.html"><a href="chap-print.html#sec:stockstdprinter"><i class="fa fa-check"></i><b>9.1</b> StockStdPrinter</a></li>
+<li class="chapter" data-level="9.2" data-path="chap-print.html"><a href="chap-print.html#sec:stockfullprinter"><i class="fa fa-check"></i><b>9.2</b> StockFullPrinter</a></li>
+<li class="chapter" data-level="9.3" data-path="chap-print.html"><a href="chap-print.html#sec:stockprinter"><i class="fa fa-check"></i><b>9.3</b> StockPrinter</a></li>
+<li class="chapter" data-level="9.4" data-path="chap-print.html"><a href="chap-print.html#sec:predatorprinter"><i class="fa fa-check"></i><b>9.4</b> PredatorPrinter</a></li>
+<li class="chapter" data-level="9.5" data-path="chap-print.html"><a href="chap-print.html#sec:predatoroverprinter"><i class="fa fa-check"></i><b>9.5</b> PredatorOverPrinter</a></li>
+<li class="chapter" data-level="9.6" data-path="chap-print.html"><a href="chap-print.html#sec:preyoverprinter"><i class="fa fa-check"></i><b>9.6</b> PreyOverPrinter</a></li>
+<li class="chapter" data-level="9.7" data-path="chap-print.html"><a href="chap-print.html#sec:stockpreyfullprinter"><i class="fa fa-check"></i><b>9.7</b> StockPreyFullPrinter</a></li>
+<li class="chapter" data-level="9.8" data-path="chap-print.html"><a href="chap-print.html#sec:stockpreyprinter"><i class="fa fa-check"></i><b>9.8</b> StockPreyPrinter</a></li>
+<li class="chapter" data-level="9.9" data-path="chap-print.html"><a href="chap-print.html#sec:predatorpreyprinter"><i class="fa fa-check"></i><b>9.9</b> PredatorPreyPrinter</a></li>
+<li class="chapter" data-level="9.10" data-path="chap-print.html"><a href="chap-print.html#sec:likelihoodprinter"><i class="fa fa-check"></i><b>9.10</b> LikelihoodPrinter</a></li>
+<li class="chapter" data-level="9.11" data-path="chap-print.html"><a href="chap-print.html#sec:likelihoodsummaryprinter"><i class="fa fa-check"></i><b>9.11</b> LikelihoodSummaryPrinter</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chap-param.html"><a href="chap-param.html"><i class="fa fa-check"></i><b>10</b> Parameter File</a></li>
+<li class="chapter" data-level="11" data-path="chap-optim.html"><a href="chap-optim.html"><i class="fa fa-check"></i><b>11</b> Optimisation File</a><ul>
+<li class="chapter" data-level="11.1" data-path="chap-optim.html"><a href="chap-optim.html#sec:hooke"><i class="fa fa-check"></i><b>11.1</b> Hooke &amp; Jeeves</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="chap-optim.html"><a href="chap-optim.html#subsec:hookeover"><i class="fa fa-check"></i><b>11.1.1</b> Overview</a></li>
+<li class="chapter" data-level="11.1.2" data-path="chap-optim.html"><a href="chap-optim.html#subsec:hookefile"><i class="fa fa-check"></i><b>11.1.2</b> File Format</a></li>
+<li class="chapter" data-level="11.1.3" data-path="chap-optim.html"><a href="chap-optim.html#subsec:hookepar"><i class="fa fa-check"></i><b>11.1.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="chap-optim.html"><a href="chap-optim.html#sec:simann"><i class="fa fa-check"></i><b>11.2</b> Simulated Annealing</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="chap-optim.html"><a href="chap-optim.html#subsec:simannover"><i class="fa fa-check"></i><b>11.2.1</b> Overview</a></li>
+<li class="chapter" data-level="11.2.2" data-path="chap-optim.html"><a href="chap-optim.html#subsec:simannfile"><i class="fa fa-check"></i><b>11.2.2</b> File Format</a></li>
+<li class="chapter" data-level="11.2.3" data-path="chap-optim.html"><a href="chap-optim.html#subsec:simannpar"><i class="fa fa-check"></i><b>11.2.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="chap-optim.html"><a href="chap-optim.html#sec:bfgs"><i class="fa fa-check"></i><b>11.3</b> BFGS</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="chap-optim.html"><a href="chap-optim.html#subsec:bfgsover"><i class="fa fa-check"></i><b>11.3.1</b> Overview</a></li>
+<li class="chapter" data-level="11.3.2" data-path="chap-optim.html"><a href="chap-optim.html#subsec:bfgsfile"><i class="fa fa-check"></i><b>11.3.2</b> File Format</a></li>
+<li class="chapter" data-level="11.3.3" data-path="chap-optim.html"><a href="chap-optim.html#subsec:bfgspar"><i class="fa fa-check"></i><b>11.3.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="chap-optim.html"><a href="chap-optim.html#sec:combine"><i class="fa fa-check"></i><b>11.4</b> Combining Optimisation Algorithms</a><ul>
+<li class="chapter" data-level="11.4.1" data-path="chap-optim.html"><a href="chap-optim.html#subsec:combineover"><i class="fa fa-check"></i><b>11.4.1</b> Overview</a></li>
+<li class="chapter" data-level="11.4.2" data-path="chap-optim.html"><a href="chap-optim.html#subsec:combinefile"><i class="fa fa-check"></i><b>11.4.2</b> File Format</a></li>
+<li class="chapter" data-level="11.4.3" data-path="chap-optim.html"><a href="chap-optim.html#subsec:combinepar"><i class="fa fa-check"></i><b>11.4.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="chap-optim.html"><a href="chap-optim.html#sec:repeat"><i class="fa fa-check"></i><b>11.5</b> Repeatability</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chap-output.html"><a href="chap-output.html"><i class="fa fa-check"></i><b>12</b> Output Files</a><ul>
+<li class="chapter" data-level="12.1" data-path="chap-output.html"><a href="chap-output.html#sec:paramoutput"><i class="fa fa-check"></i><b>12.1</b> Parameter Output</a></li>
+<li class="chapter" data-level="12.2" data-path="chap-output.html"><a href="chap-output.html#sec:likelihoodoutput"><i class="fa fa-check"></i><b>12.2</b> Likelihood Output</a></li>
+<li class="chapter" data-level="12.3" data-path="chap-output.html"><a href="chap-output.html#sec:logoutput"><i class="fa fa-check"></i><b>12.3</b> Log Output</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chap-paramin.html"><a href="chap-paramin.html"><i class="fa fa-check"></i><b>13</b> Paramin</a><ul>
+<li class="chapter" data-level="13.1" data-path="chap-paramin.html"><a href="chap-paramin.html#sec:paramininstall"><i class="fa fa-check"></i><b>13.1</b> Installation</a></li>
+<li class="chapter" data-level="13.2" data-path="chap-paramin.html"><a href="chap-paramin.html#sec:runparamin"><i class="fa fa-check"></i><b>13.2</b> Running paramin</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="chap-paramin.html"><a href="chap-paramin.html#additional-information"><i class="fa fa-check"></i><b>13.2.1</b> Additional information</a></li>
+<li class="chapter" data-level="13.2.2" data-path="chap-paramin.html"><a href="chap-paramin.html#running-paramin-on-multiple-hostscluster"><i class="fa fa-check"></i><b>13.2.2</b> Running paramin on multiple hosts/cluster</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chap-reference.html"><a href="chap-reference.html"><i class="fa fa-check"></i><b>14</b> References</a></li>
+<li class="chapter" data-level="15" data-path="chap-order.html"><a href="chap-order.html"><i class="fa fa-check"></i><b>15</b> Order of Calculations</a></li>
+<li class="chapter" data-level="16" data-path="chap-change.html"><a href="chap-change.html"><i class="fa fa-check"></i><b>16</b> Recent Changes</a><ul>
+<li class="chapter" data-level="16.1" data-path="chap-change.html"><a href="chap-change.html#sec:v2101"><i class="fa fa-check"></i><b>16.1</b> Gadget version 2.1.01</a></li>
+<li class="chapter" data-level="16.2" data-path="chap-change.html"><a href="chap-change.html#sec:v2102"><i class="fa fa-check"></i><b>16.2</b> Gadget version 2.1.02</a></li>
+<li class="chapter" data-level="16.3" data-path="chap-change.html"><a href="chap-change.html#sec:v2103"><i class="fa fa-check"></i><b>16.3</b> Gadget version 2.1.03</a></li>
+<li class="chapter" data-level="16.4" data-path="chap-change.html"><a href="chap-change.html#sec:v2104"><i class="fa fa-check"></i><b>16.4</b> Gadget version 2.1.04</a></li>
+<li class="chapter" data-level="16.5" data-path="chap-change.html"><a href="chap-change.html#sec:v2105"><i class="fa fa-check"></i><b>16.5</b> Gadget version 2.1.05</a></li>
+<li class="chapter" data-level="16.6" data-path="chap-change.html"><a href="chap-change.html#sec:v2106"><i class="fa fa-check"></i><b>16.6</b> Gadget version 2.1.06</a></li>
+<li class="chapter" data-level="16.7" data-path="chap-change.html"><a href="chap-change.html#sec:v2200"><i class="fa fa-check"></i><b>16.7</b> Gadget version 2.2.00</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Gadget userguide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="header">
+<h1 class="title">Gadget userguide</h1>
+<p class="author"><em>MFRI</em></p>
+</div>
+<div id="chap:intro" class="section level1">
+<h1><span class="header-section-number">1</span> Introduction to Gadget</h1>
+<p>Gadget is the <strong>G</strong>lobally applicable <strong>A</strong>rea <strong>D</strong>isaggregated
+<strong>G</strong>eneral <strong>E</strong>cosystem <strong>T</strong>oolbox. Gadget is a flexible and powerful
+software tool that has been developed to model marine ecosystems,
+including both the impact of the interactions between species and the
+impact of fisheries harvesting the species. Gadget simulates these
+processes in a biologically realistic manner, and uses a framework to
+test the development of the modelled ecosystem in a statistically
+rigorous manner. Gadget has successfully been used to investigate the
+population dynamics of stock complexes in Icelandic waters, the Barents
+Sea, the North Sea and the Irish and Celtic Seas.</p>
+<div id="sec:whatisgadget" class="section level2">
+<h2><span class="header-section-number">1.1</span> What is Gadget?</h2>
+<p>Gadget can run complicated statistical models which take many features
+of the ecosystem into account. Gadget works by running an internal
+forward projection model based on many parameters describing the
+ecosystem, and then comparing the output from this model to observed
+measurements to get a likelihood score. The model ecosystem parameters
+can then be adjusted, and the model re-run, until an optimum is found,
+which corresponds to the model with the lowest likelihood score. This
+iterative, computationally intensive process is handled within Gadget,
+using a robust minimisation algorithm. The Gadget software framework
+consists of three parts:</p>
+<ul>
+<li><p>a parametric model to <strong>simulate</strong> the ecosystem</p></li>
+<li><p>statistical functions to <strong>compare</strong> the model output to data</p></li>
+<li><p>search algorithms to <strong>optimise</strong> the model parameters</p></li>
+</ul>
+<p>Gadget allows the user to include a number of features of the ecosystem
+into the model: One or more species, each of which may be split into
+multiple components; multiple areas with migration between areas;
+predation between and within species; growth; maturation; reproduction
+and recruitment; multiple commercial and survey fleets taking catches
+from the populations.</p>
+<p>Like any large piece of code, Gadget is based on previous ideas by
+several authors. Conceptually the modelling framework extends earlier
+multi species programming work such as MSVPA and MULTSPEC into a more
+generic statistical framework. Alternatively, Gadget is a conceptual
+extension of the Stock Synthesis statistical assessment single-species
+framework into a multi species setting.</p>
+<p>The initial BORMICON code was developed as part of a multi species
+programme implemented at the Marine Research Institute in Reykjavik,
+Iceland, starting in 1992 with Ólafur K Pálsson as project coordinator
+and Gunnar Stefánsson coordinating the modelling work. Subsequently the
+code became the basis for Fleksibest at the Institute of Marine Research
+in Bergen, Norway. Further development work in 1999-2003 was partly
+funded by EU grant QLK5-CT1999-01609 (“Development of Structurally
+Detailed Statistically Testable Models of Marine Populations”).
+Development work for 2004-2006 was partly funded by EU grant 502482
+(“Critical Interactions Between Species and their Implications for a
+Precautionary Fisheries Management in a Variable Environment - a
+Modelling Approach”). Developement work for 2010-2012 was partly funded
+by EU project “Defineit” under the MariFish ERA-NET (grant
+ERAC-CT-2006-025989)</p>
+<p>The Gadget code is derived from the original BORMICON code of Halldór
+Narfi Stefánsson, Höskuldur Björnsson and Hersir Sigurgeirsson.
+Subsequent contributions include program additions by Morten Nygaard
+Åsnes and Kristin Frøysa to include the Fleksibest model. The ability to
+run in parallel across a network of computers using PVM was implemented
+primarily by Auðbjörg Jakobsdóttir with input from several other people,
+including Jón Guðmundsson who worked on a variant based on Condor.
+Several mathematical additions and changes to allow for parallel
+minimisation on a network were implemented by Þórdís Linda órarinsdóttir
+and Kristjana Ýr Jónsdóttir.</p>
+<p>More recent changes include the work to use information from tagging
+experiments, which was implemented primarily by Sigurður Hannesson. The
+work on multivariate distributions was implemented by Bjarki Þór
+Elvarsson. Recent additions including major code cleanups, modifications
+to the input formats and debugging operations have been led by James
+Begley, who is the current maintainer of the code and coordinator of all
+programming efforts.</p>
+</div>
+<div id="sec:gettinggadget" class="section level2">
+<h2><span class="header-section-number">1.2</span> Getting Gadget</h2>
+<p>Gadget is distributed via GitHub and can be obtained at:</p>
+<pre><code>http://github.com/hafro/gadget</code></pre>
+<p>The most recent version of Gadget will be available as a zip file from
+this from this site (select "Clone or download"). As a guide, the
+current version of Gadget is 2.2.00, so the file to be downloaded is
+gadget2.2.00.tar.gz.</p>
+<p>Gadget is a program that runs on a Unix computing platform, and is
+regularly tested on machines running versions of Linux, Mac OSX and
+Windows. It should also run on other versions of Unix, but this may
+require modifications to the makefile in order to do so. Gadget is
+distributed as a set of source code files, which need to be compiled
+into an executable program before it can be run. To allow for various
+different versions, the makefile has a list of supported computing
+platforms, so the makefile should be checked (and if necessary changed)
+to ensure that the required options are available before the source code
+is compiled. The default options in the makefile will compile Gadget for
+a Linux machine, using the GNU C++ compiler. A summary of the commands
+required to compile Gadget, using the default options for a Linux
+machine from the downloaded file are:</p>
+<pre><code>unzip gadget-master.zip
+cd gadget-master
+make</code></pre>
+<p>The most recent copy of this document will also be placed on the github
+site, along with copies of any example datasets that are available.
+These datasets will be checked so that they run without any problems,
+and will also contain some comments to help the user understand the
+format of the data files. It is recommended that this user guide is read
+in conjunction with an example dataset.</p>
+<p>A web site has been set up that contains details of the recent changes
+to Gadget, documentation updates and other news. This is also a good
+place to look for more information about Gadget. The address of the
+Gadget web site is <a href="http://www.github.com/hafro/gadget" class="uri">http://www.github.com/hafro/gadget</a>.</p>
+<p>Throughout this document any text in <span class="math inline">\(&lt;\)</span>angled brackets<span class="math inline">\(&gt;\)</span> should be
+adjusted by the user to make it relevant to the current situation, so
+for example the text above should be altered to the following to compile
+Gadget version 2.2.00 on a Linux machine:</p>
+<pre><code>gunzip gadget2.2.00.tar.gz
+tar -xvf gadget2.2.00.tar
+cd source
+make</code></pre>
+</div>
+<div id="sec:runninggadget" class="section level2">
+<h2><span class="header-section-number">1.3</span> Running Gadget</h2>
+<p>Gadget is a command line program that runs on a Linux computing
+platform. To start Gadget, simply type the following at a standard Linux
+prompt:</p>
+<pre><code>gadget &lt;options&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>options<span class="math inline">\(&gt;\)</span> are a combination of the starting switches described
+in the next section. Note that this assumes that the Gadget executable
+has been placed in a directory that is included in the $PATH, which
+might not be the case for some Linux distributions. If this is the case,
+Gadget should be started by including the path to the Gadget executable,
+for example by typing if the Gadget executable is in the current
+directory.</p>
+<p>Gadget is not an interactive program, so once it has started there is no
+need for any further input from the user. However, if Gadget was started
+incorrectly (for example, using the wrong input files) then Gadget can
+be stopped by pressing <span class="math inline">\(&lt;\)</span>CTRL<span class="math inline">\(&gt;&lt;\)</span>C<span class="math inline">\(&gt;\)</span>, which will interrupt the
+calculations, displaying a menu from which it is possible to either
+store the current calculations to a text file, or to exit (by pressing
+<span class="math inline">\(&lt;\)</span>Q<span class="math inline">\(&gt;\)</span>).</p>
+<p>When Gadget starts, it will look for a file called “main”, which
+contains a list of all the other data files required. Gadget will search
+for this file in the following 2 locations:</p>
+<ol style="list-style-type: decimal">
+<li><p>the directory specified by the Linux environment variable called
+“GADGET_WORKING_DIR”, optionally taking data from the directory
+specified by the Linux environment variable called
+“GADGET_DATA_DIR”</p></li>
+<li><p>the current directory (ie. from where Gadget has been started) if
+these environment variables have not been set (note that this is the
+default location)</p></li>
+</ol>
+<p>When Gadget is reading in the input data files, these files will be
+checked to ensure that they are in the correct format, and if there is
+an error in the format Gadget will print an error message and stop. Note
+that when Gadget is checking the format of a data file containing a
+number of columns (eg. the “area” file) it will only check the first
+data line in the file (so, for the case of the “area” file it will check
+that there are 4 entries on the first row and then assume that all the
+other rows also have 4 entries). Hopefully, there should be enough
+information in these error messages to lead the user to the input file
+that is causing the error.</p>
+<p>If all else fails, and the error messages do not lead the user to the
+source of the error, then there is an email address set up for any
+difficulties or questions that may arise, or reporting any bugs that get
+found. In addition to sorting out any problems that the user may be
+getting, we can also try to help with interpreting the output. This
+email address is gadgethelp@hafro.is</p>
+<p>Sending an email to this address should get a response within a couple
+of working days. This email address can also be used to give us any
+feedback on the usefulness (or otherwise) of Gadget, so let us know what
+you think!</p>
+</div>
+<div id="sec:starting" class="section level2">
+<h2><span class="header-section-number">1.4</span> Starting Switches</h2>
+<p>The following is a list of the command line switches that Gadget will
+recognise, together with a brief description of what the switch means to
+the running of the Gadget model.</p>
+<pre><code>gadget -s</code></pre>
+<p>Starting Gadget with the -s switch will start a simulation run, where a
+single run of the model will take place. This option is useful since it
+will give the model output (see Print Files,
+chapter <a href="chap-print.html#chap:print">9</a>),
+and it is used when running large Gadget models, using the paramin
+parallel processing optimiser to find the optimum.</p>
+<pre><code>gadget -l</code></pre>
+<p>Starting Gadget with the -l switch will start a optimising run, where
+the overall likelihood score will be reduced to an optimum, depending on
+the optimising information given (see the -opt switch).</p>
+<pre><code>gadget -n</code></pre>
+<p>Starting Gadget with the -n switch will start a network run, used in
+conjunction with the paramin optimiser to find an optimal solution for
+large models.</p>
+<pre><code>gadget -v
+gadget --version</code></pre>
+<p>Starting Gadget with the -v (or --version) switch will display the
+version of Gadget that is being run.</p>
+<pre><code>gadget -h
+gadget --help</code></pre>
+<p>Starting Gadget with the -h (or --help) switch will display a help
+screen, giving information about the various starting switches that can
+be used.</p>
+<pre><code>gadget -i &lt;filename&gt;</code></pre>
+<p>Starting Gadget with the -i switch will give Gadget an inputfile file
+from which the initial values and bounds of any variables can be read
+(see Parameter Files, chapter <a href="chap-param.html#chap:param">10</a>, for more information on the format of this
+file).</p>
+<pre><code>gadget -opt &lt;filename&gt;</code></pre>
+<p>Starting Gadget with the -opt switch will give Gadget an optimisation
+input file, from which the information about the optimisation routines
+will be read. This will specify the type of optimisation to perform, and
+also parameters for that optimisation routine (see Optimisation Files,
+chapter <a href="chap-optim.html#chap:optim">11</a>,
+for more information on the format of this file).</p>
+<pre><code>gadget -main &lt;filename&gt;</code></pre>
+<p>Starting Gadget with the -main switch will specify a filename for the
+main Gadget model input file, which contains links to all the other data
+files that are to be used by Gadget (see Main File,
+section <a href="chap-model.html#sec:mainfile">3.1</a>, for more information on the format of this
+file). If Gadget is started without the -main switch, Gadget will use
+the default filename “main” as the name for the main file.</p>
+<pre><code>gadget -p &lt;filename&gt;</code></pre>
+<p>Starting Gadget with the -p switch specifies the file that Gadget will
+use to print the final values and bounds of the variables, in the same
+format as for the inputfile. This file can then be used as the starting
+point for a subsequent Gadget run, if required. This file will always be
+generated, and if Gadget is started without the -p switch the default
+filename is “params.out” which will be created in the current directory
+(see Output Files, chapter <a href="chap-output.html#chap:output">12</a>, for more information on the format of this
+file).</p>
+<pre><code>gadget -o &lt;filename&gt;</code></pre>
+<p>Starting Gadget with the -o switch specifies the file that Gadget will
+use to print the score from the likelihood calculations. This file will
+give details on the parameters that have been used, the likelihood
+components that have been used, and the values for these parameters and
+likelihood components. This can be a large file if Gadget is performing
+an optimising run (see Output Files,
+chapter <a href="chap-output.html#chap:output">12</a>, for more information on the format of this
+file).</p>
+<pre><code>gadget -print &lt;number&gt;</code></pre>
+<p>Starting Gadget with the -print switch will specify the frequency with
+which information is written to the likelihood output file (specified
+with the -o switch). The default value for this is 1, meaning that the
+likelihood information is written for every iteration.</p>
+<pre><code>gadget -precision &lt;number&gt;</code></pre>
+<p>Starting Gadget with the -precision switch will specify the number of
+digits to be used when printing the output from the likelihood
+calculations to files specified with the -o switch.</p>
+<pre><code>gadget -log &lt;filename&gt;</code></pre>
+<p>Starting Gadget with the -log switch will specify a file to which Gadget
+will write logging messages to keep a record of internal Gadget actions.
+This can be a large file if Gadget is performing an optimising run (see
+Log Output, section <a href="chap-output.html#sec:logoutput">12.3</a>, for more information on the format of this
+file).</p>
+<pre><code>gadget -loglevel &lt;number&gt;</code></pre>
+<p>Starting Gadget with the -loglevel switch will specify the level of
+detail that is to be used by Gadget when logging messages (both to the
+screen and to a log file if one has been specified with the -log
+switch). If Gadget is started without the -loglevel switch then the
+default is for warning messages and error messages to be shown during a
+simulation run (when Gadget is started with the -s switch) and only
+error messages are shown during an optimising run (when Gadget is
+started with the -l switch).</p>
+<pre><code>gadget -seed &lt;number&gt;</code></pre>
+<p>Starting Gadget with the -seed switch will specify the value that is
+used to initialise the random number generator used within Gadget (see
+Repeatability, section <a href="chap-optim.html#sec:repeat">11.5</a> for more information on the use of the random
+number generator within Gadget runs).</p>
+<pre><code>gadget -m &lt;filename&gt;</code></pre>
+<p>Starting Gadget with the -m switch will specify a file from which Gadget
+can read the other command line options. This file should contain a
+simple list of the switches and their values, as they would be entered
+from the command line.</p>
+<pre><code>gadget -printinitial &lt;filename&gt;</code></pre>
+<p>Starting Gadget with the -printinitial switch will specify a file to
+which Gadget will write all internal information for the model at the
+start of the run (ie. the stock populations, likelihood calculations and
+other information from before the first timestep). This file will be
+large for moderately complicated models, and it is of most use for
+debugging purposes.</p>
+<pre><code>gadget -printfinal &lt;filename&gt;</code></pre>
+<p>Starting Gadget with the -printfinal switch will specify a file to which
+Gadget will write all internal information for the model at the end of
+the run (ie. the stock populations, likelihood calculations and other
+information from after the last timestep). This file will be large for
+moderately complicated models, and it is of most use for debugging
+purposes.</p>
+<pre><code>gadget -maxratio &lt;ratio&gt;</code></pre>
+<p>Starting Gadget with the -maxratio switch will specify the maximum ratio
+of prey that is allowed to be “consumed” on any one timestep. This
+consumption includes both the consumption by other stocks and the catch
+by any fleets. The default value is 0.95, which ensures that no more
+than 95% of the available stock biomass is consumed on a single
+timestep.</p>
+<p>Most of these switches can be combined to specify more information about
+the Gadget run that will be performed. For instance:</p>
+<pre><code>gadget -l -i inputfile.txt -o likelihood.txt -opt optinfo.txt -print 10</code></pre>
+<p>will start Gadget for a likelihood run, taking the initial values and
+information about the parameters from the file inputfile.txt, with the
+optimisation being done in accordance with the information in
+optinfo.txt, and printing likelihood information (every 10 iterations)
+to the file likelihood.txt.</p>
+<p>Note that it is not possible to do both a simulation run and a
+likelihood run at the same time, and starting Gadget with both the -l
+and -s switches will result in a warning, after which Gadget will
+perform a simulation run, with the -l switch being ignored.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
+<a href="chap-input.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
