@@ -425,7 +425,7 @@ void Keeper::writeParams(const OptInfoPtrVector& optvec, const char* const filen
       optvec[i]->Print(paramfile, p);
   }
 
-  paramfile << "switch\tvalue\t\tlower\tupper\toptimise\n";
+  paramfile << "; -- data --\nswitch\tvalue\t\tlower\tupper\toptimise\n";
   for (i = 0; i < bestvalues.Size(); i++) {
     //JMB - if a switch is outside the bounds, we need to reset this back to the bound
     //note that the simulation should have used the value of the bound anyway ...
