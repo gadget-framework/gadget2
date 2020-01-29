@@ -20,10 +20,6 @@ export CXX
 # CXXFLAGS = -D DEBUG
 CXXFLAGS = -O3
 
-ifneq ($(OS),Windows_NT)
-	CXXFLAGS += -D NOT_WINDOWS 
-endif
-
 export CXXFLAGS
 ###########################################################################
 $(GADGET):

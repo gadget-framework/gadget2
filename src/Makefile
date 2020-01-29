@@ -1,7 +1,17 @@
 # Compile gadget objects
+# NB: Used for both R and top-level Makefile
 
 CXXFLAGS += -D INTERRUPT_HANDLER -I ../headers/ 
 LDFLAGS += -L. -L/usr/local/lib -I ../headers -lm
+
+ifneq ($(OS),Windows_NT)
+	CXXFLAGS += -D NOT_WINDOWS 
+endif
+
+# Define executable name for R
+ifeq ($(GADGET),)
+GADGET := gadget
+endif
 
 GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
     area.o time.o keeper.o maininfo.o printinfo.o runid.o global.o stochasticdata.o \

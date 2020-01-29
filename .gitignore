@@ -1,0 +1,8 @@
+/src/gadget
+/src/gadget-para
+/*.Rcheck
+/*.Rhistory
+/*.Rprofile
+/*_*.tar.gz
+
+/params.out

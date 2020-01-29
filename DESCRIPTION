@@ -1,0 +1,12 @@
+Package: gadget
+Type: Package
+Title: Gadget is the Globally applicable Area Disaggregated General Ecosystem Toolbox
+Version: 2.2.00
+Date: 2020-01-29
+Authors@R: c(person("Bjarki Thor", "Elvarsson", email="bjarki.elvarsson@hafogvatn.is",role = c("aut", "cre")),
+            person("Jamie", "Lentin", email="lentinj@shuttlethread.com",role = c("aut")))
+Maintainer: Bjarki Thor Elvarsson <bjarki.elvarsson@hafogvatn.is>
+Description: Installs the Gadget runtime, making it available for R.
+Encoding: UTF-8
+License: GPL-2
+RoxygenNote: 6.1.1
