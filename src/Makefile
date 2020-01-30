@@ -1,6 +1,12 @@
 # Compile gadget objects
 # NB: Used for both R and top-level Makefile
 
+# R won't have run the top-level make, set some defaults
+ifeq ($(GADGET),)
+  GADGET := gadget
+  CXXFLAGS += -O3 -g0  # Override /etc/R/Makeconf settings
+endif
+
 CXXFLAGS += -D INTERRUPT_HANDLER -I ../headers/ 
 LDFLAGS += -L. -L/usr/local/lib -I ../headers -lm
 
@@ -8,11 +14,6 @@ ifneq ($(OS),Windows_NT)
   ifneq ($(R_OSTYPE),windows)
     CXXFLAGS += -D NOT_WINDOWS
   endif
-endif
-
-# Define executable name for R
-ifeq ($(GADGET),)
-GADGET := gadget
 endif
 
 GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
