@@ -5,7 +5,9 @@ CXXFLAGS += -D INTERRUPT_HANDLER -I ../headers/
 LDFLAGS += -L. -L/usr/local/lib -I ../headers -lm
 
 ifneq ($(OS),Windows_NT)
-	CXXFLAGS += -D NOT_WINDOWS 
+  ifneq ($(R_OSTYPE),windows)
+    CXXFLAGS += -D NOT_WINDOWS
+  endif
 endif
 
 # Define executable name for R
