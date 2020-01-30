@@ -17,22 +17,39 @@ looking at the data input files required shown in the diagram below:
 
 These input data files are in a column-based format, which means that they can easily be generated using simple extraction routines from databases. This means that the construction of a Gadget model can be done reasonably quickly, and the models will be free of any formatting errors in the Gadget input files that could prevent Gadget models from running. The data format is explained in more detail in the [Gadget User Guide](https://hafro.github.io/gadget/docs/userguide). There is also a tutorial available [here](https://heima.hafro.is/~bthe/gadget_course.html)
 
-# Prerequisites
+# Installing as an R package
+
+Assuming R and ``remotes`` is installed you can install gadget with:
+
+    remotes::install_github("Hafro/gadget")
+
+You can find where gadget is installed using the ``gadget_binary`` command:
+
+    > gadget::gadget_binary()
+    [1] "/usr/local/lib/R/site-library/gadget/bin/gadget"
+
+If you'd like gadget to be available on the system path, create a symlink as follows:
+
+    sudo ln -s "/usr/local/lib/R/site-library/gadget/bin/gadget" /usr/local/bin/gadget
+
+# Installing as a standalone executable
+
+## Prerequisites
 To compile Gadget one needs a working C++ compiler and a version of Make installed on the computer:
 
-## Linux
+### Linux
 This should be install automatically on most distributions but on ubuntu one needs to install build-essentials:
 
 >  sudo apt-get install build-essential
   
 
-## MacOsX
+### MacOsX
 It should be sufficient to install XCode through the Appstore and through XCode's preferences install commandline tools
 
-## Windows
+### Windows
 Easiest way is to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) . During the install process allow the installer to append to the system path.
 
-# Compile and install
+## Compile and install
 To install Gadget you can either [download as a zip file](https://github.com/Hafro/gadget/archive/master.zip) (or clone the repository using git). Unzip this file and within command prompt/terminal application make your way to the resulting folder, typically called `gadget-master`, and simply type:
   
 >  make
