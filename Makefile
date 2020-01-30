@@ -24,6 +24,7 @@ export CXXFLAGS
 ###########################################################################
 $(GADGET):
 	$(MAKE) -C src $(GADGET)
+	mv src/$@ $@
 
 ##########################################################################
 # The following line is needed to create the gadget input library
@@ -32,19 +33,22 @@ $(GADGET):
 ##########################################################################
 libgadgetinput.a:
 	$(MAKE) -C src libgadgetinput.a
+	mv src/$@ $@
 
 gadgetpara: CXX = mpic++
 gadgetpara:
 	$(MAKE) -C src $(GADGETPARA)
+	mv src/$(GADGETPARA) $(GADGETPARA)
 
 ## you need root permission to be able to do this ...
 install	:	$(GADGET)
-		strip src/$(GADGET)
-		cp src/$(GADGET) /usr/local/bin/
+		strip $(GADGET)
+		cp $(GADGET) /usr/local/bin/
 		mkdir -p /usr/local/man/man1/
 		cp gadget.1 /usr/local/man/man1/
 
 clean	:
 	$(MAKE) -C src $@
+	rm libgadgetinput.a $(GADGETPARA) $(GADGET) || true
 
 .PHONY: gadget libgadgetinput.a gadgetpara install clean

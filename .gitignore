@@ -1,5 +1,7 @@
-/src/gadget
-/src/gadget-para
+/gadget
+/gadget-para
+/libgadgetinput.a
+
 /*.Rcheck
 /*.Rhistory
 /*.Rprofile
