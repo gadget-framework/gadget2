@@ -1,0 +1,8 @@
+# Makefile used when compiling under Windows R, overrides Makefile
+
+# Fetch compiler configuration from R
+CXX := 			$(shell $(R_HOME)/bin/R $(R_ARCH) CMD config CXX)
+CXXFLAGS := 		$(shell $(R_HOME)/bin/R $(R_ARCH) CMD config CXXFLAGS)
+
+# Continue with regular Makefile
+include Makefile
