@@ -3,7 +3,7 @@
 
 # R won't have run the top-level make, set some defaults
 ifeq ($(GADGET),)
-  GADGET := gadget
+  GADGET = gadget
   CXXFLAGS += -O3 -g0  # Override /etc/R/Makeconf settings
 endif
 
