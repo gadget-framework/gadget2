@@ -6,3 +6,11 @@ libgadgetinput\.a$
 ^[^/]+\.tar\.gz
 ^\.bash_history\.*
 ^.zenodo.json$
+
+^LICENSE\.md$
+^build-docs\.R$
+^docs$
+^examples$
+^gadget\.1$
+^gadget\.dox$
+^params\.out$
