@@ -7,8 +7,8 @@ ifeq ($(GADGET),)
   CXXFLAGS += -O3 -g0  # Override /etc/R/Makeconf settings
 endif
 
-CXXFLAGS += -D INTERRUPT_HANDLER -I ../headers/ 
-LDFLAGS += -L. -L/usr/local/lib -I ../headers -lm
+CXXFLAGS += -D INTERRUPT_HANDLER -I include/
+LDFLAGS += -L. -L/usr/local/lib -I include/ -lm
 
 ifneq ($(OS),Windows_NT)
   ifneq ($(R_OSTYPE),windows)
