@@ -276,7 +276,7 @@ void ProgLikelihood::PrintLog(ofstream& outfile) const {
 
   outfile << "weightoflastyearstac" << " " << weightoflastyearstac << endl;
   
-  if(weightoflastyearstac>1 | weightoflastyearstac<0)
+  if((weightoflastyearstac>1) | (weightoflastyearstac<0))
     handle.logMessage(LOGFAIL, "Error in proglikelihood - value of weightoflastyearstac should be between 0 and 1, value supplied is: ", weightoflastyearstac);
 
   outfile <<  "maxchange"<< " " << maxchange << endl;
@@ -368,7 +368,7 @@ void ProgLikelihood::CalcTac(const TimeClass* const TimeInfo) {  // can use func
   
   // 2 more triggers+1 harvestratio
   if(triggervalues.Size() == 4) {
-    if(bio2werr[index] > triggervalues[1] & bio2werr[index] < triggervalues[2]) 
+    if((bio2werr[index] > triggervalues[1]) & (bio2werr[index] < triggervalues[2]))
       hr = harvestrates[1];
     
     if((bio2werr[index] >  triggervalues[2]) & (bio2werr[index] < triggervalues[3])) 
