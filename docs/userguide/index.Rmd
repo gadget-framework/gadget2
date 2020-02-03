@@ -99,7 +99,7 @@ Getting Gadget {#sec:gettinggadget}
 
 Gadget is distributed via GitHub and can be obtained at:
 
-    http://github.com/hafro/gadget
+    http://github.com/Hafro/gadget2
 
 The most recent version of Gadget will be available as a zip file from
 this from this site (select \"Clone or download\"). As a guide, the
@@ -134,7 +134,7 @@ in conjunction with an example dataset.
 A web site has been set up that contains details of the recent changes
 to Gadget, documentation updates and other news. This is also a good
 place to look for more information about Gadget. The address of the
-Gadget web site is http://www.github.com/hafro/gadget.
+Gadget web site is http://www.github.com/Hafro/gadget2.
 
 Throughout this document any text in $<$angled brackets$>$ should be
 adjusted by the user to make it relevant to the current situation, so

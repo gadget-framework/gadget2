@@ -21,7 +21,7 @@ These input data files are in a column-based format, which means that they can e
 
 Assuming R and ``remotes`` is installed you can install gadget with:
 
-    remotes::install_github("Hafro/gadget")
+    remotes::install_github("Hafro/gadget2")
 
 You can find where gadget is installed using the ``gadget_binary`` command:
 
