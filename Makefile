@@ -20,9 +20,17 @@ export CXX
 CXXFLAGS = -O3
 
 export CXXFLAGS
+##########################################################################
+# Detect platform
+ifeq ($(OS),Windows_NT)
+    GADGET_PLATFORM = -D WINDOWS
+else
+    GADGET_PLATFORM = -D NOT_WINDOWS
+endif
+
 ###########################################################################
 gadget:
-	$(MAKE) -C src gadget
+	$(MAKE) -C src gadget GADGET_PLATFORM="$(GADGET_PLATFORM)"
 	mv src/gadget $(GADGET)
 
 ##########################################################################
@@ -31,12 +39,12 @@ gadget:
 # to type "make libgadgetinput.a" *before* you compile paramin
 ##########################################################################
 libgadgetinput.a:
-	$(MAKE) -C src libgadgetinput.a
+	$(MAKE) -C src libgadgetinput.a GADGET_PLATFORM="$(GADGET_PLATFORM)"
 	mv src/$@ $@
 
 gadgetpara: CXX = mpic++
 gadgetpara:
-	$(MAKE) -C src gadget-para
+	$(MAKE) -C src gadget-para GADGET_PLATFORM="$(GADGET_PLATFORM)"
 	mv src/gadget-para $(GADGETPARA)
 
 ## you need root permission to be able to do this ...

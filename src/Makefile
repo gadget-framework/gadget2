@@ -3,14 +3,9 @@
 
 CXXFLAGS += -O3 -g0  # Override /etc/R/Makeconf settings
 
-CXXFLAGS += -D INTERRUPT_HANDLER -I include/
-LDFLAGS += -L. -L/usr/local/lib -I include/ -lm
-
-ifneq ($(OS),Windows_NT)
-  ifneq ($(R_OSTYPE),windows)
-    CXXFLAGS += -D NOT_WINDOWS
-  endif
-endif
+GADGET_CXXFLAGS = -D INTERRUPT_HANDLER -I include/
+GADGET_LDFLAGS = -L. -L/usr/local/lib -I include/ -lm
+GADGET_PLATFORM = -D NOT_WINDOWS  # Assume not-windows until proven otherwise
 
 GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
     area.o time.o keeper.o maininfo.o printinfo.o runid.o global.o stochasticdata.o \
@@ -57,15 +52,18 @@ EXTRAINPUT = optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
 
 all: gadget
 
+%.o: %.cc
+	$(CXX) $(CXXFLAGS) $(GADGET_CXXFLAGS) $(GADGET_PLATFORM) $(GADGET_NETWORK) -c $< -o $@
+
 gadget: $(GADGETOBJECTS) $(GADGETINPUT)
-	$(CXX) -o gadget $+ $(LDFLAGS)
+	$(CXX) -o gadget $+ $(LDFLAGS) $(GADGET_LDFLAGS)
 
 libgadgetinput.a: $(GADGETINPUT) $(EXTRAINPUT)
 	ar rs $@ $+
 
-gadget-para: CXXFLAGS += -D GADGET_NETWORK
+gadget-para: GADGET_NETWORK = -D GADGET_NETWORK
 gadget-para: $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
-	$(CXX) -o gadget-para $+ $(LDFLAGS)
+	$(CXX) -o gadget-para $+ $(LDFLAGS) $(GADGET_LDFLAGS)
 
 clean:
 	rm -f *.o libgadgetinput.a gadget gadgetpara
