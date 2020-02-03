@@ -2,7 +2,6 @@
 # The name of the final executable (eg gadget-paramin or gadget.exe)
 GADGET = gadget
 GADGETPARA = gadget-para
-export GADGET GADGETPARA
 
 ##########################################################################
 # Pick the appropriate compiler from the following switches
@@ -22,9 +21,9 @@ CXXFLAGS = -O3
 
 export CXXFLAGS
 ###########################################################################
-$(GADGET):
-	$(MAKE) -C src $(GADGET)
-	mv src/$@ $@
+gadget:
+	$(MAKE) -C src gadget
+	mv src/gadget $(GADGET)
 
 ##########################################################################
 # The following line is needed to create the gadget input library
@@ -37,8 +36,8 @@ libgadgetinput.a:
 
 gadgetpara: CXX = mpic++
 gadgetpara:
-	$(MAKE) -C src $(GADGETPARA)
-	mv src/$(GADGETPARA) $(GADGETPARA)
+	$(MAKE) -C src gadget-para
+	mv src/gadget-para $(GADGETPARA)
 
 ## you need root permission to be able to do this ...
 install	:	$(GADGET)

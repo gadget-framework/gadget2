@@ -1,11 +1,7 @@
 # Compile gadget objects
 # NB: Used for both R and top-level Makefile
 
-# R won't have run the top-level make, set some defaults
-ifeq ($(GADGET),)
-  GADGET = gadget
-  CXXFLAGS += -O3 -g0  # Override /etc/R/Makeconf settings
-endif
+CXXFLAGS += -O3 -g0  # Override /etc/R/Makeconf settings
 
 CXXFLAGS += -D INTERRUPT_HANDLER -I include/
 LDFLAGS += -L. -L/usr/local/lib -I include/ -lm
@@ -59,19 +55,19 @@ GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
 
 EXTRAINPUT = optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
 
-all: $(GADGET)
+all: gadget
 
-$(GADGET): $(GADGETOBJECTS) $(GADGETINPUT)
-	$(CXX) -o $(GADGET) $+ $(LDFLAGS)
+gadget: $(GADGETOBJECTS) $(GADGETINPUT)
+	$(CXX) -o gadget $+ $(LDFLAGS)
 
 libgadgetinput.a: $(GADGETINPUT) $(EXTRAINPUT)
 	ar rs $@ $+
 
-$(GADGETPARA): CXXFLAGS += -D GADGET_NETWORK
-$(GADGETPARA): $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
-	$(CXX) -o $(GADGETPARA) $+ $(LDFLAGS)
+gadget-para: CXXFLAGS += -D GADGET_NETWORK
+gadget-para: $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
+	$(CXX) -o gadget-para $+ $(LDFLAGS)
 
 clean:
-	rm -f *.o libgadgetinput.a $(GADGET) $(GADGETPARA)
+	rm -f *.o libgadgetinput.a gadget gadgetpara
 
 .PHONY: clean
