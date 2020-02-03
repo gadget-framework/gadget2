@@ -8,5 +8,7 @@ Authors@R: c(person("Bjarki Thor", "Elvarsson", email="bjarki.elvarsson@hafogvat
 Maintainer: Bjarki Thor Elvarsson <bjarki.elvarsson@hafogvatn.is>
 Description: Installs the C++ Gadget2 runtime, making it available for R.
 Encoding: UTF-8
+Suggests:
+    unittest (>= 1.4)
 License: GPL-2
 RoxygenNote: 7.0.2
