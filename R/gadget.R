@@ -3,7 +3,7 @@
 ##' @export
 gadget_binary <- function () {
     normalizePath(file.path(
-        find.package('gadget'),
+        find.package('gadget2'),
         'bin',
         .Platform$r_arch,  # NB: R_ARCH in src/install.libs.R has a "/", this doesn't
         if (.Platform$OS.type == 'windows') 'gadget.exe' else 'gadget'
