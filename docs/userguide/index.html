@@ -284,6 +284,7 @@
 <li class="chapter" data-level="16.5" data-path="chap-change.html"><a href="chap-change.html#sec:v2105"><i class="fa fa-check"></i><b>16.5</b> Gadget version 2.1.05</a></li>
 <li class="chapter" data-level="16.6" data-path="chap-change.html"><a href="chap-change.html#sec:v2106"><i class="fa fa-check"></i><b>16.6</b> Gadget version 2.1.06</a></li>
 <li class="chapter" data-level="16.7" data-path="chap-change.html"><a href="chap-change.html#sec:v2200"><i class="fa fa-check"></i><b>16.7</b> Gadget version 2.2.00</a></li>
+<li class="chapter" data-level="16.8" data-path="chap-change.html"><a href="chap-change.html#sec:v9999"><i class="fa fa-check"></i><b>16.8</b> Gadget development version</a></li>
 </ul></li>
 </ul>
 
@@ -382,45 +383,18 @@ programming efforts.</p>
 <div id="sec:gettinggadget" class="section level2">
 <h2><span class="header-section-number">1.2</span> Getting Gadget</h2>
 <p>Gadget is distributed via GitHub and can be obtained at:</p>
-<pre><code>http://github.com/Hafro/gadget2</code></pre>
-<p>The most recent version of Gadget will be available as a zip file from
-this from this site (select "Clone or download"). As a guide, the
-current version of Gadget is 2.2.00, so the file to be downloaded is
-gadget2.2.00.tar.gz.</p>
+<blockquote>
+<p><a href="http://github.com/Hafro/gadget2" class="uri">http://github.com/Hafro/gadget2</a></p>
+</blockquote>
+<p>That page will have instructions for how to install the most recent
+version of Gadget. Follow the instructions there to install</p>
 <p>Gadget is a program that runs on a Unix computing platform, and is
 regularly tested on machines running versions of Linux, Mac OSX and
 Windows. It should also run on other versions of Unix, but this may
 require modifications to the makefile in order to do so. Gadget is
 distributed as a set of source code files, which need to be compiled
-into an executable program before it can be run. To allow for various
-different versions, the makefile has a list of supported computing
-platforms, so the makefile should be checked (and if necessary changed)
-to ensure that the required options are available before the source code
-is compiled. The default options in the makefile will compile Gadget for
-a Linux machine, using the GNU C++ compiler. A summary of the commands
-required to compile Gadget, using the default options for a Linux
-machine from the downloaded file are:</p>
-<pre><code>unzip gadget-master.zip
-cd gadget-master
-make</code></pre>
-<p>The most recent copy of this document will also be placed on the github
-site, along with copies of any example datasets that are available.
-These datasets will be checked so that they run without any problems,
-and will also contain some comments to help the user understand the
-format of the data files. It is recommended that this user guide is read
-in conjunction with an example dataset.</p>
-<p>A web site has been set up that contains details of the recent changes
-to Gadget, documentation updates and other news. This is also a good
-place to look for more information about Gadget. The address of the
-Gadget web site is <a href="http://www.github.com/Hafro/gadget2" class="uri">http://www.github.com/Hafro/gadget2</a>.</p>
-<p>Throughout this document any text in <span class="math inline">\(&lt;\)</span>angled brackets<span class="math inline">\(&gt;\)</span> should be
-adjusted by the user to make it relevant to the current situation, so
-for example the text above should be altered to the following to compile
-Gadget version 2.2.00 on a Linux machine:</p>
-<pre><code>gunzip gadget2.2.00.tar.gz
-tar -xvf gadget2.2.00.tar
-cd source
-make</code></pre>
+into an executable program before it can be run. Follow the instructions
+on the link above to fetch and compile the Gadget sources.</p>
 </div>
 <div id="sec:runninggadget" class="section level2">
 <h2><span class="header-section-number">1.3</span> Running Gadget</h2>
