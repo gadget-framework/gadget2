@@ -358,11 +358,9 @@ void ProgLikelihood::CalcTac(const TimeClass* const TimeInfo) {  // can use func
   int index = TimeInfo->getYear() - TimeInfo->getFirstYear();
   if(bio2werr[index] < triggervalues[0]) 
     hr = harvestrates[0];
-  
-  if((bio2werr[index] >  triggervalues[0]) & (bio2werr[index] < triggervalues[1])) 
+  else if(bio2werr[index] < triggervalues[1])
     hr = harvestrates[0]+(bio2werr[index]-triggervalues[0])/(triggervalues[1]-triggervalues[0])*(harvestrates[1]-harvestrates[0]);
-  
-  if(bio2werr[index] > triggervalues[1]) 
+  else
     hr = harvestrates[1];
   
   // 2 more triggers+1 harvestratio
