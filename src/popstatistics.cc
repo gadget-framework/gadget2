@@ -46,33 +46,27 @@ void PopStatistics::calcStatistics(const PopInfoIndexVector& pop,
 
 void PopStatistics::calcStatistics(const AgeBandMatrix& agelenum, int lengr) {
 
-  PopInfo sum;
   int age;
-  double weig, totn, weigt;
   
 // loop over the ages to find specific length group else go to next age
 
-  meanweight = totalnumber= 0.0;
+  meanlength = meanweight = totalnumber = sdevlength = 0.0;
   for (age = agelenum.minAge(); age <= agelenum.maxAge(); age++) {
-    weig <= 0.0;
-    totn <=0.0;
-    weigt <= 0.0;
-
     if ((handle.getLogLevel() >= LOGWARN))
       if ((isZero((agelenum[age][lengr]).W)) && (!((agelenum[age][lengr]).N)))
         handle.logMessage(LOGWARN, "Warning in popstatistics - non-zero population has zero mean weight");
 
-    sum += agelenum[age][lengr];
-    weig = sum.W;
-    
-    totn += (agelenum[age][lengr]).N;
-
-    weigt= weig*totn;
-
+    meanweight += (agelenum[age][lengr]).W;
+    totalnumber += (agelenum[age][lengr]).N;
   }
-  meanweight += weigt;
-  totalnumber += totn;
-  meanweight /= totalnumber;
+
+  if (totalnumber > verysmall) {
+    meanweight /= totalnumber;
+    sdevlength = sqrt(sdevlength / totalnumber);
+  } else {
+    meanweight = 0.0;
+    totalnumber = 0.0;
+  }
 }
 
 
