@@ -1,9 +1,8 @@
 # Compile gadget objects
 # NB: Used for both R and top-level Makefile
 
-CXXFLAGS += -O3 -g0  # Override /etc/R/Makeconf settings
-
 GADGET_CXXFLAGS = -D INTERRUPT_HANDLER -I include/
+GADGET_OPTIM = -O3 -march=native
 GADGET_LDFLAGS = -L. -L/usr/local/lib -I include/ -lm
 GADGET_PLATFORM = -D NOT_WINDOWS  # Assume not-windows until proven otherwise
 
@@ -53,7 +52,7 @@ EXTRAINPUT = optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
 all: gadget
 
 %.o: %.cc
-	$(CXX) $(CXXFLAGS) $(GADGET_CXXFLAGS) $(GADGET_PLATFORM) $(GADGET_NETWORK) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(GADGET_OPTIM) $(GADGET_CXXFLAGS) $(GADGET_PLATFORM) $(GADGET_NETWORK) -c $< -o $@
 
 gadget: $(GADGETOBJECTS) $(GADGETINPUT)
 	$(CXX) -o gadget $+ $(LDFLAGS) $(GADGET_LDFLAGS)

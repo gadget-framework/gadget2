@@ -16,10 +16,9 @@ CXX = g++
 export CXX
 ##########################################################################
 # Enable optimisation / debugging
-# CXXFLAGS = -D DEBUG
-CXXFLAGS = -O3
+# GADGET_OPTIM = -D DEBUG
+GADGET_OPTIM = -O3 -march=native
 
-export CXXFLAGS
 ##########################################################################
 # Detect platform
 ifeq ($(OS),Windows_NT)
@@ -30,7 +29,7 @@ endif
 
 ###########################################################################
 gadget:
-	$(MAKE) -C src gadget GADGET_PLATFORM="$(GADGET_PLATFORM)"
+	$(MAKE) -C src gadget GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
 	mv src/gadget $(GADGET)
 
 ##########################################################################
@@ -39,12 +38,12 @@ gadget:
 # to type "make libgadgetinput.a" *before* you compile paramin
 ##########################################################################
 libgadgetinput.a:
-	$(MAKE) -C src libgadgetinput.a GADGET_PLATFORM="$(GADGET_PLATFORM)"
+	$(MAKE) -C src libgadgetinput.a GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
 	mv src/$@ $@
 
 gadgetpara: CXX = mpic++
 gadgetpara:
-	$(MAKE) -C src gadget-para GADGET_PLATFORM="$(GADGET_PLATFORM)"
+	$(MAKE) -C src gadget-para GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
 	mv src/gadget-para $(GADGETPARA)
 
 ## you need root permission to be able to do this ...
