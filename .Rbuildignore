@@ -1,5 +1,7 @@
 \.o$
 libgadgetinput\.a$
+gadget$
+gadget-para$
 ^\.git
 ^\.travis.yml
 ^Makefile
