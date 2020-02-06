@@ -4,7 +4,7 @@
 PopRatioMatrix::PopRatioMatrix(int nr, int nc, PopRatio value) {
   nrow = nr;
   v = new PopRatioVector*[nr];
-  int i, j;
+  int i;
   for (i = 0; i < nr; i++)
     v[i] = new PopRatioVector(nc, value);
 }

@@ -11,7 +11,6 @@ BoundLikelihood::BoundLikelihood(CommentStream& infile, const AreaClass* const A
   const TimeClass* const TimeInfo, const Keeper* const keeper, double weight, const char* name)
   : Likelihood(BOUNDLIKELIHOOD, weight, name) {
 
-  int i, j;
   Parameter tempParam;
   double temp;
   int count = 0;

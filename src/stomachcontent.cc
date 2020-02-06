@@ -85,8 +85,6 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   int i, j;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int numpred = 0;
-  int numarea = 0;
 
   timeindex = 0;
   usepredages = 0;
@@ -117,7 +115,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   datafile.open(aggfilename, ios::in);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
-  numarea = readAggregation(subdata, areas, areaindex);
+  readAggregation(subdata, areas, areaindex);
   handle.Close();
   datafile.close();
   datafile.clear();
@@ -149,7 +147,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     datafile.open(aggfilename, ios::in);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    numpred = readLengthAggregation(subdata, predatorlengths, predindex);
+    readLengthAggregation(subdata, predatorlengths, predindex);
     handle.Close();
     datafile.close();
     datafile.clear();
@@ -159,7 +157,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
     datafile.open(aggfilename, ios::in);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
-    numpred = readAggregation(subdata, predatorages, predindex);
+    readAggregation(subdata, predatorages, predindex);
     handle.Close();
     datafile.close();
     datafile.clear();

@@ -284,7 +284,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
 
-  int i, j, k;
+  int i, j;
   int minage, maxage;
   char c;
   double minlength, maxlength, dl;

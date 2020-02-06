@@ -4,7 +4,7 @@
 PopInfoMatrix::PopInfoMatrix(int nr, int nc, PopInfo value) {
   nrow = nr;
   v = new PopInfoVector*[nr];
-  int i, j;
+  int i;
   for (i = 0; i < nr; i++)
     v[i] = new PopInfoVector(nc, value);
 }

@@ -3,9 +3,8 @@
 #include "global.h"
 
 istream& operator >> (istream& istr, Whitespace& ws) {
-  int c;
   while (istr.peek() == ' ' || istr.peek() == '\t' || istr.peek() == '\r' || istr.peek() == '\n')
-    c = istr.get();
+    istr.get();
   return istr;
 }
 

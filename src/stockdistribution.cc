@@ -195,7 +195,7 @@ void StockDistribution::readStockData(CommentStream& infile,
   strncpy(tmpstock, "", MaxStrLength);
   strncpy(tmpage, "", MaxStrLength);
   strncpy(tmplen, "", MaxStrLength);
-  int i, j, year, step, count, reject;
+  int i, year, step, count, reject;
   int keepdata, timeid, stockid, ageid, areaid, lenid;
   int numstock = stocknames.Size();
 

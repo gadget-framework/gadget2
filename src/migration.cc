@@ -25,7 +25,6 @@ MigrationNumbers::MigrationNumbers(CommentStream& infile, const IntVector& Areas
   const char* givenname, Keeper* const keeper)
   : Migration(Areas, givenname) {
 
-  int i, j;
   ifstream subfile;
   CommentStream subcomment(subfile);
   char text[MaxStrLength];
@@ -427,7 +426,6 @@ MigrationFunction::MigrationFunction(CommentStream& infile, const IntVector& Are
   const char* givenname, Keeper* const keeper)
   : Migration(Areas, givenname) {
 
-  int i;
   ifstream subfile;
   CommentStream subcomment(subfile);
   char text[MaxStrLength];

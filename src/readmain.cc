@@ -333,7 +333,6 @@ void Ecosystem::readOptimisation(CommentStream& infile) {
 //
 void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
 
-  int i, j;
   char text[MaxStrLength];
   char filename[MaxStrLength];
   strncpy(text, "", MaxStrLength);

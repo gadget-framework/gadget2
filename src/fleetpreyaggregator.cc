@@ -80,7 +80,7 @@ int FleetPreyAggregator::checkCatchData() {
 
 void FleetPreyAggregator::Sum() {
 
-  int f, g, h, i, j, k, r, z;
+  int f, g, h, i, j, k, r;
   int predl = 0;  //JMB there is only ever one length group ...
   double ratio;
 

@@ -16,7 +16,7 @@ PredatorOverPrinter::PredatorOverPrinter(CommentStream& infile, const TimeClass*
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i, j;
+  int i;
 
   //read in the predator names
   i = 0;

@@ -18,7 +18,7 @@ MigrationProportion::MigrationProportion(CommentStream& infile, const AreaClass*
   int i, j;
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int numarea = 0, numage = 0, numlen = 0;
+  int numarea = 0;
 
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
@@ -164,7 +164,7 @@ void MigrationProportion::readProportionData(CommentStream& infile,
 }
 
 MigrationProportion::~MigrationProportion() {
-  int i, j;
+  int i;
   for (i = 0; i < stocknames.Size(); i++)
     delete[] stocknames[i];
   for (i = 0; i < areaindex.Size(); i++)

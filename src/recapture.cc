@@ -105,7 +105,7 @@ Recaptures::Recaptures(CommentStream& infile, const AreaClass* const Area,
 void Recaptures::readRecaptureData(CommentStream& infile,
   const TimeClass* const TimeInfo, int numarea, int numlen) {
 
-  int i, j, k;
+  int i;
   double tmpnumber;
   char tmparea[MaxStrLength], tmplength[MaxStrLength], tmptagid[MaxStrLength];
   strncpy(tmparea, "", MaxStrLength);
@@ -267,8 +267,7 @@ void Recaptures::setFleetsAndStocks(FleetPtrVector& Fleets, StockPtrVector& Stoc
       if ((strcasecmp(fleets[i]->getName(), fleets[j]->getName()) == 0) && (i != j))
         handle.logMessage(LOGFAIL, "Error in recaptures - repeated fleet", fleets[i]->getName());
 
-  double minlen, maxlen;
-  int minage, maxage, size;
+  int minage, maxage;
 
   aggregator = new RecAggregator*[tagvec.Size()];
   for (k = 0; k < tagvec.Size(); k++) {

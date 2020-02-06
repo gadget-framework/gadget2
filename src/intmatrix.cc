@@ -4,7 +4,7 @@
 IntMatrix::IntMatrix(int nr, int nc, int value) {
   nrow = nr;
   v = new IntVector*[nr];
-  int i, j;
+  int i;
   for (i = 0; i < nr; i++)
     v[i] = new IntVector(nc, value);
 }

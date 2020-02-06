@@ -290,7 +290,7 @@ void ProgLikelihood::Print(ofstream& outfile) const {}
 // biomasses in first yearsare zero if we start after quotastep in the first year
 // still to see how this function is called.  
 void ProgLikelihood::printLikelihood(ofstream& outfile,const TimeClass* const TimeInfo) {
-  int i,year;
+  int i;
   if(TimeInfo->getTime()==TimeInfo->calcSteps(TimeInfo->getLastYear(),TimeInfo->getLastStep())){
     outfile << "\n; -- data --";
     outfile << "\n; year reference_biomass reference_biomass_with_error trigger_biomass trigger_biomass_with_error";
@@ -321,7 +321,6 @@ void ProgLikelihood::Reset(const Keeper* const keeper) {
 void ProgLikelihood::AllocateTac(const TimeClass* const TimeInfo){
   int i,j;
   double tmptac;
-  int currenttime = TimeInfo->getTime();
   for(i = 0; i < quotasteps.Size(); i++){
     for(j = 0; j < fleets.Size(); j++){
       

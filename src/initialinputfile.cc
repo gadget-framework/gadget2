@@ -186,7 +186,6 @@ void InitialInputFile::readFromFile() {
 }
 
 void InitialInputFile::readNextLine() {
-  int i;
   double tempX;
   DoubleVector tempValues;
 

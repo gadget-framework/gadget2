@@ -191,7 +191,7 @@ void Grower::calcGrowth(int area,
 }
 
 void Grower::Reset() {
-  int i, j, area;
+  int i, area;
   double factorialx, tmppart, tmpmax;
 
   calcLengthGrowth.setToZero();

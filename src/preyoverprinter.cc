@@ -16,7 +16,7 @@ PreyOverPrinter::PreyOverPrinter(CommentStream& infile, const TimeClass* const T
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i, j;
+  int i;
 
   //read in the prey names
   i = 0;
@@ -185,7 +185,7 @@ void PreyOverPrinter::Print(const TimeClass* const TimeInfo, int printtime) {
 
   aggregator->Sum();
   dptr = &aggregator->getSum();
-  int a, len, p, w;
+  int a, len;
 
   for (a = 0; a < areas.Nrow(); a++) {
     for (len = 0; len < dptr->Ncol(a); len++) {

@@ -15,7 +15,6 @@ CatchInKilos::CatchInKilos(CommentStream& infile, const AreaClass* const Area,
 
   int i, j;
   int numarea = 0;
-  int readfile = 0;
   char text[MaxStrLength];
   char datafilename[MaxStrLength];
   char aggfilename[MaxStrLength];
@@ -398,7 +397,7 @@ void CatchInKilos::printLikelihood(ofstream& outfile, const TimeClass* const Tim
   if ((yearly) && (TimeInfo->getStep() != TimeInfo->numSteps()))
     return;  //if data is aggregated into years then we need the last timestep
 
-  int i, area, age, len;
+  int i, area;
   timeindex = -1;
   if (yearly) {
     for (i = 0; i < Years.Size(); i++)

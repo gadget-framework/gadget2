@@ -18,7 +18,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i, j;
+  int i;
 
   //read in the stocknames
   i = 0;

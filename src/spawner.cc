@@ -297,7 +297,7 @@ void SpawnData::addSpawnStock(int area, const TimeClass* const TimeInfo) {
   if (onlyParent)
     return;
 
-  int s, age, len;
+  int s, len;
   int inarea = this->areaNum(area);
   double tmp, length, N, total, sum;
 

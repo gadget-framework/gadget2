@@ -17,7 +17,7 @@ PredatorPrinter::PredatorPrinter(CommentStream& infile, const TimeClass* const T
 
   char text[MaxStrLength];
   strncpy(text, "", MaxStrLength);
-  int i, j;
+  int i;
 
   //default value is to print biomass
   biomass = 1;
