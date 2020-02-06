@@ -6507,3 +6507,8 @@ Gadget version 2.2.00 {#sec:v2200}
 
 -   added a penalty to models with NaN values to ensure that the
     optimiser chooses a valid minimum value
+
+Gadget development version {#sec:v9999}
+---------------------
+
+-   Turn gadget2 into a CRAN-compatible package
