@@ -24,7 +24,7 @@ public:
   /**
    * \brief This is the default Regression destructor
    */
-  ~Regression() {};
+  virtual ~Regression() {};
   /**
    * \brief This is the function that stores 2 vectors that will be compared using a regression line
    * \param modData is the DoubleVector containing the modelled data
