@@ -1,7 +1,8 @@
 # Compile gadget objects
 # NB: Used for both R and top-level Makefile
 
-GADGET_CXXFLAGS = -D INTERRUPT_HANDLER -I include/
+GADGETVERSION = `awk '/^Version: / { print $$2 }' ../DESCRIPTION`
+GADGET_CXXFLAGS = -D INTERRUPT_HANDLER -D GADGETVERSION='"'$(GADGETVERSION)'"' -I include/
 GADGET_OPTIM = -O3 -march=native
 GADGET_LDFLAGS = -L. -L/usr/local/lib -I include/ -lm
 GADGET_PLATFORM = -D NOT_WINDOWS  # Assume not-windows until proven otherwise
