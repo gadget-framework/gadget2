@@ -11,6 +11,7 @@ gadget-para$
 
 ^LICENSE\.md$
 ^build-docs\.R$
+^do-release\.sh$
 ^docs$
 ^examples$
 ^gadget\.1$
