@@ -17,7 +17,7 @@ export CXX
 ##########################################################################
 # Enable optimisation / debugging
 # GADGET_OPTIM = -D DEBUG
-GADGET_OPTIM = -O3 -march=native
+GADGET_OPTIM = -O3 -march=native -Wall
 
 ##########################################################################
 # Detect platform
