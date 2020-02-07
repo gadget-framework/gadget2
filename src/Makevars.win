@@ -1,0 +1,11 @@
+# Makefile used when compiling under Windows R, overrides Makefile
+
+# Force gadget to be windows
+ifeq "$(R_ARCH_BIN)" "/x64"
+    override GADGET_PLATFORM=-D WINDOWS -Lx64
+else
+    override GADGET_PLATFORM=-D WINDOWS -Li386
+endif
+
+# Continue with regular Makefile
+include Makefile

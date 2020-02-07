@@ -12,3 +12,4 @@ Suggests:
     unittest (>= 1.4)
 License: GPL-2
 RoxygenNote: 7.0.2
+Biarch: yes
