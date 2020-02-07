@@ -9,6 +9,7 @@ gadget-para$
 ^\.bash_history\.*
 ^.zenodo.json$
 
+^src-para$
 ^LICENSE\.md$
 ^build-docs\.R$
 ^do-release\.sh$

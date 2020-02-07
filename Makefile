@@ -43,8 +43,8 @@ libgadgetinput.a:
 
 gadgetpara: CXX = mpic++
 gadgetpara:
-	$(MAKE) -C src gadget-para GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
-	mv src/gadget-para $(GADGETPARA)
+	$(MAKE) -C src-para gadget-para GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
+	mv src-para/gadget-para $(GADGETPARA)
 
 ## you need root permission to be able to do this ...
 install	:	$(GADGET)

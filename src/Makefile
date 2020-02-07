@@ -43,8 +43,6 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     tagptrvector.o optinfoptrvector.o errorhandler.o modelvariablevector.o \
     stockvariable.o modelvariable.o migrationproportion.o proglikelihood.o
 
-SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
-
 GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
     commentstream.o parameter.o parametervector.o strstack.o 
 
@@ -61,11 +59,7 @@ gadget: $(GADGETOBJECTS) $(GADGETINPUT)
 libgadgetinput.a: $(GADGETINPUT) $(EXTRAINPUT)
 	ar rs $@ $+
 
-gadget-para: GADGET_NETWORK = -D GADGET_NETWORK
-gadget-para: $(GADGETINPUT) $(GADGETOBJECTS) $(SLAVEOBJECTS)
-	$(CXX) -o gadget-para $+ $(LDFLAGS) $(GADGET_LDFLAGS)
-
 clean:
 	rm -f *.o libgadgetinput.a gadget gadgetpara
 
-.PHONY: clean
+.PHONY: all clean

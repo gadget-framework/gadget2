@@ -41,7 +41,10 @@ To compile Gadget one needs a working C++ compiler and a version of Make install
 This should be install automatically on most distributions but on ubuntu one needs to install build-essentials:
 
 >  sudo apt-get install build-essential
-  
+
+If using paramin, you will also need mpic:
+
+> sudo apt install mpich libmpich-dev
 
 ### MacOsX
 It should be sufficient to install XCode through the Appstore and through XCode's preferences install commandline tools
