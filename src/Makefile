@@ -1,7 +1,7 @@
 # Compile gadget objects
 # NB: Used for both R and top-level Makefile
 
-GADGETVERSION = `awk '/^Version: / { print $$2 }' ../DESCRIPTION`
+GADGETVERSION = `grep 'Version:' ../DESCRIPTION | cut -d' ' -f2`
 GADGET_CXXFLAGS = -D INTERRUPT_HANDLER -D GADGETVERSION='"'$(GADGETVERSION)'"' -I include/
 GADGET_OPTIM = -O3 -march=native
 GADGET_LDFLAGS = -L. -L/usr/local/lib -I include/ -lm
