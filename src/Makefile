@@ -3,7 +3,7 @@
 
 GADGETVERSION = `grep 'Version:' ../DESCRIPTION | cut -d' ' -f2`
 GADGET_CXXFLAGS = -D INTERRUPT_HANDLER -D GADGETVERSION='"'$(GADGETVERSION)'"' -I include/
-GADGET_OPTIM = -O3 -march=native
+GADGET_OPTIM = -O3
 GADGET_LDFLAGS = -L. -L/usr/local/lib -I include/ -lm
 GADGET_PLATFORM = -D NOT_WINDOWS  # Assume not-windows until proven otherwise
 
