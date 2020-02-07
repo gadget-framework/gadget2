@@ -1,7 +1,7 @@
 Package: gadget2
 Type: Package
 Title: Gadget is the Globally-applicable Area Disaggregated General Ecosystem Toolbox
-Version: 2.3.0
+Version: 2.3.99
 Date: 2020-02-07
 Authors@R: c(person("Bjarki Thor", "Elvarsson", email="bjarki.elvarsson@hafogvatn.is",role = c("aut", "cre")),
             person("Jamie", "Lentin", email="lentinj@shuttlethread.com",role = c("aut")))
