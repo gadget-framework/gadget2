@@ -1,0 +1,2 @@
+# Remove now-installed binary
+rm -f src/gadget
