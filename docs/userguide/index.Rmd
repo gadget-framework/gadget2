@@ -6517,3 +6517,7 @@ Gadget version 2.3.1 {#sec:v231}
 ---------------------
 
 -   Package building bugfixes
+
+Gadget development version {#sec:v9999}
+---------------------
+
