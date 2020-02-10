@@ -6513,7 +6513,7 @@ Gadget version 2.3.0 {#sec:v230}
 
 -   Turn gadget2 into a CRAN-compatible package
 
-Gadget development version {#sec:v9999}
+Gadget version 2.3.1 {#sec:v231}
 ---------------------
 
 -   Package building bugfixes
