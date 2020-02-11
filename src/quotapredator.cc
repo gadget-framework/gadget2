@@ -39,17 +39,22 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
     functionnumber = 5;
   else if (strcasecmp(functionname, "annualselect") == 0)
     functionnumber = 6;
+  else if (strcasecmp(functionname, "ices") == 0)
+    functionnumber = 7;
   else
     handle.logFileMessage(LOGFAIL, "\nError in quotapredator - unrecognised function", functionname);
+
 
   //now read in the stock biomass levels
   infile >> text >> ws;
   if (strcasecmp(text, "biomasslevel") != 0)
     handle.logFileUnexpected(LOGFAIL, "biomasslevel", text);
   while (isdigit(infile.peek()) && !infile.eof()) {
-    infile >> tmp >> ws;
+    infile >> tmp >> ws; 
     biomasslevel.resize(1, tmp);
   }
+  //biomasslevel.Inform(keeper);
+  //keeper->clearLast()
 
   if (biomasslevel.Size() == 0)
     handle.logMessage(LOGFAIL, "Error in quotapredator - missing quota data");
@@ -61,7 +66,7 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
     for (i = 1; i < biomasslevel.Size(); i++)
       if ((biomasslevel[i] - biomasslevel[i - 1]) < verysmall)
         handle.logFileMessage(LOGFAIL, "biomass levels must be strictly increasing");
-
+  
   //finally read in the quota parameters
   infile >> text >> ws;
   if (strcasecmp(text, "quotalevel") != 0)
@@ -81,7 +86,7 @@ QuotaPredator::QuotaPredator(CommentStream& infile, const char* givenname,
 
   //if we need to select the stocks used to calculate the fishing quota
   infile >> text >> ws;
-  if ((functionnumber == 3) || (functionnumber == 6)) {
+  if ((functionnumber == 3) || (functionnumber == 6) || (functionnumber == 7)) {
     if (strcasecmp(text, "selectstocks") != 0)
       handle.logFileUnexpected(LOGFAIL, "selectstocks", text);
 
@@ -259,6 +264,27 @@ void QuotaPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       }
       break;
 
+  case 7:
+      //Calculate the fishing level based on the available biomass of the selected stocks
+      bio = 0.0;
+      for (prey = 0; prey < this->numPreys(); prey++)
+        if ((this->getPrey(prey)->isPreyArea(area)) && (selectprey[prey]))
+          bio += this->getPrey(prey)->getTotalBiomass(area);
+
+      tmp *= calcQuota(bio);
+      
+      if (tmp > 10.0) //JMB arbitrary value here ...
+        handle.logMessage(LOGWARN, "Warning in quotapredator - excessive consumption required");
+      for (prey = 0; prey < this->numPreys(); prey++) {
+        if (this->getPrey(prey)->isPreyArea(area))
+          (*predratio[inarea])[prey][predl] = tmp;
+        else
+          (*predratio[inarea])[prey][predl] = 0.0;
+      }
+      break;
+
+
+
     default:
       handle.logMessage(LOGWARN, "Warning in quotapredator - unrecognised function", functionname);
       break;
@@ -327,17 +353,33 @@ void QuotaPredator::Print(ofstream& outfile) const {
 
 double QuotaPredator::calcQuota(double biomass) {
   int i;
+  double tmp = 0.0;
   double quota = 0.0;
-  if (biomass < biomasslevel[0]) {
-    quota = quotalevel[0];
-  } else if (biomass > biomasslevel[biomasslevel.Size() - 1]) {
-    quota = quotalevel[biomasslevel.Size()];
+  
+  if (functionnumber < 7){
+    if (biomass < biomasslevel[0]) {
+      quota = quotalevel[0];
+    } else if (biomass > biomasslevel[biomasslevel.Size() - 1]) {
+      quota = quotalevel[biomasslevel.Size()];
+    } else {
+      for (i = 1; i < biomasslevel.Size(); i++)
+	if ((biomasslevel[i - 1] < biomass) && (biomass < biomasslevel[i]))
+	  quota = quotalevel[i];
+    }
   } else {
-    for (i = 1; i < biomasslevel.Size(); i++)
-      if ((biomasslevel[i - 1] < biomass) && (biomass < biomasslevel[i]))
-        quota = quotalevel[i];
+    if (biomass < biomasslevel[0]) {
+      quota = quotalevel[0];
+    } else if (biomass > biomasslevel[biomasslevel.Size() - 1]) {
+      quota = quotalevel[biomasslevel.Size()];
+    } else {
+      for (i = 1; i < biomasslevel.Size(); i++)
+	if ((biomasslevel[i - 1] < biomass) && (biomass < biomasslevel[i])){ 
+	  tmp = (biomass - biomasslevel[i - 1])/(biomasslevel[i] - biomasslevel[i - 1]);
+	  quota = quotalevel[i] * tmp  + quotalevel[i - 1] * (1 - tmp);  
+	}													   
+    }
   }
-
+  
   if (quota < 0.0)
     handle.logMessage(LOGWARN, "Warning in quotapredator - negative quota", quota);
   return quota;

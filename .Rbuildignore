@@ -18,3 +18,5 @@ gadget-para$
 ^gadget\.1$
 ^gadget\.dox$
 ^params\.out$
+^.*\.Rproj$
+^\.Rproj\.user$

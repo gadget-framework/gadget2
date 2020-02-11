@@ -8,3 +8,12 @@
 /*_*.tar.gz
 
 /params.out
+.Rproj.user
+
+/src/*.o
+/src/*~
+/src/*#
+
+/docs/*.html
+/docs/*.pdf
+/docs/userguide/*.html
