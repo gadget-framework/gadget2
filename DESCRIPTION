@@ -6,7 +6,7 @@ Date: 2020-02-10
 Authors@R: c(person("Bjarki Thor", "Elvarsson", email="bjarki.elvarsson@hafogvatn.is",role = c("aut", "cre")),
             person("Jamie", "Lentin", email="lentinj@shuttlethread.com",role = c("aut")))
 Maintainer: Bjarki Thor Elvarsson <bjarki.elvarsson@hafogvatn.is>
-Description: Installs the C++ Gadget2 runtime, making it available for R. See https://hafro.github.io/gadget2 for further details.
+Description: Installs the C++ Gadget2 runtime, making it available for R. See <https://hafro.github.io/gadget2> for further details.
 Encoding: UTF-8
 Suggests:
     unittest (>= 1.4)

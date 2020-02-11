@@ -6521,3 +6521,4 @@ Gadget version 2.3.1 {#sec:v231}
 Gadget development version {#sec:v9999}
 ---------------------
 
+-   Tweak DESCRIPTION for CRAN
