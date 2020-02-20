@@ -4,9 +4,9 @@ Title: Gadget is the Globally-Applicable Area Disaggregated General Ecosystem To
 Version: 2.3.99
 Date: 2020-02-11
 Authors@R: c(person("Bjarki Thor", "Elvarsson", email="bjarki.elvarsson@hafogvatn.is",role = c("aut", "cre")),
-            person("Jamie", "Lentin", email="lentinj@shuttlethread.com",role = c("aut")),
             person("James","Begley", email="james@hafro.is",role=c("aut")),
             person("Hoskuldur","Bjornsson", email="hoski@hafro.is",role=c("aut")),
+            person("Jamie", "Lentin", email="lentinj@shuttlethread.com",role = c("ctb")),
             person("Gunnar","Stefnasson", email="gunnar@hi.is",role=c("ctb")),
             person("Lorna","Taylor", email="lorna@hafro.is",role=c("ctb")),
             person("Daniel","Howell", email="daniel.howell@hi.no",role=c("ctb"))
