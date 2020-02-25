@@ -82,7 +82,7 @@ run in parallel across a network of computers using PVM was implemented
 primarily by Auðbjörg Jakobsdóttir with input from several other people,
 including Jón Guðmundsson who worked on a variant based on Condor.
 Several mathematical additions and changes to allow for parallel
-minimisation on a network were implemented by Þórdís Linda órarinsdóttir
+minimisation on a network were implemented by Þórdís Linda Þórarinsdóttir
 and Kristjana Ýr Jónsdóttir.
 
 
