@@ -6526,3 +6526,4 @@ Gadget version 2.3.2 {#sec:v232}
 Gadget development version {#sec:v9999}
 ---------------------
 
+-   More complete authors list added to DESCRIPTION
