@@ -6523,7 +6523,7 @@ Gadget version 2.3.2 {#sec:v232}
 
 -   Tweak DESCRIPTION for CRAN
 
-Gadget development version {#sec:v9999}
+Gadget version 2.3.3 {#sec:v233}
 ---------------------
 
 -   More complete authors list added to DESCRIPTION
