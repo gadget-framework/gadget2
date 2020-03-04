@@ -339,21 +339,24 @@ amount that the predators consumed.</p></li>
 <p>Note that the consumption calculations include the “consumption” of
 the stocks by any fleets in the model.</p></li>
 <li><p><strong>natural mortality</strong>. Reduce the population of the stocks in the
-model by removing a proportion due to natural mortality.</p></li>
+model by removing a proportion due to natural mortality (see section
+<a href="chap-stock.html#sec:stocknatmort">4.5</a>).</p></li>
 <li><p><strong>growth</strong>. Calculate any increase in length and weight of the
-stocks, and move any fish that will become mature (see
-section <a href="chap-stock.html#sec:stockmature">4.12</a>) into temporary storage.</p></li>
+stocks (see section <a href="chap-stock.html#sec:stockgrowth">4.3</a>), and move any fish that will
+become mature (see section <a href="chap-stock.html#sec:stockmature">4.12</a>) into temporary storage.</p></li>
 <li><p><strong>spawning</strong>. Calculate the affect that spawning will have on the
-adult stocks, and place any spawned stock into temporary storage.</p></li>
+adult stocks, and place any spawned stock into temporary storage (see
+section <a href="chap-stock.html#sec:stockspawn">4.15</a>).</p></li>
 <li><p><strong>maturation</strong>. Add the newly matured fish (calculated as part of
 the growth update) into the model. Note that this comes after the
 mature fish have spawned, which means that a fish cannot become
-mature and spawn in the same timestep.</p></li>
+mature and spawn in the same timestep (see section <a href="chap-stock.html#sec:stockmature">4.12</a>).</p></li>
 <li><p><strong>recruitment</strong>. Add any new recruits to the model, including both
-the recruits specified directly and the recruits specified as part
-of the spawning process. Note that this comes after the consumption
-calculations, so that new recruits cannot be consumed on the same
-timestep as they have been added into the model.</p></li>
+the recruits specified directly (see section <a href="chap-stock.html#sec:stockrenew">4.14</a>) and the
+recruits specified as part of the spawning process (see section
+<a href="chap-stock.html#sec:stockspawn">4.15</a>). Note that this comes after the consumption
+calculations, so that new recruits cannot be consumed on the same timestep
+as they have been added into the model.</p></li>
 <li><p><strong>straying</strong>. Move fish between stocks in the model that are
 straying, as described in
 section <a href="chap-stock.html#sec:stockstray">4.17</a>.</p></li>
