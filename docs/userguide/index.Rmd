@@ -6345,25 +6345,28 @@ the calculations is:
     the stocks by any fleets in the model.
 
 4.  **natural mortality**. Reduce the population of the stocks in the
-    model by removing a proportion due to natural mortality.
+    model by removing a proportion due to natural mortality (see section
+    \@ref(sec:stocknatmort)).
 
 5.  **growth**. Calculate any increase in length and weight of the
-    stocks, and move any fish that will become mature (see
-    section \@ref(sec:stockmature)) into temporary storage.
+    stocks (see section \@ref(sec:stockgrowth)), and move any fish that will
+    become mature (see section \@ref(sec:stockmature)) into temporary storage.
 
 6.  **spawning**. Calculate the affect that spawning will have on the
-    adult stocks, and place any spawned stock into temporary storage.
+    adult stocks, and place any spawned stock into temporary storage (see
+    section \@ref(sec:stockspawn)).
 
 7.  **maturation**. Add the newly matured fish (calculated as part of
     the growth update) into the model. Note that this comes after the
     mature fish have spawned, which means that a fish cannot become
-    mature and spawn in the same timestep.
+    mature and spawn in the same timestep (see section \@ref(sec:stockmature)).
 
 8.  **recruitment**. Add any new recruits to the model, including both
-    the recruits specified directly and the recruits specified as part
-    of the spawning process. Note that this comes after the consumption
-    calculations, so that new recruits cannot be consumed on the same
-    timestep as they have been added into the model.
+    the recruits specified directly (see section \@ref(sec:stockrenew)) and the
+    recruits specified as part of the spawning process (see section
+    \@ref(sec:stockspawn)). Note that this comes after the consumption
+    calculations, so that new recruits cannot be consumed on the same timestep
+    as they have been added into the model.
 
 9.  **straying**. Move fish between stocks in the model that are
     straying, as described in
