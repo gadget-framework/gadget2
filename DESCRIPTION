@@ -11,7 +11,7 @@ Authors@R: c(person("Bjarki Thor", "Elvarsson", email="bjarki.elvarsson@hafogvat
             person("Lorna","Taylor", email="lorna@hafro.is",role=c("ctb")),
             person("Daniel","Howell", email="daniel.howell@hi.no",role=c("ctb")),
             person("Sigurdur","Hannesson",role=c("ctb")),
-            person("Narfi","Stefansson",role=c("ctb")),
+            person("Narfi","Stefansson",role=c("aut")),
             person("Hersir","Sigurgeirsson", role = c("ctb")),
             person("Morten Nygard","Asnes", role = c("ctb")),
             person("Kristin","Froysa", role = c("ctb")),
@@ -20,9 +20,12 @@ Authors@R: c(person("Bjarki Thor", "Elvarsson", email="bjarki.elvarsson@hafogvat
             person("Gudmundur", "Einarsson", role = c("ctb")),
             person("Thordis Linda","Thorarinsdottir",role = c("ctb")),
             person("Kristjana Yr", "Jonsdottir", role = c("ctb")),
+            person("Mark G.","Johnson", role = c("ctb","cph")),
+            person("Bill","Goffe", role = c("ctb","cph")),
             person("Marine and Freshwater Research Institute (Iceland)", role = c("cph")))
 Maintainer: Bjarki Thor Elvarsson <bjarki.elvarsson@hafogvatn.is>
-Description: A statistical ecosystem modelling package, taking many features of the ecosystem into account. Gadget works by running an internal model based on many parameters, and then comparing the data from the output of this model to ''real'' data to get a goodness-of-fit likelihood score. These parameters can then be adjusted, and the model re-run, until an optimum is found, which corresponds to the model with the lowest likelihood score. Gadget allows the user to include a number of features into an ecosystem model: One or more species, each of which may be split into multiple stocks; multiple areas with migration between areas; predation between and within species; maturation; reproduction and recruitment; multiple commercial and survey fleets taking catches from the populations. For more details see <https://hafro.github.io/gadget2>. This is the C++ Gadget2 runtime, making it available for R.
+Copyright: see file COPYRIGHTS
+Description: A statistical ecosystem modelling package, taking many features of the ecosystem into account. Gadget works by running an internal model based on many parameters, and then comparing the data from the output of this model to real data to get a goodness-of-fit likelihood score. These parameters can then be adjusted, and the model re-run, until an optimum is found, which corresponds to the model with the lowest likelihood score. Gadget allows the user to include a number of features into an ecosystem model: One or more species, each of which may be split into multiple stocks; multiple areas with migration between areas; predation between and within species; maturation; reproduction and recruitment; multiple commercial and survey fleets taking catches from the populations. For more details see <https://hafro.github.io/gadget2>. This is the C++ Gadget2 runtime, making it available for R.
 Encoding: UTF-8
 Suggests:
     unittest (>= 1.4)
