@@ -1,0 +1,25 @@
+==== 2.3.4
+
+This package compiles & installs Gadget, a C++-based marine ecosystem modelling
+framework. Whilst Gadget itself is a standalone executable, this is a first
+step to releasing Rgadget[github.com/hafro/rgadget], an R front end that wraps
+and extends core Gadget.
+
+This is a re-submission, to fix the following comments:
+
+* Mark G. Johnson still is not credited.
+
+He has been added to Authors@R, and inst/COPYRIGHTS
+
+* Please omit unneeded quotes in your description, as they are used to indicate
+  packages, paper titles, non-English usage etc. --> to real data
+
+Quotes have been removed
+
+Differences since the previous submission:
+
+  https://github.com/Hafro/gadget2/compare/v2.3.3...v2.3.4
+
+Travis CI builds for this release:
+
+  https://travis-ci.org/Hafro/gadget2/builds/658643936
