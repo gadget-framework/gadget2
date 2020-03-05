@@ -1,0 +1,13 @@
+All files, with exception of src/hooke.cc and src/simann.cc, are copyrighted by
+the Marine and Freshwater Research Institute (1995 - 2020).
+
+src/hooke.cc
+
+Copyright 1994 (C) Mark G. Johnson. Original source can be obtained from
+netlib.org/opt/hooke.c
+
+src/simann.cc
+
+Translated from the original Fortran source (netlib.org/opt/simann.f) by the
+Marine and Freshwater Research Institute (2002). Original source is copyright
+1994 (C) Bill Goffe.
