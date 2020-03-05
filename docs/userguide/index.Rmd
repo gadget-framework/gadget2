@@ -6531,7 +6531,7 @@ Gadget version 2.3.3 {#sec:v233}
 
 -   More complete authors list added to DESCRIPTION
 
-Gadget development version {#sec:v9999}
+Gadget version 2.3.4 {#sec:v234}
 ---------------------
 
 -   Add an inst/COPYRIGHTS file
