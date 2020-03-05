@@ -6535,3 +6535,7 @@ Gadget version 2.3.4 {#sec:v234}
 ---------------------
 
 -   Add an inst/COPYRIGHTS file
+
+Gadget development version {#sec:v9999}
+---------------------
+
