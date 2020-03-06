@@ -21,6 +21,12 @@ These input data files are in a column-based format, which means that they can e
 
 # Installing as an R package
 
+Whilst it will work without, Gadget benefits greatly from compiler optimisation options being set.
+Create a ``~/.R/Makevars`` (Linux/MacOS) or ``~/.R/Makevars.win`` (Windows) file and add the following:
+
+    CFLAGS += -O3 -march=native
+    CXXFLAGS += -O3 -march=native
+
 Assuming R and ``remotes`` is installed you can install gadget with:
 
     remotes::install_github("Hafro/gadget2")
