@@ -6381,10 +6381,16 @@ the calculations is:
     of the timestep, after the calculations have taken place for this
     timestep.
 
-12. **ageing**. If this is the last timestep of the year, increase the
-    age of the fish in the model. As part of this process, the oldest
-    age group (the plus group) can move to another stock (see
-    section \@ref(sec:stockmove)).
+12. **ageing**. Increases the age of the fish in the model, optionally
+    moving/transitioning the oldest fish to a different stock (see section
+    \@ref(sec:stockmove)). This process takes place in 3 stages:
+
+    1. If it's a transition step, set aside transitioning fish.
+
+    2. If it's the stock's birthday (hard-coded to the final step of the
+       year), then increase the age of all fish.
+
+    3. Move transitioning fish into their new stocks.
 
 Recent Changes {#chap:change}
 ==============
