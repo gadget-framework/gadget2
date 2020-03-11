@@ -1,0 +1,4 @@
+<map id="StraightSelectFunc" name="StraightSelectFunc">
+<area shape="rect" id="node2" href="$classSelectFunc.html" title="This is the base class used to calculate the selection level as a function of length. " alt="" coords="15,175,157,340"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="31,5,141,127"/>
+</map>

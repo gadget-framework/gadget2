@@ -1,0 +1,5 @@
+<map id="AgeBandMatrixPtrVector" name="AgeBandMatrixPtrVector">
+<area shape="rect" id="node2" href="$classAgeBandMatrix.html" title="This class implements a vector of PopInfoIndexVector values, indexed from minage not 0..." alt="" coords="33,593,172,832"/>
+<area shape="rect" id="node3" href="$classPopInfoIndexVector.html" title="This class implements a dynamic vector of PopInfo values, indexed from minpos not 0..." alt="" coords="20,263,185,531"/>
+<area shape="rect" id="node4" href="$classPopInfo.html" title="This is the class used to store information about the number, and mean weight, of a population cell o..." alt="" coords="50,5,155,200"/>
+</map>

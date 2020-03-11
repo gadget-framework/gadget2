@@ -1,0 +1,5 @@
+<map id="FormulaMatrixPtrVector" name="FormulaMatrixPtrVector">
+<area shape="rect" id="node2" href="$classFormulaMatrix.html" title="This class implements a dynamic vector of FormulaVector values. " alt="" coords="33,593,166,817"/>
+<area shape="rect" id="node3" href="$classFormulaVector.html" title="This class implements a dynamic vector of Formula values. " alt="" coords="32,307,167,531"/>
+<area shape="rect" id="node4" href="$classFormula.html" title="This is the class used to calculate the value of the variables used in the model simulation. " alt="" coords="34,5,165,244"/>
+</map>

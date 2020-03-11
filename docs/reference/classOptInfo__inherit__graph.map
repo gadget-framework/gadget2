@@ -1,0 +1,5 @@
+<map id="OptInfo" name="OptInfo">
+<area shape="rect" id="node2" href="$classOptInfoBFGS.html" title="This is the class used for the BFGS optimisation. " alt="" coords="5,248,157,384"/>
+<area shape="rect" id="node3" href="$classOptInfoHooke.html" title="This is the class used for the Hooke &amp; Jeeves optimisation. " alt="" coords="181,248,333,384"/>
+<area shape="rect" id="node4" href="$classOptInfoSimann.html" title="This is the class used for the Simualted Annealing optimisation. " alt="" coords="357,248,509,384"/>
+</map>

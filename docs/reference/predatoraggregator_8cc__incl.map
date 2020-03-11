@@ -1,0 +1,36 @@
+<map id="src/predatoraggregator.cc" name="src/predatoraggregator.cc">
+<area shape="rect" id="node2" href="$predatoraggregator_8h.html" title="predatoraggregator.h" alt="" coords="1739,304,1880,331"/>
+<area shape="rect" id="node6" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="614,827,701,853"/>
+<area shape="rect" id="node7" href="$gadget_8h.html" title="gadget.h" alt="" coords="792,901,864,928"/>
+<area shape="rect" id="node28" href="$popinfovector_8h.html" title="popinfovector.h" alt="" coords="398,528,509,555"/>
+<area shape="rect" id="node36" href="$prey_8h.html" title="prey.h" alt="" coords="639,304,697,331"/>
+<area shape="rect" id="node43" href="$predator_8h.html" title="predator.h" alt="" coords="1267,229,1347,256"/>
+<area shape="rect" id="node45" href="$stockpredator_8h.html" title="stockpredator.h" alt="" coords="971,80,1083,107"/>
+<area shape="rect" id="node48" href="$errorhandler_8h.html" title="errorhandler.h" alt="" coords="2131,528,2232,555"/>
+<area shape="rect" id="node49" href="$global_8h.html" title="global.h" alt="" coords="2357,453,2424,480"/>
+<area shape="rect" id="node3" href="$agebandmatrix_8h.html" title="agebandmatrix.h" alt="" coords="449,379,567,405"/>
+<area shape="rect" id="node31" href="$doublematrixptrvector_8h.html" title="doublematrixptrvector.h" alt="" coords="1571,379,1730,405"/>
+<area shape="rect" id="node32" href="$intmatrix_8h.html" title="intmatrix.h" alt="" coords="1716,453,1799,480"/>
+<area shape="rect" id="node33" href="$predatorptrvector_8h.html" title="predatorptrvector.h" alt="" coords="1939,379,2069,405"/>
+<area shape="rect" id="node34" href="$preyptrvector_8h.html" title="preyptrvector.h" alt="" coords="1755,379,1864,405"/>
+<area shape="rect" id="node35" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="1681,677,1791,704"/>
+<area shape="rect" id="node4" href="$conversionindex_8h.html" title="conversionindex.h" alt="" coords="343,603,470,629"/>
+<area shape="rect" id="node26" href="$doublematrix_8h.html" title="doublematrix.h" alt="" coords="751,528,857,555"/>
+<area shape="rect" id="node27" href="$popinfomatrix_8h.html" title="popinfomatrix.h" alt="" coords="550,453,661,480"/>
+<area shape="rect" id="node30" href="$popinfoindexvector_8h.html" title="popinfoindexvector.h" alt="" coords="533,528,675,555"/>
+<area shape="rect" id="node5" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="624,752,731,779"/>
+<area shape="rect" id="node23" href="$intvector_8h.html" title="intvector.h" alt="" coords="827,677,909,704"/>
+<area shape="rect" id="node25" href="$lengthgroup_8h.html" title="lengthgroup.h" alt="" coords="257,677,357,704"/>
+<area shape="rect" id="node24" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="959,752,1086,779"/>
+<area shape="rect" id="node29" href="$popinfo_8h.html" title="popinfo.h" alt="" coords="567,603,641,629"/>
+<area shape="rect" id="node37" href="$hasname_8h.html" title="hasname.h" alt="" coords="2145,379,2231,405"/>
+<area shape="rect" id="node38" href="$livesonareas_8h.html" title="livesonareas.h" alt="" coords="693,379,800,405"/>
+<area shape="rect" id="node39" href="$areatime_8h.html" title="areatime.h" alt="" coords="1008,453,1091,480"/>
+<area shape="rect" id="node40" href="$keeper_8h.html" title="keeper.h" alt="" coords="1371,528,1443,555"/>
+<area shape="rect" id="node42" href="$modelvariable_8h.html" title="modelvariable.h" alt="" coords="825,379,938,405"/>
+<area shape="rect" id="node41" href="$strstack_8h.html" title="strstack.h" alt="" coords="1976,603,2056,629"/>
+<area shape="rect" id="node44" href="$suits_8h.html" title="suits.h" alt="" coords="1487,304,1548,331"/>
+<area shape="rect" id="node46" href="$agebandmatrixptrvector_8h.html" title="agebandmatrixptrvector.h" alt="" coords="239,229,409,256"/>
+<area shape="rect" id="node47" href="$poppredator_8h.html" title="poppredator.h" alt="" coords="1128,155,1229,181"/>
+<area shape="rect" id="node50" href="$runid_8h.html" title="runid.h" alt="" coords="2320,827,2381,853"/>
+</map>

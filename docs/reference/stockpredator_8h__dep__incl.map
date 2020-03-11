@@ -1,0 +1,8 @@
+<map id="src/include/stockpredator.h" name="src/include/stockpredator.h">
+<area shape="rect" id="node2" href="$initialize_8cc.html" title="src/initialize.cc" alt="" coords="5,80,115,107"/>
+<area shape="rect" id="node3" href="$predatoraggregator_8cc.html" title="src/predatoraggregator.cc" alt="" coords="139,80,309,107"/>
+<area shape="rect" id="node4" href="$stock_8cc.html" title="src/stock.cc" alt="" coords="334,80,429,107"/>
+<area shape="rect" id="node5" href="$stockmemberfunctions_8cc.html" title="src/stockmemberfunctions.cc" alt="" coords="453,80,648,107"/>
+<area shape="rect" id="node6" href="$stockpredator_8cc.html" title="src/stockpredator.cc" alt="" coords="672,80,813,107"/>
+<area shape="rect" id="node7" href="$stomachcontent_8cc.html" title="src/stomachcontent.cc" alt="" coords="837,80,992,107"/>
+</map>

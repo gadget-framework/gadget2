@@ -1,0 +1,51 @@
+<map id="StockFullPrinter" name="StockFullPrinter">
+<area shape="rect" id="node2" href="$classPrinter.html" title="This is the base class used to print the modelled population during a model simulation. " alt="" coords="107,1587,245,1855"/>
+<area shape="rect" id="node3" href="$classActionAtTimes.html" title="This is the class used to associate actions with specific timesteps within the model. " alt="" coords="282,1105,438,1271"/>
+<area shape="rect" id="node4" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="1746,358,1849,611"/>
+<area shape="rect" id="node12" href="$classIntMatrix.html" title="This class implements a dynamic vector of IntVector values. " alt="" coords="376,2229,477,2497"/>
+<area shape="rect" id="node14" href="$classConversionIndex.html" title="This is the class used to convert information from one LengthGroupDivision length structure to a seco..." alt="" coords="2101,740,2249,1081"/>
+<area shape="rect" id="node19" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="2913,828,3045,993"/>
+<area shape="rect" id="node20" href="$classStrayData.html" title="This is the class used to calculate the movement from one stock to other stocks. " alt="" coords="2053,1901,2206,2183"/>
+<area shape="rect" id="node30" href="$classRenewalData.html" title="This is the class used to calculate the renewal to a stock. " alt="" coords="4463,1930,4659,2154"/>
+<area shape="rect" id="node35" href="$classMaturity.html" title="This is the base class used to calculate the maturity of a stock within the model. " alt="" coords="2599,3249,2766,3546"/>
+<area shape="rect" id="node36" href="$classSpawnData.html" title="This is the class used to calculate the affect of the spawning process on the stock, possibly including the creation of new recruits into the model. " alt="" coords="2958,3249,3111,3546"/>
+<area shape="rect" id="node39" href="$classTransition.html" title="This is the class used to calculate the movement from a young stock to older stocks. " alt="" coords="1268,3241,1431,3553"/>
+<area shape="rect" id="node40" href="$classPopPredator.html" title="This is the class used to model the predation of a population. " alt="" coords="3123,1930,3317,2154"/>
+<area shape="rect" id="node48" href="$classPrey.html" title="This is the base class used to model the consumption of a prey. " alt="" coords="2430,1317,2621,1541"/>
+<area shape="rect" id="node5" href="$classAgeBandMatrixPtrVector.html" title="This class implements a dynamic vector of AgeBandMatrix values. " alt="" coords="400,1295,595,1563"/>
+<area shape="rect" id="node11" href="$classStockAggregator.html" title="This is the class used to aggregate stock information. " alt="" coords="392,3322,539,3473"/>
+<area shape="rect" id="node16" href="$classStock.html" title="This is the class used to model a stock within the Gadget model. " alt="" coords="2740,2521,2913,2892"/>
+<area shape="rect" id="node44" href="$classInitialCond.html" title="This is the class used to calculate the initial population of a stock. " alt="" coords="5802,1952,5998,2132"/>
+<area shape="rect" id="node47" href="$classStockPrey.html" title="This is the class used to model a dynamic prey based on a modelled stock. " alt="" coords="1815,1959,1977,2125"/>
+<area shape="rect" id="node6" href="$classAgeBandMatrix.html" title="This class implements a vector of PopInfoIndexVector values, indexed from minage not 0..." alt="" coords="192,791,331,1030"/>
+<area shape="rect" id="node7" href="$classPopInfoIndexVector.html" title="This class implements a dynamic vector of PopInfo values, indexed from minpos not 0..." alt="" coords="5,351,171,619"/>
+<area shape="rect" id="node8" href="$classPopInfo.html" title="This is the class used to store information about the number, and mean weight, of a population cell o..." alt="" coords="150,49,255,244"/>
+<area shape="rect" id="node29" href="$classPopInfoVector.html" title="This class implements a dynamic vector of PopInfo values. " alt="" coords="357,373,491,597"/>
+<area shape="rect" id="node9" href="$classLengthGroupDivision.html" title="This is the class used to store information about the length groups of the modelled stock population..." alt="" coords="5851,769,6021,1052"/>
+<area shape="rect" id="node45" href="$classGrower.html" title="This is the class used to calculate, and implement, the affect of growth on the stock. " alt="" coords="4683,1879,4847,2205"/>
+<area shape="rect" id="node10" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="3713,5,3842,288"/>
+<area shape="rect" id="node21" href="$classAgeBandMatrixRatioPtrVector.html" title="{AgeBandMatrixRatioPtrVector\n|# size\l|+ AgeBandMatrixRatioPtrVector()\l+ AgeBandMatrixRatioPtrVector()\l+ AgeBandMatrixRatioPtrVector()\l+ ~AgeBandMatrixRatioPtrVector()\l+ resize()\l+ resize()\l+ addTag()\l+ addTag()\l+ deleteTag()\l+ Size()\land 8 more...\l# addTagName()\l}" alt="" coords="745,1309,970,1548"/>
+<area shape="rect" id="node38" href="$classDoubleMatrix.html" title="This class implements a dynamic vector of DoubleVector values. " alt="" coords="3714,351,3841,619"/>
+<area shape="rect" id="node50" href="$classMigration.html" title="This is the base class used to calculate the migration of a stock within the model. " alt="" coords="2848,1346,2997,1511"/>
+<area shape="rect" id="node13" href="$classConversionIndexPtrVector.html" title="This class implements a dynamic vector of ConversionIndex values. " alt="" coords="1145,1339,1348,1519"/>
+<area shape="rect" id="node15" href="$classStockPtrVector.html" title="This class implements a dynamic vector of Stock values. " alt="" coords="1969,2969,2108,3179"/>
+<area shape="rect" id="node17" href="$classBaseClass.html" title="This is the base class for any object that can be dynamically modelled within Gadget. " alt="" coords="3814,1317,3933,1541"/>
+<area shape="rect" id="node18" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="4708,850,4817,971"/>
+<area shape="rect" id="node24" href="$classSelectFunc.html" title="This is the base class used to calculate the selection level as a function of length. " alt="" coords="4067,1346,4208,1511"/>
+<area shape="rect" id="node34" href="$classTags.html" title="{Tags\n||+ Tags()\l+ ~Tags()\l+ Update()\l+ updateTags()\l+ deleteStockTags()\l+ getEndYear()\l+ getNumTagTimeSteps()\l+ getStockNames()\l+ setStock()\l+ updateMatureStock()\land 10 more...\l}" alt="" coords="4787,1317,4960,1541"/>
+<area shape="rect" id="node41" href="$classPredator.html" title="This is the base class used to model the consumption by a predator. " alt="" coords="4283,1309,4451,1548"/>
+<area shape="rect" id="node49" href="$classNaturalMortality.html" title="This is the class used to calculate the affect of natural mortality on the stock. ..." alt="" coords="3802,1967,3945,2117"/>
+<area shape="rect" id="node46" href="$classGrowthCalcBase.html" title="This is the base class used to calculate the growth of a stock within the model. " alt="" coords="3283,1361,3432,1497"/>
+<area shape="rect" id="node22" href="$classCharPtrVector.html" title="This class implements a dynamic vector of char values. " alt="" coords="993,791,1127,1030"/>
+<area shape="rect" id="node23" href="$classAgeBandMatrixRatio.html" title="{AgeBandMatrixRatio\n|# minage\l# nrow\l|+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ ~AgeBandMatrixRatio()\l+ minAge()\l+ maxAge()\l+ Nrow()\l+ minLength()\land 11 more...\l}" alt="" coords="799,791,969,1030"/>
+<area shape="rect" id="node25" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="3257,799,3428,1023"/>
+<area shape="rect" id="node26" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="2550,380,2682,589"/>
+<area shape="rect" id="node27" href="$classFormulaVector.html" title="This class implements a dynamic vector of Formula values. " alt="" coords="6373,373,6507,597"/>
+<area shape="rect" id="node32" href="$classFormulaMatrix.html" title="This class implements a dynamic vector of FormulaVector values. " alt="" coords="6223,799,6356,1023"/>
+<area shape="rect" id="node28" href="$classFormula.html" title="This is the class used to calculate the value of the variables used in the model simulation. " alt="" coords="6772,27,6903,266"/>
+<area shape="rect" id="node43" href="$classPopInfoMatrix.html" title="This class implements a dynamic vector of PopInfoVector values. " alt="" coords="1732,806,1863,1015"/>
+<area shape="rect" id="node31" href="$classFormulaMatrixPtrVector.html" title="This class implements a dynamic vector of FormulaMatrix values. " alt="" coords="6195,1339,6383,1519"/>
+<area shape="rect" id="node33" href="$classTagPtrVector.html" title="This class implements a dynamic vector of Tags values. " alt="" coords="4207,1923,4334,2161"/>
+<area shape="rect" id="node37" href="$classDoubleMatrixPtrVector.html" title="This class implements a dynamic vector of DoubleMatrix values. " alt="" coords="3557,806,3739,1015"/>
+<area shape="rect" id="node42" href="$classDoubleMatrixPtrMatrix.html" title="This class implements a dynamic vector of DoubleMatrixPtrVector values. " alt="" coords="3457,1339,3637,1519"/>
+</map>

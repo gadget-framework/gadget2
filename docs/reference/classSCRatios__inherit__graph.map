@@ -1,0 +1,5 @@
+<map id="SCRatios" name="SCRatios">
+<area shape="rect" id="node2" href="$classSCAmounts.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the a..." alt="" coords="5,579,215,744"/>
+<area shape="rect" id="node3" href="$classSC.html" title="This is the base class used to calculate the stomach content likelihood score based on the consumptio..." alt="" coords="23,175,197,531"/>
+<area shape="rect" id="node4" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="55,5,165,127"/>
+</map>

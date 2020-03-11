@@ -1,0 +1,36 @@
+<map id="src/include/linearpredator.h" name="src/include/linearpredator.h">
+<area shape="rect" id="node2" href="$lengthpredator_8h.html" title="lengthpredator.h" alt="" coords="613,80,728,107"/>
+<area shape="rect" id="node3" href="$poppredator_8h.html" title="poppredator.h" alt="" coords="620,155,721,181"/>
+<area shape="rect" id="node4" href="$areatime_8h.html" title="areatime.h" alt="" coords="1377,379,1460,405"/>
+<area shape="rect" id="node25" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="930,827,1057,853"/>
+<area shape="rect" id="node28" href="$keeper_8h.html" title="keeper.h" alt="" coords="1292,603,1364,629"/>
+<area shape="rect" id="node37" href="$conversionindex_8h.html" title="conversionindex.h" alt="" coords="143,603,270,629"/>
+<area shape="rect" id="node39" href="$agebandmatrix_8h.html" title="agebandmatrix.h" alt="" coords="254,379,373,405"/>
+<area shape="rect" id="node44" href="$doublematrixptrmatrix_8h.html" title="doublematrixptrmatrix.h" alt="" coords="706,528,865,555"/>
+<area shape="rect" id="node46" href="$predator_8h.html" title="predator.h" alt="" coords="1060,229,1140,256"/>
+<area shape="rect" id="node5" href="$doublematrix_8h.html" title="doublematrix.h" alt="" coords="524,453,631,480"/>
+<area shape="rect" id="node26" href="$formulavector_8h.html" title="formulavector.h" alt="" coords="1740,453,1852,480"/>
+<area shape="rect" id="node6" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="224,752,331,779"/>
+<area shape="rect" id="node24" href="$intvector_8h.html" title="intvector.h" alt="" coords="593,752,676,779"/>
+<area shape="rect" id="node7" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="243,827,330,853"/>
+<area shape="rect" id="node8" href="$gadget_8h.html" title="gadget.h" alt="" coords="1008,901,1080,928"/>
+<area shape="rect" id="node27" href="$formula_8h.html" title="formula.h" alt="" coords="1758,528,1834,555"/>
+<area shape="rect" id="node29" href="$likelihood_8h.html" title="likelihood.h" alt="" coords="1791,677,1878,704"/>
+<area shape="rect" id="node31" href="$likelihoodptrvector_8h.html" title="likelihoodptrvector.h" alt="" coords="1380,677,1519,704"/>
+<area shape="rect" id="node32" href="$optinfoptrvector_8h.html" title="optinfoptrvector.h" alt="" coords="1543,677,1665,704"/>
+<area shape="rect" id="node33" href="$stochasticdata_8h.html" title="stochasticdata.h" alt="" coords="1031,677,1150,704"/>
+<area shape="rect" id="node35" href="$addresskeepermatrix_8h.html" title="addresskeepermatrix.h" alt="" coords="801,677,956,704"/>
+<area shape="rect" id="node36" href="$strstack_8h.html" title="strstack.h" alt="" coords="1276,677,1356,704"/>
+<area shape="rect" id="node30" href="$hasname_8h.html" title="hasname.h" alt="" coords="1954,752,2041,779"/>
+<area shape="rect" id="node34" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="1159,752,1268,779"/>
+<area shape="rect" id="node38" href="$lengthgroup_8h.html" title="lengthgroup.h" alt="" coords="139,677,239,704"/>
+<area shape="rect" id="node40" href="$popinfomatrix_8h.html" title="popinfomatrix.h" alt="" coords="338,453,449,480"/>
+<area shape="rect" id="node43" href="$popinfoindexvector_8h.html" title="popinfoindexvector.h" alt="" coords="145,528,287,555"/>
+<area shape="rect" id="node41" href="$popinfovector_8h.html" title="popinfovector.h" alt="" coords="311,528,422,555"/>
+<area shape="rect" id="node42" href="$popinfo_8h.html" title="popinfo.h" alt="" coords="321,603,396,629"/>
+<area shape="rect" id="node45" href="$doublematrixptrvector_8h.html" title="doublematrixptrvector.h" alt="" coords="1042,603,1201,629"/>
+<area shape="rect" id="node47" href="$preyptrvector_8h.html" title="preyptrvector.h" alt="" coords="1092,304,1201,331"/>
+<area shape="rect" id="node48" href="$livesonareas_8h.html" title="livesonareas.h" alt="" coords="708,379,815,405"/>
+<area shape="rect" id="node49" href="$suits_8h.html" title="suits.h" alt="" coords="1089,528,1151,555"/>
+<area shape="rect" id="node50" href="$prey_8h.html" title="prey.h" alt="" coords="899,304,957,331"/>
+</map>

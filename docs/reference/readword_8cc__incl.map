@@ -1,0 +1,35 @@
+<map id="src/readword.cc" name="src/readword.cc">
+<area shape="rect" id="node2" href="$readword_8h.html" title="readword.h" alt="" coords="620,80,706,107"/>
+<area shape="rect" id="node4" href="$gadget_8h.html" title="gadget.h" alt="" coords="796,976,868,1003"/>
+<area shape="rect" id="node47" href="$errorhandler_8h.html" title="errorhandler.h" alt="" coords="1432,603,1534,629"/>
+<area shape="rect" id="node48" href="$global_8h.html" title="global.h" alt="" coords="1520,528,1587,555"/>
+<area shape="rect" id="node3" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="769,901,896,928"/>
+<area shape="rect" id="node20" href="$modelvariable_8h.html" title="modelvariable.h" alt="" coords="1049,155,1162,181"/>
+<area shape="rect" id="node22" href="$formula_8h.html" title="formula.h" alt="" coords="308,453,384,480"/>
+<area shape="rect" id="node21" href="$formulavector_8h.html" title="formulavector.h" alt="" coords="952,379,1064,405"/>
+<area shape="rect" id="node43" href="$areatime_8h.html" title="areatime.h" alt="" coords="1104,304,1187,331"/>
+<area shape="rect" id="node44" href="$doublematrix_8h.html" title="doublematrix.h" alt="" coords="1099,453,1206,480"/>
+<area shape="rect" id="node45" href="$timevariable_8h.html" title="timevariable.h" alt="" coords="1054,229,1157,256"/>
+<area shape="rect" id="node46" href="$stockvariable_8h.html" title="stockvariable.h" alt="" coords="864,229,974,256"/>
+<area shape="rect" id="node23" href="$keeper_8h.html" title="keeper.h" alt="" coords="542,528,614,555"/>
+<area shape="rect" id="node35" href="$parameter_8h.html" title="parameter.h" alt="" coords="574,827,664,853"/>
+<area shape="rect" id="node24" href="$likelihood_8h.html" title="likelihood.h" alt="" coords="114,827,201,853"/>
+<area shape="rect" id="node29" href="$likelihoodptrvector_8h.html" title="likelihoodptrvector.h" alt="" coords="664,603,803,629"/>
+<area shape="rect" id="node30" href="$optinfoptrvector_8h.html" title="optinfoptrvector.h" alt="" coords="827,603,950,629"/>
+<area shape="rect" id="node31" href="$stochasticdata_8h.html" title="stochasticdata.h" alt="" coords="470,603,589,629"/>
+<area shape="rect" id="node39" href="$addresskeepermatrix_8h.html" title="addresskeepermatrix.h" alt="" coords="358,677,512,704"/>
+<area shape="rect" id="node42" href="$strstack_8h.html" title="strstack.h" alt="" coords="1126,677,1206,704"/>
+<area shape="rect" id="node25" href="$stockptrvector_8h.html" title="stockptrvector.h" alt="" coords="54,901,170,928"/>
+<area shape="rect" id="node26" href="$fleetptrvector_8h.html" title="fleetptrvector.h" alt="" coords="350,901,459,928"/>
+<area shape="rect" id="node27" href="$printinfo_8h.html" title="printinfo.h" alt="" coords="246,901,325,928"/>
+<area shape="rect" id="node28" href="$hasname_8h.html" title="hasname.h" alt="" coords="484,901,570,928"/>
+<area shape="rect" id="node32" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="1240,752,1347,779"/>
+<area shape="rect" id="node34" href="$intvector_8h.html" title="intvector.h" alt="" coords="790,752,872,779"/>
+<area shape="rect" id="node36" href="$parametervector_8h.html" title="parametervector.h" alt="" coords="638,752,765,779"/>
+<area shape="rect" id="node37" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="998,752,1107,779"/>
+<area shape="rect" id="node38" href="$initialinputfile_8h.html" title="initialinputfile.h" alt="" coords="790,677,898,704"/>
+<area shape="rect" id="node33" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="1226,827,1313,853"/>
+<area shape="rect" id="node40" href="$addresskeepervector_8h.html" title="addresskeepervector.h" alt="" coords="307,752,462,779"/>
+<area shape="rect" id="node41" href="$addresskeeper_8h.html" title="addresskeeper.h" alt="" coords="277,827,396,853"/>
+<area shape="rect" id="node49" href="$runid_8h.html" title="runid.h" alt="" coords="1534,677,1595,704"/>
+</map>

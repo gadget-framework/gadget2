@@ -1,0 +1,7 @@
+<map id="MigrationNumbers" name="MigrationNumbers">
+<area shape="rect" id="node2" href="$classMigration.html" title="This is the base class used to calculate the migration of a stock within the model. " alt="" coords="131,667,280,832"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,402,115,523"/>
+<area shape="rect" id="node4" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="139,380,271,545"/>
+<area shape="rect" id="node5" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="154,5,257,259"/>
+<area shape="rect" id="node6" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="295,321,425,604"/>
+</map>

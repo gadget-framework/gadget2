@@ -1,0 +1,11 @@
+<map id="Suits" name="Suits">
+<area shape="rect" id="node2" href="$classSuitFuncPtrVector.html" title="This class implements a dynamic vector of SuitFunc values. " alt="" coords="33,983,191,1163"/>
+<area shape="rect" id="node3" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="41,637,183,876"/>
+<area shape="rect" id="node4" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,358,115,479"/>
+<area shape="rect" id="node5" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="139,307,309,531"/>
+<area shape="rect" id="node6" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="158,5,290,215"/>
+<area shape="rect" id="node7" href="$classCharPtrVector.html" title="This class implements a dynamic vector of char values. " alt="" coords="215,953,348,1192"/>
+<area shape="rect" id="node8" href="$classDoubleMatrixPtrVector.html" title="This class implements a dynamic vector of DoubleMatrix values. " alt="" coords="373,968,555,1177"/>
+<area shape="rect" id="node9" href="$classDoubleMatrix.html" title="This class implements a dynamic vector of DoubleVector values. " alt="" coords="401,623,527,891"/>
+<area shape="rect" id="node10" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="399,277,529,560"/>
+</map>

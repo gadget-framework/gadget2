@@ -1,0 +1,36 @@
+<map id="src/suitfunc.cc" name="src/suitfunc.cc">
+<area shape="rect" id="node2" href="$suitfunc_8h.html" title="suitfunc.h" alt="" coords="1375,80,1454,107"/>
+<area shape="rect" id="node4" href="$gadget_8h.html" title="gadget.h" alt="" coords="743,1051,815,1077"/>
+<area shape="rect" id="node48" href="$errorhandler_8h.html" title="errorhandler.h" alt="" coords="1808,677,1909,704"/>
+<area shape="rect" id="node49" href="$global_8h.html" title="global.h" alt="" coords="1961,603,2028,629"/>
+<area shape="rect" id="node3" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="1262,976,1389,1003"/>
+<area shape="rect" id="node20" href="$hasname_8h.html" title="hasname.h" alt="" coords="94,752,181,779"/>
+<area shape="rect" id="node21" href="$keeper_8h.html" title="keeper.h" alt="" coords="1049,603,1121,629"/>
+<area shape="rect" id="node40" href="$modelvariablevector_8h.html" title="modelvariablevector.h" alt="" coords="1340,155,1489,181"/>
+<area shape="rect" id="node22" href="$likelihood_8h.html" title="likelihood.h" alt="" coords="271,677,358,704"/>
+<area shape="rect" id="node26" href="$likelihoodptrvector_8h.html" title="likelihoodptrvector.h" alt="" coords="675,677,813,704"/>
+<area shape="rect" id="node27" href="$optinfoptrvector_8h.html" title="optinfoptrvector.h" alt="" coords="837,677,960,704"/>
+<area shape="rect" id="node28" href="$stochasticdata_8h.html" title="stochasticdata.h" alt="" coords="1035,677,1154,704"/>
+<area shape="rect" id="node36" href="$addresskeepermatrix_8h.html" title="addresskeepermatrix.h" alt="" coords="1171,752,1325,779"/>
+<area shape="rect" id="node39" href="$strstack_8h.html" title="strstack.h" alt="" coords="1451,752,1531,779"/>
+<area shape="rect" id="node23" href="$stockptrvector_8h.html" title="stockptrvector.h" alt="" coords="441,752,557,779"/>
+<area shape="rect" id="node24" href="$fleetptrvector_8h.html" title="fleetptrvector.h" alt="" coords="307,752,416,779"/>
+<area shape="rect" id="node25" href="$printinfo_8h.html" title="printinfo.h" alt="" coords="175,976,254,1003"/>
+<area shape="rect" id="node29" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="936,827,1043,853"/>
+<area shape="rect" id="node31" href="$intvector_8h.html" title="intvector.h" alt="" coords="1117,827,1200,853"/>
+<area shape="rect" id="node32" href="$parameter_8h.html" title="parameter.h" alt="" coords="651,901,741,928"/>
+<area shape="rect" id="node33" href="$parametervector_8h.html" title="parametervector.h" alt="" coords="734,827,861,853"/>
+<area shape="rect" id="node34" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="1420,827,1529,853"/>
+<area shape="rect" id="node35" href="$initialinputfile_8h.html" title="initialinputfile.h" alt="" coords="987,752,1095,779"/>
+<area shape="rect" id="node30" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="878,976,965,1003"/>
+<area shape="rect" id="node37" href="$addresskeepervector_8h.html" title="addresskeepervector.h" alt="" coords="1224,827,1379,853"/>
+<area shape="rect" id="node38" href="$addresskeeper_8h.html" title="addresskeeper.h" alt="" coords="1169,901,1287,928"/>
+<area shape="rect" id="node41" href="$modelvariable_8h.html" title="modelvariable.h" alt="" coords="1358,229,1471,256"/>
+<area shape="rect" id="node42" href="$formulavector_8h.html" title="formulavector.h" alt="" coords="1123,453,1235,480"/>
+<area shape="rect" id="node44" href="$areatime_8h.html" title="areatime.h" alt="" coords="1311,379,1393,405"/>
+<area shape="rect" id="node45" href="$doublematrix_8h.html" title="doublematrix.h" alt="" coords="1360,528,1467,555"/>
+<area shape="rect" id="node46" href="$timevariable_8h.html" title="timevariable.h" alt="" coords="1227,304,1330,331"/>
+<area shape="rect" id="node47" href="$stockvariable_8h.html" title="stockvariable.h" alt="" coords="1406,304,1517,331"/>
+<area shape="rect" id="node43" href="$formula_8h.html" title="formula.h" alt="" coords="785,528,861,555"/>
+<area shape="rect" id="node50" href="$runid_8h.html" title="runid.h" alt="" coords="1949,901,2011,928"/>
+</map>
