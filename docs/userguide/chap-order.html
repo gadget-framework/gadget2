@@ -368,10 +368,15 @@ fleet, which has been calculated as part of the consumption process.</p></li>
 <li><p><strong>printing</strong>. Default printing of the model information at the end
 of the timestep, after the calculations have taken place for this
 timestep.</p></li>
-<li><p><strong>ageing</strong>. If this is the last timestep of the year, increase the
-age of the fish in the model. As part of this process, the oldest
-age group (the plus group) can move to another stock (see
-section <a href="chap-stock.html#sec:stockmove">4.13</a>).</p></li>
+<li><p><strong>ageing</strong>. Increases the age of the fish in the model, optionally
+moving/transitioning the oldest fish to a different stock (see section
+<a href="chap-stock.html#sec:stockmove">4.13</a>). This process takes place in 3 stages:</p>
+<ol style="list-style-type: decimal">
+<li><p>If it’s a transition step, set aside transitioning fish.</p></li>
+<li><p>If it’s the stock’s birthday (hard-coded to the final step of the
+year), then increase the age of all fish.</p></li>
+<li><p>Move transitioning fish into their new stocks.</p></li>
+</ol></li>
 </ol>
 </div>
             </section>
