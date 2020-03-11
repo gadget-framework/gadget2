@@ -26,10 +26,12 @@ writeLines('<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0;url=docs/userguide/" />
   </head>
   <body>
-    <a href="docs/userguide">Gadget documentation</a>
+    <ul>
+      <li><a href="docs/userguide">Gadget userguide</a></li>
+      <li><a href="docs/reference">Gadget reference manual</a></li>
+    </ul>
   </body>
 </html>
 ', file.path(output_dir, 'index.html'))
@@ -43,6 +45,9 @@ tryCatch({
         clean_envir = FALSE,
         output_dir = userguide_dir)
 }, finally = setwd(project_dir))
+
+Sys.setenv(DOXYGEN_OUTPUT_DIRECTORY = file.path(output_dir, 'docs/reference'))
+if (system("doxygen gadget.dox") != 0) stop("Doxygen failed")
 
 if (serve_output) {
     servr::httd(dir = output_dir, host = "0.0.0.0", port = 8000)

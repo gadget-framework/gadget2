@@ -2,7 +2,7 @@
 #define gadget_h
 
 /**
-\mainpage Draft Gadget Documentation
+\mainpage Gadget Source Reference
 
 Gadget is the <b>G</b>lobally applicable <b>A</b>rea <b>D</b>isaggregated <b>G</b>eneral <b>E</b>cosystem <b>T</b>oolbox.  Gadget is a flexible and powerful tool for creating ecosystem models.  The program was developed for modelling marine ecosystems in a fisheries management and biology context, however there is nothing in the program that restricts it to fish, and models have been developed to examine marine mammal populations.  Gadget has been used to investigate the population dynamics of many stocks and stock complexes in Icelandic waters, the Barents Sea, the North Sea and the Irish and Celtic Seas.
 
