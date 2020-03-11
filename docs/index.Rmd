@@ -3,5 +3,5 @@ title: Gadget2 documentation
 output: html_document
 ---
 
-* [Gadget user guide](/gadget2/docs/userguide/)
-* [Gadget reference manual](/gadget2/docs/reference/)
+* [Gadget user guide](userguide/)
+* [Gadget reference manual](reference/)

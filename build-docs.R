@@ -22,11 +22,11 @@ dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 output_dir <- normalizePath(output_dir)  # NB: The path has to exist first for this to work
 writeLines(paste("** Building documentation in", output_dir))
 
-# Render index page (NB: At /, not /docs)
+# Render index page
 rmarkdown::render('docs/index.Rmd', output_file = file.path(output_dir, 'index.html'))
 
 # Render user guide bookdown
-userguide_dir <- file.path(output_dir, 'docs/userguide')
+userguide_dir <- file.path(output_dir, 'userguide')
 dir.create(userguide_dir, recursive = TRUE, showWarnings = FALSE)
 tryCatch({
     setwd(file.path(project_dir, "docs/userguide"))
@@ -37,8 +37,12 @@ tryCatch({
 }, finally = setwd(project_dir))
 
 # Render reference doxygen output
-Sys.setenv(DOXYGEN_OUTPUT_DIRECTORY = file.path(output_dir, 'docs/reference'))
+Sys.setenv(DOXYGEN_OUTPUT_DIRECTORY = file.path(output_dir, 'reference'))
 if (system("doxygen gadget.dox") != 0) stop("Doxygen failed")
+
+# Compatibility Symlink: /docs/userguide --> /userguide
+dir.create(file.path(output_dir, 'docs'), recursive = TRUE, showWarnings = FALSE)
+file.symlink('../userguide', file.path(output_dir, 'docs', 'userguide'))
 
 if (serve_output) {
     servr::httd(dir = output_dir, host = "0.0.0.0", port = 8000)
