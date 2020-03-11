@@ -1,0 +1,7 @@
+---
+title: Gadget2 documentation
+output: html_document
+---
+
+* [Gadget user guide](/docs/userguide/)
+* [Gadget reference manual](/docs/reference/)
