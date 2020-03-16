@@ -50,14 +50,14 @@ EXTRAINPUT = optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
 
 all: gadget
 
-%.o: %.cc
+.cc.o:
 	$(CXX) $(CXXFLAGS) $(GADGET_OPTIM) $(GADGET_CXXFLAGS) $(GADGET_PLATFORM) $(GADGET_NETWORK) -c $< -o $@
 
 gadget: $(GADGETOBJECTS) $(GADGETINPUT)
-	$(CXX) -o gadget $+ $(LDFLAGS) $(GADGET_LDFLAGS)
+	$(CXX) -o gadget $(GADGETOBJECTS) $(GADGETINPUT) $(LDFLAGS) $(GADGET_LDFLAGS)
 
 libgadgetinput.a: $(GADGETINPUT) $(EXTRAINPUT)
-	ar rs $@ $+
+	ar rs $@ $(GADGETINPUT) $(EXTRAINPUT)
 
 clean:
 	rm -f *.o libgadgetinput.a gadget gadgetpara

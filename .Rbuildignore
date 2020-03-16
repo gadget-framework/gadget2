@@ -4,7 +4,7 @@ gadget$
 gadget-para$
 ^\.git
 ^\.travis.yml
-^Makefile
+^GNUmakefile
 ^[^/]+\.tar\.gz
 ^\.bash_history\.*
 ^.zenodo.json$

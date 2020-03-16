@@ -6545,3 +6545,4 @@ Gadget version 2.3.4 {#sec:v234}
 Gadget development version {#sec:v9999}
 ---------------------
 
+-   Fix problems when using non-GNU makes
