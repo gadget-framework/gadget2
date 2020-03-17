@@ -1,3 +1,27 @@
+# https://cran.r-project.org/submit.html
+
+==== 2.3.5
+
+This package compiles & installs Gadget, a C++-based marine ecosystem modelling
+framework. Whilst Gadget itself is a standalone executable, this is a first
+step to releasing Rgadget[github.com/hafro/rgadget], an R front end that wraps
+and extends core Gadget.
+
+This is an update to attempt to fix build problems under Solaris:
+
+  https://www.r-project.org/nosvn/R.check/r-patched-solaris-x86/gadget2-00check.html
+
+In addition to the usual R-release & R-devel checks on Windows/Linux, the
+Makefile now runs successfully on FreeBSD Make, to help flush out GNU-isms.
+
+Differences since the previous submission:
+
+  https://github.com/Hafro/gadget2/compare/v2.3.4...v2.3.5
+
+Travis CI builds for this release:
+
+  https://travis-ci.org/github/Hafro/gadget2/builds/663538634
+
 ==== 2.3.4
 
 This package compiles & installs Gadget, a C++-based marine ecosystem modelling
