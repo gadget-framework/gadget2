@@ -6546,3 +6546,7 @@ Gadget version 2.3.5 {#sec:v235}
 ---------------------
 
 -   Fix problems when using non-GNU makes
+
+Gadget development version {#sec:v9999}
+---------------------
+
