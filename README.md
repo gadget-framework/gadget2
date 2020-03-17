@@ -69,6 +69,15 @@ For convenience you may want to install the resulting gadget executable to a loc
   
 >  sudo make install 
 
+# Development
+
+## Testing compilation under FreeBSD Make
+
+To make sure no GNU-isms have snuck into src/Makevars, fmake can be used to
+test compilation:
+
+    sudo apt install frebsd-buildutils
+    make clean && fmake -C src -f GNUmakefile
 
 # Acknowledgements
 This project has received funding from an EU grant QLK5-CT199-01609 and the European Union’s Seventh Framework Programme for research, technological development and demonstration under grant agreement no.613571.
