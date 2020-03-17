@@ -5,6 +5,7 @@ gadget-para$
 ^\.git
 ^\.travis.yml
 ^GNUmakefile
+^src/GNUmakefile
 ^[^/]+\.tar\.gz
 ^\.bash_history\.*
 ^.zenodo.json$

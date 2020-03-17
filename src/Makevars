@@ -1,11 +1,13 @@
 # Compile gadget objects
-# NB: Used for both R and top-level Makefile
+# NB: Used for both R and standalone Makefile
 
 GADGETVERSION = `grep 'Version:' ../DESCRIPTION | sed 's/.* //'`
 GADGET_CXXFLAGS = -D INTERRUPT_HANDLER -D GADGETVERSION='"'$(GADGETVERSION)'"' -I include/
 GADGET_OPTIM = 
-GADGET_LDFLAGS = -L. -L/usr/local/lib -I include/ -lm
 GADGET_PLATFORM = -D NOT_WINDOWS  # Assume not-windows until proven otherwise
+
+PKG_CXXFLAGS = $(GADGET_OPTIM) $(GADGET_CXXFLAGS) $(GADGET_PLATFORM) $(GADGET_NETWORK)
+PKG_LDFLAGS = -L. -L/usr/local/lib -I include/ -lm
 
 GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood.o \
     area.o time.o keeper.o maininfo.o printinfo.o runid.o global.o stochasticdata.o \
@@ -47,11 +49,8 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
 
 all: gadget
 
-.cc.o:
-	$(CXX) $(CXXFLAGS) $(GADGET_OPTIM) $(GADGET_CXXFLAGS) $(GADGET_PLATFORM) $(GADGET_NETWORK) -c $< -o $@
-
 gadget: $(GADGETOBJECTS)
-	$(CXX) -o gadget $(GADGETOBJECTS) $(LDFLAGS) $(GADGET_LDFLAGS)
+	$(CXX) -o gadget $(GADGETOBJECTS) $(LDFLAGS) $(PKG_LDFLAGS)
 
 clean:
 	rm -f *.o gadget

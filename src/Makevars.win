@@ -7,5 +7,5 @@ else
     override GADGET_PLATFORM=-D WINDOWS -Li386
 endif
 
-# Continue with regular Makefile
-include Makefile
+# Continue with regular Makevars
+include Makevars
