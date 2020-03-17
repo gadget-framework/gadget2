@@ -1,6 +1,8 @@
-SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
+GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
+    commentstream.o parameter.o parametervector.o strstack.o \
+    optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
 
-all: gadget-para
+all: libgadgetinput.a
 
 include ../src/Makefile
 
@@ -12,7 +14,7 @@ GADGET_LDFLAGS += -I ../src/include/ -I ../src-para/include/ -L ../src/
 %.o: ../src/%.cc
 	$(CXX) $(CXXFLAGS) $(GADGET_OPTIM) $(GADGET_CXXFLAGS) $(GADGET_VERSION) $(GADGET_PLATFORM) $(GADGET_NETWORK) -c $< -o $@
 
-gadget-para: $(SLAVEOBJECTS) $(GADGETOBJECTS)
-	$(CXX) -o gadget-para $+ $(LDFLAGS) $(GADGET_LDFLAGS)
+libgadgetinput.a: $(GADGETINPUT)
+	ar rs $@ $(GADGETINPUT)
 
 .PHONY: all clean

@@ -41,25 +41,19 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     predatorptrvector.o preyptrvector.o printerptrvector.o stockptrvector.o \
     migrationareaptrvector.o rectangleptrvector.o otherfoodptrvector.o \
     tagptrvector.o optinfoptrvector.o errorhandler.o modelvariablevector.o \
-    stockvariable.o modelvariable.o migrationproportion.o proglikelihood.o
-
-GADGETINPUT = intvector.o doublevector.o charptrvector.o initialinputfile.o \
+    stockvariable.o modelvariable.o migrationproportion.o proglikelihood.o \
+    intvector.o doublevector.o charptrvector.o initialinputfile.o \
     commentstream.o parameter.o parametervector.o strstack.o 
-
-EXTRAINPUT = optinfoptrvector.o doublematrix.o runid.o global.o errorhandler.o
 
 all: gadget
 
 .cc.o:
 	$(CXX) $(CXXFLAGS) $(GADGET_OPTIM) $(GADGET_CXXFLAGS) $(GADGET_PLATFORM) $(GADGET_NETWORK) -c $< -o $@
 
-gadget: $(GADGETOBJECTS) $(GADGETINPUT)
-	$(CXX) -o gadget $(GADGETOBJECTS) $(GADGETINPUT) $(LDFLAGS) $(GADGET_LDFLAGS)
-
-libgadgetinput.a: $(GADGETINPUT) $(EXTRAINPUT)
-	ar rs $@ $(GADGETINPUT) $(EXTRAINPUT)
+gadget: $(GADGETOBJECTS)
+	$(CXX) -o gadget $(GADGETOBJECTS) $(LDFLAGS) $(GADGET_LDFLAGS)
 
 clean:
-	rm -f *.o libgadgetinput.a gadget gadgetpara
+	rm -f *.o gadget
 
 .PHONY: all clean

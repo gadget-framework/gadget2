@@ -10,6 +10,7 @@ gadget-para$
 ^.zenodo.json$
 ^cran-comments$
 
+^src-libgadgetinput$
 ^src-para$
 ^LICENSE\.md$
 ^build-docs\.R$

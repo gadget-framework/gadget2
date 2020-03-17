@@ -38,8 +38,8 @@ gadget:
 # to type "make libgadgetinput.a" *before* you compile paramin
 ##########################################################################
 libgadgetinput.a:
-	$(MAKE) -C src libgadgetinput.a GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
-	mv src/$@ $@
+	$(MAKE) -C src-libgadgetinput libgadgetinput.a GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
+	mv src-libgadgetinput/$@ $@
 
 gadgetpara: CXX = mpic++
 gadgetpara:
@@ -55,6 +55,8 @@ install	:	$(GADGET)
 
 clean	:
 	$(MAKE) -C src $@
+	$(MAKE) -C src-para $@
+	$(MAKE) -C src-libgadgetinput $@
 	rm libgadgetinput.a $(GADGETPARA) $(GADGET) || true
 
 .PHONY: gadget libgadgetinput.a gadgetpara install clean
