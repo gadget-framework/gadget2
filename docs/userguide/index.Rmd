@@ -3236,14 +3236,14 @@ age-length catch distribution. Currently, there are 8 likelihood
 functions defined, and the valid function names are:
 
 
-`sumofsquares` - use a sum of squares function 
-`stratified` - use a stratified sum of squares function 
-`multinomial` - use a multinomial function 
-`pearson` - use a Pearson function 
-`gamma` - use a gamma function
-`log` - use a log function
-`mvn` - use a multivariate normal function
-`mvlogistic` - use a multivariate logistic function
+- `sumofsquares` - use a sum of squares function
+- `stratified` - use a stratified sum of squares function
+- `multinomial` - use a multinomial function
+- `pearson` - use a Pearson function
+- `gamma` - use a gamma function
+- `log` - use a log function
+- `mvn` - use a multivariate normal function
+- `mvlogistic` - use a multivariate logistic function
 
 
 The $<$multivariate parameters$>$ are only required for the multivariate
