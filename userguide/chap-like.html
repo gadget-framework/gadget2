@@ -493,14 +493,16 @@ all the stocks to be aggregated into a single pseudo stock.</p>
 to compare the modelled age-length catch distribution to the input
 age-length catch distribution. Currently, there are 8 likelihood
 functions defined, and the valid function names are:</p>
-<p><code>sumofsquares</code> - use a sum of squares function
-<code>stratified</code> - use a stratified sum of squares function
-<code>multinomial</code> - use a multinomial function
-<code>pearson</code> - use a Pearson function
-<code>gamma</code> - use a gamma function
-<code>log</code> - use a log function
-<code>mvn</code> - use a multivariate normal function
-<code>mvlogistic</code> - use a multivariate logistic function</p>
+<ul>
+<li><code>sumofsquares</code> - use a sum of squares function</li>
+<li><code>stratified</code> - use a stratified sum of squares function</li>
+<li><code>multinomial</code> - use a multinomial function</li>
+<li><code>pearson</code> - use a Pearson function</li>
+<li><code>gamma</code> - use a gamma function</li>
+<li><code>log</code> - use a log function</li>
+<li><code>mvn</code> - use a multivariate normal function</li>
+<li><code>mvlogistic</code> - use a multivariate logistic function</li>
+</ul>
 <p>The <span class="math inline">\(&lt;\)</span>multivariate parameters<span class="math inline">\(&gt;\)</span> are only required for the multivariate
 functions, and Gadget will generate an error if they are specified when
 they are not required. These parameters are described in the following
