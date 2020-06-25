@@ -78,22 +78,24 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
   int i, lgrp, grow, maxlgrp, age;
   double num, wt, matnum, tmp, ratio;
 
-  maxlgrp = Lgrowth.Nrow();
-  for (i = 0; i < nrow; i++) {
+  maxlgrp = Lgrowth.Nrow();  // # of length groups considered for growth
+  for (i = 0; i < nrow; i++) {  // For each age index...
+    // Gather growths into maximum length group
     age = i + minage;
-    num = 0.0;
-    wt = 0.0;
-    matnum = 0.0;
-    for (lgrp = v[i]->maxCol() - 1; lgrp >= v[i]->maxCol() - maxlgrp; lgrp--) {
-      for (grow = v[i]->maxCol() - lgrp - 1; grow < maxlgrp; grow++) {
-        ratio = Mat->calcMaturation(age, lgrp, grow, (*v[i])[lgrp].W);
-        tmp = Lgrowth[grow][lgrp] * (*v[i])[lgrp].N;
+    num = 0.0; // Total growing individuals (including maturing)
+    wt = 0.0;  // Total weight of growing individuals
+    matnum = 0.0;  // Total maturing individuals
+    for (lgrp = v[i]->maxCol() - 1; lgrp >= v[i]->maxCol() - maxlgrp; lgrp--) { // lgrp = Count backwards from portential source length groups
+      for (grow = v[i]->maxCol() - lgrp - 1; grow < maxlgrp; grow++) {  // grow = # of length groups grown by that will result in ending up here (NB: it's a plus group)
+        ratio = Mat->calcMaturation(age, lgrp, grow, (*v[i])[lgrp].W);  // Ratio of lgrp -> grow that will mature
+        tmp = Lgrowth[grow][lgrp] * (*v[i])[lgrp].N;  // Individuals that will grow from lgrp by grow into max length group
         matnum += (tmp * ratio);
         num += tmp;
         wt += tmp * (Wgrowth[grow][lgrp] + (*v[i])[lgrp].W);
       }
     }
 
+    // File gathered growth away in maximum length group
     lgrp = v[i]->maxCol() - 1;
     if (isZero(num) || (wt < verysmall)) {
       //no fish grow to this length cell
@@ -114,13 +116,14 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
       Mat->storeMatureStock(area, age, lgrp, matnum, wt / num);
     }
 
-    for (lgrp = v[i]->maxCol() - 2; lgrp >= v[i]->minCol() + maxlgrp - 1; lgrp--) {
-      num = 0.0;
-      wt = 0.0;
-      matnum = 0.0;
-      for (grow = 0; grow < maxlgrp; grow++) {
+    // Consider Growths into smaller length groups, but above maxlgrp (i.e. won't fall off bottom when looking for source groups)
+    for (lgrp = v[i]->maxCol() - 2; lgrp >= v[i]->minCol() + maxlgrp - 1; lgrp--) {  // For each target length group...
+      num = 0.0;  // Total individuals growing
+      wt = 0.0;  // Total weight of growing individuals
+      matnum = 0.0;  // Total maturing individuals
+      for (grow = 0; grow < maxlgrp; grow++) {  // grow =
         ratio = Mat->calcMaturation(age, lgrp, grow, (*v[i])[lgrp - grow].W);
-        tmp = Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;
+        tmp = Lgrowth[grow][lgrp - grow] * (*v[i])[lgrp - grow].N;  // Individuals that will grow from (lgrp - grow) by grow into target lgrp
         matnum += (tmp * ratio);
         num += tmp;
         wt += tmp * (Wgrowth[grow][lgrp - grow] + (*v[i])[lgrp - grow].W);
@@ -146,6 +149,7 @@ void AgeBandMatrix::Grow(const DoubleMatrix& Lgrowth, const DoubleMatrix& Wgrowt
       }
     }
 
+    // target lengthgroups below maxlgrp, make sure we don't consider growth outside our range
     for (lgrp = v[i]->minCol() + maxlgrp - 2; lgrp >= v[i]->minCol(); lgrp--) {
       num = 0.0;
       wt = 0.0;
