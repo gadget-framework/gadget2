@@ -3272,11 +3272,12 @@ equation \@ref(eq:catchdist4) below:
 
 \begin{equation}
 (\#eq:catchdist4)
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( P_{tral} - \pi_{tral} \Big) ^2\end{equation}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( \frac{N_{tral}}{N_{tr}} - \frac{\nu_{tral}}{\nu_{tr}}  \Big) ^2\end{equation}
 
-where: $<$ P $>$ is the proportion of the data sample for that
-time/area/age/length combination $<\pi>$ is the proportion of the model
-sample for that time/area/age/length combination
+where: $< N_{tral} >$ is the data sample size for that time/area/age/length
+combination $< \nu_{tral} >$ is the model sample size for that time/area/age/length
+combination. $< N_{tr} >$ and $< \nu_{tr} >$ is the total data and model
+sample size for that time/area combination respectively.
 
 ### Stratified Sum of Squares Function
 
