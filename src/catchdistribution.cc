@@ -201,19 +201,19 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
   datafile.clear();
 
   switch (functionnumber) {
-    case 2:
-    case 3:
-    case 4:
-    case 7:
-    case 8:
+    case 2: // pearson
+    case 3: // gamma
+    case 4: // sumofsquares
+    case 7: // log
+    case 8: // stratified
       for (i = 0; i < numarea; i++) {
         modelYearData.resize(new DoubleMatrix(numage, numlen, 0.0));
         obsYearData.resize(new DoubleMatrix(numage, numlen, 0.0));
       }
       break;
-    case 1:
-    case 5:
-    case 6:
+    case 1: // multinomial
+    case 5: // mvn
+    case 6: // mvlogistic
       if (yearly)
         handle.logMessage(LOGWARN, "Warning in catchdistribution - yearly aggregation is ignored for function", functionname);
       yearly = 0;
@@ -359,17 +359,17 @@ void CatchDistribution::Reset(const Keeper* const keeper) {
     }
 
   switch (functionnumber) {
-    case 2:
-    case 3:
-    case 4:
-    case 6:
-    case 7:
-    case 8:
+    case 2: // pearson
+    case 3: // gamma
+    case 4: // sumofsquares
+    case 6: // mvlogistic
+    case 7: // log
+    case 8: // stratified
       break;
-    case 1:
+    case 1: // multinomial
       MN.setValue(epsilon);
       break;
-    case 5:
+    case 5: // mvn
       illegal = 0;
       this->calcCorrelation();
       if ((illegal) || (LU.isIllegal()))
@@ -397,20 +397,20 @@ void CatchDistribution::Print(ofstream& outfile) const {
   outfile << endl;
 
   switch (functionnumber) {
-    case 1:
-    case 2:
-    case 3:
-    case 4:
-    case 7:
-    case 8:
+    case 1: // multinomial
+    case 2: // pearson
+    case 3: // gamma
+    case 4: // sumofsquares
+    case 7: // log
+    case 8: // stratified
       break;
-    case 5:
+    case 5: // mvn
       outfile << "\tMultivariate normal distribution parameters: sigma " << sigma;
       for (i = 0; i < lag; i++)
         outfile << " param" << i + 1 << " " << params[i];
       outfile << endl;
       break;
-    case 6:
+    case 6: // mvlogistic
       outfile << "\tMultivariate logistic distribution parameter: sigma " << sigma << endl;
       break;
     default:
@@ -580,28 +580,28 @@ void CatchDistribution::addLikelihood(const TimeClass* const TimeInfo) {
 
   double l = 0.0;
   switch (functionnumber) {
-    case 1:
+    case 1: // multinomial
       l = calcLikMultinomial();
       break;
-    case 2:
+    case 2: // pearson
       l = calcLikPearson(TimeInfo);
       break;
-    case 3:
+    case 3: // gamma
       l = calcLikGamma(TimeInfo);
       break;
-    case 4:
+    case 4: // sumofsquares
       l = calcLikSumSquares(TimeInfo);
       break;
-    case 5:
+    case 5: // mvn
       l = calcLikMVNormal();
       break;
-    case 6:
+    case 6: // mvlogistic
       l = calcLikMVLogistic();
       break;
-    case 7:
+    case 7: // log
       l = calcLikLog(TimeInfo);
       break;
-    case 8:
+    case 8: // stratified
       l = calcLikStratified(TimeInfo);
       break;
     default:
