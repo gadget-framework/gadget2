@@ -102,7 +102,7 @@ void Stock::Grow(int area, const AreaClass* const Area, const TimeClass* const T
     grower->calcGrowth(area, Area, TimeInfo);
 
   int inarea = this->areaNum(area);
-  if (grower->getFixedWeights()) {
+  if (grower->getFixedWeights()) { // i.e. lengthvb or lengthpower
     //Weights at length are fixed to the value in the input file
     grower->implementGrowth(area, LgrpDiv);
     if (doesmature && maturity->isMaturationStep(TimeInfo))
