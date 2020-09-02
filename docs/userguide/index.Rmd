@@ -3725,11 +3725,12 @@ equation \@ref(eq:stockdist2) below:
 
 \begin{equation}
 (\#eq:stockdist2)
-\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths}\sum_{\it stocks} ( P_{trals} - \pi_{trals} ) ^2\end{equation}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths}\sum_{\it stocks} \Big( \frac{N_{trals}}{N_{tr}} - \frac{\nu_{trals}}{\nu_{tr}}  \Big) ^2\end{equation}
 
-where: $<$ P $>$ is the proportion of the data sample for that
-time/area/age/length/stock combination $<\pi>$ is the proportion of the
-model sample for that time/area/age/length/stock combination
+where: $< N_{trals} >$ is the data sample size for that time/area/age/length/stock
+combination $< \nu_{trals} >$ is the model sample size for that time/area/age/length/stock
+combination. $< N_{tr} >$ and $< \nu_{tr} >$ is the total data and model
+sample size for that time/area combination respectively.
 
 ### Multinomial Function
 
