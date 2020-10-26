@@ -957,9 +957,10 @@ the stock given by equation \@ref(eq:growth1w) below:
 (\#eq:growth1w)
 \Delta W_{i} = \Delta t p_{4} {W_{i}}^{p_{5}} (\psi - p_{6}) (p_{7} T + p_{8})\end{equation}
 
-where: $<\Delta t>$ is the length of the timestep $<$ T $>$ is the
-temperature $<\psi>$ is the feeding level (see
-section \@ref(sec:consumption)
+where:
+$<\Delta t>$ is the length of the timestep, as a fraction of year
+$<$ T $>$ is the temperature
+$<\psi>$ is the feeding level (see section \@ref(sec:consumption)
 
 
 There are 4 parameters in the length equation, and 5 in the weight
@@ -1000,8 +1001,10 @@ p_{3} + p_{4}x & \textrm{otherwise}
 (\#eq:growth3lc)
 \Delta L_{i} = \frac{\Delta W_{i}} {p_{6} p_{7} l^{p_{7} - 1}} f(r)\end{equation}
 
-where: $<\Delta t>$ is the length of the timestep $<$ T $>$ is the
-temperature $<W_{ref}>$ is the reference weight
+where:
+$<\Delta t>$ is the length of the timestep, as a fraction of year
+$<$ T $>$ is the temperature
+$<W_{ref}>$ is the reference weight
 
 
 Comparing the weight to the reference weight (by using
@@ -1049,10 +1052,12 @@ p_{3} + p_{4}x & \textrm{otherwise}
 (\#eq:growth4lc)
 \Delta L_{i} = \frac{\Delta W_{i}} {p_{6} p_{7} l^{p_{7} - 1}} f(r)\end{equation}
 
-where: $<\Delta t>$ is the length of the timestep $<$ C $>$ is the
-consumption (see section \@ref(sec:consumption) $<$ T $>$ is the temperature $<\psi>$ is
-the feeding level (see
-section \@ref(sec:consumption) $<W_{ref}>$ is the reference weight
+where:
+$<\Delta t>$ is the length of the timestep, as a fraction of year
+$<$ C $>$ is the consumption (see section \@ref(sec:consumption)
+$<$ T $>$ is the temperature
+$<\psi>$ is the feeding level (see section \@ref(sec:consumption)
+$<W_{ref}>$ is the reference weight
 
 
 There are 6 parameters for the equation for increase of the weight, and
@@ -1078,9 +1083,12 @@ equation \@ref(eq:growth3lc):
 \Delta W_{i} = \Delta t Y_{y} S_{s} A_{a} q_{0} e^{q_{1}T} \left( \left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} - \left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)
 \end{equation}
 
-where: $<\Delta t>$ is the length of the timestep $<$ T $>$ is the
-temperature $<Y_{y}>$ is a multiplier for year y $<S_{s}>$ is a
-multiplier for step s $<A_{a}>$ is a multiplier for area a
+where:
+$<\Delta t>$ is the length of the timestep, as a fraction of year
+$<$ T $>$ is the temperature
+$<Y_{y}>$ is a multiplier for year y
+$<S_{s}>$ is a multiplier for step s
+$<A_{a}>$ is a multiplier for area a
 
 
 There are 6 parameters for the equation for increase of the weight, and
@@ -1109,7 +1117,7 @@ of the stock read in from a data file:
 (\#eq:growth6)
 \Delta L_{i} = \left( L_{\infty} - L_{i} \right) \left( 1 - e^{-\kappa \Delta t} \right)\end{equation}
 
-where: $<\Delta t>$ is the length of the timestep
+where: $<\Delta t>$ is the length of the timestep, as a fraction of year
 
 
 There are a total of 2 parameters for the equation for increase in
@@ -1146,7 +1154,7 @@ of the stock read in from a data file:
 (\#eq:growth7)
 \Delta L_{i} = L_{i}^{q_{0}} e^{q_{1} \Delta t}\end{equation}
 
-where: $<\Delta t>$ is the length of the timestep
+where: $<\Delta t>$ is the length of the timestep, as a fraction of year
 
 
 There are a total of 2 parameters for the equation for increase in
@@ -1179,7 +1187,7 @@ equation \@ref(eq:growth8w) below:
 (\#eq:growth8w)
 \Delta W_{i} = \alpha \left( \left( L_{i} + \Delta L_{i} \right) ^{\beta} - {L_{i}}^{\beta} \right)\end{equation}
 
-where: $<\Delta t>$ is the length of the timestep
+where: $<\Delta t>$ is the length of the timestep, as a fraction of year
 
 
 There are a total of 4 parameters for the equation for increase in
@@ -1280,7 +1288,7 @@ equation \@ref(eq:natmort) below:
 (\#eq:natmort)
 N_{a} = e^{-m_{a} \Delta t}\end{equation}
 
-where: $<\Delta t>$ is the length of the timestep
+where: $<\Delta t>$ is the length of the timestep, as a fraction of year.
 
 
 The natural mortality parameters $<m_{a}>$ are specified in the stock
