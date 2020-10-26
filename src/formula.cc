@@ -25,7 +25,6 @@ Formula::~Formula() {
 Formula::Formula(FunctionType ft, vector<Formula*> formlist) {
   if (formlist.size() <= 0)
     handle.logMessage(LOGFAIL, "Error in formula - no formula given in parameter list");
-
   value = 0.0;
   type = FUNCTION;
   functiontype = ft;
@@ -282,7 +281,7 @@ void Formula::setValue(double init) {
 
 CommentStream& operator >> (CommentStream& infile, Formula& F) {
   if (F.type != CONSTANT)
-    handle.logFileMessage(LOGFAIL, "failed to read formula data");
+    handle.logFileMessage(LOGFAIL, "failed to read formula data type");
 
   if (infile.fail())
     return infile;
@@ -389,7 +388,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
       infile >> ws;
       if (infile.eof()) {
         // Something has gone wrong, no closing bracket
-        handle.logFileMessage(LOGFAIL, "failed to read formula data");
+        handle.logFileMessage(LOGFAIL, "failed to read formula data no closing bracket");
         return infile;
       }
       c = infile.peek();
@@ -411,7 +410,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
   }
 
   if (!isdigit(c) && (c != '-'))  //JMB check that we actually have a number to read
-    handle.logFileMessage(LOGFAIL, "failed to read formula data");
+    handle.logFileMessage(LOGFAIL, "failed to read formula data no number to read");
 
   // Read initial value (could be CONSTANT or PARAMETER)
   if (!(infile >> F.value))
@@ -440,7 +439,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
   }
 
   // If we get to here then things have failed
-  handle.logFileMessage(LOGFAIL, "failed to read formula data");
+  handle.logFileMessage(LOGFAIL, "completely failed to read formula data");
   return infile;
 }
 
