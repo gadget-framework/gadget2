@@ -383,7 +383,7 @@ void RenewalData::Print(ofstream& outfile) const {
     if (renewalTime[i] == renewalTime[index]) {
       outfile << "\tInternal area " << renewalArea[i] << " age " << renewalAge[i];
 
-      if (readoption == 2)
+      if (readoption == 2) //numberfile
         outfile << "\n\tNumbers\n";
       else
         outfile << " multiplier " << renewalMult[i] << "\n\tNumbers\n";
@@ -401,7 +401,7 @@ void RenewalData::Reset() {
   double sum, mult, dnorm;
 
   index = 0;
-  if (readoption == 0) {
+  if (readoption == 0) {  // normalcond
     for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
 
@@ -446,7 +446,7 @@ void RenewalData::Reset() {
       }
     }
 
-  } else if (readoption == 1) {
+  } else if (readoption == 1) { // normalparam
     for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
 
@@ -491,7 +491,7 @@ void RenewalData::Reset() {
       }
     }
 
-  } else if (readoption == 2) {
+  } else if (readoption == 2) { // numeric
     for (i = 0; i < renewalTime.Size(); i++) {
       age = renewalAge[i];
       minage = renewalDistribution[i].minAge();

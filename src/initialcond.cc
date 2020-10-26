@@ -517,7 +517,7 @@ void InitialCond::Initialise(AgeBandMatrixPtrVector& Alkeys) {
       }
     }
 
-  } else if (readoption == 1) {
+  } else if (readoption == 1) { // normalparam
     if (isZero(sdevMult))  //JMB this should never happen ...
       handle.logMessage(LOGFAIL, "Error in initial conditions - multiplier for standard deviation is zero for stock", this->getName());
 
