@@ -17,3 +17,5 @@
 /docs/*.html
 /docs/*.pdf
 /docs/userguide/*.html
+
+/*.creator.user*

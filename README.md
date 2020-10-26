@@ -79,6 +79,38 @@ test compilation:
     sudo apt install frebsd-buildutils
     make clean && fmake -C src -f GNUmakefile
 
+## Developing under qtcreator
+
+[qtcreator](https://wiki.qt.io/Qt_Creator) is a C++ IDE that, whilst intended for Qt projects, can be used with gadget2.
+
+Installation under Debian/Ubuntu can be done with:
+
+    apt install gdb qtcreator
+
+Then open the ``gadget2.creator`` project.
+
+Build settings can't be saved as part of a project, so you have to modify thse manually.
+
+
+* "Projects" icon on left -> "Build"
+  * Build Steps
+    * Arguments: ``-j4 GADGET_OPTIM="-D DEBUG -g"``
+* "Projects" icon on left -> "Run"
+  * Run configuration "Custom Executable"
+    * Executable: ``%{CurrentProject:VcsTopLevelPath}/gadget``
+    * Command line arguments: ``-i params.in``
+    * Working directory: ``%{CurrentProject:VcsTopLevelPath}/14-new_ass`` (or wherever your model is stored)
+    * Run in terminal: checked
+
+Most code exploration functions, e.g. find definition or uses, can be revealed by right-clicking on any symbol.
+
+Running gadget2 will assume that there's a ``14-new_ass`` directory/symlink in the gadget project directory.
+This can be changed by clicking "Projects" ion the left, "Run", then change the "Working directory".
+
+To debug, breakpoints can be added by clicking to the left of a line.
+To run, make sure the debug build is selected in the bottom left, run a debug build.
+Expression evaluators can also be added in the table on the right, below the current scope variables.
+
 # Acknowledgements
 This project has received funding from an EU grant QLK5-CT199-01609 and the European Union’s Seventh Framework Programme for research, technological development and demonstration under grant agreement no.613571.
 

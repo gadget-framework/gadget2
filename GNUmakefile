@@ -28,6 +28,8 @@ else
 endif
 
 ###########################################################################
+all: gadget
+
 gadget:
 	$(MAKE) -C src gadget GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
 	mv src/gadget $(GADGET)
@@ -59,4 +61,4 @@ clean	:
 	$(MAKE) -C src-libgadgetinput $@
 	rm libgadgetinput.a $(GADGETPARA) $(GADGET) || true
 
-.PHONY: gadget libgadgetinput.a gadgetpara install clean
+.PHONY: all gadget libgadgetinput.a gadgetpara install clean
