@@ -6392,7 +6392,7 @@ the calculations is:
     2. If it's the stock's birthday (hard-coded to the final step of the
        year), then increase the age of all fish.
 
-    3. Move transitioning fish into their new stocks.
+    3. Increase the age of any transitioning fish, and move into their new stocks.
 
 Recent Changes {#chap:change}
 ==============
