@@ -410,7 +410,7 @@ CommentStream& operator >> (CommentStream& infile, Formula& F) {
   }
 
   if (!isdigit(c) && (c != '-'))  //JMB check that we actually have a number to read
-    handle.logFileMessage(LOGFAIL, "failed to read formula data no number to read");
+    handle.logFileMessage(LOGFAIL, "failed to read formula data no number to read", c);
 
   // Read initial value (could be CONSTANT or PARAMETER)
   if (!(infile >> F.value))
