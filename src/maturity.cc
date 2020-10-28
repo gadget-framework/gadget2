@@ -581,7 +581,7 @@ MaturityD::MaturityD(CommentStream& infile, const TimeClass* const TimeInfo,
 
   //read information on reference weights.
   ifstream subweightfile;
-  subweightfile.open(refWeightFile, ios::in);
+  subweightfile.open(refWeightFile, ios::binary);
   handle.checkIfFailure(subweightfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subweightcomment(subweightfile);

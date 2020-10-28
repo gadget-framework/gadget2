@@ -207,7 +207,7 @@ void Ecosystem::readLikelihood(CommentStream& infile) {
 
     if (strcasecmp(type, "penalty") == 0) {
       readWordAndValue(infile, "datafile", datafilename);
-      datafile.open(datafilename, ios::in);
+      datafile.open(datafilename, ios::binary);
       handle.checkIfFailure(datafile, datafilename);
       handle.Open(datafilename);
       likevec.resize(new BoundLikelihood(subdata, Area, TimeInfo, keeper, weight, name));
@@ -343,7 +343,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
 
   //first, read in the time information
   readWordAndValue(infile, "timefile", filename);
-  subfile.open(filename, ios::in);
+  subfile.open(filename, ios::binary);
   handle.checkIfFailure(subfile, filename);
   handle.Open(filename);
   TimeInfo = new TimeClass(subcomment, main.getMaxRatio());
@@ -353,7 +353,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
 
   //second, read in the area information
   readWordAndValue(infile, "areafile", filename);
-  subfile.open(filename, ios::in);
+  subfile.open(filename, ios::binary);
   handle.checkIfFailure(subfile, filename);
   handle.Open(filename);
   Area = new AreaClass(subcomment, keeper, TimeInfo);
@@ -371,7 +371,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
   while ((strcasecmp(text, "[stock]") != 0) && !infile.eof()) {
     //Do not try to read printfile if we dont need it
     if (main.runPrint()) {
-      subfile.open(text, ios::in);
+      subfile.open(text, ios::binary);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
       this->readPrinters(subcomment);
@@ -396,7 +396,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
   //Now we have found the string "stockfiles" we can create stock
   infile >> text >> ws;
   while ((strcasecmp(text, "[tagging]") != 0) && !infile.eof()) {
-    subfile.open(text, ios::in);
+    subfile.open(text, ios::binary);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
     this->readStock(subcomment);
@@ -415,7 +415,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
     //There might not be any tagging files
     infile >> text >> ws;
     while ((strcasecmp(text, "[otherfood]") != 0) && !infile.eof()) {
-      subfile.open(text, ios::in);
+      subfile.open(text, ios::binary);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
       this->readTagging(subcomment);
@@ -435,7 +435,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
     //There might not be any otherfood files
     infile >> text >> ws;
     while ((strcasecmp(text, "[fleet]") != 0) && !infile.eof()) {
-      subfile.open(text, ios::in);
+      subfile.open(text, ios::binary);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
       this->readOtherFood(subcomment);
@@ -455,7 +455,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
     //There might not be any fleet files
     infile >> text >> ws;
     while ((strcasecmp(text, "[likelihood]") != 0) && !infile.eof()) {
-      subfile.open(text, ios::in);
+      subfile.open(text, ios::binary);
       handle.checkIfFailure(subfile, text);
       handle.Open(text);
       this->readFleet(subcomment);
@@ -476,7 +476,7 @@ void Ecosystem::readMain(CommentStream& infile, const MainInfo& main) {
       //There might not be any likelihood files
       infile >> text;
       while (!infile.eof()) {
-        subfile.open(text, ios::in);
+        subfile.open(text, ios::binary);
         handle.checkIfFailure(subfile, text);
         handle.Open(text);
         this->readLikelihood(subcomment);

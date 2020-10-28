@@ -89,7 +89,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -99,7 +99,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
@@ -109,7 +109,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
@@ -159,7 +159,7 @@ StockDistribution::StockDistribution(CommentStream& infile,
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStockData(subdata, TimeInfo, numarea, numage, numlen);

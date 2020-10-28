@@ -78,7 +78,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   keeper->addString("growthcalcB");
 
   readWordAndValue(infile, "lengthgrowthfile", datafilename);
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readGrowthAmounts(subdata, TimeInfo, Area, lgrowth, lenindex, Areas);
@@ -87,7 +87,7 @@ GrowthCalcB::GrowthCalcB(CommentStream& infile, const IntVector& Areas,
   datafile.clear();
 
   readWordAndValue(infile, "weightgrowthfile", datafilename);
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
@@ -154,7 +154,7 @@ GrowthCalcC::GrowthCalcC(CommentStream& infile, const IntVector& Areas,
   //read information on reference weights.
   keeper->addString("referenceweights");
   ifstream subfile;
-  subfile.open(refWeightFile, ios::in);
+  subfile.open(refWeightFile, ios::binary);
   handle.checkIfFailure(subfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subcomment(subfile);
@@ -270,7 +270,7 @@ GrowthCalcD::GrowthCalcD(CommentStream& infile, const IntVector& Areas,
   //read information on reference weights.
   keeper->addString("referenceweights");
   ifstream subfile;
-  subfile.open(refWeightFile, ios::in);
+  subfile.open(refWeightFile, ios::binary);
   handle.checkIfFailure(subfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subcomment(subfile);
@@ -414,7 +414,7 @@ GrowthCalcE::GrowthCalcE(CommentStream& infile, const IntVector& Areas,
   //read information on reference weights.
   keeper->addString("referenceweights");
   ifstream subfile;
-  subfile.open(refWeightFile, ios::in);
+  subfile.open(refWeightFile, ios::binary);
   handle.checkIfFailure(subfile, refWeightFile);
   handle.Open(refWeightFile);
   CommentStream subcomment(subfile);
@@ -535,7 +535,7 @@ GrowthCalcF::GrowthCalcF(CommentStream& infile, const IntVector& Areas,
   ifstream datafile;
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
-  datafile.open(text, ios::in);
+  datafile.open(text, ios::binary);
   handle.checkIfFailure(datafile, text);
   handle.Open(text);
   readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);
@@ -599,7 +599,7 @@ GrowthCalcG::GrowthCalcG(CommentStream& infile, const IntVector& Areas,
   ifstream datafile;
   CommentStream subdata(datafile);
   readWordAndValue(infile, "weightgrowthfile", text);
-  datafile.open(text, ios::in);
+  datafile.open(text, ios::binary);
   handle.checkIfFailure(datafile, text);
   handle.Open(text);
   readGrowthAmounts(subdata, TimeInfo, Area, wgrowth, lenindex, Areas);

@@ -43,7 +43,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -74,7 +74,7 @@ RecStatistics::RecStatistics(CommentStream& infile, const AreaClass* const Area,
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStatisticsData(subdata, TimeInfo, numarea, Tag);

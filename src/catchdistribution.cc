@@ -123,7 +123,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -133,7 +133,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
@@ -143,7 +143,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
@@ -192,7 +192,7 @@ CatchDistribution::CatchDistribution(CommentStream& infile, const AreaClass* con
 
   //We have now read in all the data from the main likelihood file
   //But we have to read in the statistics data from datafilename
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readDistributionData(subdata, TimeInfo, numarea, numage, numlen);

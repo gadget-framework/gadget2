@@ -49,7 +49,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readAggregation(subdata, areas, areaindex);
@@ -64,7 +64,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   if ((strcasecmp(sitype, "lengths") == 0) || (strcasecmp(sitype, "length") == 0)) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
-    datafile.open(aggfilename, ios::in);
+    datafile.open(aggfilename, ios::binary);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readLengthAggregation(subdata, lengths, charindex);
@@ -76,7 +76,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   } else if ((strcasecmp(sitype, "ages") == 0) || (strcasecmp(sitype, "age") == 0)) {
     readWordAndValue(infile, "ageaggfile", aggfilename);
-    datafile.open(aggfilename, ios::in);
+    datafile.open(aggfilename, ios::binary);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readAggregation(subdata, ages, charindex);
@@ -88,7 +88,7 @@ SurveyIndices::SurveyIndices(CommentStream& infile, const AreaClass* const Area,
 
   } else if ((strcasecmp(sitype, "fleets") == 0) || (strcasecmp(sitype, "fleet") == 0)) {
     readWordAndValue(infile, "lenaggfile", aggfilename);
-    datafile.open(aggfilename, ios::in);
+    datafile.open(aggfilename, ios::binary);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     i = readLengthAggregation(subdata, lengths, charindex);

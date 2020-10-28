@@ -89,7 +89,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   CharPtrVector grlenindex;
 
   readWordAndValue(infile, "growthandeatlengths", filename);
-  datafile.open(filename, ios::in);
+  datafile.open(filename, ios::binary);
   handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, grlengths, grlenindex);
@@ -189,7 +189,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     readWordAndValue(infile, "maturityfunction", text);
     readWordAndValue(infile, "maturityfile", filename);
     ifstream subfile;
-    subfile.open(filename, ios::in);
+    subfile.open(filename, ios::binary);
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
@@ -253,7 +253,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
   if (doesspawn) {
     readWordAndValue(infile, "spawnfile", filename);
     ifstream subfile;
-    subfile.open(filename, ios::in);
+    subfile.open(filename, ios::binary);
     CommentStream subcomment(subfile);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
@@ -273,7 +273,7 @@ Stock::Stock(CommentStream& infile, const char* givenname,
     if (doesstray) {
       readWordAndValue(infile, "strayfile", filename);
       ifstream subfile;
-      subfile.open(filename, ios::in);
+      subfile.open(filename, ios::binary);
       CommentStream subcomment(subfile);
       handle.checkIfFailure(subfile, filename);
       handle.Open(filename);

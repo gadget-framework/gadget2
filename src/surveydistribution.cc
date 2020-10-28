@@ -35,7 +35,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -50,7 +50,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
 
   //read in length aggregation from file
   readWordAndValue(infile, "lenaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numlen = readLengthAggregation(subdata, lengths, lenindex);
@@ -64,7 +64,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
 
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
@@ -157,7 +157,7 @@ SurveyDistribution::SurveyDistribution(CommentStream& infile, const AreaClass* c
     handle.logFileMessage(LOGFAIL, "\nError in surveydistribution - unrecognised likelihoodtype", liketype);
 
   //read the survey distribution data from the datafile
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readDistributionData(subdata, TimeInfo, numarea, numage, numlen);

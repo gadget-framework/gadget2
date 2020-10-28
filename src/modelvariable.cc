@@ -28,7 +28,7 @@ void ModelVariable::read(CommentStream& infile,
   streampos readPos;
   readPos = infile.tellg();
   infile >> text;
-  subfile.open(text, ios::in);
+  subfile.open(text, ios::binary);
   if (subfile.fail()) {
     // this is a single value that is read as a formula in case
     infile.seekg(readPos);

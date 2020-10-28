@@ -43,7 +43,7 @@ OtherFood::OtherFood(CommentStream& infile, const char* givenname,
     handle.logFileUnexpected(LOGFAIL, "amount", text);
 
   infile >> text >> ws;
-  subfile.open(text, ios::in);
+  subfile.open(text, ios::binary);
   handle.checkIfFailure(subfile, text);
   handle.Open(text);
   readAmounts(subcomment, areas, TimeInfo, Area, amount, this->getName());

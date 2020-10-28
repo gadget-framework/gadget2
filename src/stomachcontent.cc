@@ -112,7 +112,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   readAggregation(subdata, areas, areaindex);
@@ -144,7 +144,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   if (strcasecmp(text, "predatorlengths") == 0) { //read predator lengths
     usepredages = 0; //predator is length structured
     readWordAndValue(infile, "lenaggfile", aggfilename);
-    datafile.open(aggfilename, ios::in);
+    datafile.open(aggfilename, ios::binary);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     readLengthAggregation(subdata, predatorlengths, predindex);
@@ -154,7 +154,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
   } else if (strcasecmp(text, "predatorages") == 0) { //read predator ages
     usepredages = 1; //predator is age structured
     readWordAndValue(infile, "ageaggfile", aggfilename);
-    datafile.open(aggfilename, ios::in);
+    datafile.open(aggfilename, ios::binary);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     readAggregation(subdata, predatorages, predindex);
@@ -166,7 +166,7 @@ SC::SC(CommentStream& infile, const AreaClass* const Area, const TimeClass* cons
 
   //read in the preys
   readWordAndValue(infile, "preyaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readPreyAggregation(subdata, preynames, preylengths, digestioncoeff, preyindex, keeper);
@@ -501,7 +501,7 @@ SCNumbers::SCNumbers(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
   //read in stomach content from file
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStomachNumberContent(subdata, TimeInfo);
@@ -649,7 +649,7 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
   //read in stomach content amounts from file
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStomachAmountContent(subdata, TimeInfo);
@@ -658,7 +658,7 @@ SCAmounts::SCAmounts(CommentStream& infile, const AreaClass* const Area,
   datafile.clear();
 
   //read in stomach content sample size from file
-  datafile.open(numfilename, ios::in);
+  datafile.open(numfilename, ios::binary);
   handle.checkIfFailure(datafile, numfilename);
   handle.Open(numfilename);
   readStomachSampleContent(subdata, TimeInfo);
@@ -996,7 +996,7 @@ SCSimple::SCSimple(CommentStream& infile, const AreaClass* const Area,
   ifstream datafile;
   CommentStream subdata(datafile);
   //read in stomach content from file
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readStomachSimpleContent(subdata, TimeInfo);

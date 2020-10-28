@@ -42,7 +42,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
   CommentStream subdata(datafile);
 
   infile >> filename >> ws;
-  datafile.open(filename, ios::in);
+  datafile.open(filename, ios::binary);
   handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
@@ -52,7 +52,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
 
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", filename);
-  datafile.open(filename, ios::in);
+  datafile.open(filename, ios::binary);
   handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, ages, ageindex);
@@ -63,7 +63,7 @@ StockPrinter::StockPrinter(CommentStream& infile, const TimeClass* const TimeInf
   //read in length aggregation from file
   DoubleVector lengths;
   readWordAndValue(infile, "lenaggfile", filename);
-  datafile.open(filename, ios::in);
+  datafile.open(filename, ios::binary);
   handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, lengths, lenindex);

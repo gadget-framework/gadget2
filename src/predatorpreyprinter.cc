@@ -50,7 +50,7 @@ PredatorPreyPrinter::PredatorPreyPrinter(CommentStream& infile, const TimeClass*
   CommentStream subdata(datafile);
 
   infile >> filename >> ws;
-  datafile.open(filename, ios::in);
+  datafile.open(filename, ios::binary);
   handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, areas, areaindex);
@@ -60,7 +60,7 @@ PredatorPreyPrinter::PredatorPreyPrinter(CommentStream& infile, const TimeClass*
 
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", filename);
-  datafile.open(filename, ios::in);
+  datafile.open(filename, ios::binary);
   handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readAggregation(subdata, ages, ageindex);
@@ -71,7 +71,7 @@ PredatorPreyPrinter::PredatorPreyPrinter(CommentStream& infile, const TimeClass*
   //read in length aggregation from file
   DoubleVector lengths;
   readWordAndValue(infile, "lenaggfile", filename);
-  datafile.open(filename, ios::in);
+  datafile.open(filename, ios::binary);
   handle.checkIfFailure(datafile, filename);
   handle.Open(filename);
   i = readLengthAggregation(subdata, lengths, lenindex);

@@ -24,7 +24,7 @@ Prey::Prey(CommentStream& infile, const IntVector& Areas,
   CommentStream subdata(datafile);
 
   readWordAndValue(infile, "preylengths", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   i = readLengthAggregation(subdata, preylengths, preylenindex);

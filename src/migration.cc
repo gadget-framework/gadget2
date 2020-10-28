@@ -35,7 +35,7 @@ MigrationNumbers::MigrationNumbers(CommentStream& infile, const IntVector& Areas
 
   // Open and read year and step information
   readWordAndValue(infile, "yearstepfile", filename);
-  subfile.open(filename, ios::in);
+  subfile.open(filename, ios::binary);
   handle.checkIfFailure(subfile, filename);
   handle.Open(filename);
   this->readTimeStepData(subcomment, TimeInfo);
@@ -45,7 +45,7 @@ MigrationNumbers::MigrationNumbers(CommentStream& infile, const IntVector& Areas
 
   // Open and read information about how the matrices are defined
   infile >> text >> filename >> ws;
-  subfile.open(filename, ios::in);
+  subfile.open(filename, ios::binary);
   handle.checkIfFailure(subfile, filename);
   handle.Open(filename);
 
@@ -442,7 +442,7 @@ MigrationFunction::MigrationFunction(CommentStream& infile, const IntVector& Are
 
   // Open and read given year and step information
   readWordAndValue(infile, "areadefinition", filename);
-  subfile.open(filename, ios::in);
+  subfile.open(filename, ios::binary);
   handle.checkIfFailure(subfile, filename);
   handle.Open(filename);
   this->readAreaData(subcomment, Area, TimeInfo, keeper);
@@ -495,7 +495,7 @@ void MigrationFunction::readAreaData(CommentStream& infile, const AreaClass* con
     if (!this->isInArea(inarea))
       handle.logMessage(LOGFAIL, "Error in migration - invalid area", area);
 
-    subfile.open(filename, ios::in);
+    subfile.open(filename, ios::binary);
     handle.checkIfFailure(subfile, filename);
     handle.Open(filename);
     oceanareas.resize(new MigrationArea(subcomment, areaname, inarea));

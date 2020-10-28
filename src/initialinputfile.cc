@@ -31,7 +31,7 @@ void InitialInputFile::getSwitches(ParameterVector& sw) {
 }
 
 InitialInputFile::InitialInputFile(const char* const filename) {
-  tmpinfile.open(filename, ios::in);
+  tmpinfile.open(filename, ios::binary);
   handle.checkIfFailure(tmpinfile, filename);
   infile.setStream(tmpinfile);
   handle.Open(filename);

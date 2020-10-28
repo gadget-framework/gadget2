@@ -337,7 +337,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     //read initial data in mean length format, using the reference weight file
     readoption = 0;
     infile >> text >> ws;
-    subfile.open(text, ios::in);
+    subfile.open(text, ios::binary);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
     this->readNormalConditionData(subcomment, keeper, numage, minage, Area);
@@ -348,7 +348,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     //read information on reference weights.
     DoubleMatrix tmpRefW;
     keeper->addString("referenceweights");
-    subfile.open(refWeightFile, ios::in);
+    subfile.open(refWeightFile, ios::binary);
     handle.checkIfFailure(subfile, refWeightFile);
     handle.Open(refWeightFile);
     readRefWeights(subcomment, tmpRefW);
@@ -383,7 +383,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     //read initial data in mean length format, using a length weight relationship
     readoption = 1;
     infile >> text >> ws;
-    subfile.open(text, ios::in);
+    subfile.open(text, ios::binary);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
     this->readNormalParameterData(subcomment, keeper, numage, minage, Area);
@@ -395,7 +395,7 @@ InitialCond::InitialCond(CommentStream& infile, const IntVector& Areas,
     //read initial data in number format
     readoption = 2;
     infile >> text >> ws;
-    subfile.open(text, ios::in);
+    subfile.open(text, ios::binary);
     handle.checkIfFailure(subfile, text);
     handle.Open(text);
     this->readNumberData(subcomment, keeper, numage, minage, Area);

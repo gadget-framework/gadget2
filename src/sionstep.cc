@@ -51,7 +51,7 @@ SIOnStep::SIOnStep(CommentStream& infile, const char* datafilename, const CharPt
   //read the survey indices data from the datafile
   ifstream datafile;
   CommentStream subdata(datafile);
-  datafile.open(datafilename, ios::in);
+  datafile.open(datafilename, ios::binary);
   handle.checkIfFailure(datafile, datafilename);
   handle.Open(datafilename);
   readSIData(subdata, TimeInfo);

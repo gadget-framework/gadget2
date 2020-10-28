@@ -15,7 +15,7 @@ Ecosystem::Ecosystem(const MainInfo& main) : printinfo(main.getPI()) {
   // read the model specification from the main file
   char* filename = main.getMainGadgetFile();
   ifstream infile;
-  infile.open(filename, ios::in);
+  infile.open(filename, ios::binary);
   CommentStream commin(infile);
   handle.checkIfFailure(infile, filename);
   handle.Open(filename);
@@ -29,7 +29,7 @@ Ecosystem::Ecosystem(const MainInfo& main) : printinfo(main.getPI()) {
     handle.logMessage(LOGMESSAGE, "");  //write blank line to log file
     if (main.getOptInfoGiven()) {
       filename = main.getOptInfoFile();
-      infile.open(filename, ios::in);
+      infile.open(filename, ios::binary);
       handle.checkIfFailure(infile, filename);
       handle.Open(filename);
       this->readOptimisation(commin);

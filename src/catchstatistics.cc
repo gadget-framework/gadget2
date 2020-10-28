@@ -63,7 +63,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
 
   //read in area aggregation from file
   readWordAndValue(infile, "areaaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numarea = readAggregation(subdata, areas, areaindex);
@@ -74,7 +74,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   //read optionally from length aggregation file
   if ((functionnumber==6) || (functionnumber==7)){
     readWordAndValue(infile, "lenaggfile", aggfilename);
-    datafile.open(aggfilename, ios::in);
+    datafile.open(aggfilename, ios::binary);
     handle.checkIfFailure(datafile, aggfilename);
     handle.Open(aggfilename);
     numlen = readAggregation(subdata, lengths, lenindex);
@@ -85,7 +85,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
 
   //read in age aggregation from file
   readWordAndValue(infile, "ageaggfile", aggfilename);
-  datafile.open(aggfilename, ios::in);
+  datafile.open(aggfilename, ios::binary);
   handle.checkIfFailure(datafile, aggfilename);
   handle.Open(aggfilename);
   numage = readAggregation(subdata, ages, ageindex);
@@ -133,7 +133,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
   //But we have to read in the statistics data from datafilename
   //different data names if statistics is by length
   if ((functionnumber==6) || (functionnumber==7)){
-    datafile.open(datafilename, ios::in);
+    datafile.open(datafilename, ios::binary);
     handle.checkIfFailure(datafile, datafilename);
     handle.Open(datafilename);
     readStatisticsData(subdata, TimeInfo, numarea, 0, numlen);
@@ -141,7 +141,7 @@ CatchStatistics::CatchStatistics(CommentStream& infile, const AreaClass* const A
     datafile.close();
     datafile.clear();
   } else {
-    datafile.open(datafilename, ios::in);
+    datafile.open(datafilename, ios::binary);
     handle.checkIfFailure(datafile, datafilename);
     handle.Open(datafilename);
     readStatisticsData(subdata, TimeInfo, numarea, numage, 0);
