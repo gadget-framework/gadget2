@@ -10,8 +10,8 @@ void Grower::implementGrowth(int area, const PopInfoVector& NumberInArea,
 
   int lgroup, j, inarea = this->areaNum(area);
   double meanw, tmppart3, tmpweight;
-  double tmpMult = growthcalc->getMult();
-  double tmpPower = growthcalc->getPower();
+  double tmpMult = growthcalc->getMult(); // i.e. alpha in lengthvbsimple
+  double tmpPower = growthcalc->getPower(); // i.e. beta in lengthvbsimple
   double tmpDl = 1.0 / Lengths->dl();  //JMB no need to check zero here
 
   for (lgroup = 0; lgroup < Lengths->numLengthGroups(); lgroup++) {
