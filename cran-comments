@@ -1,4 +1,7 @@
 # https://cran.r-project.org/submit.html
+==== 2.3.6
+
+Updates allowing better compatibility with Windows line endings in Gadget input files. 
 
 ==== 2.3.5
 
