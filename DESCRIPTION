@@ -7,7 +7,7 @@ Authors@R: c(person("Bjarki Thor", "Elvarsson", email="bjarki.elvarsson@hafogvat
             person("James","Begley", email="james@hafro.is",role=c("aut")),
             person("Hoskuldur","Bjornsson", email="hoski@hafro.is",role=c("aut")),
             person("Jamie", "Lentin", email="lentinj@shuttlethread.com",role = c("ctb")),
-            person("Gunnar","Stefnasson", email="gunnar@hi.is",role=c("ctb")),
+            person("Gunnar","Stefansson", email="gunnar@hi.is",role=c("ctb")),
             person("Lorna","Taylor", email="lorna@hafro.is",role=c("ctb")),
             person("Daniel","Howell", email="daniel.howell@hi.no",role=c("ctb")),
             person("Sigurdur","Hannesson",role=c("ctb")),
