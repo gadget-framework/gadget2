@@ -2392,9 +2392,9 @@ stock. Currently there are three selection functions defined, and the
 valid length selection function names are:
 
 
-constant - use the Constant selection function 
-straightline - use the StraightLine selection function 
-exponential - use the Exponential selection function
+* `constant` - use the Constant selection function
+* `straightline` - use the StraightLine selection function 
+* `exponential` - use the Exponential selection function
 
 ### Constant Selection Function
 
