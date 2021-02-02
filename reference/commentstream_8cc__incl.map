@@ -1,11 +1,11 @@
 <map id="src/commentstream.cc" name="src/commentstream.cc">
-<area shape="rect" id="node2" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="367,80,493,107"/>
-<area shape="rect" id="node19" href="$errorhandler_8h.html" title="errorhandler.h" alt="" coords="503,155,605,181"/>
-<area shape="rect" id="node24" href="$global_8h.html" title="global.h" alt="" coords="582,80,649,107"/>
-<area shape="rect" id="node3" href="$gadget_8h.html" title="gadget.h" alt="" coords="618,379,690,405"/>
-<area shape="rect" id="node20" href="$strstack_8h.html" title="strstack.h" alt="" coords="514,229,594,256"/>
-<area shape="rect" id="node22" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="618,229,725,256"/>
-<area shape="rect" id="node21" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="507,304,617,331"/>
-<area shape="rect" id="node23" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="692,304,779,331"/>
-<area shape="rect" id="node25" href="$runid_8h.html" title="runid.h" alt="" coords="710,155,771,181"/>
+<area shape="rect" id="node2" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="390,80,533,107"/>
+<area shape="rect" id="node19" href="$errorhandler_8h.html" title="errorhandler.h" alt="" coords="534,155,647,181"/>
+<area shape="rect" id="node24" href="$global_8h.html" title="global.h" alt="" coords="619,80,693,107"/>
+<area shape="rect" id="node3" href="$gadget_8h.html" title="gadget.h" alt="" coords="657,379,735,405"/>
+<area shape="rect" id="node20" href="$strstack_8h.html" title="strstack.h" alt="" coords="547,229,634,256"/>
+<area shape="rect" id="node22" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="658,229,777,256"/>
+<area shape="rect" id="node21" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="539,304,659,331"/>
+<area shape="rect" id="node23" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="733,304,829,331"/>
+<area shape="rect" id="node25" href="$runid_8h.html" title="runid.h" alt="" coords="756,155,823,181"/>
 </map>

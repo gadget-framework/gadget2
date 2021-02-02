@@ -1,4 +1,4 @@
 <map id="GrowthCalcBase" name="GrowthCalcBase">
-<area shape="rect" id="node2" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="14,321,146,487"/>
-<area shape="rect" id="node3" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="29,5,131,259"/>
+<area shape="rect" id="node2" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="15,321,161,487"/>
+<area shape="rect" id="node3" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="30,5,146,259"/>
 </map>

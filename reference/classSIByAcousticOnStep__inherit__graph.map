@@ -1,4 +1,4 @@
 <map id="SIByAcousticOnStep" name="SIByAcousticOnStep">
-<area shape="rect" id="node2" href="$classSIOnStep.html" title="This is the base class used to calculate a likelihood score by fitting a regression line to the model..." alt="" coords="13,175,173,604"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="38,5,147,127"/>
+<area shape="rect" id="node2" href="$classSIOnStep.html" title="This is the base class used to calculate a likelihood score by fitting a regression line to the model..." alt="" coords="13,175,187,604"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="39,5,161,127"/>
 </map>

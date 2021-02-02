@@ -1,8 +1,8 @@
 <map id="AgeBandMatrixRatioPtrVector" name="AgeBandMatrixRatioPtrVector">
-<area shape="rect" id="node2" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="5,807,135,1089"/>
-<area shape="rect" id="node3" href="$classCharPtrVector.html" title="This class implements a dynamic vector of char values. " alt="" coords="159,829,293,1067"/>
-<area shape="rect" id="node4" href="$classAgeBandMatrixRatio.html" title="{AgeBandMatrixRatio\n|# minage\l# nrow\l|+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ ~AgeBandMatrixRatio()\l+ minAge()\l+ maxAge()\l+ Nrow()\l+ minLength()\land 11 more...\l}" alt="" coords="317,829,487,1067"/>
-<area shape="rect" id="node5" href="$classPopRatioIndexVector.html" title="This class implements a dynamic vector of PopRatioVector values, indexed from minpos not 0..." alt="" coords="315,505,489,744"/>
-<area shape="rect" id="node6" href="$classPopRatioVector.html" title="This class implements a dynamic vector of PopRatio values. " alt="" coords="331,233,473,443"/>
-<area shape="rect" id="node7" href="$classPopRatio.html" title="This is the class used to store information about the number of tagged fish in a population cell of a..." alt="" coords="349,5,455,171"/>
+<area shape="rect" id="node2" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="5,807,151,1089"/>
+<area shape="rect" id="node3" href="$classCharPtrVector.html" title="This class implements a dynamic vector of char values. " alt="" coords="175,829,322,1067"/>
+<area shape="rect" id="node4" href="$classAgeBandMatrixRatio.html" title="{AgeBandMatrixRatio\n|# minage\l# nrow\l|+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ AgeBandMatrixRatio()\l+ ~AgeBandMatrixRatio()\l+ minAge()\l+ maxAge()\l+ Nrow()\l+ minLength()\land 11 more...\l}" alt="" coords="347,829,537,1067"/>
+<area shape="rect" id="node5" href="$classPopRatioIndexVector.html" title="This class implements a dynamic vector of PopRatioVector values, indexed from minpos not 0..." alt="" coords="345,505,539,744"/>
+<area shape="rect" id="node6" href="$classPopRatioVector.html" title="This class implements a dynamic vector of PopRatio values. " alt="" coords="363,233,521,443"/>
+<area shape="rect" id="node7" href="$classPopRatio.html" title="This is the class used to store information about the number of tagged fish in a population cell of a..." alt="" coords="380,5,504,171"/>
 </map>

@@ -1,8 +1,8 @@
 <map id="Maturity" name="Maturity">
-<area shape="rect" id="node4" href="$classMaturityA.html" title="This is the class used to calculate the maturity based on the &#39;continuous&#39; maturity function..." alt="" coords="5,652,152,891"/>
-<area shape="rect" id="node5" href="$classMaturityB.html" title="This is the class used to calculate the maturity based on the &#39;fixedlength&#39; maturity function..." alt="" coords="177,674,322,869"/>
-<area shape="rect" id="node6" href="$classMaturityC.html" title="This is the class used to calculate the maturity based on the &#39;constant&#39; maturity function..." alt="" coords="347,652,493,891"/>
-<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="123,27,232,149"/>
-<area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="257,5,389,171"/>
-<area shape="rect" id="node7" href="$classMaturityD.html" title="This is the class used to calculate the maturity based on the &#39;constantweight&#39; maturity function..." alt="" coords="350,939,490,1104"/>
+<area shape="rect" id="node4" href="$classMaturityA.html" title="This is the class used to calculate the maturity based on the &#39;continuous&#39; maturity function..." alt="" coords="5,652,172,891"/>
+<area shape="rect" id="node5" href="$classMaturityB.html" title="This is the class used to calculate the maturity based on the &#39;fixedlength&#39; maturity function..." alt="" coords="196,674,363,869"/>
+<area shape="rect" id="node6" href="$classMaturityC.html" title="This is the class used to calculate the maturity based on the &#39;constant&#39; maturity function..." alt="" coords="387,652,553,891"/>
+<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="139,27,262,149"/>
+<area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="286,5,433,171"/>
+<area shape="rect" id="node7" href="$classMaturityD.html" title="This is the class used to calculate the maturity based on the &#39;constantweight&#39; maturity function..." alt="" coords="391,939,549,1104"/>
 </map>

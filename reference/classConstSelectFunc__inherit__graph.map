@@ -1,4 +1,4 @@
 <map id="ConstSelectFunc" name="ConstSelectFunc">
-<area shape="rect" id="node2" href="$classSelectFunc.html" title="This is the base class used to calculate the selection level as a function of length. " alt="" coords="10,175,151,340"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="26,5,135,127"/>
+<area shape="rect" id="node2" href="$classSelectFunc.html" title="This is the base class used to calculate the selection level as a function of length. " alt="" coords="9,175,166,340"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="26,5,149,127"/>
 </map>

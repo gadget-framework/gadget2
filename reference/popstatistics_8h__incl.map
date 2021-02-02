@@ -1,16 +1,16 @@
 <map id="src/include/popstatistics.h" name="src/include/popstatistics.h">
-<area shape="rect" id="node2" href="$lengthgroup_8h.html" title="lengthgroup.h" alt="" coords="525,453,625,480"/>
-<area shape="rect" id="node21" href="$popinfovector_8h.html" title="popinfovector.h" alt="" coords="580,304,691,331"/>
-<area shape="rect" id="node26" href="$popinfoindexvector_8h.html" title="popinfoindexvector.h" alt="" coords="413,304,556,331"/>
-<area shape="rect" id="node27" href="$agebandmatrixptrvector_8h.html" title="agebandmatrixptrvector.h" alt="" coords="624,80,793,107"/>
-<area shape="rect" id="node3" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="591,528,698,555"/>
-<area shape="rect" id="node4" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="611,603,697,629"/>
-<area shape="rect" id="node5" href="$gadget_8h.html" title="gadget.h" alt="" coords="618,677,690,704"/>
-<area shape="rect" id="node22" href="$conversionindex_8h.html" title="conversionindex.h" alt="" coords="584,379,711,405"/>
-<area shape="rect" id="node25" href="$popinfo_8h.html" title="popinfo.h" alt="" coords="450,379,525,405"/>
-<area shape="rect" id="node23" href="$intvector_8h.html" title="intvector.h" alt="" coords="758,453,841,480"/>
-<area shape="rect" id="node24" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="773,603,900,629"/>
-<area shape="rect" id="node28" href="$agebandmatrix_8h.html" title="agebandmatrix.h" alt="" coords="649,155,768,181"/>
-<area shape="rect" id="node29" href="$doublematrix_8h.html" title="doublematrix.h" alt="" coords="837,379,943,405"/>
-<area shape="rect" id="node30" href="$popinfomatrix_8h.html" title="popinfomatrix.h" alt="" coords="745,229,856,256"/>
+<area shape="rect" id="node2" href="$lengthgroup_8h.html" title="lengthgroup.h" alt="" coords="555,453,667,480"/>
+<area shape="rect" id="node21" href="$popinfovector_8h.html" title="popinfovector.h" alt="" coords="620,304,743,331"/>
+<area shape="rect" id="node26" href="$popinfoindexvector_8h.html" title="popinfoindexvector.h" alt="" coords="437,304,595,331"/>
+<area shape="rect" id="node27" href="$agebandmatrixptrvector_8h.html" title="agebandmatrixptrvector.h" alt="" coords="655,80,846,107"/>
+<area shape="rect" id="node3" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="625,528,743,555"/>
+<area shape="rect" id="node4" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="648,603,744,629"/>
+<area shape="rect" id="node5" href="$gadget_8h.html" title="gadget.h" alt="" coords="657,677,735,704"/>
+<area shape="rect" id="node22" href="$conversionindex_8h.html" title="conversionindex.h" alt="" coords="623,379,764,405"/>
+<area shape="rect" id="node25" href="$popinfo_8h.html" title="popinfo.h" alt="" coords="476,379,559,405"/>
+<area shape="rect" id="node23" href="$intvector_8h.html" title="intvector.h" alt="" coords="801,453,892,480"/>
+<area shape="rect" id="node24" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="819,603,962,629"/>
+<area shape="rect" id="node28" href="$agebandmatrix_8h.html" title="agebandmatrix.h" alt="" coords="684,155,817,181"/>
+<area shape="rect" id="node29" href="$doublematrix_8h.html" title="doublematrix.h" alt="" coords="885,379,1006,405"/>
+<area shape="rect" id="node30" href="$popinfomatrix_8h.html" title="popinfomatrix.h" alt="" coords="785,229,911,256"/>
 </map>

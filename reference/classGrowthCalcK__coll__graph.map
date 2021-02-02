@@ -1,7 +1,7 @@
 <map id="GrowthCalcK" name="GrowthCalcK">
-<area shape="rect" id="node2" href="$classGrowthCalcBase.html" title="This is the base class used to calculate the growth of a stock within the model. " alt="" coords="5,637,155,773"/>
-<area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="14,343,146,509"/>
-<area shape="rect" id="node4" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="29,5,131,259"/>
-<area shape="rect" id="node5" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="179,593,349,817"/>
-<area shape="rect" id="node6" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="198,321,330,531"/>
+<area shape="rect" id="node2" href="$classGrowthCalcBase.html" title="This is the base class used to calculate the growth of a stock within the model. " alt="" coords="5,637,171,773"/>
+<area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="15,343,161,509"/>
+<area shape="rect" id="node4" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="30,5,146,259"/>
+<area shape="rect" id="node5" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="195,593,386,817"/>
+<area shape="rect" id="node6" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="215,321,366,531"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="WeightRegression" name="WeightRegression">
-<area shape="rect" id="node2" href="$classLinearRegression.html" title="This is the class used to fit a linear regression line to compare 2 vectors. " alt="" coords="9,829,159,936"/>
-<area shape="rect" id="node3" href="$classRegression.html" title="This is the base class used to fit a regression line to compare 2 vectors. " alt="" coords="9,380,159,780"/>
-<area shape="rect" id="node4" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="19,5,149,288"/>
+<area shape="rect" id="node2" href="$classLinearRegression.html" title="This is the class used to fit a linear regression line to compare 2 vectors. " alt="" coords="8,829,177,936"/>
+<area shape="rect" id="node3" href="$classRegression.html" title="This is the base class used to fit a regression line to compare 2 vectors. " alt="" coords="9,380,176,780"/>
+<area shape="rect" id="node4" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="20,5,165,288"/>
 </map>

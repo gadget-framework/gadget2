@@ -1,4 +1,4 @@
 <map id="AndersenSuitFunc" name="AndersenSuitFunc">
-<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="13,175,155,413"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="29,5,139,127"/>
+<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="13,175,171,413"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="31,5,153,127"/>
 </map>

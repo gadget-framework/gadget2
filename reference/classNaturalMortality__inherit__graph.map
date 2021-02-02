@@ -1,4 +1,4 @@
 <map id="NaturalMortality" name="NaturalMortality">
-<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,27,115,149"/>
-<area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="139,5,271,171"/>
+<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,27,128,149"/>
+<area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="152,5,299,171"/>
 </map>

@@ -1,10 +1,10 @@
 <map id="NaturalMortality" name="NaturalMortality">
-<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,358,115,479"/>
-<area shape="rect" id="node9" href="$classSelectFunc.html" title="This is the base class used to calculate the selection level as a function of length. " alt="" coords="84,674,225,839"/>
-<area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="359,674,491,839"/>
-<area shape="rect" id="node4" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="374,292,477,545"/>
-<area shape="rect" id="node5" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="165,307,336,531"/>
-<area shape="rect" id="node6" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="185,5,317,215"/>
-<area shape="rect" id="node7" href="$classDoubleMatrix.html" title="This class implements a dynamic vector of DoubleVector values. " alt="" coords="515,623,642,891"/>
-<area shape="rect" id="node8" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="514,277,643,560"/>
+<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,358,128,479"/>
+<area shape="rect" id="node9" href="$classSelectFunc.html" title="This is the base class used to calculate the selection level as a function of length. " alt="" coords="89,674,247,839"/>
+<area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="395,674,541,839"/>
+<area shape="rect" id="node4" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="410,292,526,545"/>
+<area shape="rect" id="node5" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="181,307,371,531"/>
+<area shape="rect" id="node6" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="201,5,351,215"/>
+<area shape="rect" id="node7" href="$classDoubleMatrix.html" title="This class implements a dynamic vector of DoubleVector values. " alt="" coords="566,623,711,891"/>
+<area shape="rect" id="node8" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="566,277,711,560"/>
 </map>

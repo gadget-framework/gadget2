@@ -1,6 +1,6 @@
 <map id="RichardsSuitFunc" name="RichardsSuitFunc">
-<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="41,564,183,803"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,329,115,450"/>
-<area shape="rect" id="node4" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="139,277,309,501"/>
-<area shape="rect" id="node5" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="158,5,290,215"/>
+<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="11,564,168,803"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="7,329,129,450"/>
+<area shape="rect" id="node4" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="154,277,345,501"/>
+<area shape="rect" id="node5" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="174,5,325,215"/>
 </map>

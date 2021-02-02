@@ -1,8 +1,8 @@
 <map id="SIOnStep" name="SIOnStep">
-<area shape="rect" id="node3" href="$classSIByAcousticOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to acoustic ba..." alt="" coords="5,659,180,795"/>
-<area shape="rect" id="node4" href="$classSIByAgeOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to age based s..." alt="" coords="205,659,365,795"/>
-<area shape="rect" id="node5" href="$classSIByEffortOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to effort base..." alt="" coords="389,652,549,803"/>
-<area shape="rect" id="node6" href="$classSIByFleetOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to fleet based..." alt="" coords="573,659,733,795"/>
-<area shape="rect" id="node7" href="$classSIByLengthOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to length base..." alt="" coords="757,659,919,795"/>
-<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="414,5,523,127"/>
+<area shape="rect" id="node3" href="$classSIByAcousticOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to acoustic ba..." alt="" coords="5,659,195,795"/>
+<area shape="rect" id="node4" href="$classSIByAgeOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to age based s..." alt="" coords="219,659,394,795"/>
+<area shape="rect" id="node5" href="$classSIByEffortOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to effort base..." alt="" coords="418,652,593,803"/>
+<area shape="rect" id="node6" href="$classSIByFleetOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to fleet based..." alt="" coords="617,659,791,795"/>
+<area shape="rect" id="node7" href="$classSIByLengthOnStep.html" title="This is the class used to calculate a likelihood score by fitting the model population to length base..." alt="" coords="816,659,995,795"/>
+<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="444,5,567,127"/>
 </map>

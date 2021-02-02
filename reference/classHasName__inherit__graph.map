@@ -1,50 +1,50 @@
 <map id="HasName" name="HasName">
-<area shape="rect" id="node2" href="$classBaseClass.html" title="This is the base class for any object that can be dynamically modelled within Gadget. " alt="" coords="261,292,380,516"/>
-<area shape="rect" id="node6" href="$classGrower.html" title="This is the class used to calculate, and implement, the affect of growth on the stock. " alt="" coords="1589,204,1740,604"/>
-<area shape="rect" id="node7" href="$classInitialCond.html" title="This is the class used to calculate the initial population of a stock. " alt="" coords="1764,219,1960,589"/>
-<area shape="rect" id="node8" href="$classLikelihood.html" title="This is the base class used to calculate the likelihood scores used to compare the modelled data in t..." alt="" coords="1985,263,2171,545"/>
-<area shape="rect" id="node23" href="$classMaturity.html" title="This is the base class used to calculate the maturity of a stock within the model. " alt="" coords="3372,211,3539,597"/>
-<area shape="rect" id="node27" href="$classMigration.html" title="This is the base class used to calculate the migration of a stock within the model. " alt="" coords="3647,321,3797,487"/>
-<area shape="rect" id="node30" href="$classNaturalMortality.html" title="This is the class used to calculate the affect of natural mortality on the stock. ..." alt="" coords="3821,307,3964,501"/>
-<area shape="rect" id="node31" href="$classPredator.html" title="This is the base class used to model the consumption by a predator. " alt="" coords="3989,277,4157,531"/>
-<area shape="rect" id="node33" href="$classPrey.html" title="This is the base class used to model the consumption of a prey. " alt="" coords="4181,197,4372,611"/>
-<area shape="rect" id="node36" href="$classRenewalData.html" title="This is the class used to calculate the renewal to a stock. " alt="" coords="4396,226,4592,582"/>
-<area shape="rect" id="node37" href="$classSC.html" title="This is the base class used to calculate the stomach content likelihood score based on the consumptio..." alt="" coords="4617,226,4790,582"/>
-<area shape="rect" id="node41" href="$classSelectFunc.html" title="This is the base class used to calculate the selection level as a function of length. " alt="" coords="4814,321,4955,487"/>
-<area shape="rect" id="node44" href="$classSIOnStep.html" title="This is the base class used to calculate a likelihood score by fitting a regression line to the model..." alt="" coords="4979,189,5139,619"/>
-<area shape="rect" id="node45" href="$classSpawnData.html" title="This is the class used to calculate the affect of the spawning process on the stock, possibly including the creation of new recruits into the model. " alt="" coords="5164,226,5317,582"/>
-<area shape="rect" id="node46" href="$classStrayData.html" title="This is the class used to calculate the movement from one stock to other stocks. " alt="" coords="5341,175,5495,633"/>
-<area shape="rect" id="node47" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="5519,285,5661,523"/>
-<area shape="rect" id="node48" href="$classTags.html" title="{Tags\n||+ Tags()\l+ ~Tags()\l+ Update()\l+ updateTags()\l+ deleteStockTags()\l+ getEndYear()\l+ getNumTagTimeSteps()\l+ getStockNames()\l+ setStock()\l+ updateMatureStock()\land 10 more...\l}" alt="" coords="5685,292,5858,516"/>
-<area shape="rect" id="node49" href="$classTransition.html" title="This is the class used to calculate the movement from a young stock to older stocks. " alt="" coords="5882,189,6045,619"/>
-<area shape="rect" id="node3" href="$classFleet.html" title="This is the class used to model the predation that is due to the action of a fleet in the Gadget mode..." alt="" coords="5,747,140,1001"/>
-<area shape="rect" id="node4" href="$classOtherFood.html" title="This is the class used to model the available prey that is not modelled dynamically. " alt="" coords="164,747,299,1001"/>
-<area shape="rect" id="node5" href="$classStock.html" title="This is the class used to model a stock within the Gadget model. " alt="" coords="323,689,497,1059"/>
-<area shape="rect" id="node9" href="$classBoundLikelihood.html" title="This is the class used to calculate the likelihood scores based on the bounds of the parameters for t..." alt="" coords="521,711,683,1037"/>
-<area shape="rect" id="node10" href="$classCatchDistribution.html" title="This is the class used to calculate a likelihood score based on distribution data sampled from the st..." alt="" coords="707,784,867,964"/>
-<area shape="rect" id="node11" href="$classCatchInKilos.html" title="This is the class used to calculate a likelihood score based on the biomass of stocks caught by fleet..." alt="" coords="891,784,1051,964"/>
-<area shape="rect" id="node12" href="$classCatchStatistics.html" title="This is the class used to calculate a likelihood score based on statistical data sampled from the sto..." alt="" coords="1075,784,1235,964"/>
-<area shape="rect" id="node13" href="$classMigrationPenalty.html" title="This is the class used to calculate the likelihood scores based on population errors arising from inc..." alt="" coords="1259,791,1419,957"/>
-<area shape="rect" id="node14" href="$classMigrationProportion.html" title="This is the class used to calculate a likelihood score based on the biomass of stocks caught by fleet..." alt="" coords="1443,784,1606,964"/>
-<area shape="rect" id="node15" href="$classProgLikelihood.html" title="This is really a prediction class. " alt="" coords="1630,755,1790,993"/>
-<area shape="rect" id="node16" href="$classRecaptures.html" title="This is the class used to calculate a likelihood score based on returns data from tagging experiments..." alt="" coords="1814,784,1974,964"/>
-<area shape="rect" id="node17" href="$classRecStatistics.html" title="This is the class used to calculate a likelihood score based on statistical data sampled from the tag..." alt="" coords="1998,784,2158,964"/>
-<area shape="rect" id="node18" href="$classStockDistribution.html" title="This is the class used to calculate a likelihood score based on distribution data for different stock..." alt="" coords="2182,784,2342,964"/>
-<area shape="rect" id="node19" href="$classStomachContent.html" title="This is the class used to calculate a likelihood score based on data sampled from the stomach of stoc..." alt="" coords="2366,784,2539,964"/>
-<area shape="rect" id="node20" href="$classSurveyDistribution.html" title="This is the class used to calculate a likelihood score based on survey data compiled from the stocks ..." alt="" coords="2563,784,2723,964"/>
-<area shape="rect" id="node21" href="$classSurveyIndices.html" title="This is the class used to calculate a likelihood score by fitting a linear regression line to calcula..." alt="" coords="2747,762,2907,986"/>
-<area shape="rect" id="node22" href="$classUnderStocking.html" title="This is the class used to calculate a likelihood score based on the overconsumption of a stock by pre..." alt="" coords="2931,791,3105,957"/>
-<area shape="rect" id="node24" href="$classMaturityA.html" title="This is the class used to calculate the maturity based on the &#39;continuous&#39; maturity function..." alt="" coords="3129,755,3275,993"/>
-<area shape="rect" id="node25" href="$classMaturityB.html" title="This is the class used to calculate the maturity based on the &#39;fixedlength&#39; maturity function..." alt="" coords="3300,777,3445,971"/>
-<area shape="rect" id="node26" href="$classMaturityC.html" title="This is the class used to calculate the maturity based on the &#39;constant&#39; maturity function..." alt="" coords="3470,755,3617,993"/>
-<area shape="rect" id="node28" href="$classMigrationFunction.html" title="This is the class used to calculate the migration of a stock within the model based on a migration fu..." alt="" coords="3641,799,3795,949"/>
-<area shape="rect" id="node29" href="$classMigrationNumbers.html" title="This is the class used to calculate the migration of a stock within the model based on migration rati..." alt="" coords="3819,799,3975,949"/>
-<area shape="rect" id="node32" href="$classPopPredator.html" title="This is the class used to model the predation of a population. " alt="" coords="3999,681,4194,1067"/>
-<area shape="rect" id="node34" href="$classLengthPrey.html" title="This is the class used to model a simple length based prey. " alt="" coords="4219,821,4335,927"/>
-<area shape="rect" id="node35" href="$classStockPrey.html" title="This is the class used to model a dynamic prey based on a modelled stock. " alt="" coords="4359,791,4522,957"/>
-<area shape="rect" id="node38" href="$classSCAmounts.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the a..." alt="" coords="4547,791,4756,957"/>
-<area shape="rect" id="node39" href="$classSCNumbers.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the n..." alt="" coords="4781,791,4991,957"/>
-<area shape="rect" id="node40" href="$classSCSimple.html" title="This is the class used to calculate the stomach content likelihood score based on a simple function o..." alt="" coords="5016,806,5220,942"/>
-<area shape="rect" id="node42" href="$classConstSelectFunc.html" title="This is the class used to calculate a constant selection level. " alt="" coords="5244,821,5395,927"/>
-<area shape="rect" id="node43" href="$classExpSelectFunc.html" title="This is the class used to calculate the selection level based on an exponential function of length..." alt="" coords="5419,821,5558,927"/>
+<area shape="rect" id="node2" href="$classBaseClass.html" title="This is the base class for any object that can be dynamically modelled within Gadget. " alt="" coords="288,292,420,516"/>
+<area shape="rect" id="node6" href="$classGrower.html" title="This is the class used to calculate, and implement, the affect of growth on the stock. " alt="" coords="1726,204,1894,604"/>
+<area shape="rect" id="node7" href="$classInitialCond.html" title="This is the class used to calculate the initial population of a stock. " alt="" coords="1919,219,2141,589"/>
+<area shape="rect" id="node8" href="$classLikelihood.html" title="This is the base class used to calculate the likelihood scores used to compare the modelled data in t..." alt="" coords="2166,263,2379,545"/>
+<area shape="rect" id="node23" href="$classMaturity.html" title="This is the base class used to calculate the maturity of a stock within the model. " alt="" coords="3691,211,3873,597"/>
+<area shape="rect" id="node27" href="$classMigration.html" title="This is the base class used to calculate the migration of a stock within the model. " alt="" coords="3991,321,4162,487"/>
+<area shape="rect" id="node30" href="$classNaturalMortality.html" title="This is the class used to calculate the affect of natural mortality on the stock. ..." alt="" coords="4187,307,4351,501"/>
+<area shape="rect" id="node31" href="$classPredator.html" title="This is the base class used to model the consumption by a predator. " alt="" coords="4375,277,4562,531"/>
+<area shape="rect" id="node33" href="$classPrey.html" title="This is the base class used to model the consumption of a prey. " alt="" coords="4586,197,4799,611"/>
+<area shape="rect" id="node36" href="$classRenewalData.html" title="This is the class used to calculate the renewal to a stock. " alt="" coords="4824,226,5047,582"/>
+<area shape="rect" id="node37" href="$classSC.html" title="This is the base class used to calculate the stomach content likelihood score based on the consumptio..." alt="" coords="5071,226,5261,582"/>
+<area shape="rect" id="node41" href="$classSelectFunc.html" title="This is the base class used to calculate the selection level as a function of length. " alt="" coords="5286,321,5443,487"/>
+<area shape="rect" id="node44" href="$classSIOnStep.html" title="This is the base class used to calculate a likelihood score by fitting a regression line to the model..." alt="" coords="5468,189,5643,619"/>
+<area shape="rect" id="node45" href="$classSpawnData.html" title="This is the class used to calculate the affect of the spawning process on the stock, possibly including the creation of new recruits into the model. " alt="" coords="5667,226,5838,582"/>
+<area shape="rect" id="node46" href="$classStrayData.html" title="This is the class used to calculate the movement from one stock to other stocks. " alt="" coords="5862,175,6033,633"/>
+<area shape="rect" id="node47" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="6057,285,6214,523"/>
+<area shape="rect" id="node48" href="$classTags.html" title="{Tags\n||+ Tags()\l+ ~Tags()\l+ Update()\l+ updateTags()\l+ deleteStockTags()\l+ getEndYear()\l+ getNumTagTimeSteps()\l+ getStockNames()\l+ setStock()\l+ updateMatureStock()\land 10 more...\l}" alt="" coords="6239,292,6429,516"/>
+<area shape="rect" id="node49" href="$classTransition.html" title="This is the class used to calculate the movement from a young stock to older stocks. " alt="" coords="6454,189,6635,619"/>
+<area shape="rect" id="node3" href="$classFleet.html" title="This is the class used to model the predation that is due to the action of a fleet in the Gadget mode..." alt="" coords="5,747,156,1001"/>
+<area shape="rect" id="node4" href="$classOtherFood.html" title="This is the class used to model the available prey that is not modelled dynamically. " alt="" coords="180,747,331,1001"/>
+<area shape="rect" id="node5" href="$classStock.html" title="This is the class used to model a stock within the Gadget model. " alt="" coords="355,689,550,1059"/>
+<area shape="rect" id="node9" href="$classBoundLikelihood.html" title="This is the class used to calculate the likelihood scores based on the bounds of the parameters for t..." alt="" coords="575,711,757,1037"/>
+<area shape="rect" id="node10" href="$classCatchDistribution.html" title="This is the class used to calculate a likelihood score based on distribution data sampled from the st..." alt="" coords="781,784,956,964"/>
+<area shape="rect" id="node11" href="$classCatchInKilos.html" title="This is the class used to calculate a likelihood score based on the biomass of stocks caught by fleet..." alt="" coords="980,784,1155,964"/>
+<area shape="rect" id="node12" href="$classCatchStatistics.html" title="This is the class used to calculate a likelihood score based on statistical data sampled from the sto..." alt="" coords="1179,784,1353,964"/>
+<area shape="rect" id="node13" href="$classMigrationPenalty.html" title="This is the class used to calculate the likelihood scores based on population errors arising from inc..." alt="" coords="1377,791,1552,957"/>
+<area shape="rect" id="node14" href="$classMigrationProportion.html" title="This is the class used to calculate a likelihood score based on the biomass of stocks caught by fleet..." alt="" coords="1577,784,1763,964"/>
+<area shape="rect" id="node15" href="$classProgLikelihood.html" title="This is really a prediction class. " alt="" coords="1788,755,1963,993"/>
+<area shape="rect" id="node16" href="$classRecaptures.html" title="This is the class used to calculate a likelihood score based on returns data from tagging experiments..." alt="" coords="1987,784,2161,964"/>
+<area shape="rect" id="node17" href="$classRecStatistics.html" title="This is the class used to calculate a likelihood score based on statistical data sampled from the tag..." alt="" coords="2185,784,2360,964"/>
+<area shape="rect" id="node18" href="$classStockDistribution.html" title="This is the class used to calculate a likelihood score based on distribution data for different stock..." alt="" coords="2384,784,2559,964"/>
+<area shape="rect" id="node19" href="$classStomachContent.html" title="This is the class used to calculate a likelihood score based on data sampled from the stomach of stoc..." alt="" coords="2583,784,2773,964"/>
+<area shape="rect" id="node20" href="$classSurveyDistribution.html" title="This is the class used to calculate a likelihood score based on survey data compiled from the stocks ..." alt="" coords="2798,784,2977,964"/>
+<area shape="rect" id="node21" href="$classSurveyIndices.html" title="This is the class used to calculate a likelihood score by fitting a linear regression line to calcula..." alt="" coords="3001,762,3176,986"/>
+<area shape="rect" id="node22" href="$classUnderStocking.html" title="This is the class used to calculate a likelihood score based on the overconsumption of a stock by pre..." alt="" coords="3200,791,3391,957"/>
+<area shape="rect" id="node24" href="$classMaturityA.html" title="This is the class used to calculate the maturity based on the &#39;continuous&#39; maturity function..." alt="" coords="3415,755,3581,993"/>
+<area shape="rect" id="node25" href="$classMaturityB.html" title="This is the class used to calculate the maturity based on the &#39;fixedlength&#39; maturity function..." alt="" coords="3605,777,3772,971"/>
+<area shape="rect" id="node26" href="$classMaturityC.html" title="This is the class used to calculate the maturity based on the &#39;constant&#39; maturity function..." alt="" coords="3796,755,3963,993"/>
+<area shape="rect" id="node28" href="$classMigrationFunction.html" title="This is the class used to calculate the migration of a stock within the model based on a migration fu..." alt="" coords="3987,799,4161,949"/>
+<area shape="rect" id="node29" href="$classMigrationNumbers.html" title="This is the class used to calculate the migration of a stock within the model based on migration rati..." alt="" coords="4185,799,4363,949"/>
+<area shape="rect" id="node32" href="$classPopPredator.html" title="This is the class used to model the predation of a population. " alt="" coords="4387,681,4603,1067"/>
+<area shape="rect" id="node34" href="$classLengthPrey.html" title="This is the class used to model a simple length based prey. " alt="" coords="4627,821,4758,927"/>
+<area shape="rect" id="node35" href="$classStockPrey.html" title="This is the class used to model a dynamic prey based on a modelled stock. " alt="" coords="4782,791,4961,957"/>
+<area shape="rect" id="node38" href="$classSCAmounts.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the a..." alt="" coords="4985,791,5219,957"/>
+<area shape="rect" id="node39" href="$classSCNumbers.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the n..." alt="" coords="5243,791,5479,957"/>
+<area shape="rect" id="node40" href="$classSCSimple.html" title="This is the class used to calculate the stomach content likelihood score based on a simple function o..." alt="" coords="5503,806,5733,942"/>
+<area shape="rect" id="node42" href="$classConstSelectFunc.html" title="This is the class used to calculate a constant selection level. " alt="" coords="5757,821,5921,927"/>
+<area shape="rect" id="node43" href="$classExpSelectFunc.html" title="This is the class used to calculate the selection level based on an exponential function of length..." alt="" coords="5945,821,6096,927"/>
 </map>

@@ -1,11 +1,11 @@
 <map id="src/include/popstatistics.h" name="src/include/popstatistics.h">
-<area shape="rect" id="node2" href="$catchstatistics_8h.html" title="src/include/catchstatistics.h" alt="" coords="63,80,249,107"/>
-<area shape="rect" id="node6" href="$recstatistics_8h.html" title="src/include/recstatistics.h" alt="" coords="484,80,655,107"/>
-<area shape="rect" id="node8" href="$stockstdprinter_8h.html" title="src/include/stockstdprinter.h" alt="" coords="273,80,460,107"/>
-<area shape="rect" id="node10" href="$popstatistics_8cc.html" title="src/popstatistics.cc" alt="" coords="679,80,815,107"/>
-<area shape="rect" id="node3" href="$catchstatistics_8cc.html" title="src/catchstatistics.cc" alt="" coords="5,155,152,181"/>
-<area shape="rect" id="node4" href="$initialize_8cc.html" title="src/initialize.cc" alt="" coords="176,155,285,181"/>
-<area shape="rect" id="node5" href="$readmain_8cc.html" title="src/readmain.cc" alt="" coords="309,155,424,181"/>
-<area shape="rect" id="node7" href="$recstatistics_8cc.html" title="src/recstatistics.cc" alt="" coords="621,155,755,181"/>
-<area shape="rect" id="node9" href="$stockstdprinter_8cc.html" title="src/stockstdprinter.cc" alt="" coords="449,155,597,181"/>
+<area shape="rect" id="node2" href="$catchstatistics_8h.html" title="src/include/catchstatistics.h" alt="" coords="64,80,267,107"/>
+<area shape="rect" id="node6" href="$recstatistics_8h.html" title="src/include/recstatistics.h" alt="" coords="520,80,707,107"/>
+<area shape="rect" id="node8" href="$stockstdprinter_8h.html" title="src/include/stockstdprinter.h" alt="" coords="291,80,496,107"/>
+<area shape="rect" id="node10" href="$popstatistics_8cc.html" title="src/popstatistics.cc" alt="" coords="731,80,877,107"/>
+<area shape="rect" id="node3" href="$catchstatistics_8cc.html" title="src/catchstatistics.cc" alt="" coords="5,155,163,181"/>
+<area shape="rect" id="node4" href="$initialize_8cc.html" title="src/initialize.cc" alt="" coords="187,155,306,181"/>
+<area shape="rect" id="node5" href="$readmain_8cc.html" title="src/readmain.cc" alt="" coords="331,155,456,181"/>
+<area shape="rect" id="node7" href="$recstatistics_8cc.html" title="src/recstatistics.cc" alt="" coords="665,155,807,181"/>
+<area shape="rect" id="node9" href="$stockstdprinter_8cc.html" title="src/stockstdprinter.cc" alt="" coords="480,155,640,181"/>
 </map>

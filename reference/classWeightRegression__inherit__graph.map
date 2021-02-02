@@ -1,4 +1,4 @@
 <map id="WeightRegression" name="WeightRegression">
-<area shape="rect" id="node2" href="$classLinearRegression.html" title="This is the class used to fit a linear regression line to compare 2 vectors. " alt="" coords="9,497,159,604"/>
-<area shape="rect" id="node3" href="$classRegression.html" title="This is the base class used to fit a regression line to compare 2 vectors. " alt="" coords="9,5,159,449"/>
+<area shape="rect" id="node2" href="$classLinearRegression.html" title="This is the class used to fit a linear regression line to compare 2 vectors. " alt="" coords="8,497,177,604"/>
+<area shape="rect" id="node3" href="$classRegression.html" title="This is the base class used to fit a regression line to compare 2 vectors. " alt="" coords="9,5,176,449"/>
 </map>

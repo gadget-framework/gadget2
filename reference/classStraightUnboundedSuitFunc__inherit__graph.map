@@ -1,4 +1,4 @@
 <map id="StraightUnboundedSuitFunc" name="StraightUnboundedSuitFunc">
-<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="41,175,183,413"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="57,5,167,127"/>
+<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="45,175,203,413"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="63,5,185,127"/>
 </map>

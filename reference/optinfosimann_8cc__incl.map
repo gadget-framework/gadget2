@@ -1,16 +1,16 @@
 <map id="src/optinfosimann.cc" name="src/optinfosimann.cc">
-<area shape="rect" id="node2" href="$optinfo_8h.html" title="optinfo.h" alt="" coords="650,80,722,107"/>
-<area shape="rect" id="node4" href="$gadget_8h.html" title="gadget.h" alt="" coords="618,379,690,405"/>
-<area shape="rect" id="node26" href="$errorhandler_8h.html" title="errorhandler.h" alt="" coords="815,155,917,181"/>
-<area shape="rect" id="node29" href="$global_8h.html" title="global.h" alt="" coords="833,80,899,107"/>
-<area shape="rect" id="node3" href="$maininfo_8h.html" title="maininfo.h" alt="" coords="414,229,497,256"/>
-<area shape="rect" id="node22" href="$doublematrix_8h.html" title="doublematrix.h" alt="" coords="633,155,739,181"/>
-<area shape="rect" id="node23" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="723,229,830,256"/>
-<area shape="rect" id="node25" href="$intvector_8h.html" title="intvector.h" alt="" coords="583,229,666,256"/>
-<area shape="rect" id="node20" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="489,304,616,331"/>
-<area shape="rect" id="node21" href="$printinfo_8h.html" title="printinfo.h" alt="" coords="387,304,465,331"/>
-<area shape="rect" id="node24" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="743,304,829,331"/>
-<area shape="rect" id="node27" href="$strstack_8h.html" title="strstack.h" alt="" coords="913,229,993,256"/>
-<area shape="rect" id="node28" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="905,304,1014,331"/>
-<area shape="rect" id="node30" href="$runid_8h.html" title="runid.h" alt="" coords="981,155,1042,181"/>
+<area shape="rect" id="node2" href="$optinfo_8h.html" title="optinfo.h" alt="" coords="681,80,761,107"/>
+<area shape="rect" id="node4" href="$gadget_8h.html" title="gadget.h" alt="" coords="657,379,735,405"/>
+<area shape="rect" id="node26" href="$errorhandler_8h.html" title="errorhandler.h" alt="" coords="859,155,973,181"/>
+<area shape="rect" id="node29" href="$global_8h.html" title="global.h" alt="" coords="879,80,953,107"/>
+<area shape="rect" id="node3" href="$maininfo_8h.html" title="maininfo.h" alt="" coords="447,229,539,256"/>
+<area shape="rect" id="node22" href="$doublematrix_8h.html" title="doublematrix.h" alt="" coords="661,155,782,181"/>
+<area shape="rect" id="node23" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="761,229,879,256"/>
+<area shape="rect" id="node25" href="$intvector_8h.html" title="intvector.h" alt="" coords="612,229,703,256"/>
+<area shape="rect" id="node20" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="515,304,658,331"/>
+<area shape="rect" id="node21" href="$printinfo_8h.html" title="printinfo.h" alt="" coords="402,304,491,331"/>
+<area shape="rect" id="node24" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="784,304,880,331"/>
+<area shape="rect" id="node27" href="$strstack_8h.html" title="strstack.h" alt="" coords="963,229,1050,256"/>
+<area shape="rect" id="node28" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="955,304,1075,331"/>
+<area shape="rect" id="node30" href="$runid_8h.html" title="runid.h" alt="" coords="1037,155,1104,181"/>
 </map>

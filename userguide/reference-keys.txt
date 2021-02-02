@@ -44,6 +44,7 @@ eq:rec2
 eq:rec3
 eq:rec4
 eq:rec5
+eq:rec6
 eq:constsel
 eq:straightsel
 eq:expsel
@@ -162,6 +163,7 @@ simplessb-recruitment-function
 ricker-recruitment-function
 bevertonholt-recruitment-function
 hockey-stick-recruitment-function
+baleen-recruitment-function
 sec:lselection
 constant-selection-function
 straightline-selection-function

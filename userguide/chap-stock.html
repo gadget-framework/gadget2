@@ -50,8 +50,6 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
 
 
 
@@ -147,6 +145,7 @@
 <li class="chapter" data-level="4.15.3" data-path="chap-stock.html"><a href="chap-stock.html#ricker-recruitment-function"><i class="fa fa-check"></i><b>4.15.3</b> Ricker Recruitment Function</a></li>
 <li class="chapter" data-level="4.15.4" data-path="chap-stock.html"><a href="chap-stock.html#bevertonholt-recruitment-function"><i class="fa fa-check"></i><b>4.15.4</b> BevertonHolt Recruitment Function</a></li>
 <li class="chapter" data-level="4.15.5" data-path="chap-stock.html"><a href="chap-stock.html#hockey-stick-recruitment-function"><i class="fa fa-check"></i><b>4.15.5</b> Hockey stick Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.6" data-path="chap-stock.html"><a href="chap-stock.html#baleen-recruitment-function"><i class="fa fa-check"></i><b>4.15.6</b> Baleen Recruitment Function</a></li>
 </ul></li>
 <li class="chapter" data-level="4.16" data-path="chap-stock.html"><a href="chap-stock.html#sec:lselection"><i class="fa fa-check"></i><b>4.16</b> Length Selection</a><ul>
 <li class="chapter" data-level="4.16.1" data-path="chap-stock.html"><a href="chap-stock.html#constant-selection-function"><i class="fa fa-check"></i><b>4.16.1</b> Constant Selection Function</a></li>
@@ -1560,6 +1559,21 @@ is:</p>
 <p>Note that to be in-line with definition of renewals and initial
 conditions <span class="math inline">\(R_0\)</span> is defined in terms multiples of 10 000 fish.</p>
 </div>
+<div id="baleen-recruitment-function" class="section level3">
+<h3><span class="header-section-number">4.15.6</span> Baleen Recruitment Function</h3>
+<p>This recruitment function calculates the number of recruits to be added
+to the spawned stock, as a function of the spawning stock abundance (see
+equation <a href="chap-stock.html#eq:ssb">(4.41)</a>), based on the Baleen recruitment relationship
+given by the following equation:</p>
+<p><span class="math display" id="eq:rec6">\[\begin{equation}
+\tag{4.46}
+R =  B S (1 + A(1 - (S/K))^z)
+\end{equation}\]</span></p>
+<p>Hence, to specify this recruitment function, the file format required
+is:</p>
+<pre><code>recruitment            hockeystick  &lt;B&gt;  &lt;A&gt; &lt;K&gt; &lt;z&gt;</code></pre>
+<p>where <span class="math inline">\(B\)</span> is the birthrate, <span class="math inline">\(A\)</span> is the resilience parameter for the stock, <span class="math inline">\(K\)</span> the carrying capacity and <span class="math inline">\(z\)</span> the degree of compensation.</p>
+</div>
 </div>
 <div id="sec:lselection" class="section level2">
 <h2><span class="header-section-number">4.16</span> Length Selection</h2>
@@ -1585,7 +1599,7 @@ valid length selection function names are:</p>
 <p>This is a selection function, where there is no dependence on the length
 of the stock is given by the following equation:</p>
 <p><span class="math display" id="eq:constsel">\[\begin{equation}
-\tag{4.46}
+\tag{4.47}
 S(l) = \alpha
 \end{equation}\]</span></p>
 <p>Hence, to specify a constant selection function, the file format
@@ -1597,7 +1611,7 @@ required is:</p>
 <p>This is a selection function that has a linear dependence on the length
 of the stock is given by the following equation:</p>
 <p><span class="math display" id="eq:straightsel">\[\begin{equation}
-\tag{4.47}
+\tag{4.48}
 S(l) = \alpha l + \beta\end{equation}\]</span></p>
 <p>Hence, to specify a straight line selection function, the file format
 required is:</p>
@@ -1608,7 +1622,7 @@ required is:</p>
 <p>This is a selection function that has a logarithmic dependence on the
 length of the stock is given by the following equation:</p>
 <p><span class="math display" id="eq:expsel">\[\begin{equation}
-\tag{4.48}
+\tag{4.49}
 S(l) = \frac{1}{1 + e^{ \alpha (l - l_{50})}}\end{equation}\]</span></p>
 <p>Note that the stock length dependence is actually dependant on the
 difference between the length of the stock and <span class="math inline">\(l_{50}\)</span>, which is the

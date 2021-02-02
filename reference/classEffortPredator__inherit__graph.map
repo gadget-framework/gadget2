@@ -1,7 +1,7 @@
 <map id="EffortPredator" name="EffortPredator">
-<area shape="rect" id="node2" href="$classLengthPredator.html" title="This is the class used to model the predation of stocks by a fleet. " alt="" coords="61,953,203,1119"/>
-<area shape="rect" id="node3" href="$classPopPredator.html" title="This is the class used to model the predation of a population. " alt="" coords="35,520,229,905"/>
-<area shape="rect" id="node4" href="$classPredator.html" title="This is the base class used to model the consumption by a predator. " alt="" coords="48,219,216,472"/>
-<area shape="rect" id="node5" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,27,115,149"/>
-<area shape="rect" id="node6" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="139,5,271,171"/>
+<area shape="rect" id="node2" href="$classLengthPredator.html" title="This is the class used to model the predation of stocks by a fleet. " alt="" coords="65,953,226,1119"/>
+<area shape="rect" id="node3" href="$classPopPredator.html" title="This is the class used to model the predation of a population. " alt="" coords="37,520,253,905"/>
+<area shape="rect" id="node4" href="$classPredator.html" title="This is the base class used to model the consumption by a predator. " alt="" coords="52,219,239,472"/>
+<area shape="rect" id="node5" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,27,128,149"/>
+<area shape="rect" id="node6" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="152,5,299,171"/>
 </map>

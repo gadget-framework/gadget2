@@ -1,7 +1,7 @@
 <map id="SC" name="SC">
-<area shape="rect" id="node3" href="$classSCAmounts.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the a..." alt="" coords="5,579,215,744"/>
-<area shape="rect" id="node5" href="$classSCNumbers.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the n..." alt="" coords="239,579,450,744"/>
-<area shape="rect" id="node6" href="$classSCSimple.html" title="This is the class used to calculate the stomach content likelihood score based on a simple function o..." alt="" coords="475,593,679,729"/>
-<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="290,5,399,127"/>
-<area shape="rect" id="node4" href="$classSCRatios.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the r..." alt="" coords="23,792,197,913"/>
+<area shape="rect" id="node3" href="$classSCAmounts.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the a..." alt="" coords="5,579,240,744"/>
+<area shape="rect" id="node5" href="$classSCNumbers.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the n..." alt="" coords="263,579,499,744"/>
+<area shape="rect" id="node6" href="$classSCSimple.html" title="This is the class used to calculate the stomach content likelihood score based on a simple function o..." alt="" coords="524,593,753,729"/>
+<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="320,5,443,127"/>
+<area shape="rect" id="node4" href="$classSCRatios.html" title="This is the class used to calculate the stomach content likelihood score based on a function of the r..." alt="" coords="27,792,218,913"/>
 </map>

@@ -1,13 +1,13 @@
 <map id="src/maininfo.cc" name="src/maininfo.cc">
-<area shape="rect" id="node2" href="$maininfo_8h.html" title="maininfo.h" alt="" coords="446,229,529,256"/>
-<area shape="rect" id="node3" href="$gadget_8h.html" title="gadget.h" alt="" coords="618,379,690,405"/>
-<area shape="rect" id="node21" href="$errorhandler_8h.html" title="errorhandler.h" alt="" coords="682,155,783,181"/>
-<area shape="rect" id="node26" href="$runid_8h.html" title="runid.h" alt="" coords="807,155,869,181"/>
-<area shape="rect" id="node27" href="$global_8h.html" title="global.h" alt="" coords="717,80,783,107"/>
-<area shape="rect" id="node19" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="361,304,488,331"/>
-<area shape="rect" id="node20" href="$printinfo_8h.html" title="printinfo.h" alt="" coords="512,304,591,331"/>
-<area shape="rect" id="node22" href="$strstack_8h.html" title="strstack.h" alt="" coords="717,229,797,256"/>
-<area shape="rect" id="node24" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="821,229,927,256"/>
-<area shape="rect" id="node23" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="717,304,826,331"/>
-<area shape="rect" id="node25" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="901,304,988,331"/>
+<area shape="rect" id="node2" href="$maininfo_8h.html" title="maininfo.h" alt="" coords="471,229,563,256"/>
+<area shape="rect" id="node3" href="$gadget_8h.html" title="gadget.h" alt="" coords="657,379,735,405"/>
+<area shape="rect" id="node21" href="$errorhandler_8h.html" title="errorhandler.h" alt="" coords="726,155,839,181"/>
+<area shape="rect" id="node26" href="$runid_8h.html" title="runid.h" alt="" coords="864,155,931,181"/>
+<area shape="rect" id="node27" href="$global_8h.html" title="global.h" alt="" coords="763,80,837,107"/>
+<area shape="rect" id="node19" href="$commentstream_8h.html" title="commentstream.h" alt="" coords="377,304,519,331"/>
+<area shape="rect" id="node20" href="$printinfo_8h.html" title="printinfo.h" alt="" coords="543,304,633,331"/>
+<area shape="rect" id="node22" href="$strstack_8h.html" title="strstack.h" alt="" coords="759,229,846,256"/>
+<area shape="rect" id="node24" href="$doublevector_8h.html" title="doublevector.h" alt="" coords="870,229,989,256"/>
+<area shape="rect" id="node23" href="$charptrvector_8h.html" title="charptrvector.h" alt="" coords="759,304,879,331"/>
+<area shape="rect" id="node25" href="$mathfunc_8h.html" title="mathfunc.h" alt="" coords="953,304,1049,331"/>
 </map>
