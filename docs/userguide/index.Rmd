@@ -2372,6 +2372,25 @@ is:
 Note that to be in-line with definition of renewals and initial
 conditions $R_0$ is defined in terms multiples of 10 000 fish.
 
+### Baleen Recruitment Function
+
+This recruitment function calculates the number of recruits to be added
+to the spawned stock, as a function of the spawning stock abundance (see
+equation \@ref(eq:ssb)), based on the Baleen recruitment relationship
+given by the following equation:
+
+\begin{equation}
+(\#eq:rec6)
+R =  B S (1 + A(1 - (S/K))^z)
+\end{equation}
+
+Hence, to specify this recruitment function, the file format required
+is:
+
+    recruitment            hockeystick  <B>  <A> <K> <z>
+
+where $B$ is the birthrate, $A$ is the resilience parameter for the stock, $K$ the carrying capacity and $z$ the degree of compensation. 
+
 Length Selection {#sec:lselection}
 ----------------
 
