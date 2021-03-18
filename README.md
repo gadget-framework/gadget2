@@ -17,7 +17,7 @@ looking at the data input files required shown in the diagram below:
 ![Features](docs/features.png)
 
 
-These input data files are in a column-based format, which means that they can easily be generated using simple extraction routines from databases. This means that the construction of a Gadget model can be done reasonably quickly, and the models will be free of any formatting errors in the Gadget input files that could prevent Gadget models from running. The data format is explained in more detail in the [Gadget User Guide](https://hafro.github.io/gadget/docs/userguide). There is also a tutorial available [here](https://heima.hafro.is/~bthe/gadget_course.html)
+These input data files are in a column-based format, which means that they can easily be generated using simple extraction routines from databases. This means that the construction of a Gadget model can be done reasonably quickly, and the models will be free of any formatting errors in the Gadget input files that could prevent Gadget models from running. The data format is explained in more detail in the [Gadget User Guide](https://gadget-framework.github.io/gadget2/docs/userguide). There is also a tutorial available [here](https://gadget-framework.github.io/gadget-course/)
 
 # Installing as an R package
 
@@ -29,7 +29,7 @@ Create a ``~/.R/Makevars`` (Linux/MacOS) or ``~/.R/Makevars.win`` (Windows) file
 
 Assuming R and ``remotes`` is installed you can install gadget with:
 
-    remotes::install_github("Hafro/gadget2")
+    remotes::install_github("gadget-framework/gadget2")
 
 You can find where gadget is installed using the ``gadget_binary`` command:
 
@@ -61,7 +61,7 @@ It should be sufficient to install XCode through the Appstore and through XCode'
 Easiest way is to install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) . During the install process allow the installer to append to the system path.
 
 ## Compile and install
-To install Gadget you can either [download as a zip file](https://github.com/Hafro/gadget/archive/master.zip) (or clone the repository using git). Unzip this file and within command prompt/terminal application make your way to the resulting folder, typically called `gadget-master`, and simply type:
+To install Gadget you can either [download as a zip file](https://github.com/gadget-framework/gadget2/archive/master.zip) (or clone the repository using git). Unzip this file and within command prompt/terminal application make your way to the resulting folder, typically called `gadget-master`, and simply type:
   
 >  make
   
