@@ -1,8 +1,9 @@
 <map id="PredatorPtrVector" name="PredatorPtrVector">
-<area shape="rect" id="node2" href="$classPredator.html" title="This is the base class used to model the consumption by a predator. " alt="" coords="132,608,319,847"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,373,128,494"/>
+<area shape="rect" id="node1" title="This class implements a dynamic vector of Predator values." alt="" coords="139,909,311,1089"/>
+<area shape="rect" id="node2" href="$classPredator.html" title="This is the base class used to model the consumption by a predator." alt="" coords="132,608,319,847"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name." alt="" coords="5,373,128,494"/>
 <area shape="rect" id="node4" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="152,351,299,516"/>
-<area shape="rect" id="node5" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="167,5,283,259"/>
-<area shape="rect" id="node6" href="$classFormulaVector.html" title="This class implements a dynamic vector of Formula values. " alt="" coords="323,321,475,545"/>
-<area shape="rect" id="node7" href="$classFormula.html" title="This is the class used to calculate the value of the variables used in the model simulation. " alt="" coords="323,13,474,251"/>
+<area shape="rect" id="node5" href="$classIntVector.html" title="This class implements a dynamic vector of int values." alt="" coords="167,5,283,259"/>
+<area shape="rect" id="node6" href="$classFormulaVector.html" title="This class implements a dynamic vector of Formula values." alt="" coords="323,321,475,545"/>
+<area shape="rect" id="node7" href="$classFormula.html" title="This is the class used to calculate the value of the variables used in the model simulation." alt="" coords="323,13,474,251"/>
 </map>

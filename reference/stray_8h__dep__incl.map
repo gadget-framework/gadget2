@@ -1,5 +1,6 @@
 <map id="src/include/stray.h" name="src/include/stray.h">
-<area shape="rect" id="node2" href="$stock_8cc.html" title="src/stock.cc" alt="" coords="5,80,104,107"/>
-<area shape="rect" id="node3" href="$stockmemberfunctions_8cc.html" title="src/stockmemberfunctions.cc" alt="" coords="128,80,341,107"/>
-<area shape="rect" id="node4" href="$stray_8cc.html" title="src/stray.cc" alt="" coords="366,80,461,107"/>
+<area shape="rect" id="node1" title=" " alt="" coords="165,5,304,32"/>
+<area shape="rect" id="node2" href="$stock_8cc.html" title=" " alt="" coords="5,80,104,107"/>
+<area shape="rect" id="node3" href="$stockmemberfunctions_8cc.html" title=" " alt="" coords="128,80,341,107"/>
+<area shape="rect" id="node4" href="$stray_8cc.html" title=" " alt="" coords="366,80,461,107"/>
 </map>

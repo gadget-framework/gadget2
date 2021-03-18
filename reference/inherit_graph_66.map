@@ -1,14 +1,14 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classPrinter.html" title="This is the base class used to print the modelled population during a model simulation. " alt="" coords="5,259,71,285"/>
-<area shape="rect" id="node2" href="$classLikelihoodPrinter.html" title="This is the class used to print likelihood information. " alt="" coords="129,5,261,32"/>
-<area shape="rect" id="node3" href="$classPredatorOverPrinter.html" title="This is the class used to print the overconsumption information for one or more predators. " alt="" coords="119,56,270,83"/>
-<area shape="rect" id="node4" href="$classPredatorPreyPrinter.html" title="This is the class used to print the predation information for one or more predators consuming one or ..." alt="" coords="120,107,269,133"/>
+<area shape="rect" id="node1" href="$classPrinter.html" title="This is the base class used to print the modelled population during a model simulation." alt="" coords="5,259,71,285"/>
+<area shape="rect" id="node2" href="$classLikelihoodPrinter.html" title="This is the class used to print likelihood information." alt="" coords="130,5,261,32"/>
+<area shape="rect" id="node3" href="$classPredatorOverPrinter.html" title="This is the class used to print the overconsumption information for one or more predators." alt="" coords="120,56,271,83"/>
+<area shape="rect" id="node4" href="$classPredatorPreyPrinter.html" title="This is the class used to print the predation information for one or more predators consuming one or ..." alt="" coords="121,107,270,133"/>
 <area shape="rect" id="node5" href="$classPredatorPrinter.html" title="This is the class used to print the predation information for one or more predators consuming one or ..." alt="" coords="135,157,255,184"/>
-<area shape="rect" id="node6" href="$classPreyOverPrinter.html" title="This is the class used to print the overconsumption information for one or more preys. " alt="" coords="132,208,257,235"/>
-<area shape="rect" id="node7" href="$classStockFullPrinter.html" title="This is the class used to print detailed information about a stock. " alt="" coords="133,259,256,285"/>
-<area shape="rect" id="node8" href="$classStockPreyFullPrinter.html" title="This is the class used to print detailed information about a prey. " alt="" coords="119,309,271,336"/>
-<area shape="rect" id="node9" href="$classStockPreyPrinter.html" title="This is the class used to print information about one or more stock preys. " alt="" coords="129,360,260,387"/>
-<area shape="rect" id="node10" href="$classStockPrinter.html" title="This is the class used to print information about one or more stocks. " alt="" coords="144,411,245,437"/>
-<area shape="rect" id="node11" href="$classStockStdPrinter.html" title="This is the class used to print &#39;standard&#39; information about a stock. " alt="" coords="133,461,256,488"/>
-<area shape="rect" id="node12" href="$classSummaryPrinter.html" title="This is the class used to print likelihood summary information. " alt="" coords="131,512,259,539"/>
+<area shape="rect" id="node6" href="$classPreyOverPrinter.html" title="This is the class used to print the overconsumption information for one or more preys." alt="" coords="133,208,258,235"/>
+<area shape="rect" id="node7" href="$classStockFullPrinter.html" title="This is the class used to print detailed information about a stock." alt="" coords="133,259,257,285"/>
+<area shape="rect" id="node8" href="$classStockPreyFullPrinter.html" title="This is the class used to print detailed information about a prey." alt="" coords="119,309,272,336"/>
+<area shape="rect" id="node9" href="$classStockPreyPrinter.html" title="This is the class used to print information about one or more stock preys." alt="" coords="130,360,261,387"/>
+<area shape="rect" id="node10" href="$classStockPrinter.html" title="This is the class used to print information about one or more stocks." alt="" coords="145,411,246,437"/>
+<area shape="rect" id="node11" href="$classStockStdPrinter.html" title="This is the class used to print &#39;standard&#39; information about a stock." alt="" coords="134,461,257,488"/>
+<area shape="rect" id="node12" href="$classSummaryPrinter.html" title="This is the class used to print likelihood summary information." alt="" coords="131,512,259,539"/>
 </map>

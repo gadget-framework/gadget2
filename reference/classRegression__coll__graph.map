@@ -1,3 +1,4 @@
 <map id="Regression" name="Regression">
-<area shape="rect" id="node2" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="16,5,161,288"/>
+<area shape="rect" id="node1" title="This is the base class used to fit a regression line to compare 2 vectors." alt="" coords="5,380,172,780"/>
+<area shape="rect" id="node2" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values." alt="" coords="16,5,161,288"/>
 </map>

@@ -1,9 +1,10 @@
 <map id="src/include/recaggregator.h" name="src/include/recaggregator.h">
-<area shape="rect" id="node2" href="$recapture_8h.html" title="src/include/recapture.h" alt="" coords="321,80,491,107"/>
-<area shape="rect" id="node6" href="$recstatistics_8h.html" title="src/include/recstatistics.h" alt="" coords="110,80,297,107"/>
-<area shape="rect" id="node8" href="$recaggregator_8cc.html" title="src/recaggregator.cc" alt="" coords="516,80,669,107"/>
-<area shape="rect" id="node3" href="$initialize_8cc.html" title="src/initialize.cc" alt="" coords="172,155,291,181"/>
-<area shape="rect" id="node4" href="$readmain_8cc.html" title="src/readmain.cc" alt="" coords="315,155,441,181"/>
-<area shape="rect" id="node5" href="$recapture_8cc.html" title="src/recapture.cc" alt="" coords="465,155,590,181"/>
-<area shape="rect" id="node7" href="$recstatistics_8cc.html" title="src/recstatistics.cc" alt="" coords="5,155,148,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="307,5,505,32"/>
+<area shape="rect" id="node2" href="$recapture_8h.html" title=" " alt="" coords="321,80,491,107"/>
+<area shape="rect" id="node6" href="$recstatistics_8h.html" title=" " alt="" coords="110,80,297,107"/>
+<area shape="rect" id="node8" href="$recaggregator_8cc.html" title=" " alt="" coords="516,80,669,107"/>
+<area shape="rect" id="node3" href="$initialize_8cc.html" title=" " alt="" coords="172,155,291,181"/>
+<area shape="rect" id="node4" href="$readmain_8cc.html" title=" " alt="" coords="315,155,441,181"/>
+<area shape="rect" id="node5" href="$recapture_8cc.html" title=" " alt="" coords="465,155,590,181"/>
+<area shape="rect" id="node7" href="$recstatistics_8cc.html" title=" " alt="" coords="5,155,148,181"/>
 </map>

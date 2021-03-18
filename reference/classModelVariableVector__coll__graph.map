@@ -1,3 +1,4 @@
 <map id="ModelVariableVector" name="ModelVariableVector">
-<area shape="rect" id="node2" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="25,5,176,215"/>
+<area shape="rect" id="node1" title="This class implements a dynamic vector of ModelVariable values." alt="" coords="5,277,197,501"/>
+<area shape="rect" id="node2" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="26,5,177,215"/>
 </map>

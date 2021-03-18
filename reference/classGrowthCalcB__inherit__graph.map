@@ -1,4 +1,5 @@
 <map id="GrowthCalcB" name="GrowthCalcB">
-<area shape="rect" id="node2" href="$classGrowthCalcBase.html" title="This is the base class used to calculate the growth of a stock within the model. " alt="" coords="5,219,171,355"/>
+<area shape="rect" id="node1" title="This is the class used to calculate the growth when reading the growth directly from a file." alt="" coords="17,403,159,524"/>
+<area shape="rect" id="node2" href="$classGrowthCalcBase.html" title="This is the base class used to calculate the growth of a stock within the model." alt="" coords="5,219,171,355"/>
 <area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="15,5,161,171"/>
 </map>

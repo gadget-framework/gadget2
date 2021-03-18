@@ -1,11 +1,12 @@
 <map id="GrowthCalcF" name="GrowthCalcF">
-<area shape="rect" id="node2" href="$classGrowthCalcBase.html" title="This is the base class used to calculate the growth of a stock within the model. " alt="" coords="5,953,171,1089"/>
+<area shape="rect" id="node1" title="This is the class used to calculate the growth of a stock using a length based Von Bertalanffy growth..." alt="" coords="201,1196,380,1303"/>
+<area shape="rect" id="node2" href="$classGrowthCalcBase.html" title="This is the base class used to calculate the growth of a stock within the model." alt="" coords="5,953,171,1089"/>
 <area shape="rect" id="node3" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="15,652,161,817"/>
-<area shape="rect" id="node4" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="30,307,146,560"/>
-<area shape="rect" id="node5" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="195,909,386,1133"/>
+<area shape="rect" id="node4" href="$classIntVector.html" title="This class implements a dynamic vector of int values." alt="" coords="30,307,146,560"/>
+<area shape="rect" id="node5" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values." alt="" coords="195,909,387,1133"/>
 <area shape="rect" id="node6" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="215,630,366,839"/>
-<area shape="rect" id="node7" href="$classFormulaMatrixPtrVector.html" title="This class implements a dynamic vector of FormulaMatrix values. " alt="" coords="411,931,621,1111"/>
-<area shape="rect" id="node8" href="$classFormulaMatrix.html" title="This class implements a dynamic vector of FormulaVector values. " alt="" coords="440,623,592,847"/>
-<area shape="rect" id="node9" href="$classFormulaVector.html" title="This class implements a dynamic vector of Formula values. " alt="" coords="440,321,592,545"/>
-<area shape="rect" id="node10" href="$classFormula.html" title="This is the class used to calculate the value of the variables used in the model simulation. " alt="" coords="441,5,591,244"/>
+<area shape="rect" id="node7" href="$classFormulaMatrixPtrVector.html" title="This class implements a dynamic vector of FormulaMatrix values." alt="" coords="411,931,623,1111"/>
+<area shape="rect" id="node8" href="$classFormulaMatrix.html" title="This class implements a dynamic vector of FormulaVector values." alt="" coords="441,623,594,847"/>
+<area shape="rect" id="node9" href="$classFormulaVector.html" title="This class implements a dynamic vector of Formula values." alt="" coords="441,321,593,545"/>
+<area shape="rect" id="node10" href="$classFormula.html" title="This is the class used to calculate the value of the variables used in the model simulation." alt="" coords="442,5,593,244"/>
 </map>

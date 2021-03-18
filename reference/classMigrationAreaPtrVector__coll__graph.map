@@ -1,3 +1,4 @@
 <map id="MigrationAreaPtrVector" name="MigrationAreaPtrVector">
-<area shape="rect" id="node2" href="$classMigrationArea.html" title="This is the class used to store details of the areas used when calculating the migration within the m..." alt="" coords="24,5,195,156"/>
+<area shape="rect" id="node1" title="This class implements a dynamic vector of MigrationArea values." alt="" coords="5,219,215,399"/>
+<area shape="rect" id="node2" href="$classMigrationArea.html" title="This is the class used to store details of the areas used when calculating the migration within the m..." alt="" coords="25,5,195,156"/>
 </map>

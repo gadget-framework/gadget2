@@ -1,4 +1,5 @@
 <map id="PopInfoMatrix" name="PopInfoMatrix">
-<area shape="rect" id="node2" href="$classPopInfoVector.html" title="This class implements a dynamic vector of PopInfo values. " alt="" coords="5,263,153,487"/>
-<area shape="rect" id="node3" href="$classPopInfo.html" title="This is the class used to store information about the number, and mean weight, of a population cell o..." alt="" coords="17,5,141,200"/>
+<area shape="rect" id="node1" title="This class implements a dynamic vector of PopInfoVector values." alt="" coords="5,549,155,759"/>
+<area shape="rect" id="node2" href="$classPopInfoVector.html" title="This class implements a dynamic vector of PopInfo values." alt="" coords="6,263,154,487"/>
+<area shape="rect" id="node3" href="$classPopInfo.html" title="This is the class used to store information about the number, and mean weight, of a population cell o..." alt="" coords="18,5,142,200"/>
 </map>

@@ -1,2 +1,3 @@
 <map id="NetDataResult" name="NetDataResult">
+<area shape="rect" id="node1" title="this class is used to keep relevant data to be sent/received using PVM communication" alt="" coords="5,5,159,141"/>
 </map>

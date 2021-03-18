@@ -1,3 +1,4 @@
 <map id="AddressKeeperVector" name="AddressKeeperVector">
+<area shape="rect" id="node1" title="This class implements a dynamic vector of AddressKeeper values." alt="" coords="5,277,201,443"/>
 <area shape="rect" id="node2" href="$classAddressKeeper.html" title="This is the class used to store the name, and memory adddress, of the variables used in the model sim..." alt="" coords="26,5,181,215"/>
 </map>

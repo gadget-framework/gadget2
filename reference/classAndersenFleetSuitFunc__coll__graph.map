@@ -1,6 +1,7 @@
 <map id="AndersenFleetSuitFunc" name="AndersenFleetSuitFunc">
-<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="29,564,187,803"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="25,329,148,450"/>
-<area shape="rect" id="node4" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values. " alt="" coords="173,277,363,501"/>
-<area shape="rect" id="node5" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="193,5,343,215"/>
+<area shape="rect" id="node1" title="This is the class used to calculate the suitability based on an Andersen function for fleet based pre..." alt="" coords="19,852,226,1003"/>
+<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value." alt="" coords="44,564,201,803"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name." alt="" coords="5,329,128,450"/>
+<area shape="rect" id="node4" href="$classModelVariableVector.html" title="This class implements a dynamic vector of ModelVariable values." alt="" coords="152,277,344,501"/>
+<area shape="rect" id="node5" href="$classModelVariable.html" title="This is the base class used to calculate the value of variables used in the model simulation that are..." alt="" coords="173,5,323,215"/>
 </map>

@@ -1,3 +1,4 @@
 <map id="PredatorOverPrinter" name="PredatorOverPrinter">
-<area shape="rect" id="node2" href="$classPrinter.html" title="This is the base class used to print the modelled population during a model simulation. " alt="" coords="23,5,174,288"/>
+<area shape="rect" id="node1" title="This is the class used to print the overconsumption information for one or more predators." alt="" coords="5,336,192,545"/>
+<area shape="rect" id="node2" href="$classPrinter.html" title="This is the base class used to print the modelled population during a model simulation." alt="" coords="23,5,174,288"/>
 </map>

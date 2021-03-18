@@ -1,6 +1,7 @@
 <map id="SelectFunc" name="SelectFunc">
-<area shape="rect" id="node3" href="$classConstSelectFunc.html" title="This is the class used to calculate a constant selection level. " alt="" coords="5,388,169,495"/>
-<area shape="rect" id="node4" href="$classExpSelectFunc.html" title="This is the class used to calculate the selection level based on an exponential function of length..." alt="" coords="193,388,344,495"/>
-<area shape="rect" id="node5" href="$classStraightSelectFunc.html" title="This is the class used to calculate the selection level based on a linear function of length..." alt="" coords="369,388,547,495"/>
-<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="207,5,330,127"/>
+<area shape="rect" id="node1" title="This is the base class used to calculate the selection level as a function of length." alt="" coords="192,175,349,340"/>
+<area shape="rect" id="node3" href="$classConstSelectFunc.html" title="This is the class used to calculate a constant selection level." alt="" coords="5,388,171,495"/>
+<area shape="rect" id="node4" href="$classExpSelectFunc.html" title="This is the class used to calculate the selection level based on an exponential function of length." alt="" coords="195,388,347,495"/>
+<area shape="rect" id="node5" href="$classStraightSelectFunc.html" title="This is the class used to calculate the selection level based on a linear function of length." alt="" coords="371,388,549,495"/>
+<area shape="rect" id="node2" href="$classHasName.html" title="This is the base class for any object that has a name." alt="" coords="209,5,332,127"/>
 </map>

@@ -1,6 +1,7 @@
 <map id="Regression" name="Regression">
-<area shape="rect" id="node2" href="$classLinearRegression.html" title="This is the class used to fit a linear regression line to compare 2 vectors. " alt="" coords="11,497,180,604"/>
-<area shape="rect" id="node4" href="$classLogLinearRegression.html" title="This is the class used to fit a log linear regression line to compare 2 vectors. " alt="" coords="206,497,398,604"/>
-<area shape="rect" id="node3" href="$classWeightRegression.html" title="This is the class used to fit a weighted linear regression line to compare 2 vectors. " alt="" coords="5,652,180,759"/>
-<area shape="rect" id="node5" href="$classLogWeightRegression.html" title="This is the class used to fit a weighted log linear regression line to compare 2 vectors. " alt="" coords="205,652,402,759"/>
+<area shape="rect" id="node1" title="This is the base class used to fit a regression line to compare 2 vectors." alt="" coords="113,5,280,449"/>
+<area shape="rect" id="node2" href="$classLinearRegression.html" title="This is the class used to fit a linear regression line to compare 2 vectors." alt="" coords="9,497,179,604"/>
+<area shape="rect" id="node4" href="$classLogLinearRegression.html" title="This is the class used to fit a log linear regression line to compare 2 vectors." alt="" coords="205,497,399,604"/>
+<area shape="rect" id="node3" href="$classWeightRegression.html" title="This is the class used to fit a weighted linear regression line to compare 2 vectors." alt="" coords="5,652,180,759"/>
+<area shape="rect" id="node5" href="$classLogWeightRegression.html" title="This is the class used to fit a weighted log linear regression line to compare 2 vectors." alt="" coords="204,652,403,759"/>
 </map>

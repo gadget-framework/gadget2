@@ -1,11 +1,12 @@
 <map id="src/include/multinomial.h" name="src/include/multinomial.h">
-<area shape="rect" id="node2" href="$catchdistribution_8cc.html" title="src/catchdistribution.cc" alt="" coords="5,155,177,181"/>
-<area shape="rect" id="node3" href="$catchdistribution_8h.html" title="src/include/catchdistribution.h" alt="" coords="104,80,321,107"/>
-<area shape="rect" id="node6" href="$stockdistribution_8h.html" title="src/include/stockdistribution.h" alt="" coords="345,80,563,107"/>
-<area shape="rect" id="node8" href="$stomachcontent_8h.html" title="src/include/stomachcontent.h" alt="" coords="587,80,801,107"/>
-<area shape="rect" id="node9" href="$stomachcontent_8cc.html" title="src/stomachcontent.cc" alt="" coords="734,155,902,181"/>
-<area shape="rect" id="node10" href="$multinomial_8cc.html" title="src/multinomial.cc" alt="" coords="876,80,1019,107"/>
-<area shape="rect" id="node4" href="$initialize_8cc.html" title="src/initialize.cc" alt="" coords="225,155,344,181"/>
-<area shape="rect" id="node5" href="$readmain_8cc.html" title="src/readmain.cc" alt="" coords="565,155,690,181"/>
-<area shape="rect" id="node7" href="$stockdistribution_8cc.html" title="src/stockdistribution.cc" alt="" coords="368,155,540,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="481,5,667,32"/>
+<area shape="rect" id="node2" href="$catchdistribution_8cc.html" title=" " alt="" coords="5,155,177,181"/>
+<area shape="rect" id="node3" href="$catchdistribution_8h.html" title=" " alt="" coords="104,80,321,107"/>
+<area shape="rect" id="node6" href="$stockdistribution_8h.html" title=" " alt="" coords="345,80,563,107"/>
+<area shape="rect" id="node8" href="$stomachcontent_8h.html" title=" " alt="" coords="587,80,801,107"/>
+<area shape="rect" id="node9" href="$stomachcontent_8cc.html" title=" " alt="" coords="734,155,902,181"/>
+<area shape="rect" id="node10" href="$multinomial_8cc.html" title=" " alt="" coords="876,80,1019,107"/>
+<area shape="rect" id="node4" href="$initialize_8cc.html" title=" " alt="" coords="225,155,344,181"/>
+<area shape="rect" id="node5" href="$readmain_8cc.html" title=" " alt="" coords="565,155,690,181"/>
+<area shape="rect" id="node7" href="$stockdistribution_8cc.html" title=" " alt="" coords="368,155,540,181"/>
 </map>

@@ -1,5 +1,6 @@
 <map id="DoubleMatrixPtrMatrix" name="DoubleMatrixPtrMatrix">
-<area shape="rect" id="node2" href="$classDoubleMatrixPtrVector.html" title="This class implements a dynamic vector of DoubleMatrix values. " alt="" coords="5,681,209,891"/>
-<area shape="rect" id="node3" href="$classDoubleMatrix.html" title="This class implements a dynamic vector of DoubleVector values. " alt="" coords="35,351,180,619"/>
-<area shape="rect" id="node4" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="35,5,180,288"/>
+<area shape="rect" id="node1" title="This class implements a dynamic vector of DoubleMatrixPtrVector values." alt="" coords="5,953,212,1133"/>
+<area shape="rect" id="node2" href="$classDoubleMatrixPtrVector.html" title="This class implements a dynamic vector of DoubleMatrix values." alt="" coords="6,681,211,891"/>
+<area shape="rect" id="node3" href="$classDoubleMatrix.html" title="This class implements a dynamic vector of DoubleVector values." alt="" coords="35,351,182,619"/>
+<area shape="rect" id="node4" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values." alt="" coords="36,5,181,288"/>
 </map>

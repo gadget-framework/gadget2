@@ -1,3 +1,4 @@
 <map id="StockStdPrinter" name="StockStdPrinter">
-<area shape="rect" id="node2" href="$classPrinter.html" title="This is the base class used to print the modelled population during a model simulation. " alt="" coords="9,5,160,288"/>
+<area shape="rect" id="node1" title="This is the class used to print &#39;standard&#39; information about a stock." alt="" coords="5,336,164,604"/>
+<area shape="rect" id="node2" href="$classPrinter.html" title="This is the base class used to print the modelled population during a model simulation." alt="" coords="9,5,160,288"/>
 </map>

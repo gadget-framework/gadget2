@@ -1,9 +1,10 @@
 <map id="src/include/migration.h" name="src/include/migration.h">
-<area shape="rect" id="node2" href="$migrationpenalty_8h.html" title="src/include/migrationpenalty.h" alt="" coords="126,80,345,107"/>
-<area shape="rect" id="node6" href="$migration_8cc.html" title="src/migration.cc" alt="" coords="369,80,496,107"/>
-<area shape="rect" id="node7" href="$stock_8cc.html" title="src/stock.cc" alt="" coords="521,80,619,107"/>
-<area shape="rect" id="node8" href="$stockmemberfunctions_8cc.html" title="src/stockmemberfunctions.cc" alt="" coords="643,80,857,107"/>
-<area shape="rect" id="node3" href="$initialize_8cc.html" title="src/initialize.cc" alt="" coords="5,155,124,181"/>
-<area shape="rect" id="node4" href="$migrationpenalty_8cc.html" title="src/migrationpenalty.cc" alt="" coords="149,155,322,181"/>
-<area shape="rect" id="node5" href="$readmain_8cc.html" title="src/readmain.cc" alt="" coords="346,155,471,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="415,5,586,32"/>
+<area shape="rect" id="node2" href="$migrationpenalty_8h.html" title=" " alt="" coords="126,80,345,107"/>
+<area shape="rect" id="node6" href="$migration_8cc.html" title=" " alt="" coords="369,80,496,107"/>
+<area shape="rect" id="node7" href="$stock_8cc.html" title=" " alt="" coords="521,80,619,107"/>
+<area shape="rect" id="node8" href="$stockmemberfunctions_8cc.html" title=" " alt="" coords="643,80,857,107"/>
+<area shape="rect" id="node3" href="$initialize_8cc.html" title=" " alt="" coords="5,155,124,181"/>
+<area shape="rect" id="node4" href="$migrationpenalty_8cc.html" title=" " alt="" coords="149,155,322,181"/>
+<area shape="rect" id="node5" href="$readmain_8cc.html" title=" " alt="" coords="346,155,471,181"/>
 </map>

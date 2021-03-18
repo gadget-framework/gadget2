@@ -1,4 +1,5 @@
 <map id="RichardsSuitFunc" name="RichardsSuitFunc">
-<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value. " alt="" coords="11,175,168,413"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="28,5,151,127"/>
+<area shape="rect" id="node1" title="This is the class used to calculate the suitability based on a Richards function." alt="" coords="5,461,175,627"/>
+<area shape="rect" id="node2" href="$classSuitFunc.html" title="This is the base class used to calculate the predator prey suitability value." alt="" coords="11,175,169,413"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name." alt="" coords="29,5,151,127"/>
 </map>

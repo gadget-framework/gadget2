@@ -1,51 +1,52 @@
 <map id="src/include/popinfomatrix.h" name="src/include/popinfomatrix.h">
-<area shape="rect" id="node2" href="$agebandmatrix_8cc.html" title="src/agebandmatrix.cc" alt="" coords="343,155,505,181"/>
-<area shape="rect" id="node3" href="$agebandmatrix_8h.html" title="src/include/agebandmatrix.h" alt="" coords="2757,80,2963,107"/>
-<area shape="rect" id="node47" href="$grower_8h.html" title="src/include/grower.h" alt="" coords="4060,379,4212,405"/>
-<area shape="rect" id="node50" href="$popinfomatrix_8cc.html" title="src/popinfomatrix.cc" alt="" coords="4111,80,4265,107"/>
-<area shape="rect" id="node4" href="$agebandmatrixmemberfunctions_8cc.html" title="src/agebandmatrixmemberfunctions.cc" alt="" coords="2991,229,3268,256"/>
-<area shape="rect" id="node5" href="$grow_8cc.html" title="src/grow.cc" alt="" coords="3953,453,4047,480"/>
-<area shape="rect" id="node6" href="$agebandmatrixptrvector_8h.html" title="src/include/agebandmatrixptrvector.h" alt="" coords="1847,155,2113,181"/>
-<area shape="rect" id="node9" href="$tags_8h.html" title="src/include/tags.h" alt="" coords="1705,304,1841,331"/>
-<area shape="rect" id="node11" href="$stock_8h.html" title="src/include/stock.h" alt="" coords="1597,453,1739,480"/>
-<area shape="rect" id="node12" href="$spawner_8h.html" title="src/include/spawner.h" alt="" coords="1828,528,1991,555"/>
-<area shape="rect" id="node15" href="$stray_8h.html" title="src/include/stray.h" alt="" coords="1420,528,1559,555"/>
-<area shape="rect" id="node19" href="$agebandmatrixratio_8h.html" title="src/include/agebandmatrixratio.h" alt="" coords="304,229,541,256"/>
-<area shape="rect" id="node22" href="$agebandmatrixratioptrvector_8h.html" title="src/include/agebandmatrixratioptrvector.h" alt="" coords="430,304,725,331"/>
-<area shape="rect" id="node24" href="$maturity_8h.html" title="src/include/maturity.h" alt="" coords="980,379,1143,405"/>
-<area shape="rect" id="node28" href="$popstatistics_8cc.html" title="src/popstatistics.cc" alt="" coords="2152,304,2299,331"/>
-<area shape="rect" id="node31" href="$stockaggregator_8h.html" title="src/include/stockaggregator.h" alt="" coords="2753,229,2967,256"/>
-<area shape="rect" id="node32" href="$sionstep_8h.html" title="src/include/sionstep.h" alt="" coords="2779,304,2941,331"/>
-<area shape="rect" id="node36" href="$stockpreyaggregator_8h.html" title="src/include/stockpreyaggregator.h" alt="" coords="2385,229,2628,256"/>
-<area shape="rect" id="node37" href="$prey_8h.html" title="src/include/prey.h" alt="" coords="3587,229,3722,256"/>
-<area shape="rect" id="node41" href="$poppredator_8h.html" title="src/include/poppredator.h" alt="" coords="3117,379,3304,405"/>
-<area shape="rect" id="node44" href="$predatoraggregator_8h.html" title="src/include/predatoraggregator.h" alt="" coords="3155,155,3389,181"/>
-<area shape="rect" id="node45" href="$predatoroveraggregator_8h.html" title="src/include/predatoroveraggregator.h" alt="" coords="3413,155,3675,181"/>
-<area shape="rect" id="node46" href="$preyoveraggregator_8h.html" title="src/include/preyoveraggregator.h" alt="" coords="3699,155,3935,181"/>
-<area shape="rect" id="node7" href="$agebandmatrixptrvector_8cc.html" title="src/agebandmatrixptrvector.cc" alt="" coords="1430,229,1650,256"/>
-<area shape="rect" id="node8" href="$agebandmatrixptrmatrix_8h.html" title="src/include/agebandmatrixptrmatrix.h" alt="" coords="1674,229,1942,256"/>
-<area shape="rect" id="node16" href="$transition_8h.html" title="src/include/transition.h" alt="" coords="1583,528,1753,555"/>
-<area shape="rect" id="node18" href="$recaggregator_8h.html" title="src/include/recaggregator.h" alt="" coords="1810,379,2009,405"/>
-<area shape="rect" id="node26" href="$fleetpreyaggregator_8h.html" title="src/include/fleetpreyaggregator.h" alt="" coords="883,229,1119,256"/>
-<area shape="rect" id="node27" href="$popstatistics_8h.html" title="src/include/popstatistics.h" alt="" coords="2119,229,2310,256"/>
-<area shape="rect" id="node29" href="$initialcond_8h.html" title="src/include/initialcond.h" alt="" coords="436,528,612,555"/>
-<area shape="rect" id="node30" href="$predatorpreyaggregator_8h.html" title="src/include/predatorpreyaggregator.h" alt="" coords="1143,229,1406,256"/>
-<area shape="rect" id="node33" href="$stockpredator_8h.html" title="src/include/stockpredator.h" alt="" coords="2379,453,2576,480"/>
-<area shape="rect" id="node35" href="$stockprey_8h.html" title="src/include/stockprey.h" alt="" coords="2184,453,2355,480"/>
-<area shape="rect" id="node10" href="$tagptrvector_8h.html" title="src/include/tagptrvector.h" alt="" coords="1549,379,1736,405"/>
-<area shape="rect" id="node17" href="$tags_8cc.html" title="src/tags.cc" alt="" coords="2091,528,2181,555"/>
-<area shape="rect" id="node13" href="$stock_8cc.html" title="src/stock.cc" alt="" coords="1619,603,1717,629"/>
-<area shape="rect" id="node14" href="$stockmemberfunctions_8cc.html" title="src/stockmemberfunctions.cc" alt="" coords="1861,603,2075,629"/>
-<area shape="rect" id="node20" href="$agebandmatrixratio_8cc.html" title="src/agebandmatrixratio.cc" alt="" coords="43,304,235,331"/>
-<area shape="rect" id="node21" href="$agebandmatrixratiomemberfunctions_8cc.html" title="src/agebandmatrixratiomemberfunctions.cc" alt="" coords="273,379,580,405"/>
-<area shape="rect" id="node25" href="$taggrow_8cc.html" title="src/taggrow.cc" alt="" coords="460,453,575,480"/>
-<area shape="rect" id="node23" href="$agebandmatrixratioptrvector_8cc.html" title="src/agebandmatrixratioptrvector.cc" alt="" coords="604,379,855,405"/>
-<area shape="rect" id="node34" href="$initialize_8cc.html" title="src/initialize.cc" alt="" coords="3605,528,3723,555"/>
-<area shape="rect" id="node38" href="$effortpredator_8cc.html" title="src/effortpredator.cc" alt="" coords="3488,304,3640,331"/>
-<area shape="rect" id="node39" href="$lengthprey_8h.html" title="src/include/lengthprey.h" alt="" coords="3701,379,3877,405"/>
-<area shape="rect" id="node40" href="$predator_8h.html" title="src/include/predator.h" alt="" coords="3664,304,3827,331"/>
-<area shape="rect" id="node42" href="$linearpredator_8cc.html" title="src/linearpredator.cc" alt="" coords="3117,304,3272,331"/>
-<area shape="rect" id="node43" href="$numberpredator_8cc.html" title="src/numberpredator.cc" alt="" coords="3297,304,3463,331"/>
-<area shape="rect" id="node48" href="$grower_8cc.html" title="src/grower.cc" alt="" coords="4173,453,4280,480"/>
-<area shape="rect" id="node49" href="$growermemberfunctions_8cc.html" title="src/growermemberfunctions.cc" alt="" coords="4305,453,4527,480"/>
+<area shape="rect" id="node1" title=" " alt="" coords="3365,5,3565,32"/>
+<area shape="rect" id="node2" href="$agebandmatrix_8cc.html" title=" " alt="" coords="343,155,505,181"/>
+<area shape="rect" id="node3" href="$agebandmatrix_8h.html" title=" " alt="" coords="2755,80,2962,107"/>
+<area shape="rect" id="node47" href="$grower_8h.html" title=" " alt="" coords="4059,379,4211,405"/>
+<area shape="rect" id="node50" href="$popinfomatrix_8cc.html" title=" " alt="" coords="4109,80,4264,107"/>
+<area shape="rect" id="node4" href="$agebandmatrixmemberfunctions_8cc.html" title=" " alt="" coords="2989,229,3267,256"/>
+<area shape="rect" id="node5" href="$grow_8cc.html" title=" " alt="" coords="3951,453,4046,480"/>
+<area shape="rect" id="node6" href="$agebandmatrixptrvector_8h.html" title=" " alt="" coords="1847,155,2113,181"/>
+<area shape="rect" id="node9" href="$tags_8h.html" title=" " alt="" coords="1715,304,1851,331"/>
+<area shape="rect" id="node11" href="$stock_8h.html" title=" " alt="" coords="1606,453,1749,480"/>
+<area shape="rect" id="node12" href="$spawner_8h.html" title=" " alt="" coords="1837,528,2000,555"/>
+<area shape="rect" id="node15" href="$stray_8h.html" title=" " alt="" coords="1429,528,1568,555"/>
+<area shape="rect" id="node19" href="$agebandmatrixratio_8h.html" title=" " alt="" coords="304,229,541,256"/>
+<area shape="rect" id="node22" href="$agebandmatrixratioptrvector_8h.html" title=" " alt="" coords="430,304,725,331"/>
+<area shape="rect" id="node24" href="$maturity_8h.html" title=" " alt="" coords="980,379,1143,405"/>
+<area shape="rect" id="node28" href="$popstatistics_8cc.html" title=" " alt="" coords="2152,304,2299,331"/>
+<area shape="rect" id="node31" href="$stockaggregator_8h.html" title=" " alt="" coords="2753,229,2965,256"/>
+<area shape="rect" id="node32" href="$sionstep_8h.html" title=" " alt="" coords="2777,304,2940,331"/>
+<area shape="rect" id="node36" href="$stockpreyaggregator_8h.html" title=" " alt="" coords="2385,229,2628,256"/>
+<area shape="rect" id="node37" href="$prey_8h.html" title=" " alt="" coords="3586,229,3721,256"/>
+<area shape="rect" id="node41" href="$poppredator_8h.html" title=" " alt="" coords="3116,379,3303,405"/>
+<area shape="rect" id="node44" href="$predatoraggregator_8h.html" title=" " alt="" coords="3154,155,3387,181"/>
+<area shape="rect" id="node45" href="$predatoroveraggregator_8h.html" title=" " alt="" coords="3411,155,3674,181"/>
+<area shape="rect" id="node46" href="$preyoveraggregator_8h.html" title=" " alt="" coords="3698,155,3934,181"/>
+<area shape="rect" id="node7" href="$agebandmatrixptrvector_8cc.html" title=" " alt="" coords="1430,229,1650,256"/>
+<area shape="rect" id="node8" href="$agebandmatrixptrmatrix_8h.html" title=" " alt="" coords="1674,229,1942,256"/>
+<area shape="rect" id="node16" href="$transition_8h.html" title=" " alt="" coords="1592,528,1763,555"/>
+<area shape="rect" id="node18" href="$recaggregator_8h.html" title=" " alt="" coords="1819,379,2018,405"/>
+<area shape="rect" id="node26" href="$fleetpreyaggregator_8h.html" title=" " alt="" coords="883,229,1119,256"/>
+<area shape="rect" id="node27" href="$popstatistics_8h.html" title=" " alt="" coords="2119,229,2310,256"/>
+<area shape="rect" id="node29" href="$initialcond_8h.html" title=" " alt="" coords="468,528,644,555"/>
+<area shape="rect" id="node30" href="$predatorpreyaggregator_8h.html" title=" " alt="" coords="1143,229,1406,256"/>
+<area shape="rect" id="node33" href="$stockpredator_8h.html" title=" " alt="" coords="2388,453,2585,480"/>
+<area shape="rect" id="node35" href="$stockprey_8h.html" title=" " alt="" coords="2193,453,2364,480"/>
+<area shape="rect" id="node10" href="$tagptrvector_8h.html" title=" " alt="" coords="1559,379,1745,405"/>
+<area shape="rect" id="node17" href="$tags_8cc.html" title=" " alt="" coords="2100,528,2191,555"/>
+<area shape="rect" id="node13" href="$stock_8cc.html" title=" " alt="" coords="1628,603,1727,629"/>
+<area shape="rect" id="node14" href="$stockmemberfunctions_8cc.html" title=" " alt="" coords="1871,603,2084,629"/>
+<area shape="rect" id="node20" href="$agebandmatrixratio_8cc.html" title=" " alt="" coords="43,304,235,331"/>
+<area shape="rect" id="node21" href="$agebandmatrixratiomemberfunctions_8cc.html" title=" " alt="" coords="273,379,580,405"/>
+<area shape="rect" id="node25" href="$taggrow_8cc.html" title=" " alt="" coords="460,453,575,480"/>
+<area shape="rect" id="node23" href="$agebandmatrixratioptrvector_8cc.html" title=" " alt="" coords="604,379,855,405"/>
+<area shape="rect" id="node34" href="$initialize_8cc.html" title=" " alt="" coords="3603,528,3722,555"/>
+<area shape="rect" id="node38" href="$effortpredator_8cc.html" title=" " alt="" coords="3487,304,3639,331"/>
+<area shape="rect" id="node39" href="$lengthprey_8h.html" title=" " alt="" coords="3700,379,3876,405"/>
+<area shape="rect" id="node40" href="$predator_8h.html" title=" " alt="" coords="3663,304,3825,331"/>
+<area shape="rect" id="node42" href="$linearpredator_8cc.html" title=" " alt="" coords="3116,304,3271,331"/>
+<area shape="rect" id="node43" href="$numberpredator_8cc.html" title=" " alt="" coords="3295,304,3462,331"/>
+<area shape="rect" id="node48" href="$grower_8cc.html" title=" " alt="" coords="4172,453,4279,480"/>
+<area shape="rect" id="node49" href="$growermemberfunctions_8cc.html" title=" " alt="" coords="4303,453,4526,480"/>
 </map>

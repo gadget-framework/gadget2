@@ -1,3 +1,4 @@
 <map id="ActionAtTimes" name="ActionAtTimes">
-<area shape="rect" id="node2" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="33,5,149,259"/>
+<area shape="rect" id="node1" title="This is the class used to associate actions with specific timesteps within the model." alt="" coords="5,351,177,516"/>
+<area shape="rect" id="node2" href="$classIntVector.html" title="This class implements a dynamic vector of int values." alt="" coords="33,5,149,259"/>
 </map>

@@ -1,3 +1,4 @@
 <map id="SummaryPrinter" name="SummaryPrinter">
-<area shape="rect" id="node2" href="$classPrinter.html" title="This is the base class used to print the modelled population during a model simulation. " alt="" coords="12,5,163,288"/>
+<area shape="rect" id="node1" title="This is the class used to print likelihood summary information." alt="" coords="5,336,169,457"/>
+<area shape="rect" id="node2" href="$classPrinter.html" title="This is the base class used to print the modelled population during a model simulation." alt="" coords="12,5,163,288"/>
 </map>

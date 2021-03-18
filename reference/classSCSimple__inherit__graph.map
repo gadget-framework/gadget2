@@ -1,4 +1,5 @@
 <map id="SCSimple" name="SCSimple">
+<area shape="rect" id="node1" title="This is the class used to calculate the stomach content likelihood score based on a simple function o..." alt="" coords="5,579,235,715"/>
 <area shape="rect" id="node2" href="$classSC.html" title="This is the base class used to calculate the stomach content likelihood score based on the consumptio..." alt="" coords="25,175,215,531"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="59,5,181,127"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name." alt="" coords="59,5,181,127"/>
 </map>

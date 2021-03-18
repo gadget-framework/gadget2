@@ -1,6 +1,7 @@
 <map id="BaseClassPtrVector" name="BaseClassPtrVector">
-<area shape="rect" id="node2" href="$classBaseClass.html" title="This is the base class for any object that can be dynamically modelled within Gadget. " alt="" coords="49,536,181,760"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,343,128,465"/>
+<area shape="rect" id="node1" title="This class implements a dynamic vector of BaseClass values." alt="" coords="23,823,207,1003"/>
+<area shape="rect" id="node2" href="$classBaseClass.html" title="This is the base class for any object that can be dynamically modelled within Gadget." alt="" coords="49,536,181,760"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name." alt="" coords="5,343,128,465"/>
 <area shape="rect" id="node4" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="152,321,299,487"/>
-<area shape="rect" id="node5" href="$classIntVector.html" title="This class implements a dynamic vector of int values. " alt="" coords="167,5,283,259"/>
+<area shape="rect" id="node5" href="$classIntVector.html" title="This class implements a dynamic vector of int values." alt="" coords="167,5,283,259"/>
 </map>

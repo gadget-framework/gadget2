@@ -1,51 +1,52 @@
 <map id="src/include/doublematrixptrmatrix.h" name="src/include/doublematrixptrmatrix.h">
-<area shape="rect" id="node2" href="$doublematrixptrmatrix_8cc.html" title="src/doublematrixptrmatrix.cc" alt="" coords="143,80,353,107"/>
-<area shape="rect" id="node3" href="$catchdistribution_8h.html" title="src/include/catchdistribution.h" alt="" coords="915,229,1133,256"/>
-<area shape="rect" id="node7" href="$poppredator_8h.html" title="src/include/poppredator.h" alt="" coords="1716,80,1903,107"/>
-<area shape="rect" id="node46" href="$recapture_8h.html" title="src/include/recapture.h" alt="" coords="479,229,649,256"/>
-<area shape="rect" id="node47" href="$stockdistribution_8h.html" title="src/include/stockdistribution.h" alt="" coords="674,229,891,256"/>
-<area shape="rect" id="node48" href="$stomachcontent_8h.html" title="src/include/stomachcontent.h" alt="" coords="408,304,621,331"/>
-<area shape="rect" id="node49" href="$surveydistribution_8h.html" title="src/include/surveydistribution.h" alt="" coords="5,304,232,331"/>
-<area shape="rect" id="node4" href="$catchdistribution_8cc.html" title="src/catchdistribution.cc" alt="" coords="1143,304,1315,331"/>
-<area shape="rect" id="node5" href="$initialize_8cc.html" title="src/initialize.cc" alt="" coords="1347,379,1466,405"/>
-<area shape="rect" id="node6" href="$readmain_8cc.html" title="src/readmain.cc" alt="" coords="380,379,505,405"/>
-<area shape="rect" id="node8" href="$fleeteffortaggregator_8cc.html" title="src/fleeteffortaggregator.cc" alt="" coords="1517,304,1715,331"/>
-<area shape="rect" id="node9" href="$fleetpreyaggregator_8cc.html" title="src/fleetpreyaggregator.cc" alt="" coords="1739,304,1930,331"/>
-<area shape="rect" id="node10" href="$lengthpredator_8h.html" title="src/include/lengthpredator.h" alt="" coords="3399,155,3601,181"/>
-<area shape="rect" id="node23" href="$recaggregator_8cc.html" title="src/recaggregator.cc" alt="" coords="1339,304,1493,331"/>
-<area shape="rect" id="node38" href="$stockpredator_8h.html" title="src/include/stockpredator.h" alt="" coords="4401,304,4599,331"/>
-<area shape="rect" id="node44" href="$poppredator_8cc.html" title="src/poppredator.cc" alt="" coords="4537,155,4679,181"/>
-<area shape="rect" id="node45" href="$predatorpreyaggregator_8cc.html" title="src/predatorpreyaggregator.cc" alt="" coords="1478,155,1695,181"/>
-<area shape="rect" id="node11" href="$fleet_8h.html" title="src/include/fleet.h" alt="" coords="2210,229,2347,256"/>
-<area shape="rect" id="node27" href="$effortpredator_8h.html" title="src/include/effortpredator.h" alt="" coords="3401,229,3599,256"/>
-<area shape="rect" id="node29" href="$linearpredator_8h.html" title="src/include/linearpredator.h" alt="" coords="3623,229,3822,256"/>
-<area shape="rect" id="node31" href="$numberpredator_8h.html" title="src/include/numberpredator.h" alt="" coords="4029,229,4241,256"/>
-<area shape="rect" id="node33" href="$quotapredator_8h.html" title="src/include/quotapredator.h" alt="" coords="4265,229,4463,256"/>
-<area shape="rect" id="node35" href="$totalpredator_8h.html" title="src/include/totalpredator.h" alt="" coords="3185,229,3377,256"/>
-<area shape="rect" id="node37" href="$lengthpredator_8cc.html" title="src/lengthpredator.cc" alt="" coords="3846,229,4005,256"/>
-<area shape="rect" id="node12" href="$catchinkilos_8cc.html" title="src/catchinkilos.cc" alt="" coords="2569,304,2711,331"/>
-<area shape="rect" id="node13" href="$catchstatistics_8cc.html" title="src/catchstatistics.cc" alt="" coords="2735,304,2892,331"/>
-<area shape="rect" id="node14" href="$fleet_8cc.html" title="src/fleet.cc" alt="" coords="3735,304,3827,331"/>
-<area shape="rect" id="node15" href="$ecosystem_8h.html" title="src/include/ecosystem.h" alt="" coords="3185,304,3364,331"/>
-<area shape="rect" id="node20" href="$proglikelihood_8h.html" title="src/include/proglikelihood.h" alt="" coords="1954,304,2155,331"/>
-<area shape="rect" id="node21" href="$surveyindices_8h.html" title="src/include/surveyindices.h" alt="" coords="2179,304,2378,331"/>
-<area shape="rect" id="node22" href="$migrationproportion_8cc.html" title="src/migrationproportion.cc" alt="" coords="2917,304,3110,331"/>
-<area shape="rect" id="node24" href="$recapture_8cc.html" title="src/recapture.cc" alt="" coords="797,304,923,331"/>
-<area shape="rect" id="node25" href="$recstatistics_8cc.html" title="src/recstatistics.cc" alt="" coords="2402,304,2545,331"/>
-<area shape="rect" id="node26" href="$stockdistribution_8cc.html" title="src/stockdistribution.cc" alt="" coords="947,304,1119,331"/>
-<area shape="rect" id="node16" href="$bfgs_8cc.html" title="src/bfgs.cc" alt="" coords="3160,379,3251,405"/>
-<area shape="rect" id="node17" href="$ecosystem_8cc.html" title="src/ecosystem.cc" alt="" coords="3275,379,3410,405"/>
-<area shape="rect" id="node18" href="$gadget_8cc.html" title="src/gadget.cc" alt="" coords="3434,379,3542,405"/>
-<area shape="rect" id="node19" href="$hooke_8cc.html" title="src/hooke.cc" alt="" coords="3033,379,3135,405"/>
-<area shape="rect" id="node28" href="$effortpredator_8cc.html" title="src/effortpredator.cc" alt="" coords="3559,304,3711,331"/>
-<area shape="rect" id="node30" href="$linearpredator_8cc.html" title="src/linearpredator.cc" alt="" coords="3852,304,4007,331"/>
-<area shape="rect" id="node32" href="$numberpredator_8cc.html" title="src/numberpredator.cc" alt="" coords="4031,304,4198,331"/>
-<area shape="rect" id="node34" href="$quotapredator_8cc.html" title="src/quotapredator.cc" alt="" coords="4223,304,4377,331"/>
-<area shape="rect" id="node36" href="$totalpredator_8cc.html" title="src/totalpredator.cc" alt="" coords="3388,304,3535,331"/>
-<area shape="rect" id="node39" href="$predatoraggregator_8cc.html" title="src/predatoraggregator.cc" alt="" coords="4147,379,4335,405"/>
-<area shape="rect" id="node40" href="$stock_8cc.html" title="src/stock.cc" alt="" coords="4360,379,4459,405"/>
-<area shape="rect" id="node41" href="$stockmemberfunctions_8cc.html" title="src/stockmemberfunctions.cc" alt="" coords="4483,379,4696,405"/>
-<area shape="rect" id="node42" href="$stockpredator_8cc.html" title="src/stockpredator.cc" alt="" coords="4720,379,4872,405"/>
-<area shape="rect" id="node43" href="$stomachcontent_8cc.html" title="src/stomachcontent.cc" alt="" coords="3772,379,3940,405"/>
-<area shape="rect" id="node50" href="$surveydistribution_8cc.html" title="src/surveydistribution.cc" alt="" coords="28,379,209,405"/>
+<area shape="rect" id="node1" title=" " alt="" coords="436,5,692,32"/>
+<area shape="rect" id="node2" href="$doublematrixptrmatrix_8cc.html" title=" " alt="" coords="143,80,353,107"/>
+<area shape="rect" id="node3" href="$catchdistribution_8h.html" title=" " alt="" coords="915,229,1133,256"/>
+<area shape="rect" id="node7" href="$poppredator_8h.html" title=" " alt="" coords="1716,80,1903,107"/>
+<area shape="rect" id="node46" href="$recapture_8h.html" title=" " alt="" coords="479,229,649,256"/>
+<area shape="rect" id="node47" href="$stockdistribution_8h.html" title=" " alt="" coords="674,229,891,256"/>
+<area shape="rect" id="node48" href="$stomachcontent_8h.html" title=" " alt="" coords="408,304,621,331"/>
+<area shape="rect" id="node49" href="$surveydistribution_8h.html" title=" " alt="" coords="5,304,232,331"/>
+<area shape="rect" id="node4" href="$catchdistribution_8cc.html" title=" " alt="" coords="1143,304,1315,331"/>
+<area shape="rect" id="node5" href="$initialize_8cc.html" title=" " alt="" coords="1347,379,1466,405"/>
+<area shape="rect" id="node6" href="$readmain_8cc.html" title=" " alt="" coords="380,379,505,405"/>
+<area shape="rect" id="node8" href="$fleeteffortaggregator_8cc.html" title=" " alt="" coords="1517,304,1715,331"/>
+<area shape="rect" id="node9" href="$fleetpreyaggregator_8cc.html" title=" " alt="" coords="1739,304,1930,331"/>
+<area shape="rect" id="node10" href="$lengthpredator_8h.html" title=" " alt="" coords="3397,155,3600,181"/>
+<area shape="rect" id="node23" href="$recaggregator_8cc.html" title=" " alt="" coords="1339,304,1493,331"/>
+<area shape="rect" id="node38" href="$stockpredator_8h.html" title=" " alt="" coords="4400,304,4597,331"/>
+<area shape="rect" id="node44" href="$poppredator_8cc.html" title=" " alt="" coords="4536,155,4677,181"/>
+<area shape="rect" id="node45" href="$predatorpreyaggregator_8cc.html" title=" " alt="" coords="1478,155,1695,181"/>
+<area shape="rect" id="node11" href="$fleet_8h.html" title=" " alt="" coords="2209,229,2346,256"/>
+<area shape="rect" id="node27" href="$effortpredator_8h.html" title=" " alt="" coords="3400,229,3597,256"/>
+<area shape="rect" id="node29" href="$linearpredator_8h.html" title=" " alt="" coords="3622,229,3821,256"/>
+<area shape="rect" id="node31" href="$numberpredator_8h.html" title=" " alt="" coords="4027,229,4239,256"/>
+<area shape="rect" id="node33" href="$quotapredator_8h.html" title=" " alt="" coords="4263,229,4462,256"/>
+<area shape="rect" id="node35" href="$totalpredator_8h.html" title=" " alt="" coords="3184,229,3376,256"/>
+<area shape="rect" id="node37" href="$lengthpredator_8cc.html" title=" " alt="" coords="3845,229,4003,256"/>
+<area shape="rect" id="node12" href="$catchinkilos_8cc.html" title=" " alt="" coords="2568,304,2709,331"/>
+<area shape="rect" id="node13" href="$catchstatistics_8cc.html" title=" " alt="" coords="2733,304,2891,331"/>
+<area shape="rect" id="node14" href="$fleet_8cc.html" title=" " alt="" coords="3734,304,3826,331"/>
+<area shape="rect" id="node15" href="$ecosystem_8h.html" title=" " alt="" coords="3184,304,3363,331"/>
+<area shape="rect" id="node20" href="$proglikelihood_8h.html" title=" " alt="" coords="1955,304,2155,331"/>
+<area shape="rect" id="node21" href="$surveyindices_8h.html" title=" " alt="" coords="2178,304,2377,331"/>
+<area shape="rect" id="node22" href="$migrationproportion_8cc.html" title=" " alt="" coords="2915,304,3109,331"/>
+<area shape="rect" id="node24" href="$recapture_8cc.html" title=" " alt="" coords="797,304,923,331"/>
+<area shape="rect" id="node25" href="$recstatistics_8cc.html" title=" " alt="" coords="2401,304,2543,331"/>
+<area shape="rect" id="node26" href="$stockdistribution_8cc.html" title=" " alt="" coords="947,304,1119,331"/>
+<area shape="rect" id="node16" href="$bfgs_8cc.html" title=" " alt="" coords="3159,379,3249,405"/>
+<area shape="rect" id="node17" href="$ecosystem_8cc.html" title=" " alt="" coords="3274,379,3409,405"/>
+<area shape="rect" id="node18" href="$gadget_8cc.html" title=" " alt="" coords="3433,379,3541,405"/>
+<area shape="rect" id="node19" href="$hooke_8cc.html" title=" " alt="" coords="3031,379,3134,405"/>
+<area shape="rect" id="node28" href="$effortpredator_8cc.html" title=" " alt="" coords="3557,304,3709,331"/>
+<area shape="rect" id="node30" href="$linearpredator_8cc.html" title=" " alt="" coords="3851,304,4005,331"/>
+<area shape="rect" id="node32" href="$numberpredator_8cc.html" title=" " alt="" coords="4030,304,4197,331"/>
+<area shape="rect" id="node34" href="$quotapredator_8cc.html" title=" " alt="" coords="4221,304,4376,331"/>
+<area shape="rect" id="node36" href="$totalpredator_8cc.html" title=" " alt="" coords="3387,304,3533,331"/>
+<area shape="rect" id="node39" href="$predatoraggregator_8cc.html" title=" " alt="" coords="4146,379,4334,405"/>
+<area shape="rect" id="node40" href="$stock_8cc.html" title=" " alt="" coords="4359,379,4457,405"/>
+<area shape="rect" id="node41" href="$stockmemberfunctions_8cc.html" title=" " alt="" coords="4481,379,4695,405"/>
+<area shape="rect" id="node42" href="$stockpredator_8cc.html" title=" " alt="" coords="4719,379,4871,405"/>
+<area shape="rect" id="node43" href="$stomachcontent_8cc.html" title=" " alt="" coords="3771,379,3939,405"/>
+<area shape="rect" id="node50" href="$surveydistribution_8cc.html" title=" " alt="" coords="28,379,209,405"/>
 </map>

@@ -1,6 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classOptInfo.html" title="This is the base class used to perform the optimisation calculation for the model. " alt="" coords="5,56,76,83"/>
-<area shape="rect" id="node2" href="$classOptInfoBFGS.html" title="This is the class used for the BFGS optimisation. " alt="" coords="131,5,235,32"/>
-<area shape="rect" id="node3" href="$classOptInfoHooke.html" title="This is the class used for the Hooke &amp; Jeeves optimisation. " alt="" coords="127,56,239,83"/>
-<area shape="rect" id="node4" href="$classOptInfoSimann.html" title="This is the class used for the Simualted Annealing optimisation. " alt="" coords="124,107,243,133"/>
+<area shape="rect" id="node1" href="$classOptInfo.html" title="This is the base class used to perform the optimisation calculation for the model." alt="" coords="5,56,76,83"/>
+<area shape="rect" id="node2" href="$classOptInfoBFGS.html" title="This is the class used for the BFGS optimisation." alt="" coords="131,5,236,32"/>
+<area shape="rect" id="node3" href="$classOptInfoHooke.html" title="This is the class used for the Hooke &amp; Jeeves optimisation." alt="" coords="128,56,239,83"/>
+<area shape="rect" id="node4" href="$classOptInfoSimann.html" title="This is the class used for the Simualted Annealing optimisation." alt="" coords="124,107,243,133"/>
 </map>

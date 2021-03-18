@@ -1,5 +1,6 @@
 <map id="MigrationFunction" name="MigrationFunction">
-<area shape="rect" id="node2" href="$classMigration.html" title="This is the base class used to calculate the migration of a stock within the model. " alt="" coords="60,219,231,384"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="5,27,128,149"/>
+<area shape="rect" id="node1" title="This is the class used to calculate the migration of a stock within the model based on a migration fu..." alt="" coords="58,432,233,583"/>
+<area shape="rect" id="node2" href="$classMigration.html" title="This is the base class used to calculate the migration of a stock within the model." alt="" coords="59,219,231,384"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name." alt="" coords="5,27,128,149"/>
 <area shape="rect" id="node4" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="152,5,299,171"/>
 </map>

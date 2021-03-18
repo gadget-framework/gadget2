@@ -1,5 +1,6 @@
 <map id="LogWeightRegression" name="LogWeightRegression">
-<area shape="rect" id="node2" href="$classLogLinearRegression.html" title="This is the class used to fit a log linear regression line to compare 2 vectors. " alt="" coords="8,829,200,936"/>
-<area shape="rect" id="node3" href="$classRegression.html" title="This is the base class used to fit a regression line to compare 2 vectors. " alt="" coords="21,380,187,780"/>
-<area shape="rect" id="node4" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values. " alt="" coords="31,5,177,288"/>
+<area shape="rect" id="node1" title="This is the class used to fit a weighted log linear regression line to compare 2 vectors." alt="" coords="5,985,204,1092"/>
+<area shape="rect" id="node2" href="$classLogLinearRegression.html" title="This is the class used to fit a log linear regression line to compare 2 vectors." alt="" coords="8,829,201,936"/>
+<area shape="rect" id="node3" href="$classRegression.html" title="This is the base class used to fit a regression line to compare 2 vectors." alt="" coords="21,380,188,780"/>
+<area shape="rect" id="node4" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values." alt="" coords="32,5,177,288"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classRegression.html" title="This is the base class used to fit a regression line to compare 2 vectors. " alt="" coords="5,31,99,57"/>
-<area shape="rect" id="node2" href="$classLinearRegression.html" title="This is the class used to fit a linear regression line to compare 2 vectors. " alt="" coords="158,5,291,32"/>
-<area shape="rect" id="node4" href="$classLogLinearRegression.html" title="This is the class used to fit a log linear regression line to compare 2 vectors. " alt="" coords="147,56,303,83"/>
-<area shape="rect" id="node3" href="$classWeightRegression.html" title="This is the class used to fit a weighted linear regression line to compare 2 vectors. " alt="" coords="362,5,501,32"/>
-<area shape="rect" id="node5" href="$classLogWeightRegression.html" title="This is the class used to fit a weighted log linear regression line to compare 2 vectors. " alt="" coords="351,56,512,83"/>
+<area shape="rect" id="node1" href="$classRegression.html" title="This is the base class used to fit a regression line to compare 2 vectors." alt="" coords="5,31,100,57"/>
+<area shape="rect" id="node2" href="$classLinearRegression.html" title="This is the class used to fit a linear regression line to compare 2 vectors." alt="" coords="159,5,294,32"/>
+<area shape="rect" id="node4" href="$classLogLinearRegression.html" title="This is the class used to fit a log linear regression line to compare 2 vectors." alt="" coords="148,56,305,83"/>
+<area shape="rect" id="node3" href="$classWeightRegression.html" title="This is the class used to fit a weighted linear regression line to compare 2 vectors." alt="" coords="365,5,504,32"/>
+<area shape="rect" id="node5" href="$classLogWeightRegression.html" title="This is the class used to fit a weighted log linear regression line to compare 2 vectors." alt="" coords="353,56,516,83"/>
 </map>

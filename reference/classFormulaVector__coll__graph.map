@@ -1,3 +1,4 @@
 <map id="FormulaVector" name="FormulaVector">
-<area shape="rect" id="node2" href="$classFormula.html" title="This is the class used to calculate the value of the variables used in the model simulation. " alt="" coords="6,5,157,244"/>
+<area shape="rect" id="node1" title="This class implements a dynamic vector of Formula values." alt="" coords="5,307,157,531"/>
+<area shape="rect" id="node2" href="$classFormula.html" title="This is the class used to calculate the value of the variables used in the model simulation." alt="" coords="6,5,157,244"/>
 </map>

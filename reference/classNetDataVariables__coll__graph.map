@@ -1,2 +1,3 @@
 <map id="NetDataVariables" name="NetDataVariables">
+<area shape="rect" id="node1" title="this class is used to keep a vector of relevant data to be sent/received using PVM communication" alt="" coords="5,5,177,127"/>
 </map>

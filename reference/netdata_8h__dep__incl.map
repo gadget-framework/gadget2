@@ -1,5 +1,6 @@
 <map id="src&#45;para/include/netdata.h" name="src&#45;para/include/netdata.h">
-<area shape="rect" id="node2" href="$slavecommunication_8h.html" title="src&#45;para/include/slavecommunication.h" alt="" coords="5,80,284,107"/>
-<area shape="rect" id="node4" href="$netdata_8cc.html" title="src&#45;para/netdata.cc" alt="" coords="309,80,455,107"/>
-<area shape="rect" id="node3" href="$slavecommunication_8cc.html" title="src&#45;para/slavecommunication.cc" alt="" coords="28,155,261,181"/>
+<area shape="rect" id="node1" title=" " alt="" coords="167,5,359,32"/>
+<area shape="rect" id="node2" href="$slavecommunication_8h.html" title=" " alt="" coords="5,80,284,107"/>
+<area shape="rect" id="node4" href="$netdata_8cc.html" title=" " alt="" coords="309,80,455,107"/>
+<area shape="rect" id="node3" href="$slavecommunication_8cc.html" title=" " alt="" coords="28,155,261,181"/>
 </map>

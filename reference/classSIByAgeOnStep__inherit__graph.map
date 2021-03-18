@@ -1,4 +1,5 @@
 <map id="SIByAgeOnStep" name="SIByAgeOnStep">
+<area shape="rect" id="node1" title="This is the class used to calculate a likelihood score by fitting the model population to age based s..." alt="" coords="5,652,180,788"/>
 <area shape="rect" id="node2" href="$classSIOnStep.html" title="This is the base class used to calculate a likelihood score by fitting a regression line to the model..." alt="" coords="5,175,180,604"/>
-<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name. " alt="" coords="31,5,154,127"/>
+<area shape="rect" id="node3" href="$classHasName.html" title="This is the base class for any object that has a name." alt="" coords="31,5,154,127"/>
 </map>
