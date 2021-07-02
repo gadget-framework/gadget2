@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4 Stock Files | Gadget userguide</title>
   <meta name="description" content="4 Stock Files | Gadget userguide" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4 Stock Files | Gadget userguide" />
   <meta property="og:type" content="book" />
@@ -50,6 +50,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
 
 
 
@@ -1414,9 +1417,7 @@ spawnfile              &lt;name of the spawning data file&gt;</code></pre>
 <p>The spawning data file defines what happens to the stock as it spawns.
 The spawning is length-dependent, and the affect that spawning has on
 each length group of the mature stock is given by the spawning
-equations<a href="chap-stock.html#eq:spawn1">(4.38)</a> and
-@ref{eq:spawn2)
-below:</p>
+equations<a href="chap-stock.html#eq:spawn1">(4.38)</a> and <a href="chap-stock.html#eq:spawn2">(4.39)</a> below:</p>
 <p><span class="math display" id="eq:spawn1">\[\begin{equation}
 \tag{4.38}
 N = N {\left(1 + P {(e^{-m} - 1)}\right)}\end{equation}\]</span></p>
@@ -1485,9 +1486,12 @@ stockparameters        &lt;mean&gt;  &lt;stddev&gt;  &lt;alpha&gt;  &lt;beta&gt;
 use to calculate the number of recruits to be added to the spawned
 stock. Currently there are 4 recruitment functions defined, and the
 valid recruitment function names are:</p>
-<p>fecundity - use the Fecundity recruitment function simplessb - use the
-SimpleSSB recruitment function ricker - use the Ricker recruitment
-function bevertonholt - use the BevertonHolt recruitment function</p>
+<ul>
+<li><code>fecundity</code> - use the Fecundity recruitment function</li>
+<li><code>simplessb</code> - use the SimpleSSB recruitment function</li>
+<li><code>ricker</code> - use the Ricker recruitment function</li>
+<li><code>bevertonholt</code> - use the BevertonHolt recruitment function</li>
+</ul>
 <div id="fecundity-recruitment-function" class="section level3">
 <h3><span class="header-section-number">4.15.1</span> Fecundity Recruitment Function</h3>
 <p>This recruitment function calculates the number of recruits to be added
@@ -1695,6 +1699,7 @@ gitbook.start({
 "weibo": false,
 "instapaper": false,
 "vk": false,
+"whatsapp": false,
 "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
