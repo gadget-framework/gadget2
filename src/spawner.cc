@@ -425,17 +425,17 @@ void SpawnData::Reset(const TimeClass* const TimeInfo) {
 double SpawnData::calcSpawnNumber(int age, int len, double number, double weight) {
   double temp = 0.0;
   switch (functionnumber) {
-    case 1:
-    case 2:
-    case 3:
-    case 6:
+    case 1:  // simplessb
+    case 2:  // ricker
+    case 3:  // bevertonholt
+    case 6:  // hockeystick
       temp = number * weight;
       break;
-    case 4:
+    case 4:  // fecundity
       temp = pow(LgrpDiv->meanLength(len), spawnParameters[1]) * pow(age, spawnParameters[2])
         * pow(number, spawnParameters[3]) * pow(weight, spawnParameters[4]);
       break;
-    case 5:
+    case 5:  // baleen
       temp = number;
       break;
     default:
@@ -458,17 +458,17 @@ double SpawnData::calcRecruitNumber(double temp, int inarea) {
     return total;
 
   switch (functionnumber) {
-    case 1:
-    case 4:
+    case 1:  // simplessb
+    case 4:  // fecundity
       total = ssb * spawnParameters[0];
       break;
-    case 2:
+    case 2:  // ricker
       total = ssb * spawnParameters[0] * exp(-spawnParameters[1] * ssb);
       break;
-    case 3:
+    case 3:  // bevertonholt
       total = ssb * spawnParameters[0] / (spawnParameters[1] + ssb);
       break;
-    case 5:
+    case 5:  // baleen
       if (isZero(spawnParameters[2])) {
         handle.logMessage(LOGWARN, "Warning in spawner - spawn parameter is zero");
         total = ssb * spawnParameters[0];
@@ -477,7 +477,7 @@ double SpawnData::calcRecruitNumber(double temp, int inarea) {
           * max(1.0 + spawnParameters[1] * (1.0 - pow(ssb / spawnParameters[2], spawnParameters[3])), 0.0);
       }
       break;
-    case 6:
+    case 6:  // hockeystick
       if (ssb > spawnParameters[1]) {
         total = 1.0e4 * spawnParameters[0];
       } else if (isZero(spawnParameters[1])) {
