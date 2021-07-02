@@ -2274,9 +2274,10 @@ stock. Currently there are 4 recruitment functions defined, and the
 valid recruitment function names are:
 
 
-fecundity - use the Fecundity recruitment function simplessb - use the
-SimpleSSB recruitment function ricker - use the Ricker recruitment
-function bevertonholt - use the BevertonHolt recruitment function
+* `fecundity` - use the Fecundity recruitment function
+* `simplessb` - use the SimpleSSB recruitment function
+* `ricker` - use the Ricker recruitment function
+* `bevertonholt` - use the BevertonHolt recruitment function
 
 ### Fecundity Recruitment Function
 
