@@ -2186,9 +2186,7 @@ file, is given below:
 The spawning data file defines what happens to the stock as it spawns.
 The spawning is length-dependent, and the affect that spawning has on
 each length group of the mature stock is given by the spawning
-equations\@ref(eq:spawn1) and
-\@ref{eq:spawn2)
-below:
+equations\@ref(eq:spawn1) and \@ref(eq:spawn2) below:
 
 \begin{equation}
 (\#eq:spawn1)
