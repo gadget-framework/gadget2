@@ -532,14 +532,14 @@ factor to be used to determine the fishing level is defined by the
 <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> value, along with the <span class="math inline">\(&lt;\)</span>biomasslevel<span class="math inline">\(&gt;\)</span> and
 <span class="math inline">\(&lt;\)</span>quotalevel<span class="math inline">\(&gt;\)</span> vectors. Currently there are 6 quota functions defined,
 and the valid function names are:</p>
-<p>simple - use a simple harvest control rule, based on the biomass of each
-stock annual - use a annual harvest control rule, based on the biomass
-of each stock simplesum - use a simple harvest control rule, based on
-the biomass of all the stocks annualsum - use a annual harvest control
-rule, based on the biomass of all the stocks simpleselect - use a simple
-harvest control rule, based on the biomass of selected stocks
-annualselect - use a annual harvest control rule, based on the biomass
-of selected stocks</p>
+<ul>
+<li><code>simple</code> - use a simple harvest control rule, based on the biomass of each stock</li>
+<li><code>annual</code> - use a annual harvest control rule, based on the biomass of each stock</li>
+<li><code>simplesum</code> - use a simple harvest control rule, based on the biomass of all the stocks</li>
+<li><code>annualsum</code> - use a annual harvest control rule, based on the biomass of all the stocks</li>
+<li><code>simpleselect</code> - use a simple harvest control rule, based on the biomass of selected stocks</li>
+<li><code>annualselect</code> - use a annual harvest control rule, based on the biomass of selected stocks</li>
+</ul>
 <p>Note that if the <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> value is set to either simpleselect
 or annualselect, then it is necessary to define which stocks to use to
 determine the fishing level. This is done be additionally specifying a
