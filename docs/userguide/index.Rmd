@@ -2937,14 +2937,12 @@ $<$quotalevel$>$ vectors. Currently there are 6 quota functions defined,
 and the valid function names are:
 
 
-simple - use a simple harvest control rule, based on the biomass of each
-stock annual - use a annual harvest control rule, based on the biomass
-of each stock simplesum - use a simple harvest control rule, based on
-the biomass of all the stocks annualsum - use a annual harvest control
-rule, based on the biomass of all the stocks simpleselect - use a simple
-harvest control rule, based on the biomass of selected stocks
-annualselect - use a annual harvest control rule, based on the biomass
-of selected stocks
+* `simple` - use a simple harvest control rule, based on the biomass of each stock
+* `annual` - use a annual harvest control rule, based on the biomass of each stock
+* `simplesum` - use a simple harvest control rule, based on the biomass of all the stocks
+* `annualsum` - use a annual harvest control rule, based on the biomass of all the stocks
+* `simpleselect` - use a simple harvest control rule, based on the biomass of selected stocks
+* `annualselect` - use a annual harvest control rule, based on the biomass of selected stocks
 
 
 Note that if the $<$function name$>$ value is set to either simpleselect
