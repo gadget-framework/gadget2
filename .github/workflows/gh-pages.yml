@@ -19,8 +19,9 @@ jobs:
       - name: Install doxygen
         run: sudo apt install doxygen graphviz
 
+      # TODO: 0.23+ generates "chap:input.html" instead of "chap-input.html"
       - name: Install build-docs prerequisites
-        run: Rscript -e 'install.packages(c("bookdown"))'
+        run: Rscript -e 'install.packages(c("remotes")) ; remotes::install_github("rstudio/bookdown", "v0.22")'
 
       - name: Render Documentation
         run: ./build-docs.R ./docs-build
