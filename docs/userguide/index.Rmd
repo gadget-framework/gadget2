@@ -2386,7 +2386,7 @@ R =  B S (1 + A(1 - (S/K))^z)
 Hence, to specify this recruitment function, the file format required
 is:
 
-    recruitment            hockeystick  <B>  <A> <K> <z>
+    recruitment            baleen  <B>  <A> <K> <z>
 
 where $B$ is the birthrate, $A$ is the resilience parameter for the stock, $K$ the carrying capacity and $z$ the degree of compensation. 
 
