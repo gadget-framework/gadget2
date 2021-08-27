@@ -32,7 +32,6 @@ tryCatch({
     setwd(file.path(project_dir, "docs/userguide"))
     bookdown::render_book(
         "index.Rmd",
-        clean_envir = FALSE,
         output_dir = userguide_dir)
 }, finally = setwd(project_dir))
 
