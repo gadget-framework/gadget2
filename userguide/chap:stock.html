@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>4 Stock Files | Gadget userguide</title>
+  <meta name="description" content="4 Stock Files | Gadget userguide" />
+  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="4 Stock Files | Gadget userguide" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="4 Stock Files | Gadget userguide" />
+  
+  
+  
+
+<meta name="author" content="MFRI" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chap:model.html"/>
+<link rel="next" href="chap:tag.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction to Gadget</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#sec:whatisgadget"><i class="fa fa-check"></i><b>1.1</b> What is Gadget?</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#sec:gettinggadget"><i class="fa fa-check"></i><b>1.2</b> Getting Gadget</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#sec:runninggadget"><i class="fa fa-check"></i><b>1.3</b> Running Gadget</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sec:starting"><i class="fa fa-check"></i><b>1.4</b> Starting Switches</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chap:input.html"><a href="chap:input.html"><i class="fa fa-check"></i><b>2</b> Input Files</a><ul>
+<li class="chapter" data-level="2.1" data-path="chap:input.html"><a href="chap:input.html#sec:comments"><i class="fa fa-check"></i><b>2.1</b> Comments in Input Files</a></li>
+<li class="chapter" data-level="2.2" data-path="chap:input.html"><a href="chap:input.html#sec:whatdoeshash"><i class="fa fa-check"></i><b>2.2</b> What Does The # Mean?</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="chap:input.html"><a href="chap:input.html#switches"><i class="fa fa-check"></i><b>2.2.1</b> Switches</a></li>
+<li class="chapter" data-level="2.2.2" data-path="chap:input.html"><a href="chap:input.html#functions"><i class="fa fa-check"></i><b>2.2.2</b> Functions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chap:model.html"><a href="chap:model.html"><i class="fa fa-check"></i><b>3</b> Model Files</a><ul>
+<li class="chapter" data-level="3.1" data-path="chap:model.html"><a href="chap:model.html#sec:mainfile"><i class="fa fa-check"></i><b>3.1</b> Main File</a></li>
+<li class="chapter" data-level="3.2" data-path="chap:model.html"><a href="chap:model.html#sec:timefile"><i class="fa fa-check"></i><b>3.2</b> Time File</a></li>
+<li class="chapter" data-level="3.3" data-path="chap:model.html"><a href="chap:model.html#sec:areafile"><i class="fa fa-check"></i><b>3.3</b> Area File</a></li>
+<li class="chapter" data-level="3.4" data-path="chap:model.html"><a href="chap:model.html#sec:otherinputfile"><i class="fa fa-check"></i><b>3.4</b> Other Input Data Files</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="chap:model.html"><a href="chap:model.html#aggregation-files"><i class="fa fa-check"></i><b>3.4.1</b> Aggregation Files</a></li>
+<li class="chapter" data-level="3.4.2" data-path="chap:model.html"><a href="chap:model.html#subsec:timevar"><i class="fa fa-check"></i><b>3.4.2</b> TimeVariable Files</a></li>
+<li class="chapter" data-level="3.4.3" data-path="chap:model.html"><a href="chap:model.html#subsec:stockvar"><i class="fa fa-check"></i><b>3.4.3</b> StockVariable Files</a></li>
+<li class="chapter" data-level="3.4.4" data-path="chap:model.html"><a href="chap:model.html#subsec:aat"><i class="fa fa-check"></i><b>3.4.4</b> ActionAtTime</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chap:stock.html"><a href="chap:stock.html"><i class="fa fa-check"></i><b>4</b> Stock Files</a><ul>
+<li class="chapter" data-level="4.1" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockrefweight"><i class="fa fa-check"></i><b>4.1</b> Reference Weight</a></li>
+<li class="chapter" data-level="4.2" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockgrowthlength"><i class="fa fa-check"></i><b>4.2</b> Growth and Eat Lengths</a></li>
+<li class="chapter" data-level="4.3" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockgrowth"><i class="fa fa-check"></i><b>4.3</b> Growth</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth1"><i class="fa fa-check"></i><b>4.3.1</b> MULTSPEC Growth Function</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth3"><i class="fa fa-check"></i><b>4.3.2</b> WeightVB Growth Function</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth4"><i class="fa fa-check"></i><b>4.3.3</b> WeightJones Growth Function</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth5"><i class="fa fa-check"></i><b>4.3.4</b> WeightVBExpanded Growth Function</a></li>
+<li class="chapter" data-level="4.3.5" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth6"><i class="fa fa-check"></i><b>4.3.5</b> LengthVB Growth Function</a></li>
+<li class="chapter" data-level="4.3.6" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth7"><i class="fa fa-check"></i><b>4.3.6</b> LengthPower Growth Function</a></li>
+<li class="chapter" data-level="4.3.7" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth8"><i class="fa fa-check"></i><b>4.3.7</b> LengthVBSimple Growth Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockgrowthimplement"><i class="fa fa-check"></i><b>4.4</b> Growth Implementation</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="chap:stock.html"><a href="chap:stock.html#beta-binomial"><i class="fa fa-check"></i><b>4.4.1</b> Beta-Binomial</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="chap:stock.html"><a href="chap:stock.html#sec:stocknatmort"><i class="fa fa-check"></i><b>4.5</b> Natural Mortality</a></li>
+<li class="chapter" data-level="4.6" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockprey"><i class="fa fa-check"></i><b>4.6</b> Stock Prey</a></li>
+<li class="chapter" data-level="4.7" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockpredator"><i class="fa fa-check"></i><b>4.7</b> Stock Predator</a></li>
+<li class="chapter" data-level="4.8" data-path="chap:stock.html"><a href="chap:stock.html#sec:consumption"><i class="fa fa-check"></i><b>4.8</b> Consumption</a></li>
+<li class="chapter" data-level="4.9" data-path="chap:stock.html"><a href="chap:stock.html#sec:suitability"><i class="fa fa-check"></i><b>4.9</b> Suitability</a><ul>
+<li class="chapter" data-level="4.9.1" data-path="chap:stock.html"><a href="chap:stock.html#constant-suitability-function"><i class="fa fa-check"></i><b>4.9.1</b> Constant Suitability Function</a></li>
+<li class="chapter" data-level="4.9.2" data-path="chap:stock.html"><a href="chap:stock.html#straightline-suitability-function"><i class="fa fa-check"></i><b>4.9.2</b> StraightLine Suitability Function</a></li>
+<li class="chapter" data-level="4.9.3" data-path="chap:stock.html"><a href="chap:stock.html#exponential-suitability-function"><i class="fa fa-check"></i><b>4.9.3</b> Exponential Suitability Function</a></li>
+<li class="chapter" data-level="4.9.4" data-path="chap:stock.html"><a href="chap:stock.html#exponentiall50-suitability-function"><i class="fa fa-check"></i><b>4.9.4</b> ExponentialL50 Suitability Function</a></li>
+<li class="chapter" data-level="4.9.5" data-path="chap:stock.html"><a href="chap:stock.html#richards-suitability-function"><i class="fa fa-check"></i><b>4.9.5</b> Richards Suitability Function</a></li>
+<li class="chapter" data-level="4.9.6" data-path="chap:stock.html"><a href="chap:stock.html#andersen-suitability-function"><i class="fa fa-check"></i><b>4.9.6</b> Andersen Suitability Function</a></li>
+<li class="chapter" data-level="4.9.7" data-path="chap:stock.html"><a href="chap:stock.html#andersen-fleet-suitability-function"><i class="fa fa-check"></i><b>4.9.7</b> Andersen Fleet Suitability Function</a></li>
+<li class="chapter" data-level="4.9.8" data-path="chap:stock.html"><a href="chap:stock.html#gamma-suitability-function"><i class="fa fa-check"></i><b>4.9.8</b> Gamma Suitability Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockinitial"><i class="fa fa-check"></i><b>4.10</b> Initial Conditions</a><ul>
+<li class="chapter" data-level="4.10.1" data-path="chap:stock.html"><a href="chap:stock.html#normal-condition-distribution"><i class="fa fa-check"></i><b>4.10.1</b> Normal Condition Distribution</a></li>
+<li class="chapter" data-level="4.10.2" data-path="chap:stock.html"><a href="chap:stock.html#normal-parametric-distribution"><i class="fa fa-check"></i><b>4.10.2</b> Normal Parametric Distribution</a></li>
+<li class="chapter" data-level="4.10.3" data-path="chap:stock.html"><a href="chap:stock.html#numerical-distribution"><i class="fa fa-check"></i><b>4.10.3</b> Numerical Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.11" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockmigrate"><i class="fa fa-check"></i><b>4.11</b> Migration</a><ul>
+<li class="chapter" data-level="4.11.1" data-path="chap:stock.html"><a href="chap:stock.html#migration-matrices"><i class="fa fa-check"></i><b>4.11.1</b> Migration Matrices</a></li>
+<li class="chapter" data-level="4.11.2" data-path="chap:stock.html"><a href="chap:stock.html#migration-ratios"><i class="fa fa-check"></i><b>4.11.2</b> Migration Ratios</a></li>
+</ul></li>
+<li class="chapter" data-level="4.12" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockmature"><i class="fa fa-check"></i><b>4.12</b> Maturation</a><ul>
+<li class="chapter" data-level="4.12.1" data-path="chap:stock.html"><a href="chap:stock.html#constant-maturity-function"><i class="fa fa-check"></i><b>4.12.1</b> Constant Maturity Function</a></li>
+<li class="chapter" data-level="4.12.2" data-path="chap:stock.html"><a href="chap:stock.html#constantweight-maturity-function"><i class="fa fa-check"></i><b>4.12.2</b> ConstantWeight Maturity Function</a></li>
+<li class="chapter" data-level="4.12.3" data-path="chap:stock.html"><a href="chap:stock.html#fixedlength-maturity-function"><i class="fa fa-check"></i><b>4.12.3</b> FixedLength Maturity Function</a></li>
+<li class="chapter" data-level="4.12.4" data-path="chap:stock.html"><a href="chap:stock.html#continuous-maturity-function"><i class="fa fa-check"></i><b>4.12.4</b> Continuous Maturity Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.13" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockmove"><i class="fa fa-check"></i><b>4.13</b> Movement (“Transition”)</a></li>
+<li class="chapter" data-level="4.14" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockrenew"><i class="fa fa-check"></i><b>4.14</b> Renewal (“Recruitment”)</a><ul>
+<li class="chapter" data-level="4.14.1" data-path="chap:stock.html"><a href="chap:stock.html#normal-condition-distribution-1"><i class="fa fa-check"></i><b>4.14.1</b> Normal Condition Distribution</a></li>
+<li class="chapter" data-level="4.14.2" data-path="chap:stock.html"><a href="chap:stock.html#normal-parametric-distribution-1"><i class="fa fa-check"></i><b>4.14.2</b> Normal Parametric Distribution</a></li>
+<li class="chapter" data-level="4.14.3" data-path="chap:stock.html"><a href="chap:stock.html#numerical-distribution-1"><i class="fa fa-check"></i><b>4.14.3</b> Numerical Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.15" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockspawn"><i class="fa fa-check"></i><b>4.15</b> Spawning</a><ul>
+<li class="chapter" data-level="4.15.1" data-path="chap:stock.html"><a href="chap:stock.html#fecundity-recruitment-function"><i class="fa fa-check"></i><b>4.15.1</b> Fecundity Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.2" data-path="chap:stock.html"><a href="chap:stock.html#simplessb-recruitment-function"><i class="fa fa-check"></i><b>4.15.2</b> SimpleSSB Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.3" data-path="chap:stock.html"><a href="chap:stock.html#ricker-recruitment-function"><i class="fa fa-check"></i><b>4.15.3</b> Ricker Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.4" data-path="chap:stock.html"><a href="chap:stock.html#bevertonholt-recruitment-function"><i class="fa fa-check"></i><b>4.15.4</b> BevertonHolt Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.5" data-path="chap:stock.html"><a href="chap:stock.html#hockey-stick-recruitment-function"><i class="fa fa-check"></i><b>4.15.5</b> Hockey stick Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.6" data-path="chap:stock.html"><a href="chap:stock.html#baleen-recruitment-function"><i class="fa fa-check"></i><b>4.15.6</b> Baleen Recruitment Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.16" data-path="chap:stock.html"><a href="chap:stock.html#sec:lselection"><i class="fa fa-check"></i><b>4.16</b> Length Selection</a><ul>
+<li class="chapter" data-level="4.16.1" data-path="chap:stock.html"><a href="chap:stock.html#constant-selection-function"><i class="fa fa-check"></i><b>4.16.1</b> Constant Selection Function</a></li>
+<li class="chapter" data-level="4.16.2" data-path="chap:stock.html"><a href="chap:stock.html#straightline-selection-function"><i class="fa fa-check"></i><b>4.16.2</b> StraightLine Selection Function</a></li>
+<li class="chapter" data-level="4.16.3" data-path="chap:stock.html"><a href="chap:stock.html#exponential-selection-function"><i class="fa fa-check"></i><b>4.16.3</b> Exponential Selection Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.17" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockstray"><i class="fa fa-check"></i><b>4.17</b> Straying</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chap:tag.html"><a href="chap:tag.html"><i class="fa fa-check"></i><b>5</b> Tag Files</a><ul>
+<li class="chapter" data-level="5.1" data-path="chap:tag.html"><a href="chap:tag.html#sec:tagnumbers"><i class="fa fa-check"></i><b>5.1</b> Tagging Numbers</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chap:other.html"><a href="chap:other.html"><i class="fa fa-check"></i><b>6</b> Otherfood Files</a><ul>
+<li class="chapter" data-level="6.1" data-path="chap:other.html"><a href="chap:other.html#sec:foodamounts"><i class="fa fa-check"></i><b>6.1</b> Food Amounts</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chap:fleet.html"><a href="chap:fleet.html"><i class="fa fa-check"></i><b>7</b> Fleet Files</a><ul>
+<li class="chapter" data-level="7.1" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:totalfleet"><i class="fa fa-check"></i><b>7.1</b> TotalFleet</a></li>
+<li class="chapter" data-level="7.2" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:numberfleet"><i class="fa fa-check"></i><b>7.2</b> NumberFleet</a></li>
+<li class="chapter" data-level="7.3" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:linearfleet"><i class="fa fa-check"></i><b>7.3</b> LinearFleet</a></li>
+<li class="chapter" data-level="7.4" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:effortfleet"><i class="fa fa-check"></i><b>7.4</b> EffortFleet</a></li>
+<li class="chapter" data-level="7.5" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:quotafleet"><i class="fa fa-check"></i><b>7.5</b> QuotaFleet</a></li>
+<li class="chapter" data-level="7.6" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:fleetsuit"><i class="fa fa-check"></i><b>7.6</b> Fleet Suitability</a></li>
+<li class="chapter" data-level="7.7" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:fleetamount"><i class="fa fa-check"></i><b>7.7</b> Fleet Amounts</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chap:like.html"><a href="chap:like.html"><i class="fa fa-check"></i><b>8</b> Likelihood Files</a><ul>
+<li class="chapter" data-level="8.1" data-path="chap:like.html"><a href="chap:like.html#sec:boundlike"><i class="fa fa-check"></i><b>8.1</b> BoundLikelihood (“Penalty”)</a></li>
+<li class="chapter" data-level="8.2" data-path="chap:like.html"><a href="chap:like.html#sec:understocking"><i class="fa fa-check"></i><b>8.2</b> Understocking</a></li>
+<li class="chapter" data-level="8.3" data-path="chap:like.html"><a href="chap:like.html#sec:catchdist"><i class="fa fa-check"></i><b>8.3</b> CatchDistribution</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="chap:like.html"><a href="chap:like.html#sum-of-squares-function"><i class="fa fa-check"></i><b>8.3.1</b> Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.3.2" data-path="chap:like.html"><a href="chap:like.html#stratified-sum-of-squares-function"><i class="fa fa-check"></i><b>8.3.2</b> Stratified Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.3.3" data-path="chap:like.html"><a href="chap:like.html#multinomial-function"><i class="fa fa-check"></i><b>8.3.3</b> Multinomial Function</a></li>
+<li class="chapter" data-level="8.3.4" data-path="chap:like.html"><a href="chap:like.html#pearson-function"><i class="fa fa-check"></i><b>8.3.4</b> Pearson Function</a></li>
+<li class="chapter" data-level="8.3.5" data-path="chap:like.html"><a href="chap:like.html#gamma-function"><i class="fa fa-check"></i><b>8.3.5</b> Gamma Function</a></li>
+<li class="chapter" data-level="8.3.6" data-path="chap:like.html"><a href="chap:like.html#log-function"><i class="fa fa-check"></i><b>8.3.6</b> Log Function</a></li>
+<li class="chapter" data-level="8.3.7" data-path="chap:like.html"><a href="chap:like.html#multivariate-normal-function"><i class="fa fa-check"></i><b>8.3.7</b> Multivariate Normal Function</a></li>
+<li class="chapter" data-level="8.3.8" data-path="chap:like.html"><a href="chap:like.html#multivariate-logistic-function"><i class="fa fa-check"></i><b>8.3.8</b> Multivariate Logistic Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="chap:like.html"><a href="chap:like.html#sec:catchstat"><i class="fa fa-check"></i><b>8.4</b> CatchStatistics</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-length"><i class="fa fa-check"></i><b>8.4.1</b> Weighted Sum of Squares of Mean Length</a></li>
+<li class="chapter" data-level="8.4.2" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation"><i class="fa fa-check"></i><b>8.4.2</b> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.4.3" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-weightwith-given-standard-deviation"><i class="fa fa-check"></i><b>8.4.3</b> Weighted Sum of Squares of Mean WeightWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.4.4" data-path="chap:like.html"><a href="chap:like.html#unweighted-sum-of-squares-of-mean-weight"><i class="fa fa-check"></i><b>8.4.4</b> Unweighted Sum of Squares of Mean Weight</a></li>
+<li class="chapter" data-level="8.4.5" data-path="chap:like.html"><a href="chap:like.html#unweighted-sum-of-squares-of-mean-length"><i class="fa fa-check"></i><b>8.4.5</b> Unweighted Sum of Squares of Mean Length</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="chap:like.html"><a href="chap:like.html#sec:stockdist"><i class="fa fa-check"></i><b>8.5</b> StockDistribution</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="chap:like.html"><a href="chap:like.html#sum-of-squares-function-1"><i class="fa fa-check"></i><b>8.5.1</b> Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.5.2" data-path="chap:like.html"><a href="chap:like.html#multinomial-function-1"><i class="fa fa-check"></i><b>8.5.2</b> Multinomial Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="chap:like.html"><a href="chap:like.html#sec:surveyindices"><i class="fa fa-check"></i><b>8.6</b> SurveyIndices</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="chap:like.html"><a href="chap:like.html#subsec:sibylength"><i class="fa fa-check"></i><b>8.6.1</b> SurveyIndices by Length</a></li>
+<li class="chapter" data-level="8.6.2" data-path="chap:like.html"><a href="chap:like.html#subsec:sibyage"><i class="fa fa-check"></i><b>8.6.2</b> SurveyIndices by Age</a></li>
+<li class="chapter" data-level="8.6.3" data-path="chap:like.html"><a href="chap:like.html#subsec:sibyfleet"><i class="fa fa-check"></i><b>8.6.3</b> SurveyIndices by Fleet</a></li>
+<li class="chapter" data-level="8.6.4" data-path="chap:like.html"><a href="chap:like.html#subsec:sibyacoustic"><i class="fa fa-check"></i><b>8.6.4</b> SurveyIndices by Acoustic</a></li>
+<li class="chapter" data-level="8.6.5" data-path="chap:like.html"><a href="chap:like.html#subsec:sibyeffort"><i class="fa fa-check"></i><b>8.6.5</b> SurveyIndices by Effort</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="chap:like.html"><a href="chap:like.html#sec:surveydistribution"><i class="fa fa-check"></i><b>8.7</b> SurveyDistribution</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="chap:like.html"><a href="chap:like.html#linear-fit"><i class="fa fa-check"></i><b>8.7.1</b> Linear Fit</a></li>
+<li class="chapter" data-level="8.7.2" data-path="chap:like.html"><a href="chap:like.html#power-fit"><i class="fa fa-check"></i><b>8.7.2</b> Power Fit</a></li>
+<li class="chapter" data-level="8.7.3" data-path="chap:like.html"><a href="chap:like.html#multinomial-function-2"><i class="fa fa-check"></i><b>8.7.3</b> Multinomial Function</a></li>
+<li class="chapter" data-level="8.7.4" data-path="chap:like.html"><a href="chap:like.html#pearson-function-1"><i class="fa fa-check"></i><b>8.7.4</b> Pearson Function</a></li>
+<li class="chapter" data-level="8.7.5" data-path="chap:like.html"><a href="chap:like.html#gamma-function-1"><i class="fa fa-check"></i><b>8.7.5</b> Gamma Function</a></li>
+<li class="chapter" data-level="8.7.6" data-path="chap:like.html"><a href="chap:like.html#log-function-1"><i class="fa fa-check"></i><b>8.7.6</b> Log Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="chap:like.html"><a href="chap:like.html#sec:stomach"><i class="fa fa-check"></i><b>8.8</b> StomachContent</a><ul>
+<li class="chapter" data-level="8.8.1" data-path="chap:like.html"><a href="chap:like.html#scsimple-function"><i class="fa fa-check"></i><b>8.8.1</b> SCSimple Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.9" data-path="chap:like.html"><a href="chap:like.html#sec:recaptures"><i class="fa fa-check"></i><b>8.9</b> Recaptures</a><ul>
+<li class="chapter" data-level="8.9.1" data-path="chap:like.html"><a href="chap:like.html#poisson-function"><i class="fa fa-check"></i><b>8.9.1</b> Poisson Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.10" data-path="chap:like.html"><a href="chap:like.html#sec:recstat"><i class="fa fa-check"></i><b>8.10</b> RecStatistics</a><ul>
+<li class="chapter" data-level="8.10.1" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-length-1"><i class="fa fa-check"></i><b>8.10.1</b> Weighted Sum of Squares of Mean Length</a></li>
+<li class="chapter" data-level="8.10.2" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation-1"><i class="fa fa-check"></i><b>8.10.2</b> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.10.3" data-path="chap:like.html"><a href="chap:like.html#unweighted-sum-of-squares-of-mean-length-1"><i class="fa fa-check"></i><b>8.10.3</b> Unweighted Sum of Squares of Mean Length</a></li>
+</ul></li>
+<li class="chapter" data-level="8.11" data-path="chap:like.html"><a href="chap:like.html#sec:migpenalty"><i class="fa fa-check"></i><b>8.11</b> MigrationPenalty</a></li>
+<li class="chapter" data-level="8.12" data-path="chap:like.html"><a href="chap:like.html#sec:migpro"><i class="fa fa-check"></i><b>8.12</b> MigrationProportion</a><ul>
+<li class="chapter" data-level="8.12.1" data-path="chap:like.html"><a href="chap:like.html#sum-of-squares-function-2"><i class="fa fa-check"></i><b>8.12.1</b> Sum of Squares Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.13" data-path="chap:like.html"><a href="chap:like.html#sec:catchinkilos"><i class="fa fa-check"></i><b>8.13</b> CatchInKilos</a><ul>
+<li class="chapter" data-level="8.13.1" data-path="chap:like.html"><a href="chap:like.html#sum-of-squares-function-3"><i class="fa fa-check"></i><b>8.13.1</b> Sum of Squares Function</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chap:print.html"><a href="chap:print.html"><i class="fa fa-check"></i><b>9</b> Print Files</a><ul>
+<li class="chapter" data-level="9.1" data-path="chap:print.html"><a href="chap:print.html#sec:stockstdprinter"><i class="fa fa-check"></i><b>9.1</b> StockStdPrinter</a></li>
+<li class="chapter" data-level="9.2" data-path="chap:print.html"><a href="chap:print.html#sec:stockfullprinter"><i class="fa fa-check"></i><b>9.2</b> StockFullPrinter</a></li>
+<li class="chapter" data-level="9.3" data-path="chap:print.html"><a href="chap:print.html#sec:stockprinter"><i class="fa fa-check"></i><b>9.3</b> StockPrinter</a></li>
+<li class="chapter" data-level="9.4" data-path="chap:print.html"><a href="chap:print.html#sec:predatorprinter"><i class="fa fa-check"></i><b>9.4</b> PredatorPrinter</a></li>
+<li class="chapter" data-level="9.5" data-path="chap:print.html"><a href="chap:print.html#sec:predatoroverprinter"><i class="fa fa-check"></i><b>9.5</b> PredatorOverPrinter</a></li>
+<li class="chapter" data-level="9.6" data-path="chap:print.html"><a href="chap:print.html#sec:preyoverprinter"><i class="fa fa-check"></i><b>9.6</b> PreyOverPrinter</a></li>
+<li class="chapter" data-level="9.7" data-path="chap:print.html"><a href="chap:print.html#sec:stockpreyfullprinter"><i class="fa fa-check"></i><b>9.7</b> StockPreyFullPrinter</a></li>
+<li class="chapter" data-level="9.8" data-path="chap:print.html"><a href="chap:print.html#sec:stockpreyprinter"><i class="fa fa-check"></i><b>9.8</b> StockPreyPrinter</a></li>
+<li class="chapter" data-level="9.9" data-path="chap:print.html"><a href="chap:print.html#sec:predatorpreyprinter"><i class="fa fa-check"></i><b>9.9</b> PredatorPreyPrinter</a></li>
+<li class="chapter" data-level="9.10" data-path="chap:print.html"><a href="chap:print.html#sec:likelihoodprinter"><i class="fa fa-check"></i><b>9.10</b> LikelihoodPrinter</a></li>
+<li class="chapter" data-level="9.11" data-path="chap:print.html"><a href="chap:print.html#sec:likelihoodsummaryprinter"><i class="fa fa-check"></i><b>9.11</b> LikelihoodSummaryPrinter</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chap:param.html"><a href="chap:param.html"><i class="fa fa-check"></i><b>10</b> Parameter File</a></li>
+<li class="chapter" data-level="11" data-path="chap:optim.html"><a href="chap:optim.html"><i class="fa fa-check"></i><b>11</b> Optimisation File</a><ul>
+<li class="chapter" data-level="11.1" data-path="chap:optim.html"><a href="chap:optim.html#sec:hooke"><i class="fa fa-check"></i><b>11.1</b> Hooke &amp; Jeeves</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="chap:optim.html"><a href="chap:optim.html#subsec:hookeover"><i class="fa fa-check"></i><b>11.1.1</b> Overview</a></li>
+<li class="chapter" data-level="11.1.2" data-path="chap:optim.html"><a href="chap:optim.html#subsec:hookefile"><i class="fa fa-check"></i><b>11.1.2</b> File Format</a></li>
+<li class="chapter" data-level="11.1.3" data-path="chap:optim.html"><a href="chap:optim.html#subsec:hookepar"><i class="fa fa-check"></i><b>11.1.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="chap:optim.html"><a href="chap:optim.html#sec:simann"><i class="fa fa-check"></i><b>11.2</b> Simulated Annealing</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="chap:optim.html"><a href="chap:optim.html#subsec:simannover"><i class="fa fa-check"></i><b>11.2.1</b> Overview</a></li>
+<li class="chapter" data-level="11.2.2" data-path="chap:optim.html"><a href="chap:optim.html#subsec:simannfile"><i class="fa fa-check"></i><b>11.2.2</b> File Format</a></li>
+<li class="chapter" data-level="11.2.3" data-path="chap:optim.html"><a href="chap:optim.html#subsec:simannpar"><i class="fa fa-check"></i><b>11.2.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="chap:optim.html"><a href="chap:optim.html#sec:bfgs"><i class="fa fa-check"></i><b>11.3</b> BFGS</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="chap:optim.html"><a href="chap:optim.html#subsec:bfgsover"><i class="fa fa-check"></i><b>11.3.1</b> Overview</a></li>
+<li class="chapter" data-level="11.3.2" data-path="chap:optim.html"><a href="chap:optim.html#subsec:bfgsfile"><i class="fa fa-check"></i><b>11.3.2</b> File Format</a></li>
+<li class="chapter" data-level="11.3.3" data-path="chap:optim.html"><a href="chap:optim.html#subsec:bfgspar"><i class="fa fa-check"></i><b>11.3.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="chap:optim.html"><a href="chap:optim.html#sec:combine"><i class="fa fa-check"></i><b>11.4</b> Combining Optimisation Algorithms</a><ul>
+<li class="chapter" data-level="11.4.1" data-path="chap:optim.html"><a href="chap:optim.html#subsec:combineover"><i class="fa fa-check"></i><b>11.4.1</b> Overview</a></li>
+<li class="chapter" data-level="11.4.2" data-path="chap:optim.html"><a href="chap:optim.html#subsec:combinefile"><i class="fa fa-check"></i><b>11.4.2</b> File Format</a></li>
+<li class="chapter" data-level="11.4.3" data-path="chap:optim.html"><a href="chap:optim.html#subsec:combinepar"><i class="fa fa-check"></i><b>11.4.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="chap:optim.html"><a href="chap:optim.html#sec:repeat"><i class="fa fa-check"></i><b>11.5</b> Repeatability</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chap:output.html"><a href="chap:output.html"><i class="fa fa-check"></i><b>12</b> Output Files</a><ul>
+<li class="chapter" data-level="12.1" data-path="chap:output.html"><a href="chap:output.html#sec:paramoutput"><i class="fa fa-check"></i><b>12.1</b> Parameter Output</a></li>
+<li class="chapter" data-level="12.2" data-path="chap:output.html"><a href="chap:output.html#sec:likelihoodoutput"><i class="fa fa-check"></i><b>12.2</b> Likelihood Output</a></li>
+<li class="chapter" data-level="12.3" data-path="chap:output.html"><a href="chap:output.html#sec:logoutput"><i class="fa fa-check"></i><b>12.3</b> Log Output</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chap:paramin.html"><a href="chap:paramin.html"><i class="fa fa-check"></i><b>13</b> Paramin</a><ul>
+<li class="chapter" data-level="13.1" data-path="chap:paramin.html"><a href="chap:paramin.html#sec:paramininstall"><i class="fa fa-check"></i><b>13.1</b> Installation</a></li>
+<li class="chapter" data-level="13.2" data-path="chap:paramin.html"><a href="chap:paramin.html#sec:runparamin"><i class="fa fa-check"></i><b>13.2</b> Running paramin</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="chap:paramin.html"><a href="chap:paramin.html#additional-information"><i class="fa fa-check"></i><b>13.2.1</b> Additional information</a></li>
+<li class="chapter" data-level="13.2.2" data-path="chap:paramin.html"><a href="chap:paramin.html#running-paramin-on-multiple-hostscluster"><i class="fa fa-check"></i><b>13.2.2</b> Running paramin on multiple hosts/cluster</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chap:reference.html"><a href="chap:reference.html"><i class="fa fa-check"></i><b>14</b> References</a></li>
+<li class="chapter" data-level="15" data-path="chap:order.html"><a href="chap:order.html"><i class="fa fa-check"></i><b>15</b> Order of Calculations</a></li>
+<li class="chapter" data-level="16" data-path="chap:change.html"><a href="chap:change.html"><i class="fa fa-check"></i><b>16</b> Recent Changes</a><ul>
+<li class="chapter" data-level="16.1" data-path="chap:change.html"><a href="chap:change.html#sec:v2101"><i class="fa fa-check"></i><b>16.1</b> Gadget version 2.1.01</a></li>
+<li class="chapter" data-level="16.2" data-path="chap:change.html"><a href="chap:change.html#sec:v2102"><i class="fa fa-check"></i><b>16.2</b> Gadget version 2.1.02</a></li>
+<li class="chapter" data-level="16.3" data-path="chap:change.html"><a href="chap:change.html#sec:v2103"><i class="fa fa-check"></i><b>16.3</b> Gadget version 2.1.03</a></li>
+<li class="chapter" data-level="16.4" data-path="chap:change.html"><a href="chap:change.html#sec:v2104"><i class="fa fa-check"></i><b>16.4</b> Gadget version 2.1.04</a></li>
+<li class="chapter" data-level="16.5" data-path="chap:change.html"><a href="chap:change.html#sec:v2105"><i class="fa fa-check"></i><b>16.5</b> Gadget version 2.1.05</a></li>
+<li class="chapter" data-level="16.6" data-path="chap:change.html"><a href="chap:change.html#sec:v2106"><i class="fa fa-check"></i><b>16.6</b> Gadget version 2.1.06</a></li>
+<li class="chapter" data-level="16.7" data-path="chap:change.html"><a href="chap:change.html#sec:v2200"><i class="fa fa-check"></i><b>16.7</b> Gadget version 2.2.00</a></li>
+<li class="chapter" data-level="16.8" data-path="chap:change.html"><a href="chap:change.html#sec:v230"><i class="fa fa-check"></i><b>16.8</b> Gadget version 2.3.0</a></li>
+<li class="chapter" data-level="16.9" data-path="chap:change.html"><a href="chap:change.html#sec:v231"><i class="fa fa-check"></i><b>16.9</b> Gadget version 2.3.1</a></li>
+<li class="chapter" data-level="16.10" data-path="chap:change.html"><a href="chap:change.html#sec:v232"><i class="fa fa-check"></i><b>16.10</b> Gadget version 2.3.2</a></li>
+<li class="chapter" data-level="16.11" data-path="chap:change.html"><a href="chap:change.html#sec:v233"><i class="fa fa-check"></i><b>16.11</b> Gadget version 2.3.3</a></li>
+<li class="chapter" data-level="16.12" data-path="chap:change.html"><a href="chap:change.html#sec:v234"><i class="fa fa-check"></i><b>16.12</b> Gadget version 2.3.4</a></li>
+<li class="chapter" data-level="16.13" data-path="chap:change.html"><a href="chap:change.html#sec:v235"><i class="fa fa-check"></i><b>16.13</b> Gadget version 2.3.5</a></li>
+<li class="chapter" data-level="16.14" data-path="chap:change.html"><a href="chap:change.html#sec:v9999"><i class="fa fa-check"></i><b>16.14</b> Gadget development version</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Gadget userguide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chap:stock" class="section level1">
+<h1><span class="header-section-number">4</span> Stock Files</h1>
+<p>The stock files contain all the information that Gadget requires for
+each stock in the model. To define the stock files in the Gadget model,
+the following lines are required in the “main” Gadget file:</p>
+<pre><code>[stock]
+stockfiles             &lt;names of the stock files&gt;</code></pre>
+<p>The “main” file needs to list the files that define the stocks to be
+used in the model. Each stock requires a separate stock file. The
+information for the stocks are very detailed, and so these stock files
+are quite large and can be complicated to look at. The basic format for
+this file is:</p>
+<pre><code>stockname              &lt;name of the stock&gt;
+livesonareas           &lt;areas that the stock lives on&gt;
+minage                 &lt;minimum age for the stock&gt;
+maxage                 &lt;maximum age for the stock&gt;
+minlength              &lt;minimum length for the stock&gt;
+maxlength              &lt;maximum length for the stock&gt;
+dl                     &lt;step size for the length groups&gt;
+refweightfile          &lt;see Reference Weight&gt;
+growthandeatlengths    &lt;see Growth and Eat Lengths&gt;
+doesgrow               &lt;see Growth&gt;
+naturalmortality       &lt;see Natural Mortality&gt;
+iseaten                &lt;see Stock Prey&gt;
+doeseat                &lt;see Stock Predator&gt;
+initialconditions      &lt;see Initial Conditions&gt;
+doesmigrate            &lt;see Migration&gt;
+doesmature             &lt;see Maturation&gt;
+doesmove               &lt;see Movement&gt;
+doesrenew              &lt;see Renewal&gt;
+doesspawn              &lt;see Spawning&gt;
+doesstray              &lt;see Straying&gt;</code></pre>
+<p>The first seven lines of this file give the basic details of the stock,
+and are fairly self explanatory. It should be noted that the oldest age
+group and the longest length group are interpreted in Gadget as plus
+groups for the stock. The remaining lines give more detail about the
+stock, and are covered in the sub sections below.</p>
+<div id="sec:stockrefweight" class="section level2">
+<h2><span class="header-section-number">4.1</span> Reference Weight</h2>
+<p>The reference weight section lists the weight of the stock for various
+length groups. This is the reference weight that can be used in the
+initial conditions to set up the stock, and can also be used by the
+growth functions when calculating the increase in length of the stock
+due to the growth. In the stock file, the format for the reference
+weight is given by:</p>
+<pre><code>refweightfile          &lt;name of the reference weight file&gt;</code></pre>
+<p>The format of the reference weight file is simply a two column list of
+the length and the corresponding weight for the stock. This file is
+ordered so that the smallest length group is given first, up to the
+longest length group which is given last. The format for this file is
+shown below:</p>
+<pre><code>&lt;length&gt;  &lt;weight&gt;</code></pre>
+<p>When this data is read into Gadget it is aggregated so that the weight
+is calculated for each length group defined in the stock file.</p>
+</div>
+<div id="sec:stockgrowthlength" class="section level2">
+<h2><span class="header-section-number">4.2</span> Growth and Eat Lengths</h2>
+<p>The calculations for the growth and consumption parts of the Gadget
+model can be done on a coarser scale than that defined in the stock
+file. The growth and eat lengths section of the stock file gives the
+name of a length aggregation file that defines this length grouping. In
+the stock file, the format for the growth and eat lengths is:</p>
+<pre><code>growthandeatlengths    &lt;name of the length aggregation file&gt;</code></pre>
+</div>
+<div id="sec:stockgrowth" class="section level2">
+<h2><span class="header-section-number">4.3</span> Growth</h2>
+<p>The growth section of the stock file determines if, and how, the stock
+will grow in the Gadget model. The format for the first part of the
+growth section is given below:</p>
+<pre><code>doesgrow               &lt;0 or 1&gt; ; 0 for no growth, 1 for growth</code></pre>
+<p>If there is no growth, then the following sections don’t apply, and the
+next section of the input file is the natural mortality, given in
+section <a href="chap:stock.html#sec:stocknatmort">4.5</a> below. If the stock does grow, there are
+various different functions that determine the mean growth of the stock,
+so there are a number of different formats that the growth data can
+take. Once the mean growth has been calculated, the growth then needs to
+be statistically distributed to give the overall growth of the stock.
+Thus, after the growth function data has been read in, there is then
+data for the growth implementation. The full format for the growth of
+the stock is therefore given by:</p>
+<pre><code>doesgrow               1
+growthfunction         &lt;growth function&gt;
+&lt;format for the growth function data&gt;
+&lt;format for the growth implementation&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>growth function<span class="math inline">\(&gt;\)</span> defines what growth function is to be used to
+calculate the growth of the stock. Currently, there are 7 growth
+functions defined, so valid function names are:</p>
+<ul>
+<li><code>multspec</code> - use the MULTSPEC growth function</li>
+<li><code>weightvb</code> - use the WeightVB growth function</li>
+<li><code>weightjones</code> - use the WeightJones growth function</li>
+<li><code>weightvbexpanded</code> - use the WeightVBExpanded growth function</li>
+<li><code>lengthvb</code> - use the LengthVB growth function</li>
+<li><code>lengthpower</code> - use the LengthPower growth function</li>
+<li><code>lengthvbsimple</code> - use the LengthVBSimple growth function</li>
+</ul>
+<div id="subsec:growth1" class="section level3">
+<h3><span class="header-section-number">4.3.1</span> MULTSPEC Growth Function</h3>
+<p>This growth function is a simplified “MULTSPEC” growth equation, with
+the increase in length for each length group of the stock given by
+equation <a href="chap:stock.html#eq:growth1l">(4.1)</a>, and the corresponding increase in weight of
+the stock given by equation <a href="chap:stock.html#eq:growth1w">(4.2)</a> below:</p>
+<p><span class="math display" id="eq:growth1l">\[\begin{equation}
+\tag{4.1}
+\Delta L_{i} = \Delta t p_{0} {L_{i}}^{p_{1}} \psi (p_{2} T + p_{3})
+\end{equation}\]</span></p>
+<p><span class="math display" id="eq:growth1w">\[\begin{equation}
+\tag{4.2}
+\Delta W_{i} = \Delta t p_{4} {W_{i}}^{p_{5}} (\psi - p_{6}) (p_{7} T + p_{8})\end{equation}\]</span></p>
+<p>where:
+<span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep, as a fraction of year
+<span class="math inline">\(&lt;\)</span> T <span class="math inline">\(&gt;\)</span> is the temperature
+<span class="math inline">\(&lt;\psi&gt;\)</span> is the feeding level (see section <a href="chap:stock.html#sec:consumption">4.8</a></p>
+<p>There are 4 parameters in the length equation, and 5 in the weight
+equation, giving a total of 9 parameters to be declared to define this
+growth function. This is given in the main stock file by declaring a
+single vector with 9 components, consisting of the 4 length parameters
+followed by the 5 weight parameters. This is shown below:</p>
+<pre><code>growthparameters       &lt;growth parameters vector&gt;</code></pre>
+</div>
+<div id="subsec:growth3" class="section level3">
+<h3><span class="header-section-number">4.3.2</span> WeightVB Growth Function</h3>
+<p>This growth function is a form of the Von Bertalanffy growth equation,
+extended to introduce the concept of starvation to the growth function.
+The increase in the weight for each length group the stock is given by
+equation <a href="chap:stock.html#eq:growth3w">(4.3)</a>, and the corresponding increase in the length
+of the stock is given by
+equation <a href="chap:stock.html#eq:growth3lc">(4.6)</a> below:</p>
+<p><span class="math display" id="eq:growth3w">\[\begin{equation}
+\tag{4.3}
+\Delta W_{i} = \Delta t q_{0} e^{q_{1} T} \left( \left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} - \left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)\end{equation}\]</span></p>
+<p><span class="math display" id="eq:growth3la">\[\begin{equation}
+\tag{4.4}
+r = \frac{W - \left( p_{0} + p_{8} \left( p_{1} + p_{2}p_{8} \right) \right) W_{ref}}{W}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:growth3lb">\[\begin{equation}
+\tag{4.5}
+f(x) =
+\begin{cases}
+0 &amp; \textrm{if $p_{3} + p_{4}x \leq 0$} \\
+p_{5} &amp; \textrm{if $p_{3} + p_{4}x \geq p_{5}$} \\
+p_{3} + p_{4}x &amp; \textrm{otherwise}
+\end{cases}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:growth3lc">\[\begin{equation}
+\tag{4.6}
+\Delta L_{i} = \frac{\Delta W_{i}} {p_{6} p_{7} l^{p_{7} - 1}} f(r)\end{equation}\]</span></p>
+<p>where:
+<span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep, as a fraction of year
+<span class="math inline">\(&lt;\)</span> T <span class="math inline">\(&gt;\)</span> is the temperature
+<span class="math inline">\(&lt;W_{ref}&gt;\)</span> is the reference weight</p>
+<p>Comparing the weight to the reference weight (by using
+equations<a href="chap:stock.html#eq:growth3la">(4.4)</a> and
+<a href="chap:stock.html#eq:growth3lb">(4.5)</a> introduces the concept of starvation to the
+Gadget model. When the weight of the population is less than a function
+of the reference weight, there is no length increase (ensuring that the
+growth only has an effect on the weight).</p>
+<p>There are 6 parameters for the equation for increase of the weight, and
+a further 9 parameters for the increase in length. These are declared in
+2 vectors, as shown below:</p>
+<pre><code>wgrowthparameters      &lt;weight parameters vector&gt;
+lgrowthparameters      &lt;length parameters vector&gt;</code></pre>
+</div>
+<div id="subsec:growth4" class="section level3">
+<h3><span class="header-section-number">4.3.3</span> WeightJones Growth Function</h3>
+<p>This growth function is a form of the Jones growth equation, extended to
+introduce the concept of starvation to the growth function. The increase
+in the weight for each length group the stock is given by
+equation <a href="chap:stock.html#eq:growth4w">(4.7)</a>, and the corresponding increase in the length
+of the stock is given by
+equation <a href="chap:stock.html#eq:growth4lc">(4.10)</a> below:</p>
+<p><span class="math display" id="eq:growth4w">\[\begin{equation}
+\tag{4.7}
+\Delta W_{i} = \Delta t \left( \frac{C}{q_{0} W_{i}^{q_{1}}} - q_{2} W_{i}^{q_{3}} e^{(q_{4} T + q_{5})} \right)\end{equation}\]</span></p>
+<p><span class="math display" id="eq:growth4la">\[\begin{equation}
+\tag{4.8}
+r = \frac{W - \left( p_{0} + \psi \left( p_{1} + p_{2}\psi \right) \right) W_{ref}}{W}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:growth4lb">\[\begin{equation}
+\tag{4.9}
+f(x) =
+\begin{cases}
+0 &amp; \textrm{if $p_{3} + p_{4}x \leq 0$} \\
+p_{5} &amp; \textrm{if $p_{3} + p_{4}x \geq p_{5}$} \\
+p_{3} + p_{4}x &amp; \textrm{otherwise}
+\end{cases}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:growth4lc">\[\begin{equation}
+\tag{4.10}
+\Delta L_{i} = \frac{\Delta W_{i}} {p_{6} p_{7} l^{p_{7} - 1}} f(r)\end{equation}\]</span></p>
+<p>where:
+<span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep, as a fraction of year
+<span class="math inline">\(&lt;\)</span> C <span class="math inline">\(&gt;\)</span> is the consumption (see section <a href="chap:stock.html#sec:consumption">4.8</a>
+<span class="math inline">\(&lt;\)</span> T <span class="math inline">\(&gt;\)</span> is the temperature
+<span class="math inline">\(&lt;\psi&gt;\)</span> is the feeding level (see section <a href="chap:stock.html#sec:consumption">4.8</a>
+<span class="math inline">\(&lt;W_{ref}&gt;\)</span> is the reference weight</p>
+<p>There are 6 parameters for the equation for increase of the weight, and
+a further 8 parameters for the increase in length. These are declared in
+2 vectors, as shown below:</p>
+<pre><code>wgrowthparameters      &lt;weight parameters vector&gt;
+lgrowthparameters      &lt;length parameters vector&gt;</code></pre>
+</div>
+<div id="subsec:growth5" class="section level3">
+<h3><span class="header-section-number">4.3.4</span> WeightVBExpanded Growth Function</h3>
+<p>This growth function is an expanded form of the Von Bertalanffy growth
+equation, with additional information to allow for differing growth
+depending on the year, timestep and area. The increase in the weight of
+the stock is given by
+equation <a href="chap:stock.html#eq:growth5w">(4.11)</a> below, and the corresponding increase in the
+length of the stock is identical to that for WeightVB growth function
+(see section <a href="chap:stock.html#subsec:growth3">4.3.2</a>) given by
+equation <a href="chap:stock.html#eq:growth3lc">(4.6)</a>:</p>
+<p><span class="math display" id="eq:growth5w">\[\begin{equation}
+\tag{4.11}
+\Delta W_{i} = \Delta t Y_{y} S_{s} A_{a} q_{0} e^{q_{1}T} \left( \left( \frac{W_{i}}{q_{2}} \right)^{q_{4}} - \left( \frac{W_{i}}{q_{3}} \right)^{q_{5}} \right)
+\end{equation}\]</span></p>
+<p>where:
+<span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep, as a fraction of year
+<span class="math inline">\(&lt;\)</span> T <span class="math inline">\(&gt;\)</span> is the temperature
+<span class="math inline">\(&lt;Y_{y}&gt;\)</span> is a multiplier for year y
+<span class="math inline">\(&lt;S_{s}&gt;\)</span> is a multiplier for step s
+<span class="math inline">\(&lt;A_{a}&gt;\)</span> is a multiplier for area a</p>
+<p>There are 6 parameters for the equation for increase of the weight, and
+a further 9 parameters for the increase in length and these are declared
+in 2 vectors. Additionally there are vectors for the year, step and area
+multipliers, as is shown below:</p>
+<pre><code>wgrowthparameters      &lt;weight parameters vector&gt;
+lgrowthparameters      &lt;length parameters vector&gt;
+yeareffect             &lt;year effect vector&gt;
+stepeffect             &lt;step effect vector&gt;
+areaeffect             &lt;area effect vector&gt;</code></pre>
+<p>Note that the <span class="math inline">\(&lt;\)</span>year effect<span class="math inline">\(&gt;\)</span> vector requires one entry for each year,
+the <span class="math inline">\(&lt;\)</span>step effect<span class="math inline">\(&gt;\)</span> vector requires one entry for each step and the
+<span class="math inline">\(&lt;\)</span>area effect<span class="math inline">\(&gt;\)</span> vector requires one entry for each area.</p>
+</div>
+<div id="subsec:growth6" class="section level3">
+<h3><span class="header-section-number">4.3.5</span> LengthVB Growth Function</h3>
+<p>This growth function is a simplified form of the Von Bertalanffy growth
+equation. The increase in the length for each length group the stock is
+given by equation <a href="chap:stock.html#eq:growth6">(4.12)</a>, with the corresponding increase in the weight
+of the stock read in from a data file:</p>
+<p><span class="math display" id="eq:growth6">\[\begin{equation}
+\tag{4.12}
+\Delta L_{i} = \left( L_{\infty} - L_{i} \right) \left( 1 - e^{-\kappa \Delta t} \right)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep, as a fraction of year</p>
+<p>There are a total of 2 parameters for the equation for increase in
+length. These are declared in a single vector, as shown below:</p>
+<pre><code>growthparameters       &lt;linf&gt; &lt;kappa&gt;
+weightgrowthfile       &lt;weight data file&gt;</code></pre>
+<p>It is important to note that if the value of <span class="math inline">\(L_{\infty}\)</span> is less than
+the mean length of a length group, then the length increase calculated
+by equation <a href="chap:stock.html#eq:growth6">(4.12)</a> would be negative for that length group, which
+will result in Gadget printing a warning message. To avoid this, the
+user should ensure that the value of <span class="math inline">\(L_{\infty}\)</span> is always greater than
+the mean length of the largest length group.</p>
+<p>The weight data file consists of a list of the year, timestep, area and
+length group label, followed by the mean increase in weight for that
+timestep/area/length combination. The length group label used must match
+those specified in the growthandeatlengths length aggregation file. The
+format of this file is shown below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length group&gt;  &lt;number&gt;</code></pre>
+</div>
+<div id="subsec:growth7" class="section level3">
+<h3><span class="header-section-number">4.3.6</span> LengthPower Growth Function</h3>
+<p>This growth function uses a simple power-based growth equation to
+calculate the increase in length. The increase in the length for each
+length group the stock is given by
+equation <a href="chap:stock.html#eq:growth7">(4.13)</a>, with the corresponding increase in the weight
+of the stock read in from a data file:</p>
+<p><span class="math display" id="eq:growth7">\[\begin{equation}
+\tag{4.13}
+\Delta L_{i} = L_{i}^{q_{0}} e^{q_{1} \Delta t}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep, as a fraction of year</p>
+<p>There are a total of 2 parameters for the equation for increase in
+length. These are declared in a single vector, as shown below:</p>
+<pre><code>growthparameters       &lt;growth parameters vector&gt;
+weightgrowthfile       &lt;weight data file&gt;</code></pre>
+<p>The weight data file consists of a list of the year, timestep, area and
+length group label, followed by the mean increase in weight for that
+timestep/area/length combination. The length group label used must match
+those specified in the growthandeatlengths length aggregation file. The
+format of this file is shown below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length group&gt;  &lt;number&gt;</code></pre>
+</div>
+<div id="subsec:growth8" class="section level3">
+<h3><span class="header-section-number">4.3.7</span> LengthVBSimple Growth Function</h3>
+<p>This growth function is a simplified form of the Von Bertalanffy growth
+equation. The increase in the length for each length group the stock is
+given by equation <a href="chap:stock.html#eq:growth8l">(4.14)</a>, and the corresponding increase in the weight
+of the stock is given by
+equation <a href="chap:stock.html#eq:growth8w">(4.15)</a> below:</p>
+<p><span class="math display" id="eq:growth8l">\[\begin{equation}
+\tag{4.14}
+\Delta L_{i} = \left( L_{\infty} - L_{i} \right) \left( 1 - e^{-\kappa \Delta t} \right)\end{equation}\]</span></p>
+<p><span class="math display" id="eq:growth8w">\[\begin{equation}
+\tag{4.15}
+\Delta W_{i} = \alpha \left( \left( L_{i} + \Delta L_{i} \right) ^{\beta} - {L_{i}}^{\beta} \right)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep, as a fraction of year</p>
+<p>There are a total of 4 parameters for the equation for increase in
+length and weight. These are declared in a single vector, as shown
+below:</p>
+<pre><code>growthparameters       &lt;linf&gt; &lt;kappa&gt; &lt;alpha&gt; &lt;beta&gt;</code></pre>
+<p>It is important to note that if the value of <span class="math inline">\(L_{\infty}\)</span> is less than
+the mean length of a length group, then the length increase calculated
+by equation <a href="chap:stock.html#eq:growth8l">(4.14)</a> would be negative for that length group, which
+will result in Gadget printing a warning message. To avoid this, the
+user should ensure that the value of <span class="math inline">\(L_{\infty}\)</span> is always greater than
+the mean length of the largest length group.</p>
+</div>
+</div>
+<div id="sec:stockgrowthimplement" class="section level2">
+<h2><span class="header-section-number">4.4</span> Growth Implementation</h2>
+<p>The growth functions described above calculate the mean growth for the
+stock within the model. This must then be translated into a statistical
+distribution of actual growths around that mean. Currently there is only
+one statistical distribution implemented with Gadget, the beta-binomial,
+which is described below.</p>
+<p>Note that regardless of the results of the implementation function there
+is a minimum width to the possible distribution implemented in Gadget -
+where growth is allocated between two adjacent length categories. This
+is a result of the discretisation within Gadget. To avoid this the user
+should select a length category size small enough for some fish to grow
+by at least 3 or 4 categories in one time step.</p>
+<div id="beta-binomial" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> Beta-Binomial</h3>
+<p>This method uses a statistical distribution to govern the implementation
+of fish growth. The statistical distribution chosen is the
+beta-binomial, an extension of the binomial distribution with the
+flexibility to produce non-symmetrical distributions, which is defined
+for integers, x = 0, …, n as:</p>
+<p><span class="math display" id="eq:betabin1">\[\begin{equation}
+\tag{4.16}
+{n \choose x} p^x (1 - p)^{n - x} = \frac{\Gamma(n + 1)}{\Gamma(x + 1)\Gamma(n - x + 1)} p^x (1 - p)^{n - x}\end{equation}\]</span></p>
+<p>For more flexibility, this can be re-arranged by calculating the
+parameter <span class="math inline">\(&lt;\)</span>p<span class="math inline">\(&gt;\)</span> from a second beta-binomial distribution, leading to
+equation <a href="chap:stock.html#eq:betabin2">(4.17)</a> shown below, which is defined for 0 <span class="math inline">\(\le\)</span> p
+<span class="math inline">\(\le\)</span> 1:</p>
+<p><span class="math display" id="eq:betabin2">\[\begin{equation}
+\tag{4.17}
+f(p) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) \Gamma(\beta)}p^{\alpha - 1}(1 - p)^{\beta - 1}\end{equation}\]</span>
+<span class="math display" id="eq:betabin3">\[\begin{equation}
+\tag{4.18}
+\alpha = \frac{\beta \Delta L}{n - \Delta L}\end{equation}\]</span></p>
+<p>The distribution is governed by three parameters; the mean length growth
+computed by the growth function scaled by dividing by the width of the
+length groups (<span class="math inline">\(&lt;\Delta\)</span>L <span class="math inline">\(&gt;\)</span>), a fixed limit on the number of length
+groups (<span class="math inline">\(&lt;\)</span> n <span class="math inline">\(&gt;\)</span>), and a value for beta. This distribution was chosen
+because it provides a high degree of flexibility resulting from changing
+a single estimated parameter, beta. To define the distribution data
+using a beta-binomial distribution the following data is required in the
+main stock file:</p>
+<pre><code>beta                   &lt;beta&gt;
+maxlengthgroupgrowth   &lt;max length group growth&gt;</code></pre>
+<p>The parameter <span class="math inline">\(&lt;\)</span>beta<span class="math inline">\(&gt;\)</span> is the parameter that Gadget can estimate in
+the optimisation routines, in order to tune the distribution to best fit
+the data. High values of beta produce a narrow distribution, whilst
+lower values produce a more dispersed distribution with a larger
+right-hand tail. Note that very low values of beta (which lead to
+<span class="math inline">\(\alpha\)</span> &lt; 1 in
+equation <a href="chap:stock.html#eq:betabin3">(4.18)</a>) can lead to unexpected results and should be
+avoided.</p>
+<p>The <span class="math inline">\(&lt;\)</span>max length group growth<span class="math inline">\(&gt;\)</span> value is the maximum number of length
+categories a fish is permitted to grow in a single timestep within the
+model. This should be set to be several length groups larger than any
+fish can be reasonably expected to grow in a time step, in order to
+provide the beta-binomial distribution with sufficient flexibility to
+produce a distribution around the mean.</p>
+</div>
+</div>
+<div id="sec:stocknatmort" class="section level2">
+<h2><span class="header-section-number">4.5</span> Natural Mortality</h2>
+<p>The natural mortality is a measure of how much of the stock will be
+removed from the model due to additional natural causes that are not
+modelled as part of other processes (for example predation). In Gadget,
+this is simply modelled as the proportion of the stock that is removed
+due to these additional causes (the residual mortality) from each age
+group, on each timestep, as shown in
+equation <a href="chap:stock.html#eq:natmort">(4.19)</a> below:</p>
+<p><span class="math display" id="eq:natmort">\[\begin{equation}
+\tag{4.19}
+N_{a} = e^{-m_{a} \Delta t}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep, as a fraction of year.</p>
+<p>The natural mortality parameters <span class="math inline">\(&lt;m_{a}&gt;\)</span> are specified in the stock
+file as a vector, with one parameter per age group, as shown below:</p>
+<pre><code>naturalmortality       &lt;natural mortality vector&gt;</code></pre>
+</div>
+<div id="sec:stockprey" class="section level2">
+<h2><span class="header-section-number">4.6</span> Stock Prey</h2>
+<p>The stock prey section of the stock file determines if, and how, the
+stock will be treated as a prey in the Gadget model. The format for the
+first part of the prey section of the main stock file is given below:</p>
+<pre><code>iseaten                &lt;0 or 1&gt; ; 0 for not eaten, 1 for eaten</code></pre>
+<p>Note that the fleets are treated as a predator by Gadget, so for the
+stock to be caught by the fleets, the stock needs to be declared as a
+prey. If the stock is not eaten, then the following section doesn’t
+apply, and the next section of the input file is the stock predator,
+given in section <a href="chap:stock.html#sec:stockpredator">4.7</a> below. If the stock is eaten, then for
+Gadget to treat it as a prey the length groups for that prey, and the
+energy content of the prey, must be defined. The length groups need not
+be to the same scale as for the stock as a whole. This is done by
+listing a length aggregation file that is to be used, as well as the
+energy content (in kilojoules per kilogram), as shown for the full
+example below:</p>
+<pre><code>iseaten                1
+preylengths            &lt;length aggregation file&gt;
+energycontent          &lt;energy value&gt;</code></pre>
+</div>
+<div id="sec:stockpredator" class="section level2">
+<h2><span class="header-section-number">4.7</span> Stock Predator</h2>
+<p>The stock predator section of the stock file determines if, and how, the
+stock will be treated as a predator in the Gadget model. The format for
+the first part of the predator section is given below:</p>
+<pre><code>doeseat                &lt;0 or 1&gt; ; 0 for not a predator, 1 for predator</code></pre>
+<p>If the stock is not a predator, then the following sections don’t apply,
+and the next section of the input file is the initial conditions, given
+in section <a href="chap:stock.html#sec:stockinitial">4.10</a> below. If the stock is a predator, then it
+is necessary to specify information about the predation. This is done by
+defining a suitability function, and then some prey preference,
+consumption and feeding parameters. The full format for this is shown
+below:</p>
+<pre><code>doeseat                1
+suitability            &lt;see Suitability&gt;
+preference             &lt;prey preference values&gt;
+maxconsumption         &lt;maximum consumption vector&gt;
+halffeedingvalue       &lt;half feeding value&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>suitability<span class="math inline">\(&gt;\)</span> defines the prey that the predator will consume,
+and is discussed in the Suitability section below (see
+section <a href="chap:stock.html#sec:suitability">4.9</a>. The <span class="math inline">\(&lt;\)</span>prey preference<span class="math inline">\(&gt;\)</span> values,
+<span class="math inline">\(&lt;\)</span>maximum consumption<span class="math inline">\(&gt;\)</span> vector and <span class="math inline">\(&lt;\)</span>half feeding<span class="math inline">\(&gt;\)</span> value parameters
+define how the stock consumes any prey that is eaten, and are described
+in the following section.</p>
+</div>
+<div id="sec:consumption" class="section level2">
+<h2><span class="header-section-number">4.8</span> Consumption</h2>
+<p>The consumption determines how much of a given prey is consumed by the
+predator. This will result in the population of the prey being reduced,
+and can also affect the growth of the predator, depending on the growth
+function selected. The consumption of a prey is dependant on the length
+of both the predator and the prey, and the amount of the prey available,
+as a proportion of the total amount of food available. The consumption
+of prey <span class="math inline">\(p\)</span> is given by
+equation <a href="chap:stock.html#eq:totalcons">(4.20)</a> below:</p>
+<p><span class="math display" id="eq:totalcons">\[\begin{equation}
+\tag{4.20}
+C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{\displaystyle \sum_{\it preys} F_{p}(l, L)}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:preycons">\[\begin{equation}
+\tag{4.21}
+F_{p}(l, L) =\Big( S_{p}(l, L) E_{p} N_{l} W_{l} \Big) ^{d_{p}}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:maxcons">\[\begin{equation}
+\tag{4.22}
+M_{L} = m_{0} \Delta t e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:feedlevel">\[\begin{equation}
+\tag{4.23}
+\psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H \Delta t + \displaystyle \sum_{\it preys} F_{p}(l, L)}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> L <span class="math inline">\(&gt;\)</span> is the length of the predator <span class="math inline">\(&lt;\)</span> l <span class="math inline">\(&gt;\)</span> is the length
+of the prey <span class="math inline">\(&lt;\)</span> H <span class="math inline">\(&gt;\)</span> is the half feeding value <span class="math inline">\(&lt;\)</span> d <span class="math inline">\(&gt;\)</span> is the
+preference of the predator for the prey <span class="math inline">\(&lt;\)</span> E <span class="math inline">\(&gt;\)</span> is the energy content
+of the prey (see section <a href="chap:stock.html#sec:stockprey">4.6</a> <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the number of prey in the
+length cell <span class="math inline">\(&lt;\)</span> W <span class="math inline">\(&gt;\)</span> is the mean weight of the prey in the length cell
+<span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the suitability function (see
+section <a href="chap:stock.html#sec:suitability">4.9</a>) <span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep
+<span class="math inline">\(&lt;\)</span> T <span class="math inline">\(&gt;\)</span> is the temperature of the area that the feeding takes place on</p>
+<p>In equation <a href="chap:stock.html#eq:totalcons">(4.20)</a>, the parameter <span class="math inline">\(&lt;\)</span> F <span class="math inline">\(&gt;\)</span> gives the amount of a
+given prey that is consumed by the predator, given by multiplying the
+biomass of the prey by the suitability (see
+section <a href="chap:stock.html#sec:suitability">4.9</a>), as shown in
+equation <a href="chap:stock.html#eq:preycons">(4.21)</a>. The summation over preys is over all preys
+that the predator consumes, including non-modelled prey, given as
+“otherfood” in section <a href="chap:other.html#chap:other">6</a>. The value of <span class="math inline">\(&lt;\)</span> C <span class="math inline">\(&gt;\)</span> can have an affect on
+the growth of the predator when the growth function has been set to
+“WeightJones”.</p>
+<p>In equation <a href="chap:stock.html#eq:preycons">(4.21)</a>, the parameter <span class="math inline">\(&lt;\)</span> d <span class="math inline">\(&gt;\)</span> gives the preference
+of the predator for the prey, controlling the form of the functional
+response that is used to model the predation. Setting this parameter to
+1 will ensure that a Type II functional response is used (note that this
+is always used when modelling the predation by the fleets, see
+section <a href="chap:fleet.html#chap:fleet">7</a>.
+Any other value will mean that a Type III functional response is used.
+The prey preference parameter is specified by listing the names of the
+prey and the associated preference value, as shown in the example below:</p>
+<pre><code>...
+preference
+&lt;name of prey 1&gt;       &lt;preference for prey 1&gt;
+&lt;name of prey 2&gt;       &lt;preference for prey 2&gt;
+maxconsumption         &lt;maximum consumption vector&gt;
+...</code></pre>
+<p>In equation <a href="chap:stock.html#eq:maxcons">(4.22)</a>, the parameter <span class="math inline">\(&lt;\)</span> M <span class="math inline">\(&gt;\)</span> gives the maximum
+possible consumption for the predator on the current timestep. This is a
+function of temperature and the length of the predator, using the 4
+parameters specified by the <span class="math inline">\(&lt;\)</span>maximum consumption<span class="math inline">\(&gt;\)</span> vector in the
+input file. Note that the maximum consumption should be specified in
+kilojoules per month.</p>
+<p>In equation <a href="chap:stock.html#eq:feedlevel">(4.23)</a>, the parameter <span class="math inline">\(&lt;\psi&gt;\)</span> gives the “feeding
+level” which denotes the fraction of the available food that the
+predator is consuming. This is governed by the total amount of prey
+available and the <span class="math inline">\(&lt;\)</span>half feeding<span class="math inline">\(&gt;\)</span> value which is specified in the
+input file. The <span class="math inline">\(&lt;\)</span>half feeding<span class="math inline">\(&gt;\)</span> value is the biomass of prey required
+to allow the predator to consume prey at half the maximum consumption
+level. The value of <span class="math inline">\(&lt;\psi&gt;\)</span> can have an affect on the growth of the
+predator (ie. when there isn’t sufficient food available) when the
+growth function has been set to “MULTSPEC” or “WeightJones”.</p>
+</div>
+<div id="sec:suitability" class="section level2">
+<h2><span class="header-section-number">4.9</span> Suitability</h2>
+<p>The suitability determines how the predators act on the preys. This
+selectivity relationship between the predator and the prey is based on
+the lengths of the predator and prey, and are defined by declaring a
+suitability function and the parameters for that function. The
+suitability values can be thought of as the proportion of the prey
+length group that the predator length group can consume, and as such the
+suitability values should be between 0 and 1.</p>
+<p>To define a suitability relationship based on a suitability function,
+the stock file (for the predator) needs to contain the following data:</p>
+<pre><code>suitability
+&lt;preyname&gt;    function &lt;functionname&gt; &lt;parameters&gt; ; for each prey</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>functionname<span class="math inline">\(&gt;\)</span> defines which suitability function is to be used
+to calculate the suitability for the predator acting on the prey.
+Currently there are 7 suitability functions defined, and the valid
+suitability function names are:</p>
+<p>constant - use the Constant suitabilty function straightline - use the
+StraightLine suitabilty function exponential - use the Exponential
+suitabilty function newexponentiall50 - use the ExponentialL50
+suitabilty function richards - use the Richards suitabilty function
+andersen - use the Andersen suitabilty function andersenfleet - use the
+Andersen suitabilty function, modified for fleets gamma - use the Gamma
+suitabilty function</p>
+<p>For the following suitability functions, the convention used is to
+represent the length group of the prey by l, and the length group of the
+predator by L.</p>
+<div id="constant-suitability-function" class="section level3">
+<h3><span class="header-section-number">4.9.1</span> Constant Suitability Function</h3>
+<p>This is a constant suitability function, where there is no dependence on
+either the length of the predator or the length of the prey as given by
+the following equation:</p>
+<p><span class="math display" id="eq:constsuit">\[\begin{equation}
+\tag{4.24}
+S(l, L) = \alpha\end{equation}\]</span></p>
+<p>Hence, to specify a constant suitability function, the file format
+required is:</p>
+<pre><code>&lt;preyname&gt;    function constant &lt;alpha&gt;</code></pre>
+</div>
+<div id="straightline-suitability-function" class="section level3">
+<h3><span class="header-section-number">4.9.2</span> StraightLine Suitability Function</h3>
+<p>This is a suitability function that has no dependence on the length of
+the predator, and a linear dependence on the length of the prey as given
+by the following equation:</p>
+<p><span class="math display" id="eq:straightsuit">\[\begin{equation}
+\tag{4.25}
+S(l, L) = \alpha l + \beta\end{equation}\]</span></p>
+<p>Hence, to specify a straight line suitability function, the file format
+required is:</p>
+<pre><code>&lt;preyname&gt;    function straightline &lt;alpha&gt; &lt;beta&gt;</code></pre>
+</div>
+<div id="exponential-suitability-function" class="section level3">
+<h3><span class="header-section-number">4.9.3</span> Exponential Suitability Function</h3>
+<p>This is a suitability function that has a logarithmic dependence on both
+the length of the predator and the length of the prey as given by the
+following equation:</p>
+<p><span class="math display" id="eq:expsuit">\[\begin{equation}
+\tag{4.26}
+S(l, L) = {\frac{\delta}{1 + e^{(- \alpha - \beta l - \gamma  L)}}}\end{equation}\]</span></p>
+<p>Hence, to specify this suitability function, the file format required
+is:</p>
+<pre><code>&lt;preyname&gt;    function exponential &lt;alpha&gt; &lt;beta&gt; &lt;gamma&gt; &lt;delta&gt;</code></pre>
+</div>
+<div id="exponentiall50-suitability-function" class="section level3">
+<h3><span class="header-section-number">4.9.4</span> ExponentialL50 Suitability Function</h3>
+<p>This is a suitability function that has no dependence on the length of
+the predator, and a logarithmic dependence on the length of the prey as
+given by the following equation:</p>
+<p><span class="math display" id="eq:l50suit">\[\begin{equation}
+\tag{4.27}
+S(l, L) = { \frac{1}{1 + e^{ -\alpha (l - l_{50})}}}\end{equation}\]</span></p>
+<p>Note that the prey length dependence is actually dependant on the
+difference between the length of the prey and <span class="math inline">\(l_{50}\)</span>, which is the
+length of the prey with a 50% probability of predation. Hence, to
+specify this suitability function, the file format required is:</p>
+<pre><code>&lt;preyname&gt;    function newexponentiall50 &lt;alpha&gt; &lt;l50&gt;</code></pre>
+</div>
+<div id="richards-suitability-function" class="section level3">
+<h3><span class="header-section-number">4.9.5</span> Richards Suitability Function</h3>
+<p>This is a suitability function that is an extension to the Exponential
+suitiability function, and has a logarithmic dependence on both the
+length of the predator and the length of the prey as given by the
+following equation:</p>
+<p><span class="math display" id="eq:richsuit">\[\begin{equation}
+\tag{4.28}
+S(l, L) = \left({\frac{p_3}{1 + e^{(- p_0 - p_1 l - p_2  L)}}}\right) ^ {\frac{1}{p_4}}\end{equation}\]</span></p>
+<p>Hence, to specify this suitability function, the file format required
+is:</p>
+<pre><code>&lt;preyname&gt;    function richards &lt;vector of 5 parameters&gt;</code></pre>
+</div>
+<div id="andersen-suitability-function" class="section level3">
+<h3><span class="header-section-number">4.9.6</span> Andersen Suitability Function</h3>
+<p>This is a more general suitability function that is dependant on the
+ratio of the predator length to the prey length as given by the
+following equation:</p>
+<p><span class="math display" id="eq:andersensuit">\[\begin{equation}
+\tag{4.29}
+S(l, L) =
+\begin{cases}
+p_0 + p_2e^{-\frac{(\ln\frac{L}{l} - p_1)^2}{p_4}} &amp; \textrm{if $\ln\frac{L}{l} \leq p_1$} \\
+p_0 + p_2e^{-\frac{(\ln\frac{L}{l} - p_1)^2}{p_3}} &amp; \textrm{if $\ln\frac{L}{l} &gt; p_1$}
+\end{cases}\end{equation}\]</span></p>
+<p>Note that the log of the ratio of the predator/prey lengths is bounded,
+to ensure that the suitability function is always well defined. To
+specify this suitability function, the file format required is:</p>
+<pre><code>&lt;preyname&gt;    function andersen &lt;vector of 5 parameters&gt;</code></pre>
+</div>
+<div id="andersen-fleet-suitability-function" class="section level3">
+<h3><span class="header-section-number">4.9.7</span> Andersen Fleet Suitability Function</h3>
+<p>This is a modified version of the Andersen suitability function that is
+dependant on the ratio of a parameter to the prey length as given by the
+following equation:</p>
+<p><span class="math display" id="eq:andersenfleetsuit">\[\begin{equation}
+\tag{4.30}
+S(l, L) =
+\begin{cases}
+p_0 + p_2e^{-\frac{(\ln\frac{p_5}{l} - p_1)^2}{p_4}} &amp; \textrm{if $\ln\frac{p_5}{l} \leq p_1$} \\
+p_0 + p_2e^{-\frac{(\ln\frac{p_5}{l} - p_1)^2}{p_3}} &amp; \textrm{if $\ln\frac{p_5}{l} &gt; p_1$}
+\end{cases}\end{equation}\]</span></p>
+<p>Note that the log of the ratio of the fleet parameter/prey length is
+bounded, to ensure that the suitability function is always well defined.
+Compared to the standard Andersen suitability function, the additional
+parameter is used to replace the predator length and is often used as a
+proxy for the mesh size used by the fleets. To specify this suitability
+function, the file format required is:</p>
+<pre><code>&lt;preyname&gt;    function andersenfleet &lt;vector of 6 parameters&gt;</code></pre>
+</div>
+<div id="gamma-suitability-function" class="section level3">
+<h3><span class="header-section-number">4.9.8</span> Gamma Suitability Function</h3>
+<p>This is a suitability function that is only dependant on the prey length
+as given by the following equation:</p>
+<p><span class="math display" id="eq:gammasuit">\[\begin{equation}
+\tag{4.31}
+S(l, L) = \left(\frac{l}{(\alpha - 1) \beta\gamma}\right) ^ {(\alpha - 1)}e ^ {(\alpha - 1 - \frac{l}{\beta\gamma})}\end{equation}\]</span></p>
+<p>Hence, to specify this suitability function, the file format required
+is:</p>
+<pre><code>&lt;preyname&gt;    function gamma &lt;alpha&gt; &lt;beta&gt; &lt;gamma&gt;</code></pre>
+<p>This is a suitability function that is more suitable for use when
+considering the predation by a fleet (see
+section <a href="chap:fleet.html#sec:fleetsuit">7.6</a>), where the parameter <span class="math inline">\(&lt;\gamma&gt;\)</span> would
+represent the size of the mesh used by the fleet (specified in
+centimetres).</p>
+</div>
+</div>
+<div id="sec:stockinitial" class="section level2">
+<h2><span class="header-section-number">4.10</span> Initial Conditions</h2>
+<p>The initial conditions section of stock file specifies the stock
+population at the start of the simulation (ie. at the beginning of the
+first timestep specified in the “time” file). This includes setting up
+the population size, the length distribution and the mean weight for
+each length group. This is done by specifying the minimum and maximum
+age and length for the stock on this timestep, and either specifying
+parameters to allow Gadget to create a stock distribution based on a
+Normal distribution, or the numbers that make up the stock distribution
+required.</p>
+<p>The format for the initial conditions section of the stock file is given
+below:</p>
+<pre><code>initialconditions
+minage                 &lt;minimum age for the initial stock&gt;
+maxage                 &lt;maximum age for the initial stock&gt;
+minlength              &lt;minimum length for the initial stock&gt;
+maxlength              &lt;maximum length for the initial stock&gt;
+dl                     &lt;step size for the initial length groups&gt;
+sdev                   &lt;standard deviation multiplier&gt;
+&lt;initial stock distribution data&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>sdev<span class="math inline">\(&gt;\)</span> value is used to scale the standard deviation of
+the length of the initial stock. The standard deviation used in
+calculating the length distribution will be multiplied by this value. If
+it is not specified, then it is assumed to have a value of 1 (ie, no
+scaling will take place). The optional <span class="math inline">\(&lt;\)</span>dl<span class="math inline">\(&gt;\)</span> value is used to set the
+length group divisions for the initial stock population. If this is not
+specified, then it is assumed that the initial population will have the
+same value for <span class="math inline">\(&lt;\)</span>dl<span class="math inline">\(&gt;\)</span> as for the stock, as specified in the main stock
+file.</p>
+<p>There are three formats for the initial stock distribution data, as
+given below:</p>
+<p>Normal Condition - use a Normal function to generate the length
+distribution, with a relative condition factor to assign a mean weight
+to the initial population Normal Parametric - use a Normal function to
+generate the length distribution, with a parametric weight-length
+relationship to calculate a mean weight for the initial population
+Numerical - specify the numbers, and the corresponding mean weights, for
+the initial population</p>
+<div id="normal-condition-distribution" class="section level3">
+<h3><span class="header-section-number">4.10.1</span> Normal Condition Distribution</h3>
+<p>To specify an initial stock with the lengths given by a Normal
+distribution, and using a relative condition factor to generate the
+weights, the main stock file needs to specify the name of a datafile
+containing the information about the Normal distribution, as shown
+below:</p>
+<pre><code>normalcondfile         &lt;name of the initial stock data file&gt;</code></pre>
+<p>The initial stock file contains all the information that Gadget requires
+to construct an initial population of the stock. Gadget will construct a
+population of 10,000 fish for each age group, with the length groups for
+these age groups having a Normal distribution about a specified mean
+length with a specified standard deviation. The mean weight for this
+initial population is calculated by multiplying the reference weight
+(specified in the main stock file) by a relative conditioning factor
+(which is typically set to 1).</p>
+<p>To get from a population with 10,000 fish in each age group (for each
+area) to the initial population used in the model, each age group is
+multiplied by an age weighting factor and an area weighting factor.</p>
+<p>Hence, the format for the initial stock file is given below:</p>
+<pre><code>&lt;age&gt;  &lt;area&gt;  &lt;age factor&gt;  &lt;area factor&gt;  &lt;mean&gt;  &lt;stddev&gt;  &lt;relcond&gt;</code></pre>
+</div>
+<div id="normal-parametric-distribution" class="section level3">
+<h3><span class="header-section-number">4.10.2</span> Normal Parametric Distribution</h3>
+<p>To specify an initial stock with the lengths given by a Normal
+distribution, and using a weight-length relationship to generate the
+weights, the main stock file needs to specify the name of a datafile
+containing the information about the Normal distribution, as shown
+below:</p>
+<pre><code>normalparamfile        &lt;name of the initial stock data file&gt;</code></pre>
+<p>The initial stock file contains all the information that Gadget requires
+to construct an initial population of the stock. Gadget will construct a
+population of 10,000 fish for each age group, with the length groups for
+these age groups having a Normal distribution about a specified mean
+length with a specified standard deviation. The mean weight for this
+initial population is then calculated from the standard weight-length
+relationship, as given in
+equation <a href="chap:stock.html#eq:wlen">(4.32)</a> below:</p>
+<p><span class="math display" id="eq:wlen">\[\begin{equation}
+\tag{4.32}
+W = \alpha L^{\beta}\end{equation}\]</span></p>
+<p>To get from a population with 10,000 fish in each age group (for each
+area) to the initial population used in the model, each age group is
+multiplied by an age weighting factor and an area weighting factor.</p>
+<p>Hence, the format for the initial stock file is given below:</p>
+<pre><code>&lt;age&gt;  &lt;area&gt;  &lt;age factor&gt;  &lt;area factor&gt;  &lt;mean&gt;  &lt;stddev&gt;  &lt;alpha&gt;  &lt;beta&gt;</code></pre>
+</div>
+<div id="numerical-distribution" class="section level3">
+<h3><span class="header-section-number">4.10.3</span> Numerical Distribution</h3>
+<p>An alternative approach is to define the initial stock population by
+specifying an age-length table, along with the mean weight, for the
+initial stock. This approach requires the main stock file to specify a
+data file to give the age-length table, as shown below:</p>
+<pre><code>numberfile             &lt;name of the initial stock data file&gt;</code></pre>
+<p>The initial stock file contains the age-length table for the initial
+population. This file specifies the population, and mean weight, of the
+stock for each area, age group and length group combination, as shown
+below:</p>
+<pre><code>&lt;area&gt;  &lt;age&gt;  &lt;length&gt;  &lt;number&gt;  &lt;weight&gt;</code></pre>
+<p>Note that the <span class="math inline">\(&lt;\)</span>length<span class="math inline">\(&gt;\)</span> value refers to the minimum length of the
+age-length cell that the initial population will be put into.</p>
+</div>
+</div>
+<div id="sec:stockmigrate" class="section level2">
+<h2><span class="header-section-number">4.11</span> Migration</h2>
+<p>The migration section of the stock file determines if, and how, the
+stock will migrate in the Gadget model. The migration of a stock within
+a Gadget model is calculated based on migration matrices. The format for
+the first part of the migration section is given below:</p>
+<pre><code>doesmigrate            &lt;0 or 1&gt; ; 0 for no migration, 1 for migration</code></pre>
+<p>If the stock does not migrate, then the following section doesn’t apply,
+and the next section of the input file is the maturation, given in
+section <a href="chap:stock.html#sec:stockmature">4.12</a> below. If the stock does migrate, then
+further information about the migration is required. There are currently
+2 formats for the migration data, as given in the list below:</p>
+<p>Migration Matrices - specify the migration matrices to be used Migration
+Ratios - specify the ratio of the stock that moves between areas, and
+let Gadget calculate the required matrices based on these ratios</p>
+<div id="migration-matrices" class="section level3">
+<h3><span class="header-section-number">4.11.1</span> Migration Matrices</h3>
+<p>To specify the migration of the stock by defining the migration matrices
+directly, the main stock file needs to specify the name of a datafile
+containing information about when the migration will take place, and the
+name of a datafile containing information about the migration matrices,
+as shown below:</p>
+<pre><code>doesmigrate            1
+yearstepfile           &lt;name of the migration timestep data file&gt;
+definematrices         &lt;name of the migration matrix data file&gt;</code></pre>
+<p>The migration timestep file contains a simple list of the timesteps that
+the migration will take place on, along with the name of the migration
+matrix that is to be used on each timestep, as shown below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;migration matrix&gt;</code></pre>
+<p>The migration matrix file contains the migration matrices to be used to
+move the stock between the various areas within the Gadget model. Each
+matrix is listed, starting with the keyword [migrationmatrix],
+followed by the name of the migration matrix, and then the matrix to be
+used, as shown below:</p>
+<pre><code>[migrationmatrix]
+name   &lt;migration matrix&gt;
+&lt;migration matrix data&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>migration matrix<span class="math inline">\(&gt;\)</span> data should be a square <span class="math inline">\(n\)</span> x <span class="math inline">\(n\)</span> matrix, for
+the <span class="math inline">\(n\)</span> areas that the stock is defined on, with the proportion moving
+<strong>from</strong> each area given in the columns, and the proportion moving
+<strong>to</strong> each area given in the rows. Since migration shouldn’t change the
+total number of fish in the model, each column in the matrix should sum
+to one.</p>
+<p>An example of a migration matrix data for a stock that is defined on two
+areas is given below:</p>
+<pre><code>[migrationmatrix]
+name    example
+0.6     0.3
+0.4     0.7</code></pre>
+<p>For the migration of the stock in the example shown above, 60% of the
+stock that are on area 1 at the start of the migration will move to area
+1 (ie. they will stay there) and the remaining 40% will move to area 2.
+For the stock that start the timestep on area 2, 30% will move to area 1
+and the remaining 70% will stay on area 2.</p>
+</div>
+<div id="migration-ratios" class="section level3">
+<h3><span class="header-section-number">4.11.2</span> Migration Ratios</h3>
+<p>An alternative approach is to specify the migration of the stock by
+defining the ratio of the stock that will migrate between given areas,
+and let Gadget calculate the resulting migration matrices to use within
+the model. To use this format for the migration data, the main stock
+file needs to specify the name of a datafile containing information
+about when the migration will take place, and the name of a datafile
+containing information about the migration ratios, as shown below:</p>
+<pre><code>doesmigrate            1
+yearstepfile           &lt;name of the migration timestep data file&gt;
+defineratios           &lt;name of the migration ratio data file&gt;</code></pre>
+<p>The migration timestep file contains a list of the timesteps that the
+migration will take place on, along with the name of the migration
+matrix that is to be used on each timestep, in the same format as for
+the Migration Matrices, as shown above.</p>
+<p>The migration ratio file contains the ratios to be used by Gadget to
+construct the migration matrices to move the stock between the various
+areas within the Gadget model. Each matrix is listed, starting with the
+keyword [migrationmatrix], followed by the name of the migration
+matrix, and then a list of the ratios to be used to construct the
+matrix, as shown below:</p>
+<pre><code>[migrationmatrix]
+name    &lt;migration matrix&gt;
+&lt;from&gt;  &lt;to&gt;    &lt;ratio&gt;</code></pre>
+<p>The migration ratio data is a list of the ratio of the stock that moves
+from the <span class="math inline">\(&lt;\)</span>from<span class="math inline">\(&gt;\)</span> area to the <span class="math inline">\(&lt;\)</span>to<span class="math inline">\(&gt;\)</span> area. Gadget will attempt to
+construct the migration matrix based on these ratios. Where the data is
+incomplete, Gadget will assume that there is no migration between areas
+(ie. fish will stay on the area that they are on at the start of the
+timestep). If Gadget cannot construct a (unique) migration matrix, then
+the model will stop the current simulation and display an error message.</p>
+<p>An example of a migration ratio data for a stock that is defined on two
+areas is given below:</p>
+<pre><code>[migrationmatrix]
+name    example
+1       2       0.4
+2       1       0.3</code></pre>
+<p>For the migration of the stock in the example shown above, 40% of the
+stock that are on area 1 at the start of the migration will move to area
+2, and the remaining 60% will stay on area 1. For the stock that start
+the timestep on area 2, 30% will move to area 1 and the remaining 70%
+will stay on area 2.</p>
+</div>
+</div>
+<div id="sec:stockmature" class="section level2">
+<h2><span class="header-section-number">4.12</span> Maturation</h2>
+<p>The maturation section of the stock file determines if, and how, the
+stock will mature in the Gadget model. The format for the first part of
+the maturation section is given below:</p>
+<pre><code>doesmature             &lt;0 or 1&gt; ; 0 for no maturation, 1 for maturation</code></pre>
+<p>If the stock does not mature, then the following sections don’t apply,
+and the next section of the input file is the movement, given in
+section <a href="chap:stock.html#sec:stockmove">4.13</a> below. If the stock does mature, then there
+are various different functions that describe how the stock can mature.
+The type of maturity function is denoted by a name, as shown below, and
+then the data required for that maturity function is given in a
+datafile. Thus the format for the maturity data, in the main stock file,
+is given below:</p>
+<pre><code>doesmature             1
+maturityfunction       &lt;maturity function&gt;
+maturityfile           &lt;name of the maturity data file&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>maturity function<span class="math inline">\(&gt;\)</span> defines the function that is to be used to
+calculate how the stock will mature. Currently there are 4 maturity
+functions defined, and the valid maturity function names are:</p>
+<ul>
+<li><code>newconstant</code> - use the Constant maturation function</li>
+<li><code>newconstantweight</code> -use the ConstantWeight maturation function</li>
+<li><code>fixedlength</code> - use the FixedLength maturation function</li>
+<li><code>continuous</code> - use the Continuous maturation function</li>
+</ul>
+<p>The format for the data in the maturity data file is dependent on the
+maturity function that is to be used. All the maturity functions require
+the name of the mature stocks that the immature stock will mature into,
+and the ratio of the maturing part of the immature stock that is to
+mature into each mature stock. This allows for part of an immature stock
+to mature into more than one mature stock, so for example, an immature
+stock could mature into either a male mature stock or a female mature
+stock.</p>
+<p>The maturity functions calculate the proportion of the fish in each
+age-length group that will become mature, and then move these fish from
+the age-length group for the current stock into the corresponding
+age-length group for the mature stock. Note that there is a check to
+ensure that the corresponding age-length group exists for the mature
+stock, and if it doesn’t then the fish don’t become mature and will stay
+in the immature stock.</p>
+<div id="constant-maturity-function" class="section level3">
+<h3><span class="header-section-number">4.12.1</span> Constant Maturity Function</h3>
+<p>This maturity function calculates the proportion of an age-length group
+of an immature stock that becomes mature according to the maturity
+equation <a href="chap:stock.html#eq:mat3">(4.33)</a> given below:</p>
+<p><span class="math display" id="eq:mat3">\[\begin{equation}
+\tag{4.33}
+P(l, a) = \frac{1}{ 1 + e^{-\alpha(l - l_{50}) -\beta(a - a_{50})}}\end{equation}\]</span></p>
+<p>The maturity term is a function of <span class="math inline">\(l_{50}\)</span> and <span class="math inline">\(a_{50}\)</span>, which are the
+length and age where 50% of the stock are mature. For this maturation
+function, it is assumed that maturation is an annual event, taking place
+on the same timesteps in each year. The file format for this maturity
+function is the similar to that for the Continuous maturity function,
+and is shown below:</p>
+<pre><code>maturestocksandratios       &lt;stockname i&gt;  &lt;ratio i&gt; ; for each stock i
+coefficients                &lt;alpha&gt;  &lt;l50&gt;  &lt;beta&gt;  &lt;a50&gt;
+maturitysteps               &lt;vector of timesteps&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>maturitysteps<span class="math inline">\(&gt;\)</span> vector is a vector of timesteps that the
+maturation process will take place on.</p>
+</div>
+<div id="constantweight-maturity-function" class="section level3">
+<h3><span class="header-section-number">4.12.2</span> ConstantWeight Maturity Function</h3>
+<p>This maturity function is an extension to the Constant maturity
+function, with the maturity proportion being calculated according to the
+maturity equation <a href="chap:stock.html#eq:mat4">(4.34)</a> given below:</p>
+<p><span class="math display" id="eq:mat4">\[\begin{equation}
+\tag{4.34}
+P(l, a) = \frac{1}{ 1 + e^{-\alpha(l - l_{50}) -\beta(a - a_{50}) -\gamma(k - k_{50})}}\end{equation}\]</span></p>
+<p>The maturity function has been extended to include the relative
+condition of the stock (calculated by dividing the current weight by the
+reference weight) and <span class="math inline">\(k_{50}\)</span> which is the relative condition where 50%
+of the stock is mature. The file format for this maturity function is
+the similar to that for the Constant maturity function, and is shown
+below:</p>
+<pre><code>maturestocksandratios       &lt;stockname i&gt;  &lt;ratio i&gt; ; for each stock i
+coefficients                &lt;alpha&gt;  &lt;l50&gt;  &lt;beta&gt;  &lt;a50&gt;  &lt;gamma&gt;  &lt;k50&gt;
+maturitysteps               &lt;vector of timesteps&gt;</code></pre>
+</div>
+<div id="fixedlength-maturity-function" class="section level3">
+<h3><span class="header-section-number">4.12.3</span> FixedLength Maturity Function</h3>
+<p>This maturity function takes a different approach, and bases the
+proportion of the immature stock that matures on the length of the
+immature stock, as the length varies through the year. This is approach
+assumes that the maturation process is the same for each year. The
+proportion of the immature stock that matures is given by the
+equation <a href="chap:stock.html#eq:mat2">(4.35)</a> below:</p>
+<p><span class="math display" id="eq:mat2">\[\begin{equation}
+\tag{4.35}
+P(l, a) =
+\begin{cases}
+1 &amp; \textrm{if there is an $i$ such that $s_i$ is the current step and $l &gt; l_i$} \\
+0 &amp; \textrm{otherwise}
+\end{cases}\end{equation}\]</span></p>
+<p>For each timestep in the year, the stock is assumed to mature when the
+length of the fish reaches a certain value. This length can change for
+each timestep. This information is given in a file with the format
+specified below:</p>
+<pre><code>maturestocksandratios       &lt;stockname i&gt;  &lt;ratio i&gt; ; for each stock i
+maturitysteps               &lt;vector of timesteps&gt;
+maturitylengths             &lt;vector of lengths&gt;</code></pre>
+<p>Note that the <span class="math inline">\(&lt;\)</span>maturitysteps<span class="math inline">\(&gt;\)</span> and the <span class="math inline">\(&lt;\)</span>maturitylengths<span class="math inline">\(&gt;\)</span> vectors
+need to be the same size.</p>
+</div>
+<div id="continuous-maturity-function" class="section level3">
+<h3><span class="header-section-number">4.12.4</span> Continuous Maturity Function</h3>
+<p>This maturity function calculates the proportion of an age-length group
+of an immature stock that becomes mature according to the maturity
+equations<a href="chap:stock.html#eq:mat1a">(4.36)</a> and <a href="chap:stock.html#eq:mat1b">(4.37)</a> given below:</p>
+<p><span class="math display" id="eq:mat1a">\[\begin{equation}
+\tag{4.36}
+P(l, a) = {\frac{1}{1 - M}}{\frac{dM}{dt}}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:mat1b">\[\begin{equation}
+\tag{4.37}
+M(l_{t},a_{t}) = \frac{1}{1 + e^{-\alpha(l_{t} - l_{50}) - \beta(a_{t} - a_{50})}}\end{equation}\]</span></p>
+<p>The maturity term is a function of <span class="math inline">\(l_{50}\)</span> and <span class="math inline">\(a_{50}\)</span>, which are the
+length and age where 50% of the stock are mature. This is a continuous
+process, with the maturity proportion being calculated on every
+timestep. The file format for this maturity function is given below:</p>
+<pre><code>maturestocksandratios       &lt;stockname i&gt;  &lt;ratio i&gt; ; for each stock i
+coefficients                &lt;alpha&gt;  &lt;l50&gt;  &lt;beta&gt;  &lt;a50&gt;</code></pre>
+</div>
+</div>
+<div id="sec:stockmove" class="section level2">
+<h2><span class="header-section-number">4.13</span> Movement (“Transition”)</h2>
+<p>The movement section of the stock file determines if, and how, the stock
+will move (into a different stock) in the Gadget model. This allows for
+a Gadget model to be set up with different stock files for stock that is
+the same species, but with differing properties (for instance age or
+maturity status) and for the entries to move between these stocks when
+required. For the current version of Gadget, the only movement between
+stocks that is valid is for the stock in the oldest age group of one
+stock to move into a different stock. The format for the first part of
+the movement section is given below:</p>
+<pre><code>doesmove               &lt;0 or 1&gt; ; 0 for no movement, 1 for movement</code></pre>
+<p>If the stock does not move, then the following section doesn’t apply,
+and the next section of the input file is the renewal, given in
+section <a href="chap:stock.html#sec:stockrenew">4.14</a> below. If the stock does move, then the
+information required to define the movement is the timestep for the
+movement to occur (since the movement is assumed to be an annual event)
+and the names of the stocks to move the oldest age group into, along
+with the ratio of the oldest age group that will move into that
+particular stock. Thus the full format for the movement of the stock is
+given below:</p>
+<pre><code>doesmove                    1
+transitionstocksandratios   &lt;stockname i&gt;  &lt;ratio i&gt; ; for each stock i
+transitionstep              &lt;timestep for the stock to move&gt;</code></pre>
+<p>The movement function simples move the fish from the oldest age-length
+groups for the current stock into the corresponding age-length group for
+the stock that the fish will move into (in a similar manner to that used
+for the maturation, given in
+section <a href="chap:stock.html#sec:stockmature">4.12</a>). Note that there is a check to ensure that
+the corresponding age-length group exists, and if it doesn’t then the
+fish don’t move and will stay in the oldest age group for current stock,
+which is modelled as a plus group.</p>
+</div>
+<div id="sec:stockrenew" class="section level2">
+<h2><span class="header-section-number">4.14</span> Renewal (“Recruitment”)</h2>
+<p>The renewal section of the stock file determines if, and how, the stock
+will be renewed in the Gadget model. The format for the first part of
+the renewal section is given below:</p>
+<pre><code>doesrenew              &lt;0 or 1&gt; ; 0 for no renewal, 1 for renewal</code></pre>
+<p>If the stock does not renew, then the following sections don’t apply,
+and the next section of the input file is the spawning, given in
+section <a href="chap:stock.html#sec:stockspawn">4.15</a> below. If the stock does renew, then further
+information is required about the renewal data. This is given in a
+separate file, so the format for the renewal data, in the main stock
+file, is given below:</p>
+<pre><code>doesrenew              1
+minlength              &lt;minimum length for the recruits&gt;
+maxlength              &lt;maximum length for the recruits&gt;
+dl                     &lt;step size for the recruits&gt;
+&lt;renewal distribution data&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>dl<span class="math inline">\(&gt;\)</span> value is optional, and can be used to specify a different
+step size for the recruits than for the stock that the recruits will be
+added to. If this value is not specified here then the recruits will be
+given the same step length as for the stock they will be added to.</p>
+<p>In a similar manner to the format for the initial population (see
+section <a href="chap:stock.html#sec:stockinitial">4.10</a>) there are three formats for the renewal
+distribution data, as given below:</p>
+<p>Normal Condition - use a Normal function to generate the length
+distribution, with a relative condition factor to assign a mean weight
+to the new recruits
+Normal Parametric - use a Normal function to
+generate the length distribution, with a parametric weight-length
+relationship to calculate a mean weight for the new recruits Numerical -
+specify the numbers, and the corresponding mean weights, for the new
+recruits</p>
+<div id="normal-condition-distribution-1" class="section level3">
+<h3><span class="header-section-number">4.14.1</span> Normal Condition Distribution</h3>
+<p>To specify renewal data with the lengths given by a Normal distribution,
+and using a relative condition factor to generate the weights, the main
+stock file needs to specify the name of a datafile containing the
+information about the Normal distribution, as shown below:</p>
+<pre><code>normalcondfile         &lt;name of the renewal data file&gt;</code></pre>
+<p>The renewal file contains all the information that Gadget requires to
+construct the renewal data for the stock. For each timestep and area,
+this file lists the the age of the recruits (which would typically match
+the minimum age of the stock that the recruits are to be added to), the
+number of recruits (in units of 10,000 fish), parameters used to define
+the Normal distribution for length groups of the recruits, and the
+relative condition factor, used along with the reference weight to
+assign a mean weight for the recruits.</p>
+<p>Hence, the format for the renewal file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;  &lt;relcond&gt;</code></pre>
+</div>
+<div id="normal-parametric-distribution-1" class="section level3">
+<h3><span class="header-section-number">4.14.2</span> Normal Parametric Distribution</h3>
+<p>To specify renewal data with the lengths given by a Normal distribution,
+and using a weight-length relationship to generate the weights, the main
+stock file needs to specify the name of a datafile containing the
+information about the Normal distribution, as shown below:</p>
+<pre><code>normalparamfile        &lt;name of the renewal data file&gt;</code></pre>
+<p>The renewal file contains all the information that Gadget requires to
+construct the renewal data for the stock. For each timestep and area,
+this file lists the the age of the recruits (which would typically match
+the minimum age of the stock that the recruits are to be added to), the
+number of recruits (in units of 10,000 fish), parameters used to define
+the Normal distribution for length groups of the recruits, and
+parameters to define the weight-length relationship for these recruits.</p>
+<p>Hence, the format for the renewal file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;  &lt;alpha&gt;  &lt;beta&gt;</code></pre>
+</div>
+<div id="numerical-distribution-1" class="section level3">
+<h3><span class="header-section-number">4.14.3</span> Numerical Distribution</h3>
+<p>An alternative approach is to define the renewal data by specifying an
+age-length table, along with the mean weight, for each timestep that
+will have new fish added to the stock. This approach requires the main
+stock file to specify a data file to give the age-length table, as shown
+below:</p>
+<pre><code>numberfile             &lt;name of the renewal data file&gt;</code></pre>
+<p>The renewal file contains data for an age-length table for each timestep
+that will have new fish added to the stock. This file specifies the
+number, and mean weight, of the new fish for each timestep, area, age
+group and length group combination, as shown below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;length&gt;  &lt;number&gt;  &lt;weight&gt;</code></pre>
+<p>Note that the <span class="math inline">\(&lt;\)</span>length<span class="math inline">\(&gt;\)</span> value refers to the minimum length of the
+age-length cell that the new fish will be put into.</p>
+</div>
+</div>
+<div id="sec:stockspawn" class="section level2">
+<h2><span class="header-section-number">4.15</span> Spawning</h2>
+<p>The spawning section of the stock file determines if, and how, the stock
+will spawn in the Gadget model. This covers the mortality and weight
+loss from the stock due to the spawning process, and optionally the
+creation of a new spawned stock. The format for the first part of the
+spawning section is given below:</p>
+<pre><code>doesspawn              &lt;0 or 1&gt; ; 0 for no spawning, 1 for spawning</code></pre>
+<p>If the stock does not spawn, then the following sections don’t apply,
+and the next section of the input file is the straying information,
+given in section <a href="chap:stock.html#sec:stockstray">4.17</a> below. If the stock does spawn, then further
+information is required about the spawning data. This is given in a
+separate file, so the format for the spawning data, in the main stock
+file, is given below:</p>
+<pre><code>doesspawn              1
+spawnfile              &lt;name of the spawning data file&gt;</code></pre>
+<p>The spawning data file defines what happens to the stock as it spawns.
+The spawning is length-dependent, and the affect that spawning has on
+each length group of the mature stock is given by the spawning
+equations<a href="chap:stock.html#eq:spawn1">(4.38)</a> and <a href="chap:stock.html#eq:spawn2">(4.39)</a> below:</p>
+<p><span class="math display" id="eq:spawn1">\[\begin{equation}
+\tag{4.38}
+N = N {\left(1 + P {(e^{-m} - 1)}\right)}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:spawn2">\[\begin{equation}
+\tag{4.39}
+W = W \frac{\left(1 + P {((2 - w)e^{-m} - 1)}\right)}{\left(1 + P {(2e^{-m} - 1)}\right)}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the population of the age-length group <span class="math inline">\(&lt;\)</span> W <span class="math inline">\(&gt;\)</span> is
+the mean weight of the population of the age-length group <span class="math inline">\(&lt;\)</span> P <span class="math inline">\(&gt;\)</span> is
+the proportion of the length group that will spawn <span class="math inline">\(&lt;m&gt;\)</span> is the spawning
+mortality for that length group <span class="math inline">\(&lt;w&gt;\)</span> is the spawning weight loss for
+that length group</p>
+<p>In equation <a href="chap:stock.html#eq:spawn1">(4.38)</a>, the population of the age-length cell of the
+mature stock is reduced due to the spawning mortality of the fish that
+spawn. In equation <a href="chap:stock.html#eq:spawn2">(4.39)</a>, the mean weight of the population in the
+age-length cell is adjusted to take the reduction in weight of the fish
+that spawn, and the change in population, into account.</p>
+<p>Spawning is considered to be an annual event, that takes place on the
+same timestep and the same area in each year that the spawning occurs.
+To model the spawning process as it affects the parent (without the
+creation of a child stock), it is necessary to specify the timestep and
+area that the spawning will take place on, and the length selection
+functions to determine proportion of each length group that will spawn,
+and the spawning mortality and weight loss of those that spawn. This is
+done in the spawning data file, as shown below:</p>
+<pre><code>spawnsteps             &lt;vector of timesteps&gt;
+spawnareas             &lt;vector of areas&gt;
+firstspawnyear         &lt;first year that the spawning occurs&gt;
+lastspawnyear          &lt;last year that the spawning occurs&gt;
+onlyparent
+proportionfunction     &lt;see Length Selection&gt;
+mortalityfunction      &lt;see Length Selection&gt;
+weightlossfunction     &lt;see Length Selection&gt;</code></pre>
+<p>The optional &lt;firstspawnyear&gt; and &lt;lastspawnyear&gt; values define the
+first and last years on which the spawning process will take place. This
+means that it is possible to define recruits (see
+section <a href="chap:stock.html#sec:stockrenew">4.14</a> above) for some years in the model and use a
+spawning process in other years in the model. If these are not specified
+in the input file, then it assumed that the spawning process will take
+place on all years in the simulation, and these will default to the
+first year and last year in the simulation.</p>
+<p>Alternatively, it is possible to consider the spawning process as part
+of a through life-cycle model, and so the spawning process can create
+recruits to be added to one or more stocks (in a similar manner to the
+renewal data, given in
+section <a href="chap:stock.html#sec:stockrenew">4.14</a> above). The total number of recruits given
+by the spawning process is added to the youngest age group of the
+spawned stock at the start of the following timestep. The lengths of the
+spawned stock are distributed with a Normal distribution about a
+specified mean length <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> with a standard deviation <span class="math inline">\(&lt;\)</span>stddev<span class="math inline">\(&gt;\)</span>.
+The mean weight of the fish in these age length cells is given from
+equation <a href="chap:stock.html#eq:wlen">(4.32)</a>, with <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> specified in the
+spawning data file. Hence, if the spawning process is to calculate a
+number of recruits to the model, the format for the spawning data file
+is shown below:</p>
+<pre><code>spawnsteps             &lt;vector of timesteps&gt;
+spawnareas             &lt;vector of areas&gt;
+firstspawnyear         &lt;first year that the spawning occurs&gt;
+lastspawnyear          &lt;last year that the spawning occurs&gt;
+spawnstocksandratios   &lt;stockname i&gt; &lt;ratio i&gt; ; for each stock i
+proportionfunction     &lt;see Length Selection&gt;
+mortalityfunction      &lt;see Length Selection&gt;
+weightlossfunction     &lt;see Length Selection&gt;
+recruitment            &lt;functionname&gt;  &lt;parameters&gt;
+stockparameters        &lt;mean&gt;  &lt;stddev&gt;  &lt;alpha&gt;  &lt;beta&gt;</code></pre>
+<p>The recruitment <span class="math inline">\(&lt;\)</span>functionname<span class="math inline">\(&gt;\)</span> defines which recruitment function to
+use to calculate the number of recruits to be added to the spawned
+stock. Currently there are 4 recruitment functions defined, and the
+valid recruitment function names are:</p>
+<ul>
+<li><code>fecundity</code> - use the Fecundity recruitment function</li>
+<li><code>simplessb</code> - use the SimpleSSB recruitment function</li>
+<li><code>ricker</code> - use the Ricker recruitment function</li>
+<li><code>bevertonholt</code> - use the BevertonHolt recruitment function</li>
+</ul>
+<div id="fecundity-recruitment-function" class="section level3">
+<h3><span class="header-section-number">4.15.1</span> Fecundity Recruitment Function</h3>
+<p>This recruitment function calculates the number of recruits to be added
+to the spawned stock as a function of the length, age, number and weight
+of the spawning stock, given by the following equation:</p>
+<p><span class="math display" id="eq:rec1">\[\begin{equation}
+\tag{4.40}
+R = p_{0} \sum_{\it ages}\sum_{\it lengths} l ^{p_{1}} a ^{p_{2}} N_{al} ^{p_{3}} W_{al} ^{p_{4}}\end{equation}\]</span></p>
+<p>Hence, to specify this recruitment function, the file format required
+is:</p>
+<pre><code>recruitment            fecundity  &lt;vector of 5 parameters&gt;</code></pre>
+</div>
+<div id="simplessb-recruitment-function" class="section level3">
+<h3><span class="header-section-number">4.15.2</span> SimpleSSB Recruitment Function</h3>
+<p>This recruitment function calculates the number of recruits to be added
+to the spawned stock as a simple proportion of the spawning stock
+biomass, given by the following equations:</p>
+<p><span class="math display" id="eq:ssb">\[\begin{equation}
+\tag{4.41}
+S = \sum_{\it ages}\sum_{\it lengths} N_{al} W_{al}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:rec2">\[\begin{equation}
+\tag{4.42}
+R = \mu S\end{equation}\]</span></p>
+<p>Hence, to specify this recruitment function, the file format required
+is:</p>
+<pre><code>recruitment            simplessb  &lt;mu&gt;</code></pre>
+</div>
+<div id="ricker-recruitment-function" class="section level3">
+<h3><span class="header-section-number">4.15.3</span> Ricker Recruitment Function</h3>
+<p>This recruitment function calculates the number of recruits to be added
+to the spawned stock, as a function of the spawning stock biomass (see
+equation <a href="chap:stock.html#eq:ssb">(4.41)</a>), based on the Ricker recruitment relationship given
+by the following equation:</p>
+<p><span class="math display" id="eq:rec3">\[\begin{equation}
+\tag{4.43}
+R = \mu S e ^{-\lambda S}\end{equation}\]</span></p>
+<p>Hence, to specify this recruitment function, the file format required
+is:</p>
+<pre><code>recruitment            ricker  &lt;mu&gt;  &lt;lambda&gt;</code></pre>
+</div>
+<div id="bevertonholt-recruitment-function" class="section level3">
+<h3><span class="header-section-number">4.15.4</span> BevertonHolt Recruitment Function</h3>
+<p>This recruitment function calculates the number of recruits to be added
+to the spawned stock, as a function of the spawning stock biomass (see
+equation <a href="chap:stock.html#eq:ssb">(4.41)</a>), based on the Beverton Holt recruitment
+relationship given by the following equation:</p>
+<p><span class="math display" id="eq:rec4">\[\begin{equation}
+\tag{4.44}
+R = \frac{\mu S}{\lambda + S}\end{equation}\]</span></p>
+<p>Hence, to specify this recruitment function, the file format required
+is:</p>
+<pre><code>recruitment            bevertonholt  &lt;mu&gt;  &lt;lambda&gt;</code></pre>
+</div>
+<div id="hockey-stick-recruitment-function" class="section level3">
+<h3><span class="header-section-number">4.15.5</span> Hockey stick Recruitment Function</h3>
+<p>This recruitment function calculates the number of recruits to be added
+to the spawned stock, as a function of the spawning stock biomass (see
+equation <a href="chap:stock.html#eq:ssb">(4.41)</a>), based on the Hockey stick recruitment relationship
+given by the following equation:</p>
+<p><span class="math display" id="eq:rec5">\[\begin{equation}
+\tag{4.45}
+R =  \begin{cases}
+R_0,&amp;\text{If } B_{lim} \leq S \\
+\frac{R_0S}{B_{lim}} &amp; \text{If } 0 \leq S \leq B_{lim}
+\end{cases}\end{equation}\]</span></p>
+<p>Hence, to specify this recruitment function, the file format required
+is:</p>
+<pre><code>recruitment            hockeystick  &lt;R_0&gt;  &lt;B_lim&gt;</code></pre>
+<p>Note that to be in-line with definition of renewals and initial
+conditions <span class="math inline">\(R_0\)</span> is defined in terms multiples of 10 000 fish.</p>
+</div>
+<div id="baleen-recruitment-function" class="section level3">
+<h3><span class="header-section-number">4.15.6</span> Baleen Recruitment Function</h3>
+<p>This recruitment function calculates the number of recruits to be added
+to the spawned stock, as a function of the spawning stock abundance (see
+equation <a href="chap:stock.html#eq:ssb">(4.41)</a>), based on the Baleen recruitment relationship
+given by the following equation:</p>
+<p><span class="math display" id="eq:rec6">\[\begin{equation}
+\tag{4.46}
+R =  B S (1 + A(1 - (S/K))^z)
+\end{equation}\]</span></p>
+<p>Hence, to specify this recruitment function, the file format required
+is:</p>
+<pre><code>recruitment            baleen  &lt;B&gt;  &lt;A&gt; &lt;K&gt; &lt;z&gt;</code></pre>
+<p>where <span class="math inline">\(B\)</span> is the birthrate, <span class="math inline">\(A\)</span> is the resilience parameter for the stock, <span class="math inline">\(K\)</span> the carrying capacity and <span class="math inline">\(z\)</span> the degree of compensation.</p>
+</div>
+</div>
+<div id="sec:lselection" class="section level2">
+<h2><span class="header-section-number">4.16</span> Length Selection</h2>
+<p>The length selection function determines the proportion of the length
+group that will be selected, in a similar way to the suitability
+functions (see section <a href="chap:stock.html#sec:suitability">4.9</a> above). To define a length selection
+function, it is necessary to specify the function, the name of the
+function ans the parameters for the function, as shown below:</p>
+<pre><code>&lt;function&gt;    &lt;functionname&gt; &lt;parameters&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>function<span class="math inline">\(&gt;\)</span> defines how the length selection function will be
+used (for an example, see
+section <a href="chap:stock.html#sec:stockspawn">4.15</a> above). The <span class="math inline">\(&lt;\)</span>functionname<span class="math inline">\(&gt;\)</span> defines which
+selection function is to be used to calculate the selection of the
+stock. Currently there are three selection functions defined, and the
+valid length selection function names are:</p>
+<ul>
+<li><code>constant</code> - use the Constant selection function</li>
+<li><code>straightline</code> - use the StraightLine selection function</li>
+<li><code>exponential</code> - use the Exponential selection function</li>
+</ul>
+<div id="constant-selection-function" class="section level3">
+<h3><span class="header-section-number">4.16.1</span> Constant Selection Function</h3>
+<p>This is a selection function, where there is no dependence on the length
+of the stock is given by the following equation:</p>
+<p><span class="math display" id="eq:constsel">\[\begin{equation}
+\tag{4.47}
+S(l) = \alpha
+\end{equation}\]</span></p>
+<p>Hence, to specify a constant selection function, the file format
+required is:</p>
+<pre><code>&lt;function&gt;    constant  &lt;alpha&gt;</code></pre>
+</div>
+<div id="straightline-selection-function" class="section level3">
+<h3><span class="header-section-number">4.16.2</span> StraightLine Selection Function</h3>
+<p>This is a selection function that has a linear dependence on the length
+of the stock is given by the following equation:</p>
+<p><span class="math display" id="eq:straightsel">\[\begin{equation}
+\tag{4.48}
+S(l) = \alpha l + \beta\end{equation}\]</span></p>
+<p>Hence, to specify a straight line selection function, the file format
+required is:</p>
+<pre><code>&lt;function&gt;    straightline  &lt;alpha&gt;  &lt;beta&gt;</code></pre>
+</div>
+<div id="exponential-selection-function" class="section level3">
+<h3><span class="header-section-number">4.16.3</span> Exponential Selection Function</h3>
+<p>This is a selection function that has a logarithmic dependence on the
+length of the stock is given by the following equation:</p>
+<p><span class="math display" id="eq:expsel">\[\begin{equation}
+\tag{4.49}
+S(l) = \frac{1}{1 + e^{ \alpha (l - l_{50})}}\end{equation}\]</span></p>
+<p>Note that the stock length dependence is actually dependant on the
+difference between the length of the stock and <span class="math inline">\(l_{50}\)</span>, which is the
+length of the stock with a 50% probability of selection. Hence, to
+specify this selection function, the file format required is:</p>
+<pre><code>&lt;function&gt;    exponential  &lt;alpha&gt;  &lt;l50&gt;</code></pre>
+</div>
+</div>
+<div id="sec:stockstray" class="section level2">
+<h2><span class="header-section-number">4.17</span> Straying</h2>
+<p>The straying section of the stock file determines if, and how, the stock
+will stray from one substock to another substock in the Gadget model.
+The format for the first part of the straying section of the stock file
+is given below:</p>
+<pre><code>doesstray              &lt;0 or 1&gt; ; 0 for no straying, 1 for straying</code></pre>
+<p>If the stock does not stray, then the following section doesn’t apply,
+and the stock file is complete. If the stock does stray, then further
+information is required about the straying data. This is given in a
+separate file, so the format for the straying data, in the main stock
+file, is given below:</p>
+<pre><code>doesstray              1
+strayfile              &lt;name of the straying data file&gt;</code></pre>
+<p>The straying data file defines what happens to the stock as it strays
+from one substock to another. The straying is length-dependent, so that
+a proportion of each length group (over all age groups) will move to the
+corresponding length group in a different substock. This process can be
+thought of as an extension to the transition process (see
+section <a href="chap:stock.html#sec:stockmove">4.13</a>).</p>
+<p>Straying is considered to be an annual event, that takes place on the
+same timestep and the same area in each year. To model the straying
+process in Gadget, it is necessary to specify the timestep and the area
+that the straying will take place on, the the names of the stocks to
+move the straying fish into, along with the ratio of the fish that will
+move into that particular stock (in a similar manner to that used for
+the transition process) and the length selection function to determine
+the proportion of the length group that will stray. This is done in the
+straying data file, as shown below:</p>
+<pre><code>straysteps             &lt;vector of timesteps&gt;
+strayareas             &lt;vector of areas&gt;
+straystocksandratios   &lt;stockname i&gt; &lt;ratio i&gt; ; for each stock i
+proportionfunction     &lt;see Length Selection&gt;</code></pre>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chap:model.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chap:tag.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "lunr",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

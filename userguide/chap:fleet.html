@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Gadget userguide</title>
-  <meta name="description" content="Gadget userguide" />
+  <title>7 Fleet Files | Gadget userguide</title>
+  <meta name="description" content="7 Fleet Files | Gadget userguide" />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Gadget userguide" />
+  <meta property="og:title" content="7 Fleet Files | Gadget userguide" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Gadget userguide" />
+  <meta name="twitter:title" content="7 Fleet Files | Gadget userguide" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="chap:input.html"/>
+<link rel="prev" href="chap:other.html"/>
+<link rel="next" href="chap:like.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -314,285 +314,285 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Gadget userguide</h1>
-<p class="author"><em>MFRI</em></p>
+<div id="chap:fleet" class="section level1">
+<h1><span class="header-section-number">7</span> Fleet Files</h1>
+<p>The fleet files contain the information about the fleets that are
+reducing the population of the stocks in the Gadget model. The fleets
+act as a simple predator in the model, with the landings data treated as
+the fleets “consumption” of the stock that is caught.</p>
+<p>To define fleets in the Gadget model, the “main” file must contain a
+list of the data files that contain the description of the fleets, and
+the format for this is shown below:</p>
+<pre><code>[fleet]
+fleetfiles             &lt;names of the fleet files&gt;</code></pre>
+<p>There are 5 types of fleets implemented in Gadget, and the main fleet
+file lists the fleets and their type, along with information about the
+fleet and the name of the datafile that contains information about the
+landings. The format for this file shown below, with each new fleet
+starting with the keyword [component]:</p>
+<pre><code>[component]
+&lt;type&gt;                 &lt;fleetname&gt;
+&lt;fleet data&gt;</code></pre>
+<p>The fleet data for each fleet type is covered in the sub sections below.
+The <span class="math inline">\(&lt;\)</span>type<span class="math inline">\(&gt;\)</span> defines the type of fleet for the <span class="math inline">\(&lt;\)</span>fleetname<span class="math inline">\(&gt;\)</span> fleet,
+and the 5 valid fleet types that can used in Gadget are:</p>
+<pre><code>TotalFleet 
+NumberFleet 
+LinearFleet 
+EffortFleet 
+QuotaFleet</code></pre>
+<div id="sec:totalfleet" class="section level2">
+<h2><span class="header-section-number">7.1</span> TotalFleet</h2>
+<p>The fleet type used that creates a predator based on the landings data
+(by biomass) for the fleet is called “TotalFleet”. This total amount
+landed is then split between the various stocks, and length groups of
+the stocks, according to
+equation <a href="chap:fleet.html#eq:tcons">(7.1)</a> below:</p>
+<p><span class="math display" id="eq:tcons">\[\begin{equation}
+\tag{7.1}
+C_{s}(l) = \frac{E S_{s}(l) N_{sl} W_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl} W_{sl}}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> E <span class="math inline">\(&gt;\)</span> is the biomass caught by the fleet <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the
+number of stock in the length cell <span class="math inline">\(&lt;\)</span> W <span class="math inline">\(&gt;\)</span> is the mean weight of the
+stock in the length cell <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the suitability function (see
+section <a href="chap:fleet.html#sec:fleetsuit">7.6</a>)</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function for each stock that the
+fleet will catch and a data file listing the biomass that the fleet will
+catch. The file format for the TotalFleet is given below:</p>
+<pre><code>[component]
+totalfleet             &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. The
+total amount that has been landed by the fleet is also required - this
+is taken from the landings data, based on timestep and area, and is
+specified in a separate file.</p>
 </div>
-<div id="chap:intro" class="section level1">
-<h1><span class="header-section-number">1</span> Introduction to Gadget</h1>
-<p>Gadget is the <strong>G</strong>lobally applicable <strong>A</strong>rea <strong>D</strong>isaggregated
-<strong>G</strong>eneral <strong>E</strong>cosystem <strong>T</strong>oolbox. Gadget is a flexible and powerful
-software tool that has been developed to model marine ecosystems,
-including both the impact of the interactions between species and the
-impact of fisheries harvesting the species. Gadget simulates these
-processes in a biologically realistic manner, and uses a framework to
-test the development of the modelled ecosystem in a statistically
-rigorous manner. Gadget has successfully been used to investigate the
-population dynamics of stock complexes in Icelandic waters, the Barents
-Sea, the North Sea and the Irish and Celtic Seas.</p>
-<div id="sec:whatisgadget" class="section level2">
-<h2><span class="header-section-number">1.1</span> What is Gadget?</h2>
-<p>Gadget can run complicated statistical models which take many features
-of the ecosystem into account. Gadget works by running an internal
-forward projection model based on many parameters describing the
-ecosystem, and then comparing the output from this model to observed
-measurements to get a likelihood score. The model ecosystem parameters
-can then be adjusted, and the model re-run, until an optimum is found,
-which corresponds to the model with the lowest likelihood score. This
-iterative, computationally intensive process is handled within Gadget,
-using a robust minimisation algorithm. The Gadget software framework
-consists of three parts:</p>
+<div id="sec:numberfleet" class="section level2">
+<h2><span class="header-section-number">7.2</span> NumberFleet</h2>
+<p>The fleet type used that creates a predator based on the number of the
+stock landed (not the biomass) is called “NumberFleet”. This total
+number caught is then split between the various stocks, and length
+groups of the stocks, according to
+equation <a href="chap:fleet.html#eq:ncons">(7.2)</a> below:</p>
+<p><span class="math display" id="eq:ncons">\[\begin{equation}
+\tag{7.2}
+C_{s}(l) = \frac{E S_{s}(l) N_{sl}}{\displaystyle \sum_{\it stocks} \sum_{\it lengths} S_{s}(l) N_{sl}}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> E <span class="math inline">\(&gt;\)</span> is the number caught by the fleet <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the
+number of stock in the length cell <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the suitability function
+(see section <a href="chap:fleet.html#sec:fleetsuit">7.6</a>)</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function for each stock that the
+fleet will catch and a data file listing the numbers that the fleet will
+catch. The file format for the NumberFleet is given below:</p>
+<pre><code>[component]
+numberfleet            &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. The
+total number of fish that has been caught by the fleet is also required
+- this is taken from the landings data, based on timestep and area, and
+is specified in a separate file.</p>
+</div>
+<div id="sec:linearfleet" class="section level2">
+<h2><span class="header-section-number">7.3</span> LinearFleet</h2>
+<p>The fleet type used that creates a predator that removes the caught fish
+based on the available biomass of the stock multiplied by a scaling
+factor is called “LinearFleet”. The biomass caught is then split between
+the various stocks, and length groups of the stocks, according to
+equation <a href="chap:fleet.html#eq:lcons">(7.3)</a> below:</p>
+<p><span class="math display" id="eq:lcons">\[\begin{equation}
+\tag{7.3}
+C_{s}(l) = E \Delta t S_{s}(l) N_{sl} W_{sl}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> E <span class="math inline">\(&gt;\)</span> is the scaling factor for the stock that is to be
+caught, per month <span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span>
+is the number of stock in the length cell <span class="math inline">\(&lt;\)</span> W <span class="math inline">\(&gt;\)</span> is the mean weight
+of the stock in the length cell <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the suitability function
+(see section <a href="chap:fleet.html#sec:fleetsuit">7.6</a>)</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function for each stock that the
+fleet will catch and a data file listing the fishing level for the
+fleet. The file format for the LinearFleet is given below:</p>
+<pre><code>[component]
+linearfleet            &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. The
+scaling factor to be used when calculating the amount that the fleet
+will catch is also required, and this is specified in a separate file.</p>
+<p>The fleet of type LinearFleet acts a simple predator, and can be used
+for fleets acting in the future, when the landings data is not
+available.</p>
+</div>
+<div id="sec:effortfleet" class="section level2">
+<h2><span class="header-section-number">7.4</span> EffortFleet</h2>
+<p>The fleet type used that creates a predator that removes the caught fish
+based on the available biomass of the stock multiplied by a scaling
+factor and a ‘catchability’ parameter for that stock is called
+“EffortFleet”. The biomass caught is then split between the various
+stocks, and length groups of the stocks, according to
+equation <a href="chap:fleet.html#eq:econs">(7.4)</a> below:</p>
+<p><span class="math display" id="eq:econs">\[\begin{equation}
+\tag{7.4}
+C_{s}(l) = E q_{s} \Delta t S_{s}(l) N_{sl} W_{sl}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> E <span class="math inline">\(&gt;\)</span> is the scaling factor for the stock that is to be
+caught, per month <span class="math inline">\(&lt;\)</span> q <span class="math inline">\(&gt;\)</span> is the catchability parameter for that stock
+<span class="math inline">\(&lt;\Delta t&gt;\)</span> is the length of the timestep <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the number of
+stock in the length cell <span class="math inline">\(&lt;\)</span> W <span class="math inline">\(&gt;\)</span> is the mean weight of the stock in
+the length cell <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the suitability function (see
+section <a href="chap:fleet.html#sec:fleetsuit">7.6</a>)</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function and catchability
+parameter for each stock that the fleet will catch and a data file
+listing the proportion of each stock that the fleet will catch. The file
+format for the EffortFleet is given below:</p>
+<pre><code>[component]
+effortfleet            &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+catchability           &lt;stock catchability parameters&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. The
+scaling factor to be used when calculating the amount that the fleet
+will catch is also required, and this is specified in a separate file.</p>
+<p>The fleet of type EffortFleet is a multi-species extension to the fleet
+of type LinearFleet (see
+section <a href="chap:fleet.html#sec:linearfleet">7.3</a> above). This means that when a fleet is
+used to catch more than one species (either directly or as bycatch) the
+different catchability for these species can be taken into account. This
+catchability parameter is specified by listing the names of the prey and
+the associated preference value, as shown in the example below:</p>
+<pre><code>...
+catchability
+&lt;name of stock 1&gt;      &lt;catchability for stock 1&gt;
+&lt;name of stock 2&gt;      &lt;catchability for stock 2&gt;
+amount
+...</code></pre>
+</div>
+<div id="sec:quotafleet" class="section level2">
+<h2><span class="header-section-number">7.5</span> QuotaFleet</h2>
+<p>The fleet type used that creates a predator that removes the caught fish
+based on the available biomass of the stock multiplied by a scaling
+factor set according to a simple harvest control rule is called
+“QuotaFleet”. The biomass caught is then split between the various
+stocks, and length groups of the stocks, according to
+equation <a href="chap:fleet.html#eq:lcons">(7.3)</a> (see
+section <a href="chap:fleet.html#sec:linearfleet">7.3</a> above). The scaling factor (the parameter
+“E” in the equation above) is set according to a simple harvest control
+rule.</p>
+<p>This fleet type is defined by specifying the fleet name and areas it
+operates on, along with a suitability function for each stock that the
+fleet will catch, a simple harvest control rule and a data file listing
+the proportion of each stock that the fleet will catch. The file format
+for the QuotaFleet is given below:</p>
+<pre><code>[component]
+quotafleet             &lt;fleetname&gt;
+livesonareas           &lt;areas&gt;
+multiplicative         &lt;multi&gt;
+suitability            &lt;see Fleet Suitability&gt;
+quotafunction          &lt;function name&gt;
+biomasslevel           &lt;vector of biomass levels&gt;
+quotalevel             &lt;vector of quota levels&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>multi<span class="math inline">\(&gt;\)</span> value is a multiplicative constant used to
+scale the data if required - the default value for this multiplier is 1
+(ie. no scaling).</p>
+<p>The fleets act as a predator, so Gadget also requires a suitability
+function to be defined for the predation of the stocks in the model. A
+scaling factor that can be used when calculating the amount that the
+fleet will catch is also required, and this is specified in a separate
+file (although this is usually set to 1, since the scaling factor to be
+used is multiplied by that calculated using the simple harvest control
+rule below).</p>
+<p>The simple harvest control rule that is used to calculate the scaling
+factor to be used to determine the fishing level is defined by the
+<span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> value, along with the <span class="math inline">\(&lt;\)</span>biomasslevel<span class="math inline">\(&gt;\)</span> and
+<span class="math inline">\(&lt;\)</span>quotalevel<span class="math inline">\(&gt;\)</span> vectors. Currently there are 6 quota functions defined,
+and the valid function names are:</p>
 <ul>
-<li><p>a parametric model to <strong>simulate</strong> the ecosystem</p></li>
-<li><p>statistical functions to <strong>compare</strong> the model output to data</p></li>
-<li><p>search algorithms to <strong>optimise</strong> the model parameters</p></li>
+<li><code>simple</code> - use a simple harvest control rule, based on the biomass of each stock</li>
+<li><code>annual</code> - use a annual harvest control rule, based on the biomass of each stock</li>
+<li><code>simplesum</code> - use a simple harvest control rule, based on the biomass of all the stocks</li>
+<li><code>annualsum</code> - use a annual harvest control rule, based on the biomass of all the stocks</li>
+<li><code>simpleselect</code> - use a simple harvest control rule, based on the biomass of selected stocks</li>
+<li><code>annualselect</code> - use a annual harvest control rule, based on the biomass of selected stocks</li>
 </ul>
-<p>Gadget allows the user to include a number of features of the ecosystem
-into the model: One or more species, each of which may be split into
-multiple components; multiple areas with migration between areas;
-predation between and within species; growth; maturation; reproduction
-and recruitment; multiple commercial and survey fleets taking catches
-from the populations.</p>
-<p>Like any large piece of code, Gadget is based on previous ideas by
-several authors. Conceptually the modelling framework extends earlier
-multi species programming work such as MSVPA and MULTSPEC into a more
-generic statistical framework. Alternatively, Gadget is a conceptual
-extension of the Stock Synthesis statistical assessment single-species
-framework into a multi species setting.</p>
-<p>The initial BORMICON code was developed as part of a multi species
-programme implemented at the Marine Research Institute in Reykjavik,
-Iceland, starting in 1992 with Ólafur K Pálsson as project coordinator
-and Gunnar Stefánsson coordinating the modelling work. Subsequently the
-code became the basis for Fleksibest at the Institute of Marine Research
-in Bergen, Norway. Further development work in 1999-2003 was partly
-funded by EU grant QLK5-CT1999-01609 (“Development of Structurally
-Detailed Statistically Testable Models of Marine Populations”).
-Development work for 2004-2006 was partly funded by EU grant 502482
-(“Critical Interactions Between Species and their Implications for a
-Precautionary Fisheries Management in a Variable Environment - a
-Modelling Approach”). Developement work for 2010-2012 was partly funded
-by EU project “Defineit” under the MariFish ERA-NET (grant
-ERAC-CT-2006-025989)</p>
-<p>The Gadget code is derived from the original BORMICON code of Halldór
-Narfi Stefánsson, Höskuldur Björnsson and Hersir Sigurgeirsson.
-Subsequent contributions include program additions by Morten Nygaard
-Åsnes and Kristin Frøysa to include the Fleksibest model. The ability to
-run in parallel across a network of computers using PVM was implemented
-primarily by Auðbjörg Jakobsdóttir with input from several other people,
-including Jón Guðmundsson who worked on a variant based on Condor.
-Several mathematical additions and changes to allow for parallel
-minimisation on a network were implemented by Þórdís Linda Þórarinsdóttir
-and Kristjana Ýr Jónsdóttir.</p>
-<p>More recent changes include the work to use information from tagging
-experiments, which was implemented primarily by Sigurður Hannesson. The
-work on multivariate distributions was implemented by Bjarki Þór
-Elvarsson. Recent additions including major code cleanups, modifications
-to the input formats and debugging operations have been led by James
-Begley, who is the current maintainer of the code and coordinator of all
-programming efforts.</p>
+<p>Note that if the <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> value is set to either simpleselect
+or annualselect, then it is necessary to define which stocks to use to
+determine the fishing level. This is done be additionally specifying a
+<span class="math inline">\(&lt;\)</span>selectstocks<span class="math inline">\(&gt;\)</span> vector which is a list of the stocks to use, as given
+in the list below:</p>
+<pre><code>...
+biomasslevel           &lt;vector of biomass levels&gt;
+quotalevel             &lt;vector of quota levels&gt;
+selectstocks           &lt;vector of stocks to base the quote on&gt;
+amount                 &lt;see Fleet Amounts&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>biomasslevel<span class="math inline">\(&gt;\)</span> vector is a list of <span class="math inline">\(n\)</span> biomass points at which
+the fishing level will change, and the <span class="math inline">\(&lt;\)</span>quotalevel<span class="math inline">\(&gt;\)</span> vector is the
+corresponding list of <span class="math inline">\(n+1\)</span> fishing levels. Note that the first
+quotalevel value corresponds to the fishing level that will be used when
+the biomass is between 0 and the first biomasslevel value, so the
+quotalevel vector must have one more entry than the biomasslevel vector.</p>
+<p>An example of valid biomasslevel and quotalevel vectors is given below:</p>
+<pre><code>biomasslevel           10000  250000
+quotalevel             0.1  0.4  0.9</code></pre>
+<p>The fishing level for the stock in the example shown above would be set
+to 0.1 if the biomass of the stock is less than 10,000 kilogrammes, 0.4
+if the biomass is between 10,000 and 250,000 kilogrammes and 0.9 if the
+biomass is above 250,000 kilogrammes. Note that the biomasslevel vector
+has 2 entries, and that the quotalevel vector has a third entry.</p>
 </div>
-<div id="sec:gettinggadget" class="section level2">
-<h2><span class="header-section-number">1.2</span> Getting Gadget</h2>
-<p>Gadget is distributed via GitHub and can be obtained at:</p>
-<blockquote>
-<p><a href="http://github.com/Hafro/gadget2" class="uri">http://github.com/Hafro/gadget2</a></p>
-</blockquote>
-<p>That page will have instructions for how to install the most recent
-version of Gadget. Follow the instructions there to install</p>
-<p>Gadget is a program that runs on a Unix computing platform, and is
-regularly tested on machines running versions of Linux, Mac OSX and
-Windows. It should also run on other versions of Unix, but this may
-require modifications to the makefile in order to do so. Gadget is
-distributed as a set of source code files, which need to be compiled
-into an executable program before it can be run. Follow the instructions
-on the link above to fetch and compile the Gadget sources.</p>
+<div id="sec:fleetsuit" class="section level2">
+<h2><span class="header-section-number">7.6</span> Fleet Suitability</h2>
+<p>The suitability determines how the fleets act on the stocks that are
+caught. Since Gadget treats the fleets as predators of the stocks, the
+format for the suitability functions for the fleets is the same as the
+format for the suitability functions of the stock when they are acting
+as a predator. The format for the suitability functions as discussed in
+section <a href="chap:stock.html#sec:suitability">4.9</a> above. Note that in the equations for the
+suitability functions, the ‘length’ of the predator is a meaningless
+concept when the predator is a fleet.</p>
 </div>
-<div id="sec:runninggadget" class="section level2">
-<h2><span class="header-section-number">1.3</span> Running Gadget</h2>
-<p>Gadget is a command line program that runs on a Linux computing
-platform. To start Gadget, simply type the following at a standard Linux
-prompt:</p>
-<pre><code>gadget &lt;options&gt;</code></pre>
-<p>where <span class="math inline">\(&lt;\)</span>options<span class="math inline">\(&gt;\)</span> are a combination of the starting switches described
-in the next section. Note that this assumes that the Gadget executable
-has been placed in a directory that is included in the $PATH, which
-might not be the case for some Linux distributions. If this is the case,
-Gadget should be started by including the path to the Gadget executable,
-for example by typing if the Gadget executable is in the current
-directory.</p>
-<p>Gadget is not an interactive program, so once it has started there is no
-need for any further input from the user. However, if Gadget was started
-incorrectly (for example, using the wrong input files) then Gadget can
-be stopped by pressing <span class="math inline">\(&lt;\)</span>CTRL<span class="math inline">\(&gt;&lt;\)</span>C<span class="math inline">\(&gt;\)</span>, which will interrupt the
-calculations, displaying a menu from which it is possible to either
-store the current calculations to a text file, or to exit (by pressing
-<span class="math inline">\(&lt;\)</span>Q<span class="math inline">\(&gt;\)</span>).</p>
-<p>When Gadget starts, it will look for a file called “main”, which
-contains a list of all the other data files required. Gadget will search
-for this file in the following 2 locations:</p>
-<ol style="list-style-type: decimal">
-<li><p>the directory specified by the Linux environment variable called
-“GADGET_WORKING_DIR”, optionally taking data from the directory
-specified by the Linux environment variable called
-“GADGET_DATA_DIR”</p></li>
-<li><p>the current directory (ie. from where Gadget has been started) if
-these environment variables have not been set (note that this is the
-default location)</p></li>
-</ol>
-<p>When Gadget is reading in the input data files, these files will be
-checked to ensure that they are in the correct format, and if there is
-an error in the format Gadget will print an error message and stop. Note
-that when Gadget is checking the format of a data file containing a
-number of columns (eg. the “area” file) it will only check the first
-data line in the file (so, for the case of the “area” file it will check
-that there are 4 entries on the first row and then assume that all the
-other rows also have 4 entries). Hopefully, there should be enough
-information in these error messages to lead the user to the input file
-that is causing the error.</p>
-<p>If all else fails, and the error messages do not lead the user to the
-source of the error, then there is an email address set up for any
-difficulties or questions that may arise, or reporting any bugs that get
-found. In addition to sorting out any problems that the user may be
-getting, we can also try to help with interpreting the output. This
-email address is gadgethelp@hafro.is</p>
-<p>Sending an email to this address should get a response within a couple
-of working days. This email address can also be used to give us any
-feedback on the usefulness (or otherwise) of Gadget, so let us know what
-you think!</p>
-</div>
-<div id="sec:starting" class="section level2">
-<h2><span class="header-section-number">1.4</span> Starting Switches</h2>
-<p>The following is a list of the command line switches that Gadget will
-recognise, together with a brief description of what the switch means to
-the running of the Gadget model.</p>
-<pre><code>gadget -s</code></pre>
-<p>Starting Gadget with the -s switch will start a simulation run, where a
-single run of the model will take place. This option is useful since it
-will give the model output (see Print Files,
-chapter <a href="chap:print.html#chap:print">9</a>),
-and it is used when running large Gadget models, using the paramin
-parallel processing optimiser to find the optimum.</p>
-<pre><code>gadget -l</code></pre>
-<p>Starting Gadget with the -l switch will start a optimising run, where
-the overall likelihood score will be reduced to an optimum, depending on
-the optimising information given (see the -opt switch).</p>
-<pre><code>gadget -n</code></pre>
-<p>Starting Gadget with the -n switch will start a network run, used in
-conjunction with the paramin optimiser to find an optimal solution for
-large models.</p>
-<pre><code>gadget -v
-gadget --version</code></pre>
-<p>Starting Gadget with the -v (or --version) switch will display the
-version of Gadget that is being run.</p>
-<pre><code>gadget -h
-gadget --help</code></pre>
-<p>Starting Gadget with the -h (or --help) switch will display a help
-screen, giving information about the various starting switches that can
-be used.</p>
-<pre><code>gadget -i &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -i switch will give Gadget an inputfile file
-from which the initial values and bounds of any variables can be read
-(see Parameter Files, chapter <a href="chap:param.html#chap:param">10</a>, for more information on the format of this
-file).</p>
-<pre><code>gadget -opt &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -opt switch will give Gadget an optimisation
-input file, from which the information about the optimisation routines
-will be read. This will specify the type of optimisation to perform, and
-also parameters for that optimisation routine (see Optimisation Files,
-chapter <a href="chap:optim.html#chap:optim">11</a>,
-for more information on the format of this file).</p>
-<pre><code>gadget -main &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -main switch will specify a filename for the
-main Gadget model input file, which contains links to all the other data
-files that are to be used by Gadget (see Main File,
-section <a href="chap:model.html#sec:mainfile">3.1</a>, for more information on the format of this
-file). If Gadget is started without the -main switch, Gadget will use
-the default filename “main” as the name for the main file.</p>
-<pre><code>gadget -p &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -p switch specifies the file that Gadget will
-use to print the final values and bounds of the variables, in the same
-format as for the inputfile. This file can then be used as the starting
-point for a subsequent Gadget run, if required. This file will always be
-generated, and if Gadget is started without the -p switch the default
-filename is “params.out” which will be created in the current directory
-(see Output Files, chapter <a href="chap:output.html#chap:output">12</a>, for more information on the format of this
-file).</p>
-<pre><code>gadget -o &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -o switch specifies the file that Gadget will
-use to print the score from the likelihood calculations. This file will
-give details on the parameters that have been used, the likelihood
-components that have been used, and the values for these parameters and
-likelihood components. This can be a large file if Gadget is performing
-an optimising run (see Output Files,
-chapter <a href="chap:output.html#chap:output">12</a>, for more information on the format of this
-file).</p>
-<pre><code>gadget -print &lt;number&gt;</code></pre>
-<p>Starting Gadget with the -print switch will specify the frequency with
-which information is written to the likelihood output file (specified
-with the -o switch). The default value for this is 1, meaning that the
-likelihood information is written for every iteration.</p>
-<pre><code>gadget -precision &lt;number&gt;</code></pre>
-<p>Starting Gadget with the -precision switch will specify the number of
-digits to be used when printing the output from the likelihood
-calculations to files specified with the -o switch.</p>
-<pre><code>gadget -log &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -log switch will specify a file to which Gadget
-will write logging messages to keep a record of internal Gadget actions.
-This can be a large file if Gadget is performing an optimising run (see
-Log Output, section <a href="chap:output.html#sec:logoutput">12.3</a>, for more information on the format of this
-file).</p>
-<pre><code>gadget -loglevel &lt;number&gt;</code></pre>
-<p>Starting Gadget with the -loglevel switch will specify the level of
-detail that is to be used by Gadget when logging messages (both to the
-screen and to a log file if one has been specified with the -log
-switch). If Gadget is started without the -loglevel switch then the
-default is for warning messages and error messages to be shown during a
-simulation run (when Gadget is started with the -s switch) and only
-error messages are shown during an optimising run (when Gadget is
-started with the -l switch).</p>
-<pre><code>gadget -seed &lt;number&gt;</code></pre>
-<p>Starting Gadget with the -seed switch will specify the value that is
-used to initialise the random number generator used within Gadget (see
-Repeatability, section <a href="chap:optim.html#sec:repeat">11.5</a> for more information on the use of the random
-number generator within Gadget runs).</p>
-<pre><code>gadget -m &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -m switch will specify a file from which Gadget
-can read the other command line options. This file should contain a
-simple list of the switches and their values, as they would be entered
-from the command line.</p>
-<pre><code>gadget -printinitial &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -printinitial switch will specify a file to
-which Gadget will write all internal information for the model at the
-start of the run (ie. the stock populations, likelihood calculations and
-other information from before the first timestep). This file will be
-large for moderately complicated models, and it is of most use for
-debugging purposes.</p>
-<pre><code>gadget -printfinal &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -printfinal switch will specify a file to which
-Gadget will write all internal information for the model at the end of
-the run (ie. the stock populations, likelihood calculations and other
-information from after the last timestep). This file will be large for
-moderately complicated models, and it is of most use for debugging
-purposes.</p>
-<pre><code>gadget -maxratio &lt;ratio&gt;</code></pre>
-<p>Starting Gadget with the -maxratio switch will specify the maximum ratio
-of prey that is allowed to be “consumed” on any one timestep. This
-consumption includes both the consumption by other stocks and the catch
-by any fleets. The default value is 0.95, which ensures that no more
-than 95% of the available stock biomass is consumed on a single
-timestep.</p>
-<p>Most of these switches can be combined to specify more information about
-the Gadget run that will be performed. For instance:</p>
-<pre><code>gadget -l -i inputfile.txt -o likelihood.txt -opt optinfo.txt -print 10</code></pre>
-<p>will start Gadget for a likelihood run, taking the initial values and
-information about the parameters from the file inputfile.txt, with the
-optimisation being done in accordance with the information in
-optinfo.txt, and printing likelihood information (every 10 iterations)
-to the file likelihood.txt.</p>
-<p>Note that it is not possible to do both a simulation run and a
-likelihood run at the same time, and starting Gadget with both the -l
-and -s switches will result in a warning, after which Gadget will
-perform a simulation run, with the -l switch being ignored.</p>
+<div id="sec:fleetamount" class="section level2">
+<h2><span class="header-section-number">7.7</span> Fleet Amounts</h2>
+<p>The amounts section of the fleet file gives the landings data for the
+fleets. This data is listed in a column format in a separate file, so
+the main fleet file simply gives the name of this fleet data file, as
+shown in the example below:</p>
+<pre><code>amount                 &lt;name of data file&gt;</code></pre>
+<p>For fleets of type TotalFleet or NumberFleet, the data file is a list of
+year, timestep, area, fleetname and then the amount of catch landed
+(either biomass or number), taken from landings data, for that
+timestep/area/fleet combination:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;fleetname&gt;  &lt;amount&gt;</code></pre>
+<p>For fleets of type LinearFleet, EffortFleet or QuotaFleet, the data file
+is a list of year, timestep, area, fleetname and then the scaling factor
+to be used when calculating the amount of the catch for that
+timestep/area/fleet combination:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;fleetname&gt;  &lt;scaling factor&gt;</code></pre>
 </div>
 </div>
             </section>
@@ -600,8 +600,8 @@ perform a simulation run, with the -l switch being ignored.</p>
           </div>
         </div>
       </div>
-
-<a href="chap:input.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="chap:other.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chap:like.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

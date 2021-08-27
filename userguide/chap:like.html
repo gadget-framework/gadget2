@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>8 Likelihood Files | Gadget userguide</title>
+  <meta name="description" content="8 Likelihood Files | Gadget userguide" />
+  <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="8 Likelihood Files | Gadget userguide" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="8 Likelihood Files | Gadget userguide" />
+  
+  
+  
+
+<meta name="author" content="MFRI" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="chap:fleet.html"/>
+<link rel="next" href="chap:print.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction to Gadget</a><ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#sec:whatisgadget"><i class="fa fa-check"></i><b>1.1</b> What is Gadget?</a></li>
+<li class="chapter" data-level="1.2" data-path="index.html"><a href="index.html#sec:gettinggadget"><i class="fa fa-check"></i><b>1.2</b> Getting Gadget</a></li>
+<li class="chapter" data-level="1.3" data-path="index.html"><a href="index.html#sec:runninggadget"><i class="fa fa-check"></i><b>1.3</b> Running Gadget</a></li>
+<li class="chapter" data-level="1.4" data-path="index.html"><a href="index.html#sec:starting"><i class="fa fa-check"></i><b>1.4</b> Starting Switches</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="chap:input.html"><a href="chap:input.html"><i class="fa fa-check"></i><b>2</b> Input Files</a><ul>
+<li class="chapter" data-level="2.1" data-path="chap:input.html"><a href="chap:input.html#sec:comments"><i class="fa fa-check"></i><b>2.1</b> Comments in Input Files</a></li>
+<li class="chapter" data-level="2.2" data-path="chap:input.html"><a href="chap:input.html#sec:whatdoeshash"><i class="fa fa-check"></i><b>2.2</b> What Does The # Mean?</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="chap:input.html"><a href="chap:input.html#switches"><i class="fa fa-check"></i><b>2.2.1</b> Switches</a></li>
+<li class="chapter" data-level="2.2.2" data-path="chap:input.html"><a href="chap:input.html#functions"><i class="fa fa-check"></i><b>2.2.2</b> Functions</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="chap:model.html"><a href="chap:model.html"><i class="fa fa-check"></i><b>3</b> Model Files</a><ul>
+<li class="chapter" data-level="3.1" data-path="chap:model.html"><a href="chap:model.html#sec:mainfile"><i class="fa fa-check"></i><b>3.1</b> Main File</a></li>
+<li class="chapter" data-level="3.2" data-path="chap:model.html"><a href="chap:model.html#sec:timefile"><i class="fa fa-check"></i><b>3.2</b> Time File</a></li>
+<li class="chapter" data-level="3.3" data-path="chap:model.html"><a href="chap:model.html#sec:areafile"><i class="fa fa-check"></i><b>3.3</b> Area File</a></li>
+<li class="chapter" data-level="3.4" data-path="chap:model.html"><a href="chap:model.html#sec:otherinputfile"><i class="fa fa-check"></i><b>3.4</b> Other Input Data Files</a><ul>
+<li class="chapter" data-level="3.4.1" data-path="chap:model.html"><a href="chap:model.html#aggregation-files"><i class="fa fa-check"></i><b>3.4.1</b> Aggregation Files</a></li>
+<li class="chapter" data-level="3.4.2" data-path="chap:model.html"><a href="chap:model.html#subsec:timevar"><i class="fa fa-check"></i><b>3.4.2</b> TimeVariable Files</a></li>
+<li class="chapter" data-level="3.4.3" data-path="chap:model.html"><a href="chap:model.html#subsec:stockvar"><i class="fa fa-check"></i><b>3.4.3</b> StockVariable Files</a></li>
+<li class="chapter" data-level="3.4.4" data-path="chap:model.html"><a href="chap:model.html#subsec:aat"><i class="fa fa-check"></i><b>3.4.4</b> ActionAtTime</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="chap:stock.html"><a href="chap:stock.html"><i class="fa fa-check"></i><b>4</b> Stock Files</a><ul>
+<li class="chapter" data-level="4.1" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockrefweight"><i class="fa fa-check"></i><b>4.1</b> Reference Weight</a></li>
+<li class="chapter" data-level="4.2" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockgrowthlength"><i class="fa fa-check"></i><b>4.2</b> Growth and Eat Lengths</a></li>
+<li class="chapter" data-level="4.3" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockgrowth"><i class="fa fa-check"></i><b>4.3</b> Growth</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth1"><i class="fa fa-check"></i><b>4.3.1</b> MULTSPEC Growth Function</a></li>
+<li class="chapter" data-level="4.3.2" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth3"><i class="fa fa-check"></i><b>4.3.2</b> WeightVB Growth Function</a></li>
+<li class="chapter" data-level="4.3.3" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth4"><i class="fa fa-check"></i><b>4.3.3</b> WeightJones Growth Function</a></li>
+<li class="chapter" data-level="4.3.4" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth5"><i class="fa fa-check"></i><b>4.3.4</b> WeightVBExpanded Growth Function</a></li>
+<li class="chapter" data-level="4.3.5" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth6"><i class="fa fa-check"></i><b>4.3.5</b> LengthVB Growth Function</a></li>
+<li class="chapter" data-level="4.3.6" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth7"><i class="fa fa-check"></i><b>4.3.6</b> LengthPower Growth Function</a></li>
+<li class="chapter" data-level="4.3.7" data-path="chap:stock.html"><a href="chap:stock.html#subsec:growth8"><i class="fa fa-check"></i><b>4.3.7</b> LengthVBSimple Growth Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockgrowthimplement"><i class="fa fa-check"></i><b>4.4</b> Growth Implementation</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="chap:stock.html"><a href="chap:stock.html#beta-binomial"><i class="fa fa-check"></i><b>4.4.1</b> Beta-Binomial</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="chap:stock.html"><a href="chap:stock.html#sec:stocknatmort"><i class="fa fa-check"></i><b>4.5</b> Natural Mortality</a></li>
+<li class="chapter" data-level="4.6" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockprey"><i class="fa fa-check"></i><b>4.6</b> Stock Prey</a></li>
+<li class="chapter" data-level="4.7" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockpredator"><i class="fa fa-check"></i><b>4.7</b> Stock Predator</a></li>
+<li class="chapter" data-level="4.8" data-path="chap:stock.html"><a href="chap:stock.html#sec:consumption"><i class="fa fa-check"></i><b>4.8</b> Consumption</a></li>
+<li class="chapter" data-level="4.9" data-path="chap:stock.html"><a href="chap:stock.html#sec:suitability"><i class="fa fa-check"></i><b>4.9</b> Suitability</a><ul>
+<li class="chapter" data-level="4.9.1" data-path="chap:stock.html"><a href="chap:stock.html#constant-suitability-function"><i class="fa fa-check"></i><b>4.9.1</b> Constant Suitability Function</a></li>
+<li class="chapter" data-level="4.9.2" data-path="chap:stock.html"><a href="chap:stock.html#straightline-suitability-function"><i class="fa fa-check"></i><b>4.9.2</b> StraightLine Suitability Function</a></li>
+<li class="chapter" data-level="4.9.3" data-path="chap:stock.html"><a href="chap:stock.html#exponential-suitability-function"><i class="fa fa-check"></i><b>4.9.3</b> Exponential Suitability Function</a></li>
+<li class="chapter" data-level="4.9.4" data-path="chap:stock.html"><a href="chap:stock.html#exponentiall50-suitability-function"><i class="fa fa-check"></i><b>4.9.4</b> ExponentialL50 Suitability Function</a></li>
+<li class="chapter" data-level="4.9.5" data-path="chap:stock.html"><a href="chap:stock.html#richards-suitability-function"><i class="fa fa-check"></i><b>4.9.5</b> Richards Suitability Function</a></li>
+<li class="chapter" data-level="4.9.6" data-path="chap:stock.html"><a href="chap:stock.html#andersen-suitability-function"><i class="fa fa-check"></i><b>4.9.6</b> Andersen Suitability Function</a></li>
+<li class="chapter" data-level="4.9.7" data-path="chap:stock.html"><a href="chap:stock.html#andersen-fleet-suitability-function"><i class="fa fa-check"></i><b>4.9.7</b> Andersen Fleet Suitability Function</a></li>
+<li class="chapter" data-level="4.9.8" data-path="chap:stock.html"><a href="chap:stock.html#gamma-suitability-function"><i class="fa fa-check"></i><b>4.9.8</b> Gamma Suitability Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.10" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockinitial"><i class="fa fa-check"></i><b>4.10</b> Initial Conditions</a><ul>
+<li class="chapter" data-level="4.10.1" data-path="chap:stock.html"><a href="chap:stock.html#normal-condition-distribution"><i class="fa fa-check"></i><b>4.10.1</b> Normal Condition Distribution</a></li>
+<li class="chapter" data-level="4.10.2" data-path="chap:stock.html"><a href="chap:stock.html#normal-parametric-distribution"><i class="fa fa-check"></i><b>4.10.2</b> Normal Parametric Distribution</a></li>
+<li class="chapter" data-level="4.10.3" data-path="chap:stock.html"><a href="chap:stock.html#numerical-distribution"><i class="fa fa-check"></i><b>4.10.3</b> Numerical Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.11" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockmigrate"><i class="fa fa-check"></i><b>4.11</b> Migration</a><ul>
+<li class="chapter" data-level="4.11.1" data-path="chap:stock.html"><a href="chap:stock.html#migration-matrices"><i class="fa fa-check"></i><b>4.11.1</b> Migration Matrices</a></li>
+<li class="chapter" data-level="4.11.2" data-path="chap:stock.html"><a href="chap:stock.html#migration-ratios"><i class="fa fa-check"></i><b>4.11.2</b> Migration Ratios</a></li>
+</ul></li>
+<li class="chapter" data-level="4.12" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockmature"><i class="fa fa-check"></i><b>4.12</b> Maturation</a><ul>
+<li class="chapter" data-level="4.12.1" data-path="chap:stock.html"><a href="chap:stock.html#constant-maturity-function"><i class="fa fa-check"></i><b>4.12.1</b> Constant Maturity Function</a></li>
+<li class="chapter" data-level="4.12.2" data-path="chap:stock.html"><a href="chap:stock.html#constantweight-maturity-function"><i class="fa fa-check"></i><b>4.12.2</b> ConstantWeight Maturity Function</a></li>
+<li class="chapter" data-level="4.12.3" data-path="chap:stock.html"><a href="chap:stock.html#fixedlength-maturity-function"><i class="fa fa-check"></i><b>4.12.3</b> FixedLength Maturity Function</a></li>
+<li class="chapter" data-level="4.12.4" data-path="chap:stock.html"><a href="chap:stock.html#continuous-maturity-function"><i class="fa fa-check"></i><b>4.12.4</b> Continuous Maturity Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.13" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockmove"><i class="fa fa-check"></i><b>4.13</b> Movement (“Transition”)</a></li>
+<li class="chapter" data-level="4.14" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockrenew"><i class="fa fa-check"></i><b>4.14</b> Renewal (“Recruitment”)</a><ul>
+<li class="chapter" data-level="4.14.1" data-path="chap:stock.html"><a href="chap:stock.html#normal-condition-distribution-1"><i class="fa fa-check"></i><b>4.14.1</b> Normal Condition Distribution</a></li>
+<li class="chapter" data-level="4.14.2" data-path="chap:stock.html"><a href="chap:stock.html#normal-parametric-distribution-1"><i class="fa fa-check"></i><b>4.14.2</b> Normal Parametric Distribution</a></li>
+<li class="chapter" data-level="4.14.3" data-path="chap:stock.html"><a href="chap:stock.html#numerical-distribution-1"><i class="fa fa-check"></i><b>4.14.3</b> Numerical Distribution</a></li>
+</ul></li>
+<li class="chapter" data-level="4.15" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockspawn"><i class="fa fa-check"></i><b>4.15</b> Spawning</a><ul>
+<li class="chapter" data-level="4.15.1" data-path="chap:stock.html"><a href="chap:stock.html#fecundity-recruitment-function"><i class="fa fa-check"></i><b>4.15.1</b> Fecundity Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.2" data-path="chap:stock.html"><a href="chap:stock.html#simplessb-recruitment-function"><i class="fa fa-check"></i><b>4.15.2</b> SimpleSSB Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.3" data-path="chap:stock.html"><a href="chap:stock.html#ricker-recruitment-function"><i class="fa fa-check"></i><b>4.15.3</b> Ricker Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.4" data-path="chap:stock.html"><a href="chap:stock.html#bevertonholt-recruitment-function"><i class="fa fa-check"></i><b>4.15.4</b> BevertonHolt Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.5" data-path="chap:stock.html"><a href="chap:stock.html#hockey-stick-recruitment-function"><i class="fa fa-check"></i><b>4.15.5</b> Hockey stick Recruitment Function</a></li>
+<li class="chapter" data-level="4.15.6" data-path="chap:stock.html"><a href="chap:stock.html#baleen-recruitment-function"><i class="fa fa-check"></i><b>4.15.6</b> Baleen Recruitment Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.16" data-path="chap:stock.html"><a href="chap:stock.html#sec:lselection"><i class="fa fa-check"></i><b>4.16</b> Length Selection</a><ul>
+<li class="chapter" data-level="4.16.1" data-path="chap:stock.html"><a href="chap:stock.html#constant-selection-function"><i class="fa fa-check"></i><b>4.16.1</b> Constant Selection Function</a></li>
+<li class="chapter" data-level="4.16.2" data-path="chap:stock.html"><a href="chap:stock.html#straightline-selection-function"><i class="fa fa-check"></i><b>4.16.2</b> StraightLine Selection Function</a></li>
+<li class="chapter" data-level="4.16.3" data-path="chap:stock.html"><a href="chap:stock.html#exponential-selection-function"><i class="fa fa-check"></i><b>4.16.3</b> Exponential Selection Function</a></li>
+</ul></li>
+<li class="chapter" data-level="4.17" data-path="chap:stock.html"><a href="chap:stock.html#sec:stockstray"><i class="fa fa-check"></i><b>4.17</b> Straying</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="chap:tag.html"><a href="chap:tag.html"><i class="fa fa-check"></i><b>5</b> Tag Files</a><ul>
+<li class="chapter" data-level="5.1" data-path="chap:tag.html"><a href="chap:tag.html#sec:tagnumbers"><i class="fa fa-check"></i><b>5.1</b> Tagging Numbers</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="chap:other.html"><a href="chap:other.html"><i class="fa fa-check"></i><b>6</b> Otherfood Files</a><ul>
+<li class="chapter" data-level="6.1" data-path="chap:other.html"><a href="chap:other.html#sec:foodamounts"><i class="fa fa-check"></i><b>6.1</b> Food Amounts</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="chap:fleet.html"><a href="chap:fleet.html"><i class="fa fa-check"></i><b>7</b> Fleet Files</a><ul>
+<li class="chapter" data-level="7.1" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:totalfleet"><i class="fa fa-check"></i><b>7.1</b> TotalFleet</a></li>
+<li class="chapter" data-level="7.2" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:numberfleet"><i class="fa fa-check"></i><b>7.2</b> NumberFleet</a></li>
+<li class="chapter" data-level="7.3" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:linearfleet"><i class="fa fa-check"></i><b>7.3</b> LinearFleet</a></li>
+<li class="chapter" data-level="7.4" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:effortfleet"><i class="fa fa-check"></i><b>7.4</b> EffortFleet</a></li>
+<li class="chapter" data-level="7.5" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:quotafleet"><i class="fa fa-check"></i><b>7.5</b> QuotaFleet</a></li>
+<li class="chapter" data-level="7.6" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:fleetsuit"><i class="fa fa-check"></i><b>7.6</b> Fleet Suitability</a></li>
+<li class="chapter" data-level="7.7" data-path="chap:fleet.html"><a href="chap:fleet.html#sec:fleetamount"><i class="fa fa-check"></i><b>7.7</b> Fleet Amounts</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="chap:like.html"><a href="chap:like.html"><i class="fa fa-check"></i><b>8</b> Likelihood Files</a><ul>
+<li class="chapter" data-level="8.1" data-path="chap:like.html"><a href="chap:like.html#sec:boundlike"><i class="fa fa-check"></i><b>8.1</b> BoundLikelihood (“Penalty”)</a></li>
+<li class="chapter" data-level="8.2" data-path="chap:like.html"><a href="chap:like.html#sec:understocking"><i class="fa fa-check"></i><b>8.2</b> Understocking</a></li>
+<li class="chapter" data-level="8.3" data-path="chap:like.html"><a href="chap:like.html#sec:catchdist"><i class="fa fa-check"></i><b>8.3</b> CatchDistribution</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="chap:like.html"><a href="chap:like.html#sum-of-squares-function"><i class="fa fa-check"></i><b>8.3.1</b> Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.3.2" data-path="chap:like.html"><a href="chap:like.html#stratified-sum-of-squares-function"><i class="fa fa-check"></i><b>8.3.2</b> Stratified Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.3.3" data-path="chap:like.html"><a href="chap:like.html#multinomial-function"><i class="fa fa-check"></i><b>8.3.3</b> Multinomial Function</a></li>
+<li class="chapter" data-level="8.3.4" data-path="chap:like.html"><a href="chap:like.html#pearson-function"><i class="fa fa-check"></i><b>8.3.4</b> Pearson Function</a></li>
+<li class="chapter" data-level="8.3.5" data-path="chap:like.html"><a href="chap:like.html#gamma-function"><i class="fa fa-check"></i><b>8.3.5</b> Gamma Function</a></li>
+<li class="chapter" data-level="8.3.6" data-path="chap:like.html"><a href="chap:like.html#log-function"><i class="fa fa-check"></i><b>8.3.6</b> Log Function</a></li>
+<li class="chapter" data-level="8.3.7" data-path="chap:like.html"><a href="chap:like.html#multivariate-normal-function"><i class="fa fa-check"></i><b>8.3.7</b> Multivariate Normal Function</a></li>
+<li class="chapter" data-level="8.3.8" data-path="chap:like.html"><a href="chap:like.html#multivariate-logistic-function"><i class="fa fa-check"></i><b>8.3.8</b> Multivariate Logistic Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="chap:like.html"><a href="chap:like.html#sec:catchstat"><i class="fa fa-check"></i><b>8.4</b> CatchStatistics</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-length"><i class="fa fa-check"></i><b>8.4.1</b> Weighted Sum of Squares of Mean Length</a></li>
+<li class="chapter" data-level="8.4.2" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation"><i class="fa fa-check"></i><b>8.4.2</b> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.4.3" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-weightwith-given-standard-deviation"><i class="fa fa-check"></i><b>8.4.3</b> Weighted Sum of Squares of Mean WeightWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.4.4" data-path="chap:like.html"><a href="chap:like.html#unweighted-sum-of-squares-of-mean-weight"><i class="fa fa-check"></i><b>8.4.4</b> Unweighted Sum of Squares of Mean Weight</a></li>
+<li class="chapter" data-level="8.4.5" data-path="chap:like.html"><a href="chap:like.html#unweighted-sum-of-squares-of-mean-length"><i class="fa fa-check"></i><b>8.4.5</b> Unweighted Sum of Squares of Mean Length</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="chap:like.html"><a href="chap:like.html#sec:stockdist"><i class="fa fa-check"></i><b>8.5</b> StockDistribution</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="chap:like.html"><a href="chap:like.html#sum-of-squares-function-1"><i class="fa fa-check"></i><b>8.5.1</b> Sum of Squares Function</a></li>
+<li class="chapter" data-level="8.5.2" data-path="chap:like.html"><a href="chap:like.html#multinomial-function-1"><i class="fa fa-check"></i><b>8.5.2</b> Multinomial Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="chap:like.html"><a href="chap:like.html#sec:surveyindices"><i class="fa fa-check"></i><b>8.6</b> SurveyIndices</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="chap:like.html"><a href="chap:like.html#subsec:sibylength"><i class="fa fa-check"></i><b>8.6.1</b> SurveyIndices by Length</a></li>
+<li class="chapter" data-level="8.6.2" data-path="chap:like.html"><a href="chap:like.html#subsec:sibyage"><i class="fa fa-check"></i><b>8.6.2</b> SurveyIndices by Age</a></li>
+<li class="chapter" data-level="8.6.3" data-path="chap:like.html"><a href="chap:like.html#subsec:sibyfleet"><i class="fa fa-check"></i><b>8.6.3</b> SurveyIndices by Fleet</a></li>
+<li class="chapter" data-level="8.6.4" data-path="chap:like.html"><a href="chap:like.html#subsec:sibyacoustic"><i class="fa fa-check"></i><b>8.6.4</b> SurveyIndices by Acoustic</a></li>
+<li class="chapter" data-level="8.6.5" data-path="chap:like.html"><a href="chap:like.html#subsec:sibyeffort"><i class="fa fa-check"></i><b>8.6.5</b> SurveyIndices by Effort</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="chap:like.html"><a href="chap:like.html#sec:surveydistribution"><i class="fa fa-check"></i><b>8.7</b> SurveyDistribution</a><ul>
+<li class="chapter" data-level="8.7.1" data-path="chap:like.html"><a href="chap:like.html#linear-fit"><i class="fa fa-check"></i><b>8.7.1</b> Linear Fit</a></li>
+<li class="chapter" data-level="8.7.2" data-path="chap:like.html"><a href="chap:like.html#power-fit"><i class="fa fa-check"></i><b>8.7.2</b> Power Fit</a></li>
+<li class="chapter" data-level="8.7.3" data-path="chap:like.html"><a href="chap:like.html#multinomial-function-2"><i class="fa fa-check"></i><b>8.7.3</b> Multinomial Function</a></li>
+<li class="chapter" data-level="8.7.4" data-path="chap:like.html"><a href="chap:like.html#pearson-function-1"><i class="fa fa-check"></i><b>8.7.4</b> Pearson Function</a></li>
+<li class="chapter" data-level="8.7.5" data-path="chap:like.html"><a href="chap:like.html#gamma-function-1"><i class="fa fa-check"></i><b>8.7.5</b> Gamma Function</a></li>
+<li class="chapter" data-level="8.7.6" data-path="chap:like.html"><a href="chap:like.html#log-function-1"><i class="fa fa-check"></i><b>8.7.6</b> Log Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.8" data-path="chap:like.html"><a href="chap:like.html#sec:stomach"><i class="fa fa-check"></i><b>8.8</b> StomachContent</a><ul>
+<li class="chapter" data-level="8.8.1" data-path="chap:like.html"><a href="chap:like.html#scsimple-function"><i class="fa fa-check"></i><b>8.8.1</b> SCSimple Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.9" data-path="chap:like.html"><a href="chap:like.html#sec:recaptures"><i class="fa fa-check"></i><b>8.9</b> Recaptures</a><ul>
+<li class="chapter" data-level="8.9.1" data-path="chap:like.html"><a href="chap:like.html#poisson-function"><i class="fa fa-check"></i><b>8.9.1</b> Poisson Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.10" data-path="chap:like.html"><a href="chap:like.html#sec:recstat"><i class="fa fa-check"></i><b>8.10</b> RecStatistics</a><ul>
+<li class="chapter" data-level="8.10.1" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-length-1"><i class="fa fa-check"></i><b>8.10.1</b> Weighted Sum of Squares of Mean Length</a></li>
+<li class="chapter" data-level="8.10.2" data-path="chap:like.html"><a href="chap:like.html#weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation-1"><i class="fa fa-check"></i><b>8.10.2</b> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</a></li>
+<li class="chapter" data-level="8.10.3" data-path="chap:like.html"><a href="chap:like.html#unweighted-sum-of-squares-of-mean-length-1"><i class="fa fa-check"></i><b>8.10.3</b> Unweighted Sum of Squares of Mean Length</a></li>
+</ul></li>
+<li class="chapter" data-level="8.11" data-path="chap:like.html"><a href="chap:like.html#sec:migpenalty"><i class="fa fa-check"></i><b>8.11</b> MigrationPenalty</a></li>
+<li class="chapter" data-level="8.12" data-path="chap:like.html"><a href="chap:like.html#sec:migpro"><i class="fa fa-check"></i><b>8.12</b> MigrationProportion</a><ul>
+<li class="chapter" data-level="8.12.1" data-path="chap:like.html"><a href="chap:like.html#sum-of-squares-function-2"><i class="fa fa-check"></i><b>8.12.1</b> Sum of Squares Function</a></li>
+</ul></li>
+<li class="chapter" data-level="8.13" data-path="chap:like.html"><a href="chap:like.html#sec:catchinkilos"><i class="fa fa-check"></i><b>8.13</b> CatchInKilos</a><ul>
+<li class="chapter" data-level="8.13.1" data-path="chap:like.html"><a href="chap:like.html#sum-of-squares-function-3"><i class="fa fa-check"></i><b>8.13.1</b> Sum of Squares Function</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="chap:print.html"><a href="chap:print.html"><i class="fa fa-check"></i><b>9</b> Print Files</a><ul>
+<li class="chapter" data-level="9.1" data-path="chap:print.html"><a href="chap:print.html#sec:stockstdprinter"><i class="fa fa-check"></i><b>9.1</b> StockStdPrinter</a></li>
+<li class="chapter" data-level="9.2" data-path="chap:print.html"><a href="chap:print.html#sec:stockfullprinter"><i class="fa fa-check"></i><b>9.2</b> StockFullPrinter</a></li>
+<li class="chapter" data-level="9.3" data-path="chap:print.html"><a href="chap:print.html#sec:stockprinter"><i class="fa fa-check"></i><b>9.3</b> StockPrinter</a></li>
+<li class="chapter" data-level="9.4" data-path="chap:print.html"><a href="chap:print.html#sec:predatorprinter"><i class="fa fa-check"></i><b>9.4</b> PredatorPrinter</a></li>
+<li class="chapter" data-level="9.5" data-path="chap:print.html"><a href="chap:print.html#sec:predatoroverprinter"><i class="fa fa-check"></i><b>9.5</b> PredatorOverPrinter</a></li>
+<li class="chapter" data-level="9.6" data-path="chap:print.html"><a href="chap:print.html#sec:preyoverprinter"><i class="fa fa-check"></i><b>9.6</b> PreyOverPrinter</a></li>
+<li class="chapter" data-level="9.7" data-path="chap:print.html"><a href="chap:print.html#sec:stockpreyfullprinter"><i class="fa fa-check"></i><b>9.7</b> StockPreyFullPrinter</a></li>
+<li class="chapter" data-level="9.8" data-path="chap:print.html"><a href="chap:print.html#sec:stockpreyprinter"><i class="fa fa-check"></i><b>9.8</b> StockPreyPrinter</a></li>
+<li class="chapter" data-level="9.9" data-path="chap:print.html"><a href="chap:print.html#sec:predatorpreyprinter"><i class="fa fa-check"></i><b>9.9</b> PredatorPreyPrinter</a></li>
+<li class="chapter" data-level="9.10" data-path="chap:print.html"><a href="chap:print.html#sec:likelihoodprinter"><i class="fa fa-check"></i><b>9.10</b> LikelihoodPrinter</a></li>
+<li class="chapter" data-level="9.11" data-path="chap:print.html"><a href="chap:print.html#sec:likelihoodsummaryprinter"><i class="fa fa-check"></i><b>9.11</b> LikelihoodSummaryPrinter</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="chap:param.html"><a href="chap:param.html"><i class="fa fa-check"></i><b>10</b> Parameter File</a></li>
+<li class="chapter" data-level="11" data-path="chap:optim.html"><a href="chap:optim.html"><i class="fa fa-check"></i><b>11</b> Optimisation File</a><ul>
+<li class="chapter" data-level="11.1" data-path="chap:optim.html"><a href="chap:optim.html#sec:hooke"><i class="fa fa-check"></i><b>11.1</b> Hooke &amp; Jeeves</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="chap:optim.html"><a href="chap:optim.html#subsec:hookeover"><i class="fa fa-check"></i><b>11.1.1</b> Overview</a></li>
+<li class="chapter" data-level="11.1.2" data-path="chap:optim.html"><a href="chap:optim.html#subsec:hookefile"><i class="fa fa-check"></i><b>11.1.2</b> File Format</a></li>
+<li class="chapter" data-level="11.1.3" data-path="chap:optim.html"><a href="chap:optim.html#subsec:hookepar"><i class="fa fa-check"></i><b>11.1.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="chap:optim.html"><a href="chap:optim.html#sec:simann"><i class="fa fa-check"></i><b>11.2</b> Simulated Annealing</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="chap:optim.html"><a href="chap:optim.html#subsec:simannover"><i class="fa fa-check"></i><b>11.2.1</b> Overview</a></li>
+<li class="chapter" data-level="11.2.2" data-path="chap:optim.html"><a href="chap:optim.html#subsec:simannfile"><i class="fa fa-check"></i><b>11.2.2</b> File Format</a></li>
+<li class="chapter" data-level="11.2.3" data-path="chap:optim.html"><a href="chap:optim.html#subsec:simannpar"><i class="fa fa-check"></i><b>11.2.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="chap:optim.html"><a href="chap:optim.html#sec:bfgs"><i class="fa fa-check"></i><b>11.3</b> BFGS</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="chap:optim.html"><a href="chap:optim.html#subsec:bfgsover"><i class="fa fa-check"></i><b>11.3.1</b> Overview</a></li>
+<li class="chapter" data-level="11.3.2" data-path="chap:optim.html"><a href="chap:optim.html#subsec:bfgsfile"><i class="fa fa-check"></i><b>11.3.2</b> File Format</a></li>
+<li class="chapter" data-level="11.3.3" data-path="chap:optim.html"><a href="chap:optim.html#subsec:bfgspar"><i class="fa fa-check"></i><b>11.3.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="chap:optim.html"><a href="chap:optim.html#sec:combine"><i class="fa fa-check"></i><b>11.4</b> Combining Optimisation Algorithms</a><ul>
+<li class="chapter" data-level="11.4.1" data-path="chap:optim.html"><a href="chap:optim.html#subsec:combineover"><i class="fa fa-check"></i><b>11.4.1</b> Overview</a></li>
+<li class="chapter" data-level="11.4.2" data-path="chap:optim.html"><a href="chap:optim.html#subsec:combinefile"><i class="fa fa-check"></i><b>11.4.2</b> File Format</a></li>
+<li class="chapter" data-level="11.4.3" data-path="chap:optim.html"><a href="chap:optim.html#subsec:combinepar"><i class="fa fa-check"></i><b>11.4.3</b> Parameters</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="chap:optim.html"><a href="chap:optim.html#sec:repeat"><i class="fa fa-check"></i><b>11.5</b> Repeatability</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="chap:output.html"><a href="chap:output.html"><i class="fa fa-check"></i><b>12</b> Output Files</a><ul>
+<li class="chapter" data-level="12.1" data-path="chap:output.html"><a href="chap:output.html#sec:paramoutput"><i class="fa fa-check"></i><b>12.1</b> Parameter Output</a></li>
+<li class="chapter" data-level="12.2" data-path="chap:output.html"><a href="chap:output.html#sec:likelihoodoutput"><i class="fa fa-check"></i><b>12.2</b> Likelihood Output</a></li>
+<li class="chapter" data-level="12.3" data-path="chap:output.html"><a href="chap:output.html#sec:logoutput"><i class="fa fa-check"></i><b>12.3</b> Log Output</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="chap:paramin.html"><a href="chap:paramin.html"><i class="fa fa-check"></i><b>13</b> Paramin</a><ul>
+<li class="chapter" data-level="13.1" data-path="chap:paramin.html"><a href="chap:paramin.html#sec:paramininstall"><i class="fa fa-check"></i><b>13.1</b> Installation</a></li>
+<li class="chapter" data-level="13.2" data-path="chap:paramin.html"><a href="chap:paramin.html#sec:runparamin"><i class="fa fa-check"></i><b>13.2</b> Running paramin</a><ul>
+<li class="chapter" data-level="13.2.1" data-path="chap:paramin.html"><a href="chap:paramin.html#additional-information"><i class="fa fa-check"></i><b>13.2.1</b> Additional information</a></li>
+<li class="chapter" data-level="13.2.2" data-path="chap:paramin.html"><a href="chap:paramin.html#running-paramin-on-multiple-hostscluster"><i class="fa fa-check"></i><b>13.2.2</b> Running paramin on multiple hosts/cluster</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="chap:reference.html"><a href="chap:reference.html"><i class="fa fa-check"></i><b>14</b> References</a></li>
+<li class="chapter" data-level="15" data-path="chap:order.html"><a href="chap:order.html"><i class="fa fa-check"></i><b>15</b> Order of Calculations</a></li>
+<li class="chapter" data-level="16" data-path="chap:change.html"><a href="chap:change.html"><i class="fa fa-check"></i><b>16</b> Recent Changes</a><ul>
+<li class="chapter" data-level="16.1" data-path="chap:change.html"><a href="chap:change.html#sec:v2101"><i class="fa fa-check"></i><b>16.1</b> Gadget version 2.1.01</a></li>
+<li class="chapter" data-level="16.2" data-path="chap:change.html"><a href="chap:change.html#sec:v2102"><i class="fa fa-check"></i><b>16.2</b> Gadget version 2.1.02</a></li>
+<li class="chapter" data-level="16.3" data-path="chap:change.html"><a href="chap:change.html#sec:v2103"><i class="fa fa-check"></i><b>16.3</b> Gadget version 2.1.03</a></li>
+<li class="chapter" data-level="16.4" data-path="chap:change.html"><a href="chap:change.html#sec:v2104"><i class="fa fa-check"></i><b>16.4</b> Gadget version 2.1.04</a></li>
+<li class="chapter" data-level="16.5" data-path="chap:change.html"><a href="chap:change.html#sec:v2105"><i class="fa fa-check"></i><b>16.5</b> Gadget version 2.1.05</a></li>
+<li class="chapter" data-level="16.6" data-path="chap:change.html"><a href="chap:change.html#sec:v2106"><i class="fa fa-check"></i><b>16.6</b> Gadget version 2.1.06</a></li>
+<li class="chapter" data-level="16.7" data-path="chap:change.html"><a href="chap:change.html#sec:v2200"><i class="fa fa-check"></i><b>16.7</b> Gadget version 2.2.00</a></li>
+<li class="chapter" data-level="16.8" data-path="chap:change.html"><a href="chap:change.html#sec:v230"><i class="fa fa-check"></i><b>16.8</b> Gadget version 2.3.0</a></li>
+<li class="chapter" data-level="16.9" data-path="chap:change.html"><a href="chap:change.html#sec:v231"><i class="fa fa-check"></i><b>16.9</b> Gadget version 2.3.1</a></li>
+<li class="chapter" data-level="16.10" data-path="chap:change.html"><a href="chap:change.html#sec:v232"><i class="fa fa-check"></i><b>16.10</b> Gadget version 2.3.2</a></li>
+<li class="chapter" data-level="16.11" data-path="chap:change.html"><a href="chap:change.html#sec:v233"><i class="fa fa-check"></i><b>16.11</b> Gadget version 2.3.3</a></li>
+<li class="chapter" data-level="16.12" data-path="chap:change.html"><a href="chap:change.html#sec:v234"><i class="fa fa-check"></i><b>16.12</b> Gadget version 2.3.4</a></li>
+<li class="chapter" data-level="16.13" data-path="chap:change.html"><a href="chap:change.html#sec:v235"><i class="fa fa-check"></i><b>16.13</b> Gadget version 2.3.5</a></li>
+<li class="chapter" data-level="16.14" data-path="chap:change.html"><a href="chap:change.html#sec:v9999"><i class="fa fa-check"></i><b>16.14</b> Gadget development version</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Gadget userguide</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="chap:like" class="section level1">
+<h1><span class="header-section-number">8</span> Likelihood Files</h1>
+<p>The likelihood files are used to define the various likelihood
+components that are used to calculate the “goodness of fit” of the
+Gadget model to the available data. Each likelihood component will
+calculate a likelihood score for that individual component, and there is
+then a weighted sum of all the likelihood scores to calculate an overall
+likelihood score. It is this overall likelihood score that the optimiser
+attempts to minimise during an optimising run.</p>
+<p>To define likelihood files in the Gadget model, the “main” file must
+contain a list of the data files that contain the description of the
+likelihood classes required, and the format for this is shown below:</p>
+<pre><code>[likelihood]
+likelihoodfiles      &lt;names of the likelihood files&gt;</code></pre>
+<p>The likelihood files contain a list of various type of likelihood
+classes, separated by the keyword [component] that control the
+different likelihood components in the model, the name and weight for
+that likelihood component and various likelihood data, depending in the
+likelihood component type. The format of the likelihood files is
+follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 &lt;likelihood type&gt;
+&lt;likelihood data&gt;</code></pre>
+<p>The likelihood data for each likelihood type is covered in the sub
+sections below. The <span class="math inline">\(&lt;\)</span>likelihood type<span class="math inline">\(&gt;\)</span> defines the type of likelihood
+component that is to be used, and there are currently 12 valid
+likelihood types defined in Gadget. These are:</p>
+<ul>
+<li><code>BoundLikelihood</code></li>
+<li><code>Understocking</code></li>
+<li><code>CatchDistribution</code></li>
+<li><code>CatchStatistics</code></li>
+<li><code>StockDistribution</code></li>
+<li><code>SurveyIndices</code></li>
+<li><code>SurveyDistribution</code></li>
+<li><code>StomachContent</code></li>
+<li><code>Recaptures</code></li>
+<li><code>RecStatistics</code></li>
+<li><code>MigrationPenalty</code></li>
+<li><code>MigrationProportion</code></li>
+<li><code>CatchInKilos</code></li>
+</ul>
+<div id="sec:boundlike" class="section level2">
+<h2><span class="header-section-number">8.1</span> BoundLikelihood (“Penalty”)</h2>
+<p>The BoundLikelihood likelihood component is used to give a penalty
+weight to parameters that have moved beyond the bounds, as specified in
+the parameter file, in the optimisation process. This file does not
+specify the bounds that are to be used, only the penalty that is to be
+applied when these bounds are exceeded. Since the Simmulated Annealing
+(see section <a href="chap:optim.html#sec:simann">11.2</a>) algorithm will always choose a value for the
+parameter that is within the bounds, this likelihood component will
+return a zero likelihood score during an optimisation using that
+algorithm. However, both the Hooke &amp; Jeeves (see
+section <a href="chap:optim.html#sec:hooke">11.1</a>)
+and the BFGS (see section <a href="chap:optim.html#sec:bfgs">11.3</a>) algorithms can choose a parameter outside the
+specified bounds, and so this likelihood component can then return a
+positive score.</p>
+<p>To specify a BoundLikelihood likelihood component, the format required
+in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 penalty
+datafile             &lt;name for the datafile&gt;</code></pre>
+<p>The datafile defines the penalty that is to be applied to the parameter
+when it exceeds the bounds, as given by
+equation <a href="chap:like.html#eq:bound">(8.1)</a> below:</p>
+<p><span class="math display" id="eq:bound">\[\begin{equation}
+\tag{8.1}
+\ell_{i} =
+\begin{cases}
+lw_{i} (val_{i} - lb_{i})^{p_{i}} &amp; \textrm{if $val_{i} &lt; lb_i$} \\
+uw_{i} (val_{i} - ub_{i})^{p_{i}} &amp; \textrm{if $val_{i} &gt; ub_i$} \\
+0 &amp; \textrm{otherwise}
+\end{cases}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;val_i&gt;\)</span> is the value of the parameter <span class="math inline">\(&lt;lw_i&gt;\)</span> is the weight
+applied when the parameter exceeds the lower bound <span class="math inline">\(&lt;uw_i&gt;\)</span> is the
+weight applied when the parameter exceeds the upper bound <span class="math inline">\(&lt;lb_i&gt;\)</span> is
+the lower bound <span class="math inline">\(&lt;ub_i&gt;\)</span> is the upper bound <span class="math inline">\(&lt;p_i&gt;\)</span> is the power
+coefficient</p>
+<p>Note that when the value of the parameter is exactly equal to the bound,
+this equation will give a zero likelihood score.</p>
+<p>The datafile lists these weights and the power that is to be used for
+each parameter. The format for this file is shown below:</p>
+<pre><code>&lt;switch&gt;  &lt;power&gt;  &lt;lower&gt;  &lt;upper&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>lower<span class="math inline">\(&gt;\)</span> is the weighting used when the parameter hits the
+lower bound, and <span class="math inline">\(&lt;\)</span>upper<span class="math inline">\(&gt;\)</span> is the weighting used when the parameter
+hits the upper bound, for the parameter with the name <span class="math inline">\(&lt;\)</span>switch<span class="math inline">\(&gt;\)</span>.</p>
+<p>It is possible to define a default penalty that is used for all switches
+that are not defined separately. To do this, simply enter a line in the
+data file with the switch name given as “default”, and then the power,
+lower and upper weights that are required. For example:</p>
+<pre><code>default    2        1000     1000</code></pre>
+<p>would define a default penalty, where the lower and upper weights were
+1000, and the power was 2.</p>
+</div>
+<div id="sec:understocking" class="section level2">
+<h2><span class="header-section-number">8.2</span> Understocking</h2>
+<p>The Understocking likelihood component calculates a penalty that is
+applied if there are an insufficient number of a particular prey to meet
+the requirements of the predators. In the case of a fleet, this means
+that the landings data indicates that more fish have been landed than
+there are fish in the model, for that timetep and area combination. A
+well defined model will have a zero likelihood score from this
+component. The likelihood component that is used is the sum of squares
+of the overconsumption, given by the equation below:</p>
+<p><span class="math display" id="eq:understocking">\[\begin{equation}
+\tag{8.2}
+\ell = \sum_{\it time}\sum_{\it areas} \Big(\sum_{\it preys} U_{trp} \Big)^p\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> U <span class="math inline">\(&gt;\)</span> is the understocking that has occurred in the model <span class="math inline">\(&lt;\)</span>
+p <span class="math inline">\(&gt;\)</span> is the power coefficient (which should be 2 for sum of squares
+fit)</p>
+<p>To specify an Understocking likelihood component, the format required in
+the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 understocking
+powercoeff           &lt;power&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>power<span class="math inline">\(&gt;\)</span> value is optional, and if this is not given, the power
+coefficient is assumed to be 2, giving a sum of squares equation for
+this likelihood component.</p>
+</div>
+<div id="sec:catchdist" class="section level2">
+<h2><span class="header-section-number">8.3</span> CatchDistribution</h2>
+<p>The CatchDistribution likelihood component is used to compare
+distribution data sampled from the model with distribution data sampled
+from landings or surveys. The distribution data can either be aggregated
+into age groups (giving a distribution of length groups for each age),
+length groups (giving a distribution of age groups for each length) or
+into age-length groups. The likelihood score that is calculated gives
+some measure as to how well the data from the model fit to the data from
+the sample catches.</p>
+<p>To specify a CatchDistribution likelihood component, the format required
+in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 catchdistribution
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+&lt;multivariate parameters&gt;
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+overconsumption      &lt;0 or 1&gt; ; 1 to take overconsumption into account
+epsilon              &lt;epsilon&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
+<p>The optional flag <span class="math inline">\(&lt;\)</span>aggregationlevel<span class="math inline">\(&gt;\)</span> is used to specify whether the
+distribution data should be aggregated over the whole year (by setting
+aggregation level to 1) or not aggregated, and calculated for each
+timestep (by setting aggregation level to 0). If this line is not
+specified, then an aggregation level of 0 is assumed, and the
+distribution data is not aggregated over the whole year. Note that not
+all of the functions used to compare the data can aggregate the data
+over the whole year.</p>
+<p>The optional flag <span class="math inline">\(&lt;\)</span>overconsumption<span class="math inline">\(&gt;\)</span> is used to specify whether any
+over consumption of the stock is to be taken into account when
+calculating the model distribution. If this is set to 1, then the model
+catch data will be adjusted to ensure that the fleets don’t catch more
+stock than is available, by applying a bound to the catch of the fleets.
+If this line is not specified, then an overconsumption of 0 is assumed
+and any understocking that is present in the model is ignored, which can
+lead to an unrealistic result if the understocking likelihood component
+is not specified.</p>
+<p>The optional <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> value is used whenever the calculated
+probability is very unlikely, although the exact format of this depends
+on the function that is to be used when calculating the likelihood
+score. This means that the likelihood component is not dominated by one
+or two stray values, since these will be reset back to less unlikely
+values. The default value for <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> is 10, which is used
+whenever it is not defined in the input file.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be
+aggregated into a single pseudo fleet for the purposes of the data
+comparison. Similarly, the <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of
+all the stocks to be aggregated into a single pseudo stock.</p>
+<p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used
+to compare the modelled age-length catch distribution to the input
+age-length catch distribution. Currently, there are 8 likelihood
+functions defined, and the valid function names are:</p>
+<ul>
+<li><code>sumofsquares</code> - use a sum of squares function</li>
+<li><code>stratified</code> - use a stratified sum of squares function</li>
+<li><code>multinomial</code> - use a multinomial function</li>
+<li><code>pearson</code> - use a Pearson function</li>
+<li><code>gamma</code> - use a gamma function</li>
+<li><code>log</code> - use a log function</li>
+<li><code>mvn</code> - use a multivariate normal function</li>
+<li><code>mvlogistic</code> - use a multivariate logistic function</li>
+</ul>
+<p>The <span class="math inline">\(&lt;\)</span>multivariate parameters<span class="math inline">\(&gt;\)</span> are only required for the multivariate
+functions, and Gadget will generate an error if they are specified when
+they are not required. These parameters are described in the following
+sections.</p>
+<p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains a list of the
+age-length catch distribution that Gadget is to use to fit the
+likelihood function to, aggregated according to the aggregation files
+specified, for the numbers calculated in the model. The format of this
+file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the
+timestep/area/age/length combination.</p>
+<div id="sum-of-squares-function" class="section level3">
+<h3><span class="header-section-number">8.3.1</span> Sum of Squares Function</h3>
+<p>The sum of squares function calculates the likelihood component from
+equation <a href="chap:like.html#eq:catchdist4">(8.3)</a> below:</p>
+<p><span class="math display" id="eq:catchdist4">\[\begin{equation}
+\tag{8.3}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( \frac{N_{tral}}{N_{tr}} - \frac{\nu_{tral}}{\nu_{tr}}  \Big) ^2\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt; N_{tral} &gt;\)</span> is the data sample size for that time/area/age/length
+combination <span class="math inline">\(&lt; \nu_{tral} &gt;\)</span> is the model sample size for that time/area/age/length
+combination. <span class="math inline">\(&lt; N_{tr} &gt;\)</span> and <span class="math inline">\(&lt; \nu_{tr} &gt;\)</span> is the total data and model
+sample size for that time/area combination respectively.</p>
+</div>
+<div id="stratified-sum-of-squares-function" class="section level3">
+<h3><span class="header-section-number">8.3.2</span> Stratified Sum of Squares Function</h3>
+<p>The stratified function is a variant of the sum of squares function that
+calculates an age distribution for each length class, and then
+calculates the likelihood component from
+equation <a href="chap:like.html#eq:catchdist4">(8.3)</a> above. The difference between this function
+and the sum of squares function above is in the way the proportions of
+the samples are calculated - for this function the proportion is
+calculated for each length group in turn, whereas for the sum of squares
+function the proportion is taken over all the length groups. If there is
+only one length group then these two functions are identical.</p>
+</div>
+<div id="multinomial-function" class="section level3">
+<h3><span class="header-section-number">8.3.3</span> Multinomial Function</h3>
+<p>The multinomial function calculates the likelihood component from
+equation <a href="chap:like.html#eq:catchdist1">(8.4)</a> below:</p>
+<p><span class="math display" id="eq:catchdist1">\[\begin{equation}
+\tag{8.4}
+\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Bigg( \log N_{tra}! - \sum_{\it lengths} \log N_{tral}! + \sum_{\it lengths} \Big( N_{tral} \log {\frac{\nu_{tral}}{\sum \nu_{tral}}} \Big) \Bigg)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the data sample size for that time/area/age/length
+combination <span class="math inline">\(&lt;\nu&gt;\)</span> is the model sample size for that
+time/area/age/length combination</p>
+</div>
+<div id="pearson-function" class="section level3">
+<h3><span class="header-section-number">8.3.4</span> Pearson Function</h3>
+<p>The Pearson function calculates the likelihood component from
+equation <a href="chap:like.html#eq:catchdist2">(8.5)</a> below:</p>
+<p><span class="math display" id="eq:catchdist2">\[\begin{equation}
+\tag{8.5}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ ( N_{tral} - \nu_{tral} ) ^2} {\nu_{tral} + \epsilon}} \Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the data sample size for that time/area/age/length
+combination <span class="math inline">\(&lt;\nu&gt;\)</span> is the model sample size for that
+time/area/age/length combination</p>
+</div>
+<div id="gamma-function" class="section level3">
+<h3><span class="header-section-number">8.3.5</span> Gamma Function</h3>
+<p>The gamma function calculates the likelihood component from
+equation <a href="chap:like.html#eq:catchdist3">(8.6)</a> below:</p>
+<p><span class="math display" id="eq:catchdist3">\[\begin{equation}
+\tag{8.6}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ N_{tral}} { (\nu_{tral} + \epsilon )} + \log ({\nu_{tral} + \epsilon}}) \Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the data sample size for that time/area/age/length
+combination <span class="math inline">\(&lt;\nu&gt;\)</span> is the model sample size for that
+time/area/age/length combination</p>
+</div>
+<div id="log-function" class="section level3">
+<h3><span class="header-section-number">8.3.6</span> Log Function</h3>
+<p>The log function calculates the likelihood component from
+equation <a href="chap:like.html#eq:catchdist7">(8.7)</a> below:</p>
+<p><span class="math display" id="eq:catchdist7">\[\begin{equation}
+\tag{8.7}
+\ell = \sum_{\it time}\sum_{\it areas} \Big( \log \Big( {\frac{ \displaystyle \sum_{\it ages}\sum_{\it lengths} \nu_{tral}} { \displaystyle \sum_{\it ages}\sum_{\it lengths} N_{tral}}} \Big) \Big) ^2\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the data sample size for that time/area/age/length
+combination <span class="math inline">\(&lt;\nu&gt;\)</span> is the model sample size for that
+time/area/age/length combination</p>
+</div>
+<div id="multivariate-normal-function" class="section level3">
+<h3><span class="header-section-number">8.3.7</span> Multivariate Normal Function</h3>
+<p>The multivariate normal function calculates the likelihood component
+from equation <a href="chap:like.html#eq:catchdist5">(8.8)</a> below:</p>
+<p><span class="math display" id="eq:catchdist5">\[\begin{equation}
+\tag{8.8}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big( log|\Sigma| + (P_{tra} - \pi_{tra})^T \Sigma^{-1}(P_{tra} - \pi_{tra}) \Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\Sigma&gt;\)</span> is the variance-covariance matrix for the multivariate
+normal distribution <span class="math inline">\(&lt;\)</span> P <span class="math inline">\(&gt;\)</span> is the proportion of the data sample for
+that time/area/age combination <span class="math inline">\(&lt;\pi&gt;\)</span> is the proportion of the model
+sample for that time/area/age combination</p>
+<p>For the formulation of the variance-covariance matrix, <span class="math inline">\(&lt;\Sigma&gt;\)</span> is
+calculated from equations
+<a href="chap:like.html#eq:cdsigma1">(8.9)</a> and
+<a href="chap:like.html#eq:cdsigma2">(8.10)</a> below:</p>
+<p><span class="math display" id="eq:cdsigma1">\[\begin{equation}
+\tag{8.9}
+\Sigma = (\sigma_{ij})_{ij}\end{equation}\]</span></p>
+<p><span class="math display" id="eq:cdsigma2">\[\begin{equation}
+\tag{8.10}
+\sigma_{ij} =
+\begin{cases}
+\displaystyle \sum^{lag}_{l=1} c_l \sigma_{i-l,j} + \delta^i_{j} \sigma^2 &amp; \textrm{if $i \geq j$} \\
+\displaystyle \sum^{lag}_{l=1} c_l \sigma_{j,i-l} &amp; \textrm{otherwise}
+\end{cases}\end{equation}\]</span></p>
+<p>In equation <a href="chap:like.html#eq:cdsigma2">(8.10)</a> it is assumed that the number in each length
+group is autocorrelated with lag <span class="math inline">\(&lt;\)</span> lag <span class="math inline">\(&gt;\)</span>. Note that setting the lag
+to be zero simplifies the multivariate normal distribution to a
+univariate one.</p>
+<p>To specify this likelihood function, it is necessary to specify the
+parameters <span class="math inline">\(&lt;\sigma&gt;\)</span> and <span class="math inline">\(&lt;\)</span> lag <span class="math inline">\(&gt;\)</span> and a list of <span class="math inline">\(&lt;\)</span> lag <span class="math inline">\(&gt;\)</span>
+correlation parameters. This is done in the likelihood file, as shown
+below:</p>
+<pre><code>...
+function             mvn
+lag                  &lt;lag&gt;
+sigma                &lt;sigma&gt;
+param                &lt;correlation parameter&gt; ; note that a total of
+param                &lt;correlation parameter&gt; ; &lt;lag&gt; correlation
+...                                          ; parameters are required
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+...</code></pre>
+</div>
+<div id="multivariate-logistic-function" class="section level3">
+<h3><span class="header-section-number">8.3.8</span> Multivariate Logistic Function</h3>
+<p>The multivariate logistic function calculates the likelihood component
+from equations
+<a href="chap:like.html#eq:catchdist6a">(8.11)</a> and
+<a href="chap:like.html#eq:catchdist6b">(8.12)</a> below:</p>
+<p><span class="math display" id="eq:catchdist6a">\[\begin{equation}
+\tag{8.11}
+\ell = \frac{1}{2\sigma^2} \sum_{\it time} \Big((L - 1) log(\sigma)+\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \tau_{tral}^2 \Big)\end{equation}\]</span></p>
+<p><span class="math display" id="eq:catchdist6b">\[\begin{equation}
+\tag{8.12}
+\tau_{tral} = log(P_{tral}) - log(\pi_{tral}) - \frac{1}{L}\sum_{\it lengths} \Big(log(P_{tral}) - log(\pi_{tral}) \Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> L <span class="math inline">\(&gt;\)</span> is the number of length groups <span class="math inline">\(&lt;\)</span> P <span class="math inline">\(&gt;\)</span> is the
+proportion of the data sample for that time/area/age/length combination
+<span class="math inline">\(&lt;\pi&gt;\)</span> is the proportion of the model sample for that
+time/area/age/length combination</p>
+<p>To specify this likelihood function it is necessary to specify the
+parameter <span class="math inline">\(&lt;\sigma&gt;\)</span>. This is done in the likelihood file as shown
+below:</p>
+<pre><code>...
+function             mvlogistic
+sigma                &lt;sigma&gt;
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+...</code></pre>
+</div>
+</div>
+<div id="sec:catchstat" class="section level2">
+<h2><span class="header-section-number">8.4</span> CatchStatistics</h2>
+<p>The CatchStatistics likelihood component is used to compare statistical
+data sampled from the model with statistical data sampled from landings
+or surveys. This is typically used to compare biological data, such as
+the mean length at age or mean weight at age. The likelihood score that
+is calculated gives some measure as to how well the data from the model
+fits to the data from the landings.</p>
+<p>To specify a CatchStatistics likelihood component, the format required
+in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 catchstatistics
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+overconsumption      &lt;0 or 1&gt; ; 1 to take overconsumption into account
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying lengthes; is optional and used only in weight at length likelihood&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
+<p>The optional flag <span class="math inline">\(&lt;\)</span>overconsumption<span class="math inline">\(&gt;\)</span> is used to specify whether any
+over consumption of the stock is to be taken into account when
+calculating the model statistical data. If this is set to 1, then the
+model catch data will be adjusted to ensure that the fleets don’t catch
+more stock than is available, by applying a bound to the catch of the
+fleets. If this line is not specified, then an overconsumption of 0 is
+assumed and any understocking that is present in the model is ignored,
+which can lead to an unrealistic result if the understocking likelihood
+component is not specified.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be
+aggregated into a single pseudo fleet for the purposes of the data
+comparison. Similarly, the <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of
+all the stocks to be aggregated into a single pseudo stock.</p>
+<p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used
+to compare the modelled statistical data to the input statistical data.
+Currently, there are 5 likelihood functions defined, and the format of
+the statistical data given in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span>
+depends on the likelihood function used. The valid functions are:</p>
+<ul>
+<li><code>lengthcalcstddev</code> - use a weighted sum of squares of mean length</li>
+<li><code>lengthgivenstddev</code> - use a weighted sum of squares of mean length with given standard deviation</li>
+<li><code>weightgivenstddev</code> - use a weighted sum of squares of mean weight with given standard deviation</li>
+<li><code>weightnostddev</code> - use a unweighted sum of squares of mean weight</li>
+<li><code>lengthnostddev</code> - use a unweighted sum of squares of mean length</li>
+<li><code>weightgivenstddevlen</code> - use a weighted sum of squares of mean weight at length with given standard deviation</li>
+<li><code>weightnostddevlen</code> - use a unweighted sum of squares of mean weight at length</li>
+</ul>
+<div id="weighted-sum-of-squares-of-mean-length" class="section level3">
+<h3><span class="header-section-number">8.4.1</span> Weighted Sum of Squares of Mean Length</h3>
+<p>This likelihood function calculates the likelihood score based on a
+weighted sum of squares of the mean length, with the weighting given by
+calculating the variance of length of the modelled population, as shown
+in equation <a href="chap:like.html#eq:catchstat1">(8.13)</a> below:</p>
+<p><span class="math display" id="eq:catchstat1">\[\begin{equation}
+\tag{8.13}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {\sigma_{tra}^2} N_{tra}\Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the
+mean length calculated from the model <span class="math inline">\(&lt;\sigma&gt;\)</span> is the standard
+deviation of the length, calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the
+sample size</p>
+<p>For this CatchStatistics function, the format of the statistical data
+required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age
+combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples.</p>
+</div>
+<div id="weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation" class="section level3">
+<h3><span class="header-section-number">8.4.2</span> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</h3>
+<p>This likelihood function calculates the likelihood score based on a
+weighted sum of squares of the mean length, with the weighting given the
+variance of length of the input population, as shown in
+equation <a href="chap:like.html#eq:catchstat2">(8.14)</a> below:</p>
+<p><span class="math display" id="eq:catchstat2">\[\begin{equation}
+\tag{8.14}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the
+mean length calculated from the model <span class="math inline">\(&lt;\)</span> s <span class="math inline">\(&gt;\)</span> is the standard
+deviation of the length from the data <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
+<p>For this CatchStatistics function, the format of the statistical data
+required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age
+combination, <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples and
+<span class="math inline">\(&lt;\)</span>stddev<span class="math inline">\(&gt;\)</span> is the standard deviation of the length of these samples.</p>
+</div>
+<div id="weighted-sum-of-squares-of-mean-weightwith-given-standard-deviation" class="section level3">
+<h3><span class="header-section-number">8.4.3</span> Weighted Sum of Squares of Mean WeightWith Given Standard Deviation</h3>
+<p>This likelihood function calculates the likelihood score based on a
+weighted sum of squares of the mean weight, with the weighting given the
+variance of weight of the input population, as shown in
+equation <a href="chap:like.html#eq:catchstat3">(8.15)</a> below:</p>
+<p><span class="math display" id="eq:catchstat3">\[\begin{equation}
+\tag{8.15}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big(\frac{(x_{tra}-\mu_{tra})^2} {s_{tra}^2} N_{tra}\Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean weight from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the
+mean weight calculated from the model <span class="math inline">\(&lt;\)</span> s <span class="math inline">\(&gt;\)</span> is the standard
+deviation of the weight from the data <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
+<p>For this CatchStatistics function, the format of the statistical data
+required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age
+combination, <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean weight of these samples and
+<span class="math inline">\(&lt;\)</span>stddev<span class="math inline">\(&gt;\)</span> is the standard deviation of the weight of these samples.</p>
+</div>
+<div id="unweighted-sum-of-squares-of-mean-weight" class="section level3">
+<h3><span class="header-section-number">8.4.4</span> Unweighted Sum of Squares of Mean Weight</h3>
+<p>This likelihood function calculates the likelihood score based on a
+unweighted sum of squares of the mean weight, with the variance of the
+weight of the population assumed to be 1, as shown in
+equation <a href="chap:like.html#eq:catchstat4">(8.16)</a> below:</p>
+<p><span class="math display" id="eq:catchstat4">\[\begin{equation}
+\tag{8.16}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean weight from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the
+mean weight calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
+<p>For this CatchStatistics function, the format of the statistical data
+required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age
+combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean weight of these samples.</p>
+</div>
+<div id="unweighted-sum-of-squares-of-mean-length" class="section level3">
+<h3><span class="header-section-number">8.4.5</span> Unweighted Sum of Squares of Mean Length</h3>
+<p>This likelihood function calculates the likelihood score based on a
+unweighted sum of squares of the mean length, with the variance of the
+length of the population assumed to be 1, as shown in
+equation <a href="chap:like.html#eq:catchstat5">(8.17)</a> below:</p>
+<p><span class="math display" id="eq:catchstat5">\[\begin{equation}
+\tag{8.17}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages} \Big((x_{tra}-\mu_{tra})^2 N_{tra}\Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the
+mean length calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
+<p>For this CatchStatistics function, the format of the statistical data
+required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the timestep/area/age
+combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples.</p>
+</div>
+</div>
+<div id="sec:stockdist" class="section level2">
+<h2><span class="header-section-number">8.5</span> StockDistribution</h2>
+<p>The StockDistribution likelihood component is used to compare
+distribution data sampled from the model with distribution data sampled
+from landings or surveys for different stocks within the Gadget model.
+This is typically used to compare Gadget stocks that are based on the
+same species, but have differing biological properties (eg. immature and
+mature fish). The distribution data can either be aggregated into age
+groups (giving a distribution of length groups for each age), length
+groups (giving a distribution of age groups for each length) or into
+age-length groups. The likelihood score that is calculated gives some
+measure as to how well the data from the model fits to the data from the
+landings.</p>
+<p>To specify a StockDistribution likelihood component, the format required
+in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 stockdistribution
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+overconsumption      &lt;0 or 1&gt; ; 1 to take overconsumption into account
+epsilon              &lt;epsilon&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
+<p>The optional flag <span class="math inline">\(&lt;\)</span>aggregationlevel<span class="math inline">\(&gt;\)</span> is used to specify whether the
+distribution data should be aggregated over the whole year (by setting
+aggregation level to 1) or not aggregated, and calculated for each
+timestep (by setting aggregation level to 0). If this line is not
+specified, then an aggregation level of 0 is assumed, and the
+distribution data is not aggregated over the whole year. Note that not
+all of the functions used to compare the data can aggregate the data
+over the whole year.</p>
+<p>The optional flag <span class="math inline">\(&lt;\)</span>overconsumption<span class="math inline">\(&gt;\)</span> is used to specify whether any
+over consumption of the stock is to be taken into account when
+calculating the model distribution. If this is set to 1, then the model
+catch data will be adjusted to ensure that the fleets don’t catch more
+stock than is available, by applying a bound to the catch of the fleets.
+If this line is not specified, then an overconsumption of 0 is assumed
+and any understocking that is present in the model is ignored, which can
+lead to an unrealistic result if the understocking likelihood component
+is not specified.</p>
+<p>The optional <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> value is used whenever the calculated
+probability is very unlikely, although the exact format of this depends
+on the function that is to be used when calculating the likelihood
+score. This means that the likelihood component is not dominated by one
+or two stray values, since these will be reset back to less unlikely
+values. The default value for <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> is 10, which is used
+whenever it is not defined in the input file.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be
+aggregated into a single pseudo fleet for the purposes of the data
+comparison. However, the <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of all
+the stocks to be compared for the data comparison. These stocks are not
+aggregated into a single pseudo stock.</p>
+<p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used
+to compare the modelled age-length stock distribution to the input
+age-length stock distribution. Currently, there are two likelihood
+functions defined, and the valid functions are:</p>
+<ul>
+<li><code>sumofsquares</code> - use a sum of squares function</li>
+<li><code>multinomial</code> - use a multinomial function</li>
+</ul>
+<p>Finally, the datafile is a list of the age-length catch distribution for
+each stock, that Gadget is to use to fit the likelihood function to,
+aggregated according to the aggregation files specified, for the numbers
+calculated in the model. The format of this file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;stock&gt;  &lt;age&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the
+timestep/area/stock/age/length combination.</p>
+<div id="sum-of-squares-function-1" class="section level3">
+<h3><span class="header-section-number">8.5.1</span> Sum of Squares Function</h3>
+<p>The sum of squares function calculates the likelihood component from
+equation <a href="chap:like.html#eq:stockdist2">(8.18)</a> below:</p>
+<p><span class="math display" id="eq:stockdist2">\[\begin{equation}
+\tag{8.18}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths}\sum_{\it stocks} \Big( \frac{N_{trals}}{N_{tr}} - \frac{\nu_{trals}}{\nu_{tr}}  \Big) ^2\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt; N_{trals} &gt;\)</span> is the data sample size for that time/area/age/length/stock
+combination <span class="math inline">\(&lt; \nu_{trals} &gt;\)</span> is the model sample size for that time/area/age/length/stock
+combination. <span class="math inline">\(&lt; N_{tr} &gt;\)</span> and <span class="math inline">\(&lt; \nu_{tr} &gt;\)</span> is the total data and model
+sample size for that time/area combination respectively.</p>
+</div>
+<div id="multinomial-function-1" class="section level3">
+<h3><span class="header-section-number">8.5.2</span> Multinomial Function</h3>
+<p>The multinomial function calculates the likelihood component from
+equation <a href="chap:like.html#eq:stockdist1">(8.19)</a> below:</p>
+<p><span class="math display" id="eq:stockdist1">\[\begin{equation}
+\tag{8.19}
+\ell = 2 \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Bigg( \log N_{tral}! - \sum_{\it stocks} \log N_{trals}! + \sum_{\it stocks} \Big( N_{trals} \log {\frac{\nu_{tral}}{\sum \nu_{trals}}} \Big)\Bigg)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the data sample size for that
+time/area/age/length/stock combination <span class="math inline">\(&lt;\nu&gt;\)</span> is the model sample size
+for that time/area/age/length/stock combination</p>
+</div>
+</div>
+<div id="sec:surveyindices" class="section level2">
+<h2><span class="header-section-number">8.6</span> SurveyIndices</h2>
+<p>The SurveyIndices likelihood component is used to compare the
+development of a stock in the Gadget model to indices calculated from a
+standardized survey for that stock. These indices can be aggregated into
+length groups or age groups. The likelihood component that is used is
+the sum of squares of a linear regression fitted to the difference
+between the modelled data and the specified index, given by
+equation <a href="chap:like.html#eq:surveyindex">(8.20)</a> below:</p>
+<p><span class="math display" id="eq:surveyindex">\[\begin{equation}
+\tag{8.20}
+\ell = \sum_{\it time}\Big(I_{t} - (\alpha + \beta N_{t})\Big)^2\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> I <span class="math inline">\(&gt;\)</span> is the observed survey index <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the
+corresponding index calculated in the Gadget model</p>
+<p>The exact format of this linear regression equation will vary, depending
+on survey index data available. It is possible to take the log of the
+indices and the modelled data before fitting the linear regression line.
+The slope and intercept of the linear regression line are controlled by
+the parameters alpha and beta, and it is possible to fix these to
+specified numbers, or let Gadget calculate these to get the best fit to
+the modelled data.</p>
+<p>To specify a SurveyIndices likelihood component, the format required in
+the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               &lt;survey index type&gt;
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+&lt;survey index data&gt;</code></pre>
+<p>The optional flag <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is used to specify whether the index
+data should be based on the biomass of the stock or on the population
+numbers for the stock. If this is set to 1, then the index data
+calculated in the model will be based on the available biomass of the
+stock. If this line is not specified, then a biomass value of 0 is
+assumed and the index data calculated in the model will be based on the
+available population numbers for the stock.</p>
+<p>The format of the survey index data, and the contents of the datafile,
+depend on the type of survey index that is to be used, which is
+specified by the value of <span class="math inline">\(&lt;\)</span>survey index type<span class="math inline">\(&gt;\)</span>. There are currently 5
+valid options, which are:</p>
+<ul>
+<li><code>lengths</code> - defining a length group based survey index</li>
+<li><code>ages</code> - defining an age group based survey index</li>
+<li><code>fleets</code> - defining a length group based survey index, taking the fleet selectivity into account</li>
+<li><code>acoustic</code> - defining an acoustic based survey index</li>
+<li><code>effort</code> - defining an fishing effort based survey index</li>
+</ul>
+<div id="subsec:sibylength" class="section level3">
+<h3><span class="header-section-number">8.6.1</span> SurveyIndices by Length</h3>
+<p>To specify a length group based SurveyIndices likelihood component, the
+format required in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               lengths
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
+<p>The datafile is a list of the indices that Gadget is to use to fit the
+linear regression to, aggregated according to the length aggregation
+file specified, for the population numbers calculated in the model. The
+format of this file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the survey index for that timestep/area/length
+combination.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be
+used to calculate the likelihood score for this likelihood component.
+These options specify whether or not the log of the numbers is to be
+used, and whether the parameters alpha and beta are to be estimated by
+Gadget, or fixed. If these parameters are to be fixed, then they are
+specified here. In total, there are 8 valid entries for <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span>,
+and the associated parameters, and these are:</p>
+<ul>
+<li><code>linearfit</code></li>
+<li><code>loglinearfit</code></li>
+<li><code>fixedslopelinearfit</code></li>
+<li><code>fixedslopeloglinearfit</code></li>
+<li><code>fixedinterceptlinearfit</code></li>
+<li><code>fixedinterceptloglinearfit</code></li>
+<li><code>fixedlinearfit</code></li>
+<li><code>fixedloglinearfit</code></li>
+</ul>
+<div id="linear-regression-estimating-both-slope-and-intercept" class="section level4">
+<h4><span class="header-section-number">8.6.1.1</span> linear regression, estimating both slope and intercept</h4>
+<p>This fit type will fit a linear regression line, with the alpha and beta
+parameter values estimated from the data within the Gadget model. The
+file format for this fit type is given below:</p>
+<pre><code>fittype              linearfit</code></pre>
+</div>
+<div id="log-linear-regression-estimating-both-slope-and-intercept" class="section level4">
+<h4><span class="header-section-number">8.6.1.2</span> log linear regression, estimating both slope and intercept</h4>
+<p>This fit type will fit a log linear regression line, with the alpha and
+beta parameter values estimated from the data within the Gadget model.
+The file format for this fit type is given below:</p>
+<pre><code>fittype              loglinearfit</code></pre>
+</div>
+<div id="linear-regression-fixing-slope-and-estimating-intercept" class="section level4">
+<h4><span class="header-section-number">8.6.1.3</span> linear regression, fixing slope and estimating intercept</h4>
+<p>This fit type will fit a linear regression line, with the alpha
+parameter value estimated from the data within the Gadget model, and the
+beta parameter value specified in the input file. The file format for
+this fit type is given below:</p>
+<pre><code>fittype              fixedslopelinearfit
+slope                &lt;beta&gt;</code></pre>
+</div>
+<div id="log-linear-regression-fixing-slope-and-estimating-intercept" class="section level4">
+<h4><span class="header-section-number">8.6.1.4</span> log linear regression, fixing slope and estimating intercept</h4>
+<p>This fit type will fit a log linear regression line, with the alpha
+parameter value estimated from the data within the Gadget model, and the
+beta parameter value specified in the input file. The file format for
+this fit type is given below:</p>
+<pre><code>fittype              fixedslopeloglinearfit
+slope                &lt;beta&gt;</code></pre>
+</div>
+<div id="linear-regression-fixing-intercept-and-estimating-slope" class="section level4">
+<h4><span class="header-section-number">8.6.1.5</span> linear regression, fixing intercept and estimating slope</h4>
+<p>This fit type will fit a linear regression line, with the beta parameter
+value estimated from the data within the Gadget model, and the alpha
+parameter value specified in the input file. The file format for this
+fit type is given below:</p>
+<pre><code>fittype              fixedinterceptlinearfit
+intercept            &lt;alpha&gt;</code></pre>
+</div>
+<div id="log-linear-regression-fixing-intercept-and-estimating-slope" class="section level4">
+<h4><span class="header-section-number">8.6.1.6</span> log linear regression, fixing intercept and estimating slope</h4>
+<p>This fit type will fit a log linear regression line, with the beta
+parameter value estimated from the data within the Gadget model, and the
+alpha parameter value specified in the input file. The file format for
+this fit type is given below:</p>
+<pre><code>fittype              fixedinterceptloglinearfit
+intercept            &lt;alpha&gt;</code></pre>
+</div>
+<div id="linear-regression-fixing-both-slope-and-intercept" class="section level4">
+<h4><span class="header-section-number">8.6.1.7</span> linear regression, fixing both slope and intercept</h4>
+<p>This fit type will fit a linear regression line, with the alpha and beta
+parameter values specified in the input file. The file format for this
+fit type is given below:</p>
+<pre><code>fittype              fixedlinearfit
+slope                &lt;beta&gt;
+intercept            &lt;alpha&gt;</code></pre>
+</div>
+<div id="log-linear-regression-fixing-both-slope-and-intercept" class="section level4">
+<h4><span class="header-section-number">8.6.1.8</span> log linear regression, fixing both slope and intercept</h4>
+<p>This fit type will fit a log linear regression line, with the alpha and
+beta parameter values specified in the input file. The file format for
+this fit type is given below:</p>
+<pre><code>fittype              fixedloglinearfit
+slope                &lt;beta&gt;
+intercept            &lt;alpha&gt;</code></pre>
+</div>
+</div>
+<div id="subsec:sibyage" class="section level3">
+<h3><span class="header-section-number">8.6.2</span> SurveyIndices by Age</h3>
+<p>To specify an age group based SurveyIndices likelihood component, the
+format required in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               ages
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
+<p>The datafile is a list of the indices that Gadget is to use to fit the
+linear regression to, aggregated according to the age aggregation file
+specified, for the population numbers calculated in the model. The
+format of this file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the survey index for that timestep/area/age
+combination.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be
+used to calculate the likelihood score for this likelihood component.
+The valid fit type options are the same as for the length based survey
+indices, given in
+section <a href="chap:like.html#subsec:sibylength" reference-type="ref" reference="subsec:sibylength">8.6.1</a> above.</p>
+</div>
+<div id="subsec:sibyfleet" class="section level3">
+<h3><span class="header-section-number">8.6.3</span> SurveyIndices by Fleet</h3>
+<p>To specify a length group based SurveyIndices likelihood component
+taking the fleet selectivity into account, the format required in the
+main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               fleets
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
+<p>The datafile is a list of the indices that Gadget is to use to fit the
+linear regression to, aggregated according to the length aggregation
+file specified, for the population numbers calculated in the model. The
+format of this file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the survey index for that timestep/area/length
+combination.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be
+used to calculate the likelihood score for this likelihood component.
+The valid fit type options are the same as for the length based survey
+indices, given in
+section <a href="chap:like.html#subsec:sibylength" reference-type="ref" reference="subsec:sibylength">8.6.1</a> above.</p>
+</div>
+<div id="subsec:sibyacoustic" class="section level3">
+<h3><span class="header-section-number">8.6.4</span> SurveyIndices by Acoustic</h3>
+<p>To specify an acoustic based SurveyIndices likelihood component, the
+format required in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               acoustic
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+surveynames          &lt;vector of the names of the acoustic surveys&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
+<p>The datafile is a list of the acoustic indices that Gadget is to use to
+fit the linear regression to, for the population calculated in the
+model. The format of this file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;survey&gt;  &lt;acoustic&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>acoustic<span class="math inline">\(&gt;\)</span> is the acoustic index for that timestep/area/survey
+combination.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be
+used to calculate the likelihood score for this likelihood component.
+The valid fit type options are the same as for the length based survey
+indices, given in
+section <a href="chap:like.html#subsec:sibylength" reference-type="ref" reference="subsec:sibylength">8.6.1</a> above.</p>
+</div>
+<div id="subsec:sibyeffort" class="section level3">
+<h3><span class="header-section-number">8.6.5</span> SurveyIndices by Effort</h3>
+<p>To specify an effort based SurveyIndices likelihood component, the
+format required in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveyindices
+datafile             &lt;name for the datafile&gt;
+sitype               effort
+biomass              &lt;0 or 1&gt; ; 1 to base index data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+&lt;fit type parameters&gt;</code></pre>
+<p>The datafile is a list of the fleet effort indices that Gadget is to use
+to fit the linear regression to, for the fishing effort calculated in
+the model. The format of this file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;fleet&gt;  &lt;effort&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>effort<span class="math inline">\(&gt;\)</span> is the effort index for that timestep/area/fleet
+combination.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines the type of linear regression equation to be
+used to calculate the likelihood score for this likelihood component.
+The valid fit type options are the same as for the length based survey
+indices, given in
+section <a href="chap:like.html#subsec:sibylength" reference-type="ref" reference="subsec:sibylength">8.6.1</a> above.</p>
+</div>
+</div>
+<div id="sec:surveydistribution" class="section level2">
+<h2><span class="header-section-number">8.7</span> SurveyDistribution</h2>
+<p>The SurveyDistribution likelihood component is used to compare the
+development of a stock in the Gadget model to age-length indices
+calculated from a survey for that stock. The likelihood score that is
+calculated gives some measure as to how well the data from the model
+fits to the data from the calculated survey index distribution.</p>
+<p>To specify a SurveyDistribution likelihood component, the format
+required in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 surveydistribution
+datafile             &lt;name for the datafile&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying lengths&gt;
+ageaggfile           &lt;age aggregation file specifying ages&gt;
+stocknames           &lt;vector of the names of the stocks&gt;
+fittype              &lt;fit type&gt;
+parameters           &lt;fit type parameters&gt;
+&lt;suitability parameters&gt;
+epsilon              &lt;epsilon&gt;
+likelihoodtype       &lt;likelihood type&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of all the stocks to be
+aggregated into a single pseudo stock for the purposes of the data
+comparison. The <span class="math inline">\(&lt;\)</span>suitability parameters<span class="math inline">\(&gt;\)</span> define the suitability of
+the survey fleet that was used to collect the survey index data. This is
+the same format as the suitability functions for the stock, as discussed
+in section <a href="chap:stock.html#sec:suitability">4.9</a> above. Note that only one set of
+suitability values is defined, which will be applied to all the stocks
+for this likelihood component.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fit type<span class="math inline">\(&gt;\)</span> defines what function is to be used to calculate the
+survey index distribution from the modelled population. Currently, there
+are two functions defined, and the valid function names are:</p>
+<ul>
+<li><code>linearfit</code> - use a linear function</li>
+<li><code>powerfit</code> - use a power function</li>
+</ul>
+<p>The <span class="math inline">\(&lt;\)</span>fit type parameters<span class="math inline">\(&gt;\)</span> is a vector of 2 parameters that are used
+to calculate the survey index values from the modelled population. The
+<span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> value is used whenever the calculated probability is very
+unlikely, although the exact format of this depends on the likelihood
+type that is to be used when calculating the likelihood score.</p>
+<p>The <span class="math inline">\(&lt;\)</span>likelihood type<span class="math inline">\(&gt;\)</span> defines what function is to be used to compare
+the modelled survey index distribution to the input survey index
+distribution. Currently, there are 4 functions defined, and the valid
+function names are:</p>
+<ul>
+<li><code>multinomial</code> - use a multinomial function</li>
+<li><code>pearson</code> - use a Pearson function</li>
+<li><code>gamma</code> - use a gamma function</li>
+<li><code>log</code> - use a log function</li>
+</ul>
+<p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains a list of the
+age-length survey indices that Gadget is to use to fit the likelihood
+function to, aggregated according to the aggregation files specified,
+for the numbers calculated in the model. The format of this file is
+given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the survey index for the timestep/area/age/length
+combination.</p>
+<div id="linear-fit" class="section level3">
+<h3><span class="header-section-number">8.7.1</span> Linear Fit</h3>
+<p>The linear fit function calculates the survey index for the modelled
+population from
+equation <a href="chap:like.html#eq:surveydistfit1">(8.21)</a> below:</p>
+<p><span class="math display" id="eq:surveydistfit1">\[\begin{equation}
+\tag{8.21}
+\widehat{I}_{tral} = q_{0} S_{l} \big( N_{tral} + q_{1} \big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the calculated suitability value for that length
+group <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the model population for that time/area/age/length
+combination</p>
+</div>
+<div id="power-fit" class="section level3">
+<h3><span class="header-section-number">8.7.2</span> Power Fit</h3>
+<p>The power fit function calculates the survey index for the modelled
+population from
+equation <a href="chap:like.html#eq:surveydistfit1">(8.21)</a> below:</p>
+<p><span class="math display" id="eq:surveydistfit2">\[\begin{equation}
+\tag{8.22}
+\widehat{I}_{tral} = q_{0} S_{l} N_{tral} ^{q_{1}}\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> S <span class="math inline">\(&gt;\)</span> is the calculated suitability value for that length
+group <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the model population for that time/area/age/length
+combination</p>
+</div>
+<div id="multinomial-function-2" class="section level3">
+<h3><span class="header-section-number">8.7.3</span> Multinomial Function</h3>
+<p>The multinomial function calculates the likelihood component from
+equation <a href="chap:like.html#eq:surveydist1">(8.23)</a> below:</p>
+<p><span class="math display" id="eq:surveydist1">\[\begin{equation}
+\tag{8.23}
+\ell = \sum_{\it time}\sum_{\it areas} \bigg( \log \big(\sum_{\it ages}\sum_{\it lengths} \widehat{I}_{tral} \big) - {\frac { \displaystyle \sum_{\it ages}\sum_{\it lengths} \big(\widehat{I}_{tral} \log (I_{tral} + \epsilon) \big)} { \displaystyle \sum_{\it ages}\sum_{\it lengths} I_{tral}} } \bigg)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> I <span class="math inline">\(&gt;\)</span> is the data survey index for that time/area/age/length
+combination <span class="math inline">\(&lt;\widehat{I}&gt;\)</span> is the model survey index for that
+time/area/age/length combination</p>
+</div>
+<div id="pearson-function-1" class="section level3">
+<h3><span class="header-section-number">8.7.4</span> Pearson Function</h3>
+<p>The Pearson function calculates the likelihood component from
+equation <a href="chap:like.html#eq:surveydist2">(8.24)</a> below:</p>
+<p><span class="math display" id="eq:surveydist2">\[\begin{equation}
+\tag{8.24}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ ( I_{tral} - \widehat{I}_{tral} ) ^2} {\widehat{I}_{tral} + \epsilon}} \Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> I <span class="math inline">\(&gt;\)</span> is the data survey index for that time/area/age/length
+combination <span class="math inline">\(&lt;\widehat{I}&gt;\)</span> is the model survey index for that
+time/area/age/length combination</p>
+</div>
+<div id="gamma-function-1" class="section level3">
+<h3><span class="header-section-number">8.7.5</span> Gamma Function</h3>
+<p>The gamma function calculates the likelihood component from
+equation <a href="chap:like.html#eq:surveydist3">(8.25)</a> below:</p>
+<p><span class="math display" id="eq:surveydist3">\[\begin{equation}
+\tag{8.25}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( {\frac{ I_{tral}} { (\widehat{I}_{tral} + \epsilon )} + \log ({\widehat{I}_{tral} + \epsilon}}) \Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> I <span class="math inline">\(&gt;\)</span> is the data survey index for that time/area/age/length
+combination <span class="math inline">\(&lt;\widehat{I}&gt;\)</span> is the model survey index for that
+time/area/age/length combination</p>
+</div>
+<div id="log-function-1" class="section level3">
+<h3><span class="header-section-number">8.7.6</span> Log Function</h3>
+<p>The log function calculates the likelihood component from
+equation <a href="chap:like.html#eq:surveydist4">(8.26)</a> below:</p>
+<p><span class="math display" id="eq:surveydist4">\[\begin{equation}
+\tag{8.26}
+\ell = \sum_{\it time}\sum_{\it areas} \Big(  \log \Big( {\frac{ \displaystyle \sum_{\it ages}\sum_{\it lengths}  \widehat{I}_{tral}} { \displaystyle \sum_{\it ages}\sum_{\it lengths} I_{tral}}} \Big) \Big) ^2\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> I <span class="math inline">\(&gt;\)</span> is the data survey index for that time/area/age/length
+combination <span class="math inline">\(&lt;\widehat{I}&gt;\)</span> is the model survey index for that
+time/area/age/length combination</p>
+</div>
+</div>
+<div id="sec:stomach" class="section level2">
+<h2><span class="header-section-number">8.8</span> StomachContent</h2>
+<p>The StomachContent likelihood component is used to compare consumption
+data sampled from the model with stomach content data obtained by
+analysing the stomach contents of various predators. This data can be
+used to give an indication of the diet composition of the stock. The
+likelihood score that is calculated gives some measure as to how well
+the consumption data from the model fits to the data from the stomach
+contents. Care is needed when making this comparison, since the data
+will give information on the stomach content at the time of capture of
+the predator, where as the Gadget simulation can only give information
+about the modelled consumption of the prey by the predator.</p>
+<p>To specify a StomachContent likelihood component, the format required in
+the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 stomachcontent
+function             &lt;function name&gt;
+datafile             &lt;name for the datafile&gt;
+epsilon              &lt;epsilon&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+predatornames        &lt;vector of the names of the predators&gt;
+predatorlengths
+lenaggfile           &lt;length aggregation file specifying predator lengths&gt;
+preyaggfile          &lt;prey aggregation file specifying preys&gt;</code></pre>
+<p>The optional <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> value is used whenever the calculated
+probability is very unlikely, although the exact format of this depends
+on the function that is to be used when calculating the likelihood
+score. This means that the likelihood component is not dominated by one
+or two stray values, since these will be reset back to less unlikely
+values. The default value for <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> is 10, which is used
+whenever it is not defined in the input file.</p>
+<p>The <span class="math inline">\(&lt;\)</span>predatornames<span class="math inline">\(&gt;\)</span> vector contains a list of all the predators to
+be aggregated into a single pseudo predator for the purposes of the data
+comparison.</p>
+<p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used
+to compare the modelled consumption data to the input stomach content
+data. Currently, there is only one likelihood function defined, so the
+valid function name is:</p>
+<ul>
+<li><code>scsimple</code> - use a simple ratio function</li>
+</ul>
+<p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains a list of the
+stomach content data that Gadget is to use to fit the likelihood
+function to, aggregated according to the aggregation files specified,
+for the consumption calculated in the model. The format of this file is
+given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;predator&gt;  &lt;prey&gt;  &lt;ratio&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>ratio<span class="math inline">\(&gt;\)</span> is the ratio of prey <span class="math inline">\(&lt;\)</span>prey<span class="math inline">\(&gt;\)</span> in the stomachs of
+predator <span class="math inline">\(&lt;\)</span>predator<span class="math inline">\(&gt;\)</span> for the timestep/area combination, where
+<span class="math inline">\(&lt;\)</span>prey<span class="math inline">\(&gt;\)</span> is defined in the prey aggregation file, and <span class="math inline">\(&lt;\)</span>predator<span class="math inline">\(&gt;\)</span>
+is defined in the predator length aggregation file.</p>
+<div id="scsimple-function" class="section level3">
+<h3><span class="header-section-number">8.8.1</span> SCSimple Function</h3>
+<p>The scsimple function calculates the likelihood component by comparing
+the ratio of the consumption of different preys by a predator in the
+model to the ratio of the preys found in the stomach contents data
+specified in the input file, as shown in
+equation <a href="chap:like.html#eq:stomach1">(8.27)</a> below:</p>
+<p><span class="math display" id="eq:stomach1">\[\begin{equation}
+\tag{8.27}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it predators}\sum_{\it preys} \Big( P_{trpp} - \pi_{trpp} \Big) ^2\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> P <span class="math inline">\(&gt;\)</span> is the ratio of the stomach content data for that
+time/area/predator/prey combination <span class="math inline">\(&lt;\pi&gt;\)</span> is the ratio of the modelled
+consumption for that time/area/predator/prey combination</p>
+</div>
+</div>
+<div id="sec:recaptures" class="section level2">
+<h2><span class="header-section-number">8.9</span> Recaptures</h2>
+<p>The Recaptures likelihood component is used to compare recaptures data
+from tagging experiments within the model with recaptures data obtained
+from tagging experiments, aggregated according to length at recapture.
+The likelihood score that is calculated gives some measure as to how
+well the data from the model fits the recaptures data.</p>
+<p>To specify a Recaptures likelihood component, the format required in the
+main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 recaptures
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+lenaggfile           &lt;length aggregation file specifying recapture lengths&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be
+aggregated into a single pseudo fleet for the purposes of the data
+comparison.</p>
+<p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used
+to compare the modelled recaptures data to the input recaptures data.
+Currently, there is only one likelihood function defined, so the only
+valid function name is:</p>
+<ul>
+<li><code>poisson</code> - use a Poisson function</li>
+</ul>
+<p>Finally, the datafile is a list of the recaptures that Gadget is to use
+to fit the likelihood function to, aggregated according to the
+aggregation files specified, for the numbers calculated in the model.
+The format of this file is given below:</p>
+<pre><code>&lt;tagid&gt;  &lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of recaptures for the
+tag/timestep/area/length combination.</p>
+<div id="poisson-function" class="section level3">
+<h3><span class="header-section-number">8.9.1</span> Poisson Function</h3>
+<p>The Poisson function calculates the likelihood component from
+equation <a href="chap:like.html#eq:recap1">(8.28)</a> below:</p>
+<p><span class="math display" id="eq:recap1">\[\begin{equation}
+\tag{8.28}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it lengths} \Big( N_{trl} + \log \nu_{trl}! - N_{trl} \log \nu_{trl} \Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the number of observed recaptures for that
+time/area/length combination <span class="math inline">\(&lt;\nu&gt;\)</span> is the number of modelled
+recaptures for that time/area/length combination</p>
+</div>
+</div>
+<div id="sec:recstat" class="section level2">
+<h2><span class="header-section-number">8.10</span> RecStatistics</h2>
+<p>The RecStatistics likelihood component is used to compare statistical
+data sampled from tagged subpopulations within the model with
+statistical data obtained from the fish returned from tagging
+experiments. This is used to compare biological data, such as the mean
+length at age, and is similar to the CatchStatistics likelihood
+component (see section <a href="chap:like.html#sec:catchstat">8.4</a>). The likelihood score that is calculated
+gives some measure as to how well the data from the model fits to the
+data from the recaptures.</p>
+<p>To specify a RecStatistics likelihood component, the format required in
+the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 recstatistics
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;</code></pre>
+<p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be
+aggregated into a single pseudo fleet for the purposes of the data
+comparison.</p>
+<p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used
+to compare the modelled statistical data to the input statistical data.
+Currently, there are three likelihood functions defined, and the format
+of the statistical data given in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span>
+depends on the likelihood function used. The valid functions are:</p>
+<ul>
+<li><code>lengthcalcstddev</code> - use a weighted sum of squares of mean length</li>
+<li><code>lengthgivenstddev</code> - use a weighted sum of squares of mean length with given standard deviation</li>
+<li><code>lengthnostddev</code> - use a unweighted sum of squares of mean length</li>
+</ul>
+<div id="weighted-sum-of-squares-of-mean-length-1" class="section level3">
+<h3><span class="header-section-number">8.10.1</span> Weighted Sum of Squares of Mean Length</h3>
+<p>This likelihood function calculates the likelihood score based on a
+weighted sum of squares of the mean length, with the weighting given by
+calculating the variance of length of the modelled population, as shown
+in equation <a href="chap:like.html#eq:recstat1">(8.29)</a> below:</p>
+<p><span class="math display" id="eq:recstat1">\[\begin{equation}
+\tag{8.29}
+\ell = \sum_{\it tags}\sum_{\it time}\sum_{\it areas} \Big(\frac{(x-\mu)^2} {\sigma^2} N\Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the
+mean length calculated from the model <span class="math inline">\(&lt;\sigma&gt;\)</span> is the standard
+deviation of the length, calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the
+sample size</p>
+<p>For this RecStatistics function, the format of the statistical data
+required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
+<pre><code>&lt;tagid&gt;  &lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the tag/timestep/area
+combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples.</p>
+</div>
+<div id="weighted-sum-of-squares-of-mean-lengthwith-given-standard-deviation-1" class="section level3">
+<h3><span class="header-section-number">8.10.2</span> Weighted Sum of Squares of Mean LengthWith Given Standard Deviation</h3>
+<p>This likelihood function calculates the likelihood score based on a
+weighted sum of squares of the mean length, with the weighting given the
+variance of length of the input population, as shown in
+equation <a href="chap:like.html#eq:recstat2">(8.30)</a> below:</p>
+<p><span class="math display" id="eq:recstat2">\[\begin{equation}
+\tag{8.30}
+\ell = \sum_{\it tags}\sum_{\it time}\sum_{\it areas} \Big(\frac{(x-\mu)^2} {s^2} N\Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the
+mean length calculated from the model <span class="math inline">\(&lt;\)</span> s <span class="math inline">\(&gt;\)</span> is the standard
+deviation of the length from the data <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
+<p>For this RecStatistics function, the format of the statistical data
+required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
+<pre><code>&lt;tagid&gt;  &lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the tag/timestep/area
+combination, <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples and
+<span class="math inline">\(&lt;\)</span>stddev<span class="math inline">\(&gt;\)</span> is the standard deviation of the length of these samples.</p>
+</div>
+<div id="unweighted-sum-of-squares-of-mean-length-1" class="section level3">
+<h3><span class="header-section-number">8.10.3</span> Unweighted Sum of Squares of Mean Length</h3>
+<p>This likelihood function calculates the likelihood score based on a
+unweighted sum of squares of the mean length, with the variance of the
+length of the population assumed to be 1, as shown in
+equation <a href="chap:like.html#eq:recstat3">(8.31)</a> below:</p>
+<p><span class="math display" id="eq:recstat3">\[\begin{equation}
+\tag{8.31}
+\ell = \sum_{\it tags}\sum_{\it time}\sum_{\it areas} \Big((x-\mu)^2 N\Big)\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> x <span class="math inline">\(&gt;\)</span> is the sample mean length from the data <span class="math inline">\(&lt;\mu&gt;\)</span> is the
+mean length calculated from the model <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the sample size</p>
+<p>For this RecStatistics function, the format of the statistical data
+required in the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> is given below:</p>
+<pre><code>&lt;tagid&gt;  &lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;number&gt;  &lt;mean&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>number<span class="math inline">\(&gt;\)</span> is the number of samples for the tag/timestep/area
+combination, and <span class="math inline">\(&lt;\)</span>mean<span class="math inline">\(&gt;\)</span> is the mean length of these samples.</p>
+</div>
+</div>
+<div id="sec:migpenalty" class="section level2">
+<h2><span class="header-section-number">8.11</span> MigrationPenalty</h2>
+<p>The MigrationPenalty likelihood component is used to give a penalty
+whenever there is a negative migration value from the migration matrices
+(which is meaningless). The MigrationPenalty component is used (rather
+than the BoundLikelihood component) since the values in the migration
+matrices are calculated from more than one parameter, and it is not
+necessarily the individual parameters that are wrong, rather the
+combination of the parameters that give the migration matrix value that
+is wrong. The likelihood component that is used is based on the sum of
+squares of the migration values, given by the equation below:</p>
+<p><span class="math display" id="eq:migpenalty">\[\begin{equation}
+\tag{8.32}
+\ell = \left( \sum_{ij}^{} M_{ij}^{p_0} \right)^{p_1}\end{equation}\]</span></p>
+<p>The use of 2 power coefficients gives increased flexibility for the
+likelihood component. In general, a higher value of <span class="math inline">\(p_1\)</span> applies a
+higher penalty to “many small negative values”, where as a higher value
+of <span class="math inline">\(p_0\)</span> applies a higher penalty to “few large negative values”. For a
+simple sum of squares of the migration matrix values, <span class="math inline">\(p_0\)</span> should be
+set to 2, and <span class="math inline">\(p_1\)</span> should be set to 1.</p>
+<p>To specify a MigrationPenalty likelihood component, the format required
+in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 migrationpenalty
+stockname            &lt;name for the stock to check&gt;
+powercoeffs          &lt;p0&gt;  &lt;p1&gt;</code></pre>
+<p>Note that it is not possible to aggregate more than one stock into a
+single pseudo stock for this likelihood component.</p>
+</div>
+<div id="sec:migpro" class="section level2">
+<h2><span class="header-section-number">8.12</span> MigrationProportion</h2>
+<p>The MigrationProportion likelihood component is used to compare
+population proportion data sampled from the model with population
+proportion data sampled from landings or surveys. The populations
+proportion data gives the proportion of the population is that is
+present on each area on a given timestep. The likelihood score that is
+calculated gives some measure as to how well the migration data from the
+model fit to the data from the sample catches.</p>
+<p>To specify a MigrationProportion likelihood component, the format
+required in the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 migrationproportion
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+biomass              &lt;0 or 1&gt; ; 1 to base migration proportion data on biomass
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
+<p>The optional flag <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is used to specify whether the migration
+proportion data should be based on the biomass of the stock or on the
+population numbers for the stock. If this is set to 0, then the
+migration proportion data calculated in the model will be based on the
+available population numbers for the stock. If this line is not
+specified, then a biomass value of 1 is assumed and the migration
+proportion data calculated in the model will be based on the available
+population biomass of the stock.</p>
+<p>The <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of all the stocks to be
+aggregated into a single pseudo stock for the purposes of the data
+comparison.</p>
+<p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used
+to compare the modelled migration proportion data to the input migration
+proportion data. Currently, there is only one likelihood function
+defined, so the valid function name is:</p>
+<ul>
+<li><code>sumofsquares</code> - use a simple sum of squares function</li>
+</ul>
+<p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains a list of the
+migration proportion data that Gadget is to use to fit the likelihood
+function to, aggregated according to the aggregation files specified,
+for the migration proportions calculated in the model. The format of
+this file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;ratio&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>ratio<span class="math inline">\(&gt;\)</span> is the proportion of stock that is in area <span class="math inline">\(&lt;\)</span>area<span class="math inline">\(&gt;\)</span>
+for that timestep.</p>
+<div id="sum-of-squares-function-2" class="section level3">
+<h3><span class="header-section-number">8.12.1</span> Sum of Squares Function</h3>
+<p>The sum of squares function calculates the likelihood component from
+equation <a href="chap:like.html#eq:migpro1">(8.33)</a> below:</p>
+<p><span class="math display" id="eq:migpro1">\[\begin{equation}
+\tag{8.33}
+\ell = \sum_{\it time}\sum_{\it areas} \Big( P_{tr} - \pi_{tr} \Big) ^2\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> P <span class="math inline">\(&gt;\)</span> is the proportion of the data sample for that time/area
+combination <span class="math inline">\(&lt;\pi&gt;\)</span> is the proportion of the model sample for that
+time/area combination</p>
+</div>
+</div>
+<div id="sec:catchinkilos" class="section level2">
+<h2><span class="header-section-number">8.13</span> CatchInKilos</h2>
+<p>The CatchInKilos likelihood component is used to compare the overall
+catch from the modelled fleets with landings data. This can be done for
+any fleet that has landings data available, but will give more useful
+information when used with fleets of type “LinearFleet”, since the
+“TotalFleet” fleet type will catch the amount specified in the input
+file (see section <a href="chap:fleet.html#chap:fleet">7</a> for more information on the available fleet
+types).</p>
+<p>To specify a CatchInKilos likelihood component, the format required in
+the main likelihood file is as follows:</p>
+<pre><code>[component]
+name                 &lt;name for the likelihood component&gt;
+weight               &lt;weight for the likelihood component&gt;
+type                 catchinkilos
+datafile             &lt;name for the datafile&gt;
+function             &lt;function name&gt;
+aggregationlevel     &lt;0 or 1&gt; ; 1 to aggregate data over the whole year
+epsilon              &lt;epsilon&gt;
+areaaggfile          &lt;area aggregation file specifying areas&gt;
+fleetnames           &lt;vector of the names of the fleets&gt;
+stocknames           &lt;vector of the names of the stocks&gt;</code></pre>
+<p>The optional flag <span class="math inline">\(&lt;\)</span>aggregationlevel<span class="math inline">\(&gt;\)</span> is used to specify whether the
+catch data should be aggregated over the whole year (by setting
+aggregation level to 1) or not aggregated, and calculated for each
+timestep (by setting aggregation level to 0). If this line is not
+specified, then an aggregation level of 0 is assumed, and the catch data
+is not aggregated over the whole year.</p>
+<p>The <span class="math inline">\(&lt;\)</span>fleetnames<span class="math inline">\(&gt;\)</span> vector contains a list of all the fleets to be
+aggregated into a single pseudo fleet for the purposes of the data
+comparison. Similarly, the <span class="math inline">\(&lt;\)</span>stocknames<span class="math inline">\(&gt;\)</span> vector contains a list of
+all the stocks to be aggregated into a single pseudo stock.</p>
+<p>The optional <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> value is used in the likelihood function to
+avoid problems that would arise from taking the logarithm of zero.
+Epsilon is added to both the modelled and observed landings data, to
+ensure that these values are always positive, and thus should be set to
+a small number. The default value for <span class="math inline">\(&lt;\)</span>epsilon<span class="math inline">\(&gt;\)</span> is 10, which is used
+whenever it is not defined in the input file.</p>
+<p>The <span class="math inline">\(&lt;\)</span>function name<span class="math inline">\(&gt;\)</span> defines what likelihood function is to be used
+to compare the modelled catch to the input catch. Currently, there is
+only one likelihood function defined, so the only valid function name
+is:</p>
+<ul>
+<li><code>sumofsquares</code> - use a log sum of squares function</li>
+</ul>
+<p>Finally, the file specified by <span class="math inline">\(&lt;\)</span>datafile<span class="math inline">\(&gt;\)</span> contains the landings data
+that Gadget is to use to fit the likelihood function to for the catch
+calculated in the model. The format of this file is given below:</p>
+<pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;fleet&gt;  &lt;biomass&gt;</code></pre>
+<p>where <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is the catch for the timestep/area/fleet
+combination. The <span class="math inline">\(&lt;\)</span>step<span class="math inline">\(&gt;\)</span> column is optional if the
+<span class="math inline">\(&lt;\)</span>aggregationlevel<span class="math inline">\(&gt;\)</span> flag has been set to 1, since the data will be
+aggregated over the whole year. In this case, it is possible to specify
+the landings data in the following format:</p>
+<pre><code>&lt;year&gt;  &lt;area&gt;  &lt;fleet&gt;  &lt;biomass&gt;</code></pre>
+<div id="sum-of-squares-function-3" class="section level3">
+<h3><span class="header-section-number">8.13.1</span> Sum of Squares Function</h3>
+<p>The sum of squares function calculates the likelihood component from
+equation <a href="chap:like.html#eq:catchtons">(8.34)</a> below:</p>
+<p><span class="math display" id="eq:catchtons">\[\begin{equation}
+\tag{8.34}
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it fleets} (\log(N_{trf} + \epsilon) - \log(\nu_{trf} + \epsilon))^2\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the catch biomass for that time/area/fleet
+combination <span class="math inline">\(&lt;\nu&gt;\)</span> is the modelled catch biomass for that
+time/area/fleet combination</p>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="chap:fleet.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chap:print.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "lunr",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
