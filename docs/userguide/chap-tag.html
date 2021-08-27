@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Gadget userguide</title>
-  <meta name="description" content="Gadget userguide" />
+  <title>5 Tag Files | Gadget userguide</title>
+  <meta name="description" content="5 Tag Files | Gadget userguide" />
   <meta name="generator" content="bookdown 0.23 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Gadget userguide" />
+  <meta property="og:title" content="5 Tag Files | Gadget userguide" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Gadget userguide" />
+  <meta name="twitter:title" content="5 Tag Files | Gadget userguide" />
   
   
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-
-<link rel="next" href="chap-input.html"/>
+<link rel="prev" href="chap-stock.html"/>
+<link rel="next" href="chap-other.html"/>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -314,285 +314,65 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="header">
-<h1 class="title">Gadget userguide</h1>
-<p class="author"><em>MFRI</em></p>
-</div>
-<div id="chap-intro" class="section level1">
-<h1><span class="header-section-number">1</span> Introduction to Gadget</h1>
-<p>Gadget is the <strong>G</strong>lobally applicable <strong>A</strong>rea <strong>D</strong>isaggregated
-<strong>G</strong>eneral <strong>E</strong>cosystem <strong>T</strong>oolbox. Gadget is a flexible and powerful
-software tool that has been developed to model marine ecosystems,
-including both the impact of the interactions between species and the
-impact of fisheries harvesting the species. Gadget simulates these
-processes in a biologically realistic manner, and uses a framework to
-test the development of the modelled ecosystem in a statistically
-rigorous manner. Gadget has successfully been used to investigate the
-population dynamics of stock complexes in Icelandic waters, the Barents
-Sea, the North Sea and the Irish and Celtic Seas.</p>
-<div id="sec-whatisgadget" class="section level2">
-<h2><span class="header-section-number">1.1</span> What is Gadget?</h2>
-<p>Gadget can run complicated statistical models which take many features
-of the ecosystem into account. Gadget works by running an internal
-forward projection model based on many parameters describing the
-ecosystem, and then comparing the output from this model to observed
-measurements to get a likelihood score. The model ecosystem parameters
-can then be adjusted, and the model re-run, until an optimum is found,
-which corresponds to the model with the lowest likelihood score. This
-iterative, computationally intensive process is handled within Gadget,
-using a robust minimisation algorithm. The Gadget software framework
-consists of three parts:</p>
-<ul>
-<li><p>a parametric model to <strong>simulate</strong> the ecosystem</p></li>
-<li><p>statistical functions to <strong>compare</strong> the model output to data</p></li>
-<li><p>search algorithms to <strong>optimise</strong> the model parameters</p></li>
-</ul>
-<p>Gadget allows the user to include a number of features of the ecosystem
-into the model: One or more species, each of which may be split into
-multiple components; multiple areas with migration between areas;
-predation between and within species; growth; maturation; reproduction
-and recruitment; multiple commercial and survey fleets taking catches
-from the populations.</p>
-<p>Like any large piece of code, Gadget is based on previous ideas by
-several authors. Conceptually the modelling framework extends earlier
-multi species programming work such as MSVPA and MULTSPEC into a more
-generic statistical framework. Alternatively, Gadget is a conceptual
-extension of the Stock Synthesis statistical assessment single-species
-framework into a multi species setting.</p>
-<p>The initial BORMICON code was developed as part of a multi species
-programme implemented at the Marine Research Institute in Reykjavik,
-Iceland, starting in 1992 with Ólafur K Pálsson as project coordinator
-and Gunnar Stefánsson coordinating the modelling work. Subsequently the
-code became the basis for Fleksibest at the Institute of Marine Research
-in Bergen, Norway. Further development work in 1999-2003 was partly
-funded by EU grant QLK5-CT1999-01609 (“Development of Structurally
-Detailed Statistically Testable Models of Marine Populations”).
-Development work for 2004-2006 was partly funded by EU grant 502482
-(“Critical Interactions Between Species and their Implications for a
-Precautionary Fisheries Management in a Variable Environment - a
-Modelling Approach”). Developement work for 2010-2012 was partly funded
-by EU project “Defineit” under the MariFish ERA-NET (grant
-ERAC-CT-2006-025989)</p>
-<p>The Gadget code is derived from the original BORMICON code of Halldór
-Narfi Stefánsson, Höskuldur Björnsson and Hersir Sigurgeirsson.
-Subsequent contributions include program additions by Morten Nygaard
-Åsnes and Kristin Frøysa to include the Fleksibest model. The ability to
-run in parallel across a network of computers using PVM was implemented
-primarily by Auðbjörg Jakobsdóttir with input from several other people,
-including Jón Guðmundsson who worked on a variant based on Condor.
-Several mathematical additions and changes to allow for parallel
-minimisation on a network were implemented by Þórdís Linda Þórarinsdóttir
-and Kristjana Ýr Jónsdóttir.</p>
-<p>More recent changes include the work to use information from tagging
-experiments, which was implemented primarily by Sigurður Hannesson. The
-work on multivariate distributions was implemented by Bjarki Þór
-Elvarsson. Recent additions including major code cleanups, modifications
-to the input formats and debugging operations have been led by James
-Begley, who is the current maintainer of the code and coordinator of all
-programming efforts.</p>
-</div>
-<div id="sec-gettinggadget" class="section level2">
-<h2><span class="header-section-number">1.2</span> Getting Gadget</h2>
-<p>Gadget is distributed via GitHub and can be obtained at:</p>
-<blockquote>
-<p><a href="http://github.com/Hafro/gadget2" class="uri">http://github.com/Hafro/gadget2</a></p>
-</blockquote>
-<p>That page will have instructions for how to install the most recent
-version of Gadget. Follow the instructions there to install</p>
-<p>Gadget is a program that runs on a Unix computing platform, and is
-regularly tested on machines running versions of Linux, Mac OSX and
-Windows. It should also run on other versions of Unix, but this may
-require modifications to the makefile in order to do so. Gadget is
-distributed as a set of source code files, which need to be compiled
-into an executable program before it can be run. Follow the instructions
-on the link above to fetch and compile the Gadget sources.</p>
-</div>
-<div id="sec-runninggadget" class="section level2">
-<h2><span class="header-section-number">1.3</span> Running Gadget</h2>
-<p>Gadget is a command line program that runs on a Linux computing
-platform. To start Gadget, simply type the following at a standard Linux
-prompt:</p>
-<pre><code>gadget &lt;options&gt;</code></pre>
-<p>where <span class="math inline">\(&lt;\)</span>options<span class="math inline">\(&gt;\)</span> are a combination of the starting switches described
-in the next section. Note that this assumes that the Gadget executable
-has been placed in a directory that is included in the $PATH, which
-might not be the case for some Linux distributions. If this is the case,
-Gadget should be started by including the path to the Gadget executable,
-for example by typing if the Gadget executable is in the current
-directory.</p>
-<p>Gadget is not an interactive program, so once it has started there is no
-need for any further input from the user. However, if Gadget was started
-incorrectly (for example, using the wrong input files) then Gadget can
-be stopped by pressing <span class="math inline">\(&lt;\)</span>CTRL<span class="math inline">\(&gt;&lt;\)</span>C<span class="math inline">\(&gt;\)</span>, which will interrupt the
-calculations, displaying a menu from which it is possible to either
-store the current calculations to a text file, or to exit (by pressing
-<span class="math inline">\(&lt;\)</span>Q<span class="math inline">\(&gt;\)</span>).</p>
-<p>When Gadget starts, it will look for a file called “main”, which
-contains a list of all the other data files required. Gadget will search
-for this file in the following 2 locations:</p>
-<ol style="list-style-type: decimal">
-<li><p>the directory specified by the Linux environment variable called
-“GADGET_WORKING_DIR”, optionally taking data from the directory
-specified by the Linux environment variable called
-“GADGET_DATA_DIR”</p></li>
-<li><p>the current directory (ie. from where Gadget has been started) if
-these environment variables have not been set (note that this is the
-default location)</p></li>
-</ol>
-<p>When Gadget is reading in the input data files, these files will be
-checked to ensure that they are in the correct format, and if there is
-an error in the format Gadget will print an error message and stop. Note
-that when Gadget is checking the format of a data file containing a
-number of columns (eg. the “area” file) it will only check the first
-data line in the file (so, for the case of the “area” file it will check
-that there are 4 entries on the first row and then assume that all the
-other rows also have 4 entries). Hopefully, there should be enough
-information in these error messages to lead the user to the input file
-that is causing the error.</p>
-<p>If all else fails, and the error messages do not lead the user to the
-source of the error, then there is an email address set up for any
-difficulties or questions that may arise, or reporting any bugs that get
-found. In addition to sorting out any problems that the user may be
-getting, we can also try to help with interpreting the output. This
-email address is gadgethelp@hafro.is</p>
-<p>Sending an email to this address should get a response within a couple
-of working days. This email address can also be used to give us any
-feedback on the usefulness (or otherwise) of Gadget, so let us know what
-you think!</p>
-</div>
-<div id="sec-starting" class="section level2">
-<h2><span class="header-section-number">1.4</span> Starting Switches</h2>
-<p>The following is a list of the command line switches that Gadget will
-recognise, together with a brief description of what the switch means to
-the running of the Gadget model.</p>
-<pre><code>gadget -s</code></pre>
-<p>Starting Gadget with the -s switch will start a simulation run, where a
-single run of the model will take place. This option is useful since it
-will give the model output (see Print Files,
-chapter <a href="chap-print.html#chap-print">9</a>),
-and it is used when running large Gadget models, using the paramin
-parallel processing optimiser to find the optimum.</p>
-<pre><code>gadget -l</code></pre>
-<p>Starting Gadget with the -l switch will start a optimising run, where
-the overall likelihood score will be reduced to an optimum, depending on
-the optimising information given (see the -opt switch).</p>
-<pre><code>gadget -n</code></pre>
-<p>Starting Gadget with the -n switch will start a network run, used in
-conjunction with the paramin optimiser to find an optimal solution for
-large models.</p>
-<pre><code>gadget -v
-gadget --version</code></pre>
-<p>Starting Gadget with the -v (or --version) switch will display the
-version of Gadget that is being run.</p>
-<pre><code>gadget -h
-gadget --help</code></pre>
-<p>Starting Gadget with the -h (or --help) switch will display a help
-screen, giving information about the various starting switches that can
-be used.</p>
-<pre><code>gadget -i &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -i switch will give Gadget an inputfile file
-from which the initial values and bounds of any variables can be read
-(see Parameter Files, chapter <a href="chap-param.html#chap-param">10</a>, for more information on the format of this
-file).</p>
-<pre><code>gadget -opt &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -opt switch will give Gadget an optimisation
-input file, from which the information about the optimisation routines
-will be read. This will specify the type of optimisation to perform, and
-also parameters for that optimisation routine (see Optimisation Files,
-chapter <a href="chap-optim.html#chap-optim">11</a>,
-for more information on the format of this file).</p>
-<pre><code>gadget -main &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -main switch will specify a filename for the
-main Gadget model input file, which contains links to all the other data
-files that are to be used by Gadget (see Main File,
-section <a href="chap-model.html#sec-mainfile">3.1</a>, for more information on the format of this
-file). If Gadget is started without the -main switch, Gadget will use
-the default filename “main” as the name for the main file.</p>
-<pre><code>gadget -p &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -p switch specifies the file that Gadget will
-use to print the final values and bounds of the variables, in the same
-format as for the inputfile. This file can then be used as the starting
-point for a subsequent Gadget run, if required. This file will always be
-generated, and if Gadget is started without the -p switch the default
-filename is “params.out” which will be created in the current directory
-(see Output Files, chapter <a href="chap-output.html#chap-output">12</a>, for more information on the format of this
-file).</p>
-<pre><code>gadget -o &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -o switch specifies the file that Gadget will
-use to print the score from the likelihood calculations. This file will
-give details on the parameters that have been used, the likelihood
-components that have been used, and the values for these parameters and
-likelihood components. This can be a large file if Gadget is performing
-an optimising run (see Output Files,
-chapter <a href="chap-output.html#chap-output">12</a>, for more information on the format of this
-file).</p>
-<pre><code>gadget -print &lt;number&gt;</code></pre>
-<p>Starting Gadget with the -print switch will specify the frequency with
-which information is written to the likelihood output file (specified
-with the -o switch). The default value for this is 1, meaning that the
-likelihood information is written for every iteration.</p>
-<pre><code>gadget -precision &lt;number&gt;</code></pre>
-<p>Starting Gadget with the -precision switch will specify the number of
-digits to be used when printing the output from the likelihood
-calculations to files specified with the -o switch.</p>
-<pre><code>gadget -log &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -log switch will specify a file to which Gadget
-will write logging messages to keep a record of internal Gadget actions.
-This can be a large file if Gadget is performing an optimising run (see
-Log Output, section <a href="chap-output.html#sec-logoutput">12.3</a>, for more information on the format of this
-file).</p>
-<pre><code>gadget -loglevel &lt;number&gt;</code></pre>
-<p>Starting Gadget with the -loglevel switch will specify the level of
-detail that is to be used by Gadget when logging messages (both to the
-screen and to a log file if one has been specified with the -log
-switch). If Gadget is started without the -loglevel switch then the
-default is for warning messages and error messages to be shown during a
-simulation run (when Gadget is started with the -s switch) and only
-error messages are shown during an optimising run (when Gadget is
-started with the -l switch).</p>
-<pre><code>gadget -seed &lt;number&gt;</code></pre>
-<p>Starting Gadget with the -seed switch will specify the value that is
-used to initialise the random number generator used within Gadget (see
-Repeatability, section <a href="chap-optim.html#sec-repeat">11.5</a> for more information on the use of the random
-number generator within Gadget runs).</p>
-<pre><code>gadget -m &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -m switch will specify a file from which Gadget
-can read the other command line options. This file should contain a
-simple list of the switches and their values, as they would be entered
-from the command line.</p>
-<pre><code>gadget -printinitial &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -printinitial switch will specify a file to
-which Gadget will write all internal information for the model at the
-start of the run (ie. the stock populations, likelihood calculations and
-other information from before the first timestep). This file will be
-large for moderately complicated models, and it is of most use for
-debugging purposes.</p>
-<pre><code>gadget -printfinal &lt;filename&gt;</code></pre>
-<p>Starting Gadget with the -printfinal switch will specify a file to which
-Gadget will write all internal information for the model at the end of
-the run (ie. the stock populations, likelihood calculations and other
-information from after the last timestep). This file will be large for
-moderately complicated models, and it is of most use for debugging
-purposes.</p>
-<pre><code>gadget -maxratio &lt;ratio&gt;</code></pre>
-<p>Starting Gadget with the -maxratio switch will specify the maximum ratio
-of prey that is allowed to be “consumed” on any one timestep. This
-consumption includes both the consumption by other stocks and the catch
-by any fleets. The default value is 0.95, which ensures that no more
-than 95% of the available stock biomass is consumed on a single
-timestep.</p>
-<p>Most of these switches can be combined to specify more information about
-the Gadget run that will be performed. For instance:</p>
-<pre><code>gadget -l -i inputfile.txt -o likelihood.txt -opt optinfo.txt -print 10</code></pre>
-<p>will start Gadget for a likelihood run, taking the initial values and
-information about the parameters from the file inputfile.txt, with the
-optimisation being done in accordance with the information in
-optinfo.txt, and printing likelihood information (every 10 iterations)
-to the file likelihood.txt.</p>
-<p>Note that it is not possible to do both a simulation run and a
-likelihood run at the same time, and starting Gadget with both the -l
-and -s switches will result in a warning, after which Gadget will
-perform a simulation run, with the -l switch being ignored.</p>
+<div id="chap-tag" class="section level1">
+<h1><span class="header-section-number">5</span> Tag Files</h1>
+<p>The tag files contain the information about the tagging experiments that
+are to be included in the Gadget model. Gadget will keep track of the
+number, and proportion, of fish in an age-length cell that have been
+tagged for a tagging experiment. This information can then be compared
+to the recaptures from that tagging experiment when calculating a
+likelihood score (see Recaptures,
+section <a href="chap-like.html#sec-recaptures">8.9</a>).</p>
+<p>To define tagged populations in the Gadget model, the “main” file must
+contain a list of the data files that contain the description of the
+tagging experiments, and the format for this is shown below:</p>
+<pre><code>[tagging]
+tagfiles               &lt;names of the tag files&gt;</code></pre>
+<p>The main tag file lists the tagging experiments, along with basic
+information about the experiments and the name of the datafile that
+contains information about the number of fish tagged for the tagging
+experiment. The format for this file shown below, with each new tagging
+experiment starting with the keyword [component]:</p>
+<pre><code>[component]
+tagid                  &lt;name of the tagging experiment&gt;
+stock                  &lt;name of the tagged stock&gt;
+tagarea                &lt;area that the tagging took place&gt;
+endyear                &lt;year of last recapture&gt;
+tagloss                &lt;proportion of tagged fish that are lost&gt;
+numbers                &lt;see Tagging Numbers&gt;</code></pre>
+<p>Each tagging experiment is defined by specifying the name of the tagging
+experiment, the stock that is tagged for the tagging experiment, and the
+area that the tagging took place on. Note that it is currently possible
+to only tag one stock, on one area, for each tagging experiment.</p>
+<p>The optional <span class="math inline">\(&lt;\)</span>endyear<span class="math inline">\(&gt;\)</span> value is used to define the end of a tagging
+experiment, and should be set to the year of the last expected recapture
+from the tagging experiment. This can be used to reduce the calculation
+time. If this is not specified, then it is assumed that the tagging
+experiment will run until the end of the simulation.</p>
+<p>The <span class="math inline">\(&lt;\)</span>tagloss<span class="math inline">\(&gt;\)</span> value is used to remove tagged fish from the model.
+For each time step, a number of tags can be lost from the tagging
+experiment. The number of tagged fish that remain in the tagging
+experiment is given by the
+equation <a href="chap-tag.html#eq:tagloss">(5.1)</a> below:</p>
+<p><span class="math display" id="eq:tagloss">\[\begin{equation}
+\tag{5.1}
+N = N (e^{-t})\end{equation}\]</span></p>
+<p>where: <span class="math inline">\(&lt;\)</span> N <span class="math inline">\(&gt;\)</span> is the number of tagged fish in an age-length group
+<span class="math inline">\(&lt;t&gt;\)</span> is the proportion of tagged fish that are lost, as specified in
+the input file</p>
+<div id="sec-tagnumbers" class="section level2">
+<h2><span class="header-section-number">5.1</span> Tagging Numbers</h2>
+<p>The numbers section of the tag file gives the number of fish tagged for
+the tagging experiment. This is given in a column format in a separate
+file, so the main tag file simply gives the name of this tag data file,
+as shown in the example below:</p>
+<pre><code>numbers                &lt;name of data file&gt;</code></pre>
+<p>For the tag datafile, this is a simple list of tag identifier, timestep,
+length and then the number of fish tagged, for that tag/timestep/length
+combination. This format is shown below:</p>
+<pre><code>&lt;tagid&gt;  &lt;year&gt;  &lt;step&gt;  &lt;length&gt;  &lt;number&gt;</code></pre>
+<p>Note that the <span class="math inline">\(&lt;\)</span>length<span class="math inline">\(&gt;\)</span> value refers to the minimum length of the
+length cell that the tagged fish will be put into.</p>
 </div>
 </div>
             </section>
@@ -600,8 +380,8 @@ perform a simulation run, with the -l switch being ignored.</p>
           </div>
         </div>
       </div>
-
-<a href="chap-input.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="chap-stock.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="chap-other.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
