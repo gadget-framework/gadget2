@@ -102,7 +102,7 @@ void LikelihoodPrinter::setLikelihood(LikelihoodPtrVector& likevec) {
         break;
       case CATCHINKILOSLIKELIHOOD:
 	outfile << "\n; -- data --";
-        outfile << "\n; year step area fleet biomass\n";
+        outfile << "\n; year step area fleet number\n";
         break;
       case SURVEYDISTRIBUTIONLIKELIHOOD:
 	outfile << "\n; -- data --";
