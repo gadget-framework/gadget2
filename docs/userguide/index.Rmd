@@ -3305,10 +3305,14 @@ sample size for that time/area combination respectively.
 
 ### Stratified Sum of Squares Function
 
-The stratified function is a variant of the sum of squares function that
-calculates an age distribution for each length class, and then
-calculates the likelihood component from
-equation \@ref(eq:catchdist4) above. The difference between this function
+The stratified function calculates the likelihood component from
+equation \@ref(eq:catchdist4s) below:
+
+\begin{equation}
+(\#eq:catchdist4s)
+\ell = \sum_{\it time}\sum_{\it areas}\sum_{\it ages}\sum_{\it lengths} \Big( \frac{N_{tral}}{N_{trl}} - \frac{\nu_{tral}}{\nu_{trl}}  \Big) ^2\end{equation}
+
+The difference between this function
 and the sum of squares function above is in the way the proportions of
 the samples are calculated - for this function the proportion is
 calculated for each length group in turn, whereas for the sum of squares
