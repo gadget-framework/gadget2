@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>7 Fleet Files | Gadget userguide</title>
   <meta name="description" content="7 Fleet Files | Gadget userguide" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="7 Fleet Files | Gadget userguide" />
   <meta property="og:type" content="book" />
-  
   
   
   
@@ -50,8 +49,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 
@@ -314,8 +314,8 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="chap-fleet" class="section level1">
-<h1><span class="header-section-number">7</span> Fleet Files</h1>
+<div id="chap-fleet" class="section level1 hasAnchor">
+<h1><span class="header-section-number">7</span> Fleet Files<a href="chap-fleet.html#chap-fleet" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The fleet files contain the information about the fleets that are
 reducing the population of the stocks in the Gadget model. The fleets
 act as a simple predator in the model, with the landings data treated as
@@ -341,8 +341,8 @@ NumberFleet
 LinearFleet 
 EffortFleet 
 QuotaFleet</code></pre>
-<div id="sec-totalfleet" class="section level2">
-<h2><span class="header-section-number">7.1</span> TotalFleet</h2>
+<div id="sec-totalfleet" class="section level2 hasAnchor">
+<h2><span class="header-section-number">7.1</span> TotalFleet<a href="chap-fleet.html#sec-totalfleet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The fleet type used that creates a predator based on the landings data
 (by biomass) for the fleet is called “TotalFleet”. This total amount
 landed is then split between the various stocks, and length groups of
@@ -374,8 +374,8 @@ total amount that has been landed by the fleet is also required - this
 is taken from the landings data, based on timestep and area, and is
 specified in a separate file.</p>
 </div>
-<div id="sec-numberfleet" class="section level2">
-<h2><span class="header-section-number">7.2</span> NumberFleet</h2>
+<div id="sec-numberfleet" class="section level2 hasAnchor">
+<h2><span class="header-section-number">7.2</span> NumberFleet<a href="chap-fleet.html#sec-numberfleet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The fleet type used that creates a predator based on the number of the
 stock landed (not the biomass) is called “NumberFleet”. This total
 number caught is then split between the various stocks, and length
@@ -406,8 +406,8 @@ total number of fish that has been caught by the fleet is also required
 - this is taken from the landings data, based on timestep and area, and
 is specified in a separate file.</p>
 </div>
-<div id="sec-linearfleet" class="section level2">
-<h2><span class="header-section-number">7.3</span> LinearFleet</h2>
+<div id="sec-linearfleet" class="section level2 hasAnchor">
+<h2><span class="header-section-number">7.3</span> LinearFleet<a href="chap-fleet.html#sec-linearfleet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The fleet type used that creates a predator that removes the caught fish
 based on the available biomass of the stock multiplied by a scaling
 factor is called “LinearFleet”. The biomass caught is then split between
@@ -442,8 +442,8 @@ will catch is also required, and this is specified in a separate file.</p>
 for fleets acting in the future, when the landings data is not
 available.</p>
 </div>
-<div id="sec-effortfleet" class="section level2">
-<h2><span class="header-section-number">7.4</span> EffortFleet</h2>
+<div id="sec-effortfleet" class="section level2 hasAnchor">
+<h2><span class="header-section-number">7.4</span> EffortFleet<a href="chap-fleet.html#sec-effortfleet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The fleet type used that creates a predator that removes the caught fish
 based on the available biomass of the stock multiplied by a scaling
 factor and a ‘catchability’ parameter for that stock is called
@@ -492,8 +492,8 @@ catchability
 amount
 ...</code></pre>
 </div>
-<div id="sec-quotafleet" class="section level2">
-<h2><span class="header-section-number">7.5</span> QuotaFleet</h2>
+<div id="sec-quotafleet" class="section level2 hasAnchor">
+<h2><span class="header-section-number">7.5</span> QuotaFleet<a href="chap-fleet.html#sec-quotafleet" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The fleet type used that creates a predator that removes the caught fish
 based on the available biomass of the stock multiplied by a scaling
 factor set according to a simple harvest control rule is called
@@ -565,8 +565,8 @@ if the biomass is between 10,000 and 250,000 kilogrammes and 0.9 if the
 biomass is above 250,000 kilogrammes. Note that the biomasslevel vector
 has 2 entries, and that the quotalevel vector has a third entry.</p>
 </div>
-<div id="sec-fleetsuit" class="section level2">
-<h2><span class="header-section-number">7.6</span> Fleet Suitability</h2>
+<div id="sec-fleetsuit" class="section level2 hasAnchor">
+<h2><span class="header-section-number">7.6</span> Fleet Suitability<a href="chap-fleet.html#sec-fleetsuit" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The suitability determines how the fleets act on the stocks that are
 caught. Since Gadget treats the fleets as predators of the stocks, the
 format for the suitability functions for the fleets is the same as the
@@ -576,8 +576,8 @@ section <a href="chap-stock.html#sec-suitability">4.9</a> above. Note that in th
 suitability functions, the ‘length’ of the predator is a meaningless
 concept when the predator is a fleet.</p>
 </div>
-<div id="sec-fleetamount" class="section level2">
-<h2><span class="header-section-number">7.7</span> Fleet Amounts</h2>
+<div id="sec-fleetamount" class="section level2 hasAnchor">
+<h2><span class="header-section-number">7.7</span> Fleet Amounts<a href="chap-fleet.html#sec-fleetamount" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The amounts section of the fleet file gives the landings data for the
 fleets. This data is listed in a column format in a separate file, so
 the main fleet file simply gives the name of this fleet data file, as
@@ -661,7 +661,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

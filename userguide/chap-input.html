@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>2 Input Files | Gadget userguide</title>
   <meta name="description" content="2 Input Files | Gadget userguide" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="2 Input Files | Gadget userguide" />
   <meta property="og:type" content="book" />
-  
   
   
   
@@ -50,8 +49,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 
@@ -314,8 +314,8 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="chap-input" class="section level1">
-<h1><span class="header-section-number">2</span> Input Files</h1>
+<div id="chap-input" class="section level1 hasAnchor">
+<h1><span class="header-section-number">2</span> Input Files<a href="chap-input.html#chap-input" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>All the input files for Gadget are plain ASCII text files, so they can
 be viewed in any plain-text text editor. Any whitespace or blank lines
 in the data files are ignored, so the layout of the files can be
@@ -335,23 +335,23 @@ input data files must use a Linux style end-of-line character
 (<span class="math inline">\(&lt;\)</span>linefeed<span class="math inline">\(&gt;\)</span>) and not a Windows style end-of-line character
 (<span class="math inline">\(&lt;\)</span>carriage return<span class="math inline">\(&gt;&lt;\)</span>linefeed<span class="math inline">\(&gt;\)</span>). All the lines of the input files
 containing data should end with an end-of-line character.</p>
-<div id="sec-comments" class="section level2">
-<h2><span class="header-section-number">2.1</span> Comments in Input Files</h2>
+<div id="sec-comments" class="section level2 hasAnchor">
+<h2><span class="header-section-number">2.1</span> Comments in Input Files<a href="chap-input.html#sec-comments" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Any of the input files used by Gadget can contain comments that are not
 used by Gadget. The start of the comment is denoted by a semi-colon “;”.
 Once Gadget has read as far as the semi-colon, the rest of the line will
 be ignored.</p>
 </div>
-<div id="sec-whatdoeshash" class="section level2">
-<h2><span class="header-section-number">2.2</span> What Does The # Mean?</h2>
+<div id="sec-whatdoeshash" class="section level2 hasAnchor">
+<h2><span class="header-section-number">2.2</span> What Does The # Mean?<a href="chap-input.html#sec-whatdoeshash" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>When Gadget is performing an optimising run, a number of the parameters
 can be adjusted to try to find a better fit between the modelled output
 and the data. The parameters that are to be adjusted are termed
 “switches” and are marked in the input files by the ‘#’ character.
 There are two valid formats for switches in the data file - either
 directly, or as part of a function.</p>
-<div id="switches" class="section level3">
-<h3><span class="header-section-number">2.2.1</span> Switches</h3>
+<div id="switches" class="section level3 hasAnchor">
+<h3><span class="header-section-number">2.2.1</span> Switches<a href="chap-input.html#switches" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The format for the switches is given by:</p>
 <pre><code>&lt;numerical part&gt;#&lt;name&gt;</code></pre>
 <p>where the <span class="math inline">\(&lt;\)</span>numerical part<span class="math inline">\(&gt;\)</span> consists of the (optional) initial value
@@ -374,8 +374,8 @@ but needs to be defined with the same initial value each time.</p>
 <pre><code>10#age2</code></pre></li>
 </ol>
 </div>
-<div id="functions" class="section level3">
-<h3><span class="header-section-number">2.2.2</span> Functions</h3>
+<div id="functions" class="section level3 hasAnchor">
+<h3><span class="header-section-number">2.2.2</span> Functions<a href="chap-input.html#functions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The format for the functions is given by:</p>
 <pre><code>(&lt;function&gt; &lt;parameters&gt;)</code></pre>
 <p>where the <span class="math inline">\(&lt;\)</span>function<span class="math inline">\(&gt;\)</span> defines the name of the function, and the
@@ -471,7 +471,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

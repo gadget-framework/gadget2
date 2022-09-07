@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>13 Paramin | Gadget userguide</title>
   <meta name="description" content="13 Paramin | Gadget userguide" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="13 Paramin | Gadget userguide" />
   <meta property="og:type" content="book" />
-  
   
   
   
@@ -50,8 +49,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 
@@ -314,8 +314,8 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="chap-paramin" class="section level1">
-<h1><span class="header-section-number">13</span> Paramin</h1>
+<div id="chap-paramin" class="section level1 hasAnchor">
+<h1><span class="header-section-number">13</span> Paramin<a href="chap-paramin.html#chap-paramin" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>This chapter describes how to run Gadget with paramin which runs the
 optimisation routines in parallel across a network of processors which
 will result in a much faster optimisation run. The current version of
@@ -324,8 +324,8 @@ handles all the message passing between the master process, paramin, and
 the slave processes, which are Gadget simulation runs. The setup is very
 similar to a normal Gadget run, with all the Gadget input files are the
 same, it’s only the optimisation execution that differs.</p>
-<div id="sec-paramininstall" class="section level2">
-<h2><span class="header-section-number">13.1</span> Installation</h2>
+<div id="sec-paramininstall" class="section level2 hasAnchor">
+<h2><span class="header-section-number">13.1</span> Installation<a href="chap-paramin.html#sec-paramininstall" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>In order to begin one must first download and install a version of MPI.
 This version of paramin is made with an implementation of MPI-2 called
 OPEN-MPI, one can download the MPI library and a wrapper compiler called
@@ -346,8 +346,8 @@ to edit the Makefile and add the path to the directory where you
 installed Gadget as described above. Now you can run the make command to
 compile paramin and get an executable, let’s assume it’s called paramin.</p>
 </div>
-<div id="sec-runparamin" class="section level2">
-<h2><span class="header-section-number">13.2</span> Running paramin</h2>
+<div id="sec-runparamin" class="section level2 hasAnchor">
+<h2><span class="header-section-number">13.2</span> Running paramin<a href="chap-paramin.html#sec-runparamin" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>To be able to run paramin it’s ideal to add the path of the two
 executables, gadget-PARA and paramin to the global variable PATH. If
 you’re running a bash console you can edit the <code>.bashrc</code> to add it, you
@@ -395,8 +395,8 @@ pass to it the <code>-s</code> and <code>-n</code> switch to make it go to netwo
 Gadget knows it’s running with paramin. Finally we can add
 <code>&gt; &lt;filename&gt;</code> to specify a file for the output of the run, this is not
 necessary but recommended.</p>
-<div id="additional-information" class="section level3">
-<h3><span class="header-section-number">13.2.1</span> Additional information</h3>
+<div id="additional-information" class="section level3 hasAnchor">
+<h3><span class="header-section-number">13.2.1</span> Additional information<a href="chap-paramin.html#additional-information" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>If you’re running a potentially very long run on a remote host it’s
 recommended to use the <code>screen</code> utility, for more information type
 <code>man screen</code> in the console. It allows you to detach the session so it
@@ -424,8 +424,8 @@ process from PVM to MPI can be found on the MRI website, there one can
 also find study on the improvement in time relative to the number of
 processes spawned for each optimization routine.</p>
 </div>
-<div id="running-paramin-on-multiple-hostscluster" class="section level3">
-<h3><span class="header-section-number">13.2.2</span> Running paramin on multiple hosts/cluster</h3>
+<div id="running-paramin-on-multiple-hostscluster" class="section level3 hasAnchor">
+<h3><span class="header-section-number">13.2.2</span> Running paramin on multiple hosts/cluster<a href="chap-paramin.html#running-paramin-on-multiple-hostscluster" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>As stated above when we run paramin in the console it has to be invoked
 with the <code>mpirun</code> command. The <code>mpirun</code> command can take some optional
 arguments. First of all it can take the argument <code>-np &lt;numproc&gt;</code> where
@@ -522,7 +522,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

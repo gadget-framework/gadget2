@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>9 Print Files | Gadget userguide</title>
   <meta name="description" content="9 Print Files | Gadget userguide" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="9 Print Files | Gadget userguide" />
   <meta property="og:type" content="book" />
-  
   
   
   
@@ -50,8 +49,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 
@@ -314,8 +314,8 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="chap-print" class="section level1">
-<h1><span class="header-section-number">9</span> Print Files</h1>
+<div id="chap-print" class="section level1 hasAnchor">
+<h1><span class="header-section-number">9</span> Print Files<a href="chap-print.html#chap-print" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The print files are used to control the output from the Gadget model
 (and not the output from the optimisation process). To avoid writing the
 model output from each iteration of a optimising process (and thus
@@ -342,8 +342,8 @@ printer types defined in Gadget. These are:</p>
 PredatorOverPrinter PreyOverPrinter StockPreyFullPrinter
 StockPreyPrinter PredatorPreyPrinter LikelihoodPrinter
 LikelihoodSummaryPrinter</p>
-<div id="sec-stockstdprinter" class="section level2">
-<h2><span class="header-section-number">9.1</span> StockStdPrinter</h2>
+<div id="sec-stockstdprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.1</span> StockStdPrinter<a href="chap-print.html#sec-stockstdprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output the standard details of a stock is called
 “StockStdPrinter”. This printer type is defined by specifying the stock
 and timesteps of interest. The file format for this component is given
@@ -385,8 +385,8 @@ fleets) for that timestep/area/age combination <span class="math inline">\(&lt;\
 stock biomass that has been consumed by all the predators (including
 fleets) for that timestep/area/age combination</p>
 </div>
-<div id="sec-stockfullprinter" class="section level2">
-<h2><span class="header-section-number">9.2</span> StockFullPrinter</h2>
+<div id="sec-stockfullprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.2</span> StockFullPrinter<a href="chap-print.html#sec-stockfullprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output some more detailed information about a stock
 is called “StockFullPrinter”. This printer type is defined by specifying
 the stock and timesteps of interest. The file format for this component
@@ -417,8 +417,8 @@ line:</p>
 combination <span class="math inline">\(&lt;\)</span>weight<span class="math inline">\(&gt;\)</span> is the mean weight for that
 timestep/area/age/length combination</p>
 </div>
-<div id="sec-stockprinter" class="section level2">
-<h2><span class="header-section-number">9.3</span> StockPrinter</h2>
+<div id="sec-stockprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.3</span> StockPrinter<a href="chap-print.html#sec-stockprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output information about (one or more) stocks, with
 the information aggregated into a convenient grouping, is called
 “StockPrinter”. This printer type is defined by specifying the stocks,
@@ -458,8 +458,8 @@ aggregation file <span class="math inline">\(&lt;\)</span>number<span class="mat
 timestep/area/age/length combination <span class="math inline">\(&lt;\)</span>weight<span class="math inline">\(&gt;\)</span> is the mean weight for
 that timestep/area/age/length combination</p>
 </div>
-<div id="sec-predatorprinter" class="section level2">
-<h2><span class="header-section-number">9.4</span> PredatorPrinter</h2>
+<div id="sec-predatorprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.4</span> PredatorPrinter<a href="chap-print.html#sec-predatorprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output information about predation, with the
 information aggregated into a convenient grouping, is called
 “PredatorPrinter”. This printer type is defined by specifying the
@@ -503,8 +503,8 @@ number) consumed for that timestep/area/predator length/prey length
 combination, depending on the value of the <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> flag in the
 input file</p>
 </div>
-<div id="sec-predatoroverprinter" class="section level2">
-<h2><span class="header-section-number">9.5</span> PredatorOverPrinter</h2>
+<div id="sec-predatoroverprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.5</span> PredatorOverPrinter<a href="chap-print.html#sec-predatoroverprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output information about predator over consumption
 (where a predator has failed to eat the required amount of prey since
 the prey is not available), with the information aggregated into a
@@ -534,8 +534,8 @@ file <span class="math inline">\(&lt;\)</span>length<span class="math inline">\(
 aggregation file <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is the biomass that the predator failed
 to consume for that timestep/area/length combination</p>
 </div>
-<div id="sec-preyoverprinter" class="section level2">
-<h2><span class="header-section-number">9.6</span> PreyOverPrinter</h2>
+<div id="sec-preyoverprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.6</span> PreyOverPrinter<a href="chap-print.html#sec-preyoverprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output information about prey over consumption
 (where there has been insufficient prey for a predator to consume), with
 the information aggregated into a convenient grouping, is called
@@ -567,8 +567,8 @@ file <span class="math inline">\(&lt;\)</span>length<span class="math inline">\(
 aggregation file <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is the biomass of the prey that was
 unavailable, for that timestep/area/length combination</p>
 </div>
-<div id="sec-stockpreyfullprinter" class="section level2">
-<h2><span class="header-section-number">9.7</span> StockPreyFullPrinter</h2>
+<div id="sec-stockpreyfullprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.7</span> StockPreyFullPrinter<a href="chap-print.html#sec-stockpreyfullprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output detailed information about a prey is called
 “StockPreyFullPrinter”. This printer type is defined by specifying the
 prey and timesteps of interest. The file format for this component is
@@ -590,8 +590,8 @@ line:</p>
 timestep/area/age/length combination <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is the total biomass
 consumed for that timestep/area/age/length combination</p>
 </div>
-<div id="sec-stockpreyprinter" class="section level2">
-<h2><span class="header-section-number">9.8</span> StockPreyPrinter</h2>
+<div id="sec-stockpreyprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.8</span> StockPreyPrinter<a href="chap-print.html#sec-stockpreyprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output information about (one or more) preys, with
 the information aggregated into a convenient grouping, is called
 “StockPreyPrinter”. This printer type is defined by specifying the
@@ -622,8 +622,8 @@ aggregation file <span class="math inline">\(&lt;\)</span>number<span class="mat
 timestep/area/age/length combination <span class="math inline">\(&lt;\)</span>biomass<span class="math inline">\(&gt;\)</span> is the total biomass
 consumed for that timestep/area/age/length combination</p>
 </div>
-<div id="sec-predatorpreyprinter" class="section level2">
-<h2><span class="header-section-number">9.9</span> PredatorPreyPrinter</h2>
+<div id="sec-predatorpreyprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.9</span> PredatorPreyPrinter<a href="chap-print.html#sec-predatorpreyprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output detailed information about predator-prey
 combinations, with the information aggregated into a convenient
 grouping, is called “PredatorPreyPrinter”. This printer type is defined
@@ -659,8 +659,8 @@ consumed for that timestep/area/age/length combination <span class="math inline"
 is the effective annual mortality induced in the prey by the predation
 for that timestep/area/age/length combination</p>
 </div>
-<div id="sec-likelihoodprinter" class="section level2">
-<h2><span class="header-section-number">9.10</span> LikelihoodPrinter</h2>
+<div id="sec-likelihoodprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.10</span> LikelihoodPrinter<a href="chap-print.html#sec-likelihoodprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output detailed information about a likelihood
 component is called “LikelihoodPrinter”. This printer type is defined by
 specifying the likelihood component and timesteps of interest. The file
@@ -688,8 +688,8 @@ section @ref(#sec:surveyindices))</p>
 <pre><code>year-step-area-index-number</code></pre></li>
 </ol>
 </div>
-<div id="sec-likelihoodsummaryprinter" class="section level2">
-<h2><span class="header-section-number">9.11</span> LikelihoodSummaryPrinter</h2>
+<div id="sec-likelihoodsummaryprinter" class="section level2 hasAnchor">
+<h2><span class="header-section-number">9.11</span> LikelihoodSummaryPrinter<a href="chap-print.html#sec-likelihoodsummaryprinter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The printer type to output summary information about all the likelihood
 components that are in use for the current simulation is called
 “LikelihoodSummaryPrinter”. The file format for this component is given
@@ -773,7 +773,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

@@ -56,6 +56,7 @@ eq:econs
 eq:bound
 eq:understocking
 eq:catchdist4
+eq:catchdist4s
 eq:catchdist1
 eq:catchdist2
 eq:catchdist3

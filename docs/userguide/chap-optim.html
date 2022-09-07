@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>11 Optimisation File | Gadget userguide</title>
   <meta name="description" content="11 Optimisation File | Gadget userguide" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="11 Optimisation File | Gadget userguide" />
   <meta property="og:type" content="book" />
-  
   
   
   
@@ -50,8 +49,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 
@@ -314,8 +314,8 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="chap-optim" class="section level1">
-<h1><span class="header-section-number">11</span> Optimisation File</h1>
+<div id="chap-optim" class="section level1 hasAnchor">
+<h1><span class="header-section-number">11</span> Optimisation File<a href="chap-optim.html#chap-optim" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The optimisation file is used to specify the type of optimisation to be
 used, along with any parameters that are needed for the optimisation
 algorithm. This file is specified by a “-opt <span class="math inline">\(&lt;\)</span>filename<span class="math inline">\(&gt;\)</span>” command
@@ -345,10 +345,10 @@ important to ensure that an optimum solution has been reached before
 accepting the model, especially if the model is to be used to predict
 the population into the future or to examine the strength of the last
 few year classes.</p>
-<div id="sec-hooke" class="section level2">
-<h2><span class="header-section-number">11.1</span> Hooke &amp; Jeeves</h2>
-<div id="subsec-hookeover" class="section level3">
-<h3><span class="header-section-number">11.1.1</span> Overview</h3>
+<div id="sec-hooke" class="section level2 hasAnchor">
+<h2><span class="header-section-number">11.1</span> Hooke &amp; Jeeves<a href="chap-optim.html#sec-hooke" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="subsec-hookeover" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.1.1</span> Overview<a href="chap-optim.html#subsec-hookeover" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Hooke &amp; Jeeves is a simple and fast optimising method, but somewhat
 unreliable, and it is often described as a ‘hill climbing’ technique.
 From the initial starting point the algorithm takes a step in various
@@ -378,8 +378,8 @@ June 1963 (Vol 6, pp.313-314) issue of the Communications of the ACM.</p>
 <p>Hooke &amp; Jeeves is the default optimisation method used for Gadget, and
 will be used if no optimisation information file is specified.</p>
 </div>
-<div id="subsec-hookefile" class="section level3">
-<h3><span class="header-section-number">11.1.2</span> File Format</h3>
+<div id="subsec-hookefile" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.1.2</span> File Format<a href="chap-optim.html#subsec-hookefile" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To specify the Hooke &amp; Jeeves algorithm, the optimisation file should
 start with the keyword “[hooke]”, followed by (up to) 4 lines giving
 the parameters for the optimisation algorithm. Any parameters that are
@@ -392,10 +392,10 @@ hookeeps   1e-04 ; minimum epsilon, hooke &amp; jeeves halt criteria
 rho        0.5   ; step length adjustment factor
 lambda     0     ; initial value for the step length</code></pre>
 </div>
-<div id="subsec-hookepar" class="section level3">
-<h3><span class="header-section-number">11.1.3</span> Parameters</h3>
-<div id="hookeiter" class="section level4">
-<h4><span class="header-section-number">11.1.3.1</span> hookeiter</h4>
+<div id="subsec-hookepar" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.1.3</span> Parameters<a href="chap-optim.html#subsec-hookepar" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="hookeiter" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.1.3.1</span> hookeiter<a href="chap-optim.html#hookeiter" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the maximum number of Gadget model runs that the Hooke &amp; Jeeves
 algorithm will use to try to find the best solution. If this number is
 exceeded, Gadget will select the best point found so far, and accept
@@ -403,8 +403,8 @@ this as the ‘solution’, even though it has not met the convergence
 criteria. A warning that Gadget has stopped without finding a solution
 that meets the convergence criteria will be printed.</p>
 </div>
-<div id="hookeeps" class="section level4">
-<h4><span class="header-section-number">11.1.3.2</span> hookeeps</h4>
+<div id="hookeeps" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.1.3.2</span> hookeeps<a href="chap-optim.html#hookeeps" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the criteria for halting the Hooke &amp; Jeeves algorithm at a
 minimum, and accepting the current point as the ‘solution’. The
 algorithm has “converged” when the size of each step in the search has
@@ -415,8 +415,8 @@ hookeeps give a quicker running time, but a less accurate estimate of
 the minimum. Conversely, smaller values will give a longer running time,
 but a more accurate estimate of the minimum.</p>
 </div>
-<div id="rho" class="section level4">
-<h4><span class="header-section-number">11.1.3.3</span> rho</h4>
+<div id="rho" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.1.3.3</span> rho<a href="chap-optim.html#rho" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the resizing multiplier for the step length of the search made
 by the algorithm. The Hooke &amp; Jeeves algorithm works by taking “steps”
 from one estimate of a optimum, to another (hopefully better) estimate
@@ -432,8 +432,8 @@ changes, which force the algorithm to carefully examine nearby points
 instead of optimistically forging ahead, which improves the probability
 of convergence. The value of rho must be between 0 and 1.</p>
 </div>
-<div id="lambda" class="section level4">
-<h4><span class="header-section-number">11.1.3.4</span> lambda</h4>
+<div id="lambda" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.1.3.4</span> lambda<a href="chap-optim.html#lambda" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the initial value for the size of the steps in the search, which
 will be used for the the first search, before any modification to the
 step length. All the parameters in the Gadget model are initially scaled
@@ -444,10 +444,10 @@ lambda must be between 0 and 1.</p>
 </div>
 </div>
 </div>
-<div id="sec-simann" class="section level2">
-<h2><span class="header-section-number">11.2</span> Simulated Annealing</h2>
-<div id="subsec-simannover" class="section level3">
-<h3><span class="header-section-number">11.2.1</span> Overview</h3>
+<div id="sec-simann" class="section level2 hasAnchor">
+<h2><span class="header-section-number">11.2</span> Simulated Annealing<a href="chap-optim.html#sec-simann" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="subsec-simannover" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.2.1</span> Overview<a href="chap-optim.html#subsec-simannover" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Simulated Annealing is a global optimisation method that distinguishes
 between different local minimum. From the initial starting point the
 algorithm takes a random step in various directions, and conducts a new
@@ -509,8 +509,8 @@ Mathematical Software and Goffe et al, “Global Optimisation of
 Statistical Functions with Simulated Annealing” in the January/February
 1994 (Vol. 60, pp. 65-100) issue of the Journal of Econometrics.</p>
 </div>
-<div id="subsec-simannfile" class="section level3">
-<h3><span class="header-section-number">11.2.2</span> File Format</h3>
+<div id="subsec-simannfile" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.2.2</span> File Format<a href="chap-optim.html#subsec-simannfile" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To specify the Simulated Annealing algorithm, the optimisation file
 should start with the keyword “[simann]”, followed by (up to) 11 lines
 giving the parameters for the optimisation algorithm. Any parameters
@@ -530,10 +530,10 @@ lratio     0.3   ; lower limit for ratio when adjusting step length
 uratio     0.7   ; upper limit for ratio when adjusting step length
 check      4     ; number of temperature loops to check</code></pre>
 </div>
-<div id="subsec-simannpar" class="section level3">
-<h3><span class="header-section-number">11.2.3</span> Parameters</h3>
-<div id="simanniter" class="section level4">
-<h4><span class="header-section-number">11.2.3.1</span> simanniter</h4>
+<div id="subsec-simannpar" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.2.3</span> Parameters<a href="chap-optim.html#subsec-simannpar" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="simanniter" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.2.3.1</span> simanniter<a href="chap-optim.html#simanniter" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the maximum number of Gadget model runs that the Simulated
 Annealing algorithm will use to try to find the best solution. If this
 number is exceeded, Gadget will select the best point found so far, and
@@ -541,8 +541,8 @@ accept this as the ‘solution’, even though it has not met the
 convergence criteria. A warning that Gadget has stopped without finding
 a solution that meets the convergence criteria will be printed.</p>
 </div>
-<div id="simanneps" class="section level4">
-<h4><span class="header-section-number">11.2.3.2</span> simanneps</h4>
+<div id="simanneps" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.2.3.2</span> simanneps<a href="chap-optim.html#simanneps" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the criteria for halting the Simulated Annealing algorithm at a
 minimum, and accepting the current point as the ‘solution’. The
 algorithm has “converged” if the point found at the end of a temperature
@@ -555,8 +555,8 @@ values for simanneps will give a more stable estimate of the minimum, at
 the cost of a longer running time. Note that the convergence criteria is
 only checked at the end of each temperature loop.</p>
 </div>
-<div id="t" class="section level4">
-<h4><span class="header-section-number">11.2.3.3</span> t</h4>
+<div id="t" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.2.3.3</span> t<a href="chap-optim.html#t" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the initial value for the “temperature” of the Simulated
 Annealing algorithm, used to control the speed of the convergence of the
 algorithm, using the Metropolis Criteria given in
@@ -567,8 +567,8 @@ computationally very intensive. Low values for the temperature (t
 <span class="math inline">\(\ll \Delta F\)</span>) will mean that most of the uphill moves are rejected and
 the algorithm will be performing an inefficient local search.</p>
 </div>
-<div id="rt" class="section level4">
-<h4><span class="header-section-number">11.2.3.4</span> rt</h4>
+<div id="rt" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.2.3.4</span> rt<a href="chap-optim.html#rt" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the temperature reduction factor, used to lower the temperature
 of the algorithm as it moves closer to the minimum. Higher values here
 will mean that the temperature is reduced slowly, which will mean that
@@ -579,8 +579,8 @@ to faster convergence, possibly to a local minimum that the algorithm
 cannot escape from (this is analogous to “quenching” in the
 thermodynamic metaphor). The value of rt must be between 0 and 1.</p>
 </div>
-<div id="nt" class="section level4">
-<h4><span class="header-section-number">11.2.3.5</span> nt</h4>
+<div id="nt" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.2.3.5</span> nt<a href="chap-optim.html#nt" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the number of loops that the algorithm will perform before
 reducing the temperature parameter. Higher values here will mean that
 the algorithm will explore the current search area more thoroughly,
@@ -590,8 +590,8 @@ mean that the current search area is not explored as thoroughly, with a
 corresponding reduction in computation time. Note that each temperature
 loop consists of all of the “ns” step loops.</p>
 </div>
-<div id="ns" class="section level4">
-<h4><span class="header-section-number">11.2.3.6</span> ns</h4>
+<div id="ns" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.2.3.6</span> ns<a href="chap-optim.html#ns" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the number of loops that the algorithm will perform before
 adjusting the maximum step length parameter. The maximum step length is
 periodically adjusted so that approximately half of all moves are
@@ -605,8 +605,8 @@ focus on the most promising area. However, if more moves are rejected
 that accepted, the maximum step length will rise so the search area will
 widen.</p>
 </div>
-<div id="vm" class="section level4">
-<h4><span class="header-section-number">11.2.3.7</span> vm</h4>
+<div id="vm" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.2.3.7</span> vm<a href="chap-optim.html#vm" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the initial maximum step length for the Simulated Annealing
 algorithm. The maximum step length will get adjusted during the
 optimisation process. Note that each of the steps taken by the Simulated
@@ -620,8 +620,8 @@ Annealing algorithm, it is recommended that the parameters to be
 estimated are scaled (by the user) so that they are all approximately
 the same order of magnitude.</p>
 </div>
-<div id="cstep-lratio-and-uratio" class="section level4">
-<h4><span class="header-section-number">11.2.3.8</span> cstep, lratio and uratio</h4>
+<div id="cstep-lratio-and-uratio" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.2.3.8</span> cstep, lratio and uratio<a href="chap-optim.html#cstep-lratio-and-uratio" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>These parameters control how the maximum step length for the Simulated
 Annealing algorithm is adjusted, at the end of each of the “ns” step
 loops. The algorithm keeps track of the number of moves that are
@@ -643,8 +643,8 @@ vm_{i} &amp; \textrm{otherwise}
 <span class="math inline">\(&gt;\)</span> is the value of the “cstep” parameter <span class="math inline">\(&lt;\)</span> U <span class="math inline">\(&gt;\)</span> is the value of the
 “uratio” parameter <span class="math inline">\(&lt;\)</span> L <span class="math inline">\(&gt;\)</span> is the value of the “lratio” parameter</p>
 </div>
-<div id="check" class="section level4">
-<h4><span class="header-section-number">11.2.3.9</span> check</h4>
+<div id="check" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.2.3.9</span> check<a href="chap-optim.html#check" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the number of temperature loops that the Simulated Annealing
 algorithm will check to confirm that the current best point that has
 been found is a stable minimum, so that it can be accepted as a
@@ -652,10 +652,10 @@ solution.</p>
 </div>
 </div>
 </div>
-<div id="sec-bfgs" class="section level2">
-<h2><span class="header-section-number">11.3</span> BFGS</h2>
-<div id="subsec-bfgsover" class="section level3">
-<h3><span class="header-section-number">11.3.1</span> Overview</h3>
+<div id="sec-bfgs" class="section level2 hasAnchor">
+<h2><span class="header-section-number">11.3</span> BFGS<a href="chap-optim.html#sec-bfgs" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="subsec-bfgsover" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.3.1</span> Overview<a href="chap-optim.html#subsec-bfgsover" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>BFGS is a quasi-Newton optimisation method that uses information about
 the gradient of the function at the current point to calculate the best
 direction to look in to find a better point. Using this information, the
@@ -705,8 +705,8 @@ by Dennis and Schnabel, “Numerical Methods for Unconstrained
 Optimisation and Nonlinear Equations” (“Classics” edition, published by
 SIAM).</p>
 </div>
-<div id="subsec-bfgsfile" class="section level3">
-<h3><span class="header-section-number">11.3.2</span> File Format</h3>
+<div id="subsec-bfgsfile" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.3.2</span> File Format<a href="chap-optim.html#subsec-bfgsfile" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To specify the BFGS algorithm, the optimisation file should start with
 the keyword “<a href="chap-optim.html#sec-bfgs">bfgs</a>”, followed by (up to) 7 lines giving the
 parameters for the optimisation algorithm. Any parameters that are not
@@ -722,10 +722,10 @@ gradacc    1e-06 ; initial value for gradient accuracy
 gradstep   0.5   ; gradient accuracy adjustment factor
 gradeps    1e-10 ; minimum value for gradient accuracy</code></pre>
 </div>
-<div id="subsec-bfgspar" class="section level3">
-<h3><span class="header-section-number">11.3.3</span> Parameters</h3>
-<div id="bfgsiter" class="section level4">
-<h4><span class="header-section-number">11.3.3.1</span> bfgsiter</h4>
+<div id="subsec-bfgspar" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.3.3</span> Parameters<a href="chap-optim.html#subsec-bfgspar" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="bfgsiter" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.3.3.1</span> bfgsiter<a href="chap-optim.html#bfgsiter" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the maximum number of Gadget model runs that the BFGS algorithm
 will use to try to find the best solution. If this number is exceeded,
 Gadget will select the best point found so far, and accept this as the
@@ -733,8 +733,8 @@ Gadget will select the best point found so far, and accept this as the
 warning that Gadget has stopped without finding a solution that meets
 the convergence criteria will be printed.</p>
 </div>
-<div id="bfgseps" class="section level4">
-<h4><span class="header-section-number">11.3.3.2</span> bfgseps</h4>
+<div id="bfgseps" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.3.3.2</span> bfgseps<a href="chap-optim.html#bfgseps" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the criteria for halting the BFGS algorithm at a minimum, and
 accepting the current point as the ‘solution’. The algorithm has
 “converged” if the magnitude of the gradient vector is less than
@@ -744,8 +744,8 @@ true minimum, the magnitude of the gradient vector will be zero, since
 there would be no direction for the algorithm to move to, but this point
 could take an infinite number of iterations to find.</p>
 </div>
-<div id="sigma" class="section level4">
-<h4><span class="header-section-number">11.3.3.3</span> sigma</h4>
+<div id="sigma" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.3.3.3</span> sigma<a href="chap-optim.html#sigma" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the criteria for stopping the Armijo linesearch at a point that
 is “sufficiently better”, and recalculating the gradient of the function
 at this new point. Lower values of sigma will increase the size of the
@@ -757,8 +757,8 @@ higher values of sigma will decrease the size of the acceptance region,
 which will mean that the BFGS algorithm will take smaller steps. The
 value of sigma must be between 0 and 1, and should be close to zero.</p>
 </div>
-<div id="beta" class="section level4">
-<h4><span class="header-section-number">11.3.3.4</span> beta</h4>
+<div id="beta" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.3.3.4</span> beta<a href="chap-optim.html#beta" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>This is the adjustment factor for the Armijo linesearch, used to
 calculate the size of the step taken by the linesearch to find the next
 point. Lower values of beta will mean that the size of the step that the
@@ -769,8 +769,8 @@ tried, but these steps are more likely to be rejected since they may be
 outside the acceptance region. The value of beta must be between 0 and
 1.</p>
 </div>
-<div id="gradacc-gradstep-and-gradeps" class="section level4">
-<h4><span class="header-section-number">11.3.3.5</span> gradacc, gradstep and gradeps</h4>
+<div id="gradacc-gradstep-and-gradeps" class="section level4 hasAnchor">
+<h4><span class="header-section-number">11.3.3.5</span> gradacc, gradstep and gradeps<a href="chap-optim.html#gradacc-gradstep-and-gradeps" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>These parameters control the accuracy that is used for the gradient
 calculations. The gradient of the function is calculated numerically by
 Gadget using a forward difference algorithm, as shown in
@@ -792,10 +792,10 @@ accurate when the gradacc parameter is very small.</p>
 </div>
 </div>
 </div>
-<div id="sec-combine" class="section level2">
-<h2><span class="header-section-number">11.4</span> Combining Optimisation Algorithms</h2>
-<div id="subsec-combineover" class="section level3">
-<h3><span class="header-section-number">11.4.1</span> Overview</h3>
+<div id="sec-combine" class="section level2 hasAnchor">
+<h2><span class="header-section-number">11.4</span> Combining Optimisation Algorithms<a href="chap-optim.html#sec-combine" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="subsec-combineover" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.4.1</span> Overview<a href="chap-optim.html#subsec-combineover" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This method attempts to combine the global search of the Simulated
 Annealing algorithm and the more rapid convergence of the local searches
 performed by the Hooke &amp; Jeeves and BFGS algorithms. It relies on the
@@ -810,8 +810,8 @@ that valley. Hopefully the Simulated Annealing algorithm will have moved
 the current point to the correct side of any ‘hills’ to avoid the local
 searches becoming trapped into an unrealistic local minimum.</p>
 </div>
-<div id="subsec-combinefile" class="section level3">
-<h3><span class="header-section-number">11.4.2</span> File Format</h3>
+<div id="subsec-combinefile" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.4.2</span> File Format<a href="chap-optim.html#subsec-combinefile" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To specify a combination of optimisation algorithms, the optimisation
 file should simply list the algorithms that should be used, along with
 the parameters for each optimisation algorithm. Any parameters that are
@@ -849,8 +849,8 @@ the order that they are specified in the input file, so for this example
 the order will be: first Simulated Annealing, second Hooke &amp; Jeeves and
 finally BFGS.</p>
 </div>
-<div id="subsec-combinepar" class="section level3">
-<h3><span class="header-section-number">11.4.3</span> Parameters</h3>
+<div id="subsec-combinepar" class="section level3 hasAnchor">
+<h3><span class="header-section-number">11.4.3</span> Parameters<a href="chap-optim.html#subsec-combinepar" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The parameters for this combined optimisation algorithm are the same as
 for the individual algorithms, and are described in sections
 <a href="#subsec:hookepar" reference-type="ref" reference="subsec:hookepar">11.1.3</a> (for the Hooke &amp; Jeeves parameters),
@@ -858,8 +858,8 @@ for the individual algorithms, and are described in sections
 and <a href="#subsec:bfgspar" reference-type="ref" reference="subsec:bfgspar">11.3.3</a> (for the BFGS parameters).</p>
 </div>
 </div>
-<div id="sec-repeat" class="section level2">
-<h2><span class="header-section-number">11.5</span> Repeatability</h2>
+<div id="sec-repeat" class="section level2 hasAnchor">
+<h2><span class="header-section-number">11.5</span> Repeatability<a href="chap-optim.html#sec-repeat" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The optimisation algorithms used by Gadget contain a random number
 generator, used to randomise the order of the parameters (to ensure that
 the order of the parameters has no effect on the optimum found) and to
@@ -950,7 +950,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

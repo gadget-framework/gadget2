@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4 Stock Files | Gadget userguide</title>
   <meta name="description" content="4 Stock Files | Gadget userguide" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4 Stock Files | Gadget userguide" />
   <meta property="og:type" content="book" />
-  
   
   
   
@@ -50,8 +49,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 
@@ -314,8 +314,8 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="chap-stock" class="section level1">
-<h1><span class="header-section-number">4</span> Stock Files</h1>
+<div id="chap-stock" class="section level1 hasAnchor">
+<h1><span class="header-section-number">4</span> Stock Files<a href="chap-stock.html#chap-stock" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>The stock files contain all the information that Gadget requires for
 each stock in the model. To define the stock files in the Gadget model,
 the following lines are required in the “main” Gadget file:</p>
@@ -351,8 +351,8 @@ and are fairly self explanatory. It should be noted that the oldest age
 group and the longest length group are interpreted in Gadget as plus
 groups for the stock. The remaining lines give more detail about the
 stock, and are covered in the sub sections below.</p>
-<div id="sec-stockrefweight" class="section level2">
-<h2><span class="header-section-number">4.1</span> Reference Weight</h2>
+<div id="sec-stockrefweight" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.1</span> Reference Weight<a href="chap-stock.html#sec-stockrefweight" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The reference weight section lists the weight of the stock for various
 length groups. This is the reference weight that can be used in the
 initial conditions to set up the stock, and can also be used by the
@@ -369,8 +369,8 @@ shown below:</p>
 <p>When this data is read into Gadget it is aggregated so that the weight
 is calculated for each length group defined in the stock file.</p>
 </div>
-<div id="sec-stockgrowthlength" class="section level2">
-<h2><span class="header-section-number">4.2</span> Growth and Eat Lengths</h2>
+<div id="sec-stockgrowthlength" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.2</span> Growth and Eat Lengths<a href="chap-stock.html#sec-stockgrowthlength" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The calculations for the growth and consumption parts of the Gadget
 model can be done on a coarser scale than that defined in the stock
 file. The growth and eat lengths section of the stock file gives the
@@ -378,8 +378,8 @@ name of a length aggregation file that defines this length grouping. In
 the stock file, the format for the growth and eat lengths is:</p>
 <pre><code>growthandeatlengths    &lt;name of the length aggregation file&gt;</code></pre>
 </div>
-<div id="sec-stockgrowth" class="section level2">
-<h2><span class="header-section-number">4.3</span> Growth</h2>
+<div id="sec-stockgrowth" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.3</span> Growth<a href="chap-stock.html#sec-stockgrowth" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The growth section of the stock file determines if, and how, the stock
 will grow in the Gadget model. The format for the first part of the
 growth section is given below:</p>
@@ -410,8 +410,8 @@ functions defined, so valid function names are:</p>
 <li><code>lengthpower</code> - use the LengthPower growth function</li>
 <li><code>lengthvbsimple</code> - use the LengthVBSimple growth function</li>
 </ul>
-<div id="subsec-growth1" class="section level3">
-<h3><span class="header-section-number">4.3.1</span> MULTSPEC Growth Function</h3>
+<div id="subsec-growth1" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.3.1</span> MULTSPEC Growth Function<a href="chap-stock.html#subsec-growth1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This growth function is a simplified “MULTSPEC” growth equation, with
 the increase in length for each length group of the stock given by
 equation <a href="chap-stock.html#eq:growth1l">(4.1)</a>, and the corresponding increase in weight of
@@ -434,8 +434,8 @@ single vector with 9 components, consisting of the 4 length parameters
 followed by the 5 weight parameters. This is shown below:</p>
 <pre><code>growthparameters       &lt;growth parameters vector&gt;</code></pre>
 </div>
-<div id="subsec-growth3" class="section level3">
-<h3><span class="header-section-number">4.3.2</span> WeightVB Growth Function</h3>
+<div id="subsec-growth3" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.3.2</span> WeightVB Growth Function<a href="chap-stock.html#subsec-growth3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This growth function is a form of the Von Bertalanffy growth equation,
 extended to introduce the concept of starvation to the growth function.
 The increase in the weight for each length group the stock is given by
@@ -475,8 +475,8 @@ a further 9 parameters for the increase in length. These are declared in
 <pre><code>wgrowthparameters      &lt;weight parameters vector&gt;
 lgrowthparameters      &lt;length parameters vector&gt;</code></pre>
 </div>
-<div id="subsec-growth4" class="section level3">
-<h3><span class="header-section-number">4.3.3</span> WeightJones Growth Function</h3>
+<div id="subsec-growth4" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.3.3</span> WeightJones Growth Function<a href="chap-stock.html#subsec-growth4" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This growth function is a form of the Jones growth equation, extended to
 introduce the concept of starvation to the growth function. The increase
 in the weight for each length group the stock is given by
@@ -512,8 +512,8 @@ a further 8 parameters for the increase in length. These are declared in
 <pre><code>wgrowthparameters      &lt;weight parameters vector&gt;
 lgrowthparameters      &lt;length parameters vector&gt;</code></pre>
 </div>
-<div id="subsec-growth5" class="section level3">
-<h3><span class="header-section-number">4.3.4</span> WeightVBExpanded Growth Function</h3>
+<div id="subsec-growth5" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.3.4</span> WeightVBExpanded Growth Function<a href="chap-stock.html#subsec-growth5" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This growth function is an expanded form of the Von Bertalanffy growth
 equation, with additional information to allow for differing growth
 depending on the year, timestep and area. The increase in the weight of
@@ -545,8 +545,8 @@ areaeffect             &lt;area effect vector&gt;</code></pre>
 the <span class="math inline">\(&lt;\)</span>step effect<span class="math inline">\(&gt;\)</span> vector requires one entry for each step and the
 <span class="math inline">\(&lt;\)</span>area effect<span class="math inline">\(&gt;\)</span> vector requires one entry for each area.</p>
 </div>
-<div id="subsec-growth6" class="section level3">
-<h3><span class="header-section-number">4.3.5</span> LengthVB Growth Function</h3>
+<div id="subsec-growth6" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.3.5</span> LengthVB Growth Function<a href="chap-stock.html#subsec-growth6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This growth function is a simplified form of the Von Bertalanffy growth
 equation. The increase in the length for each length group the stock is
 given by equation <a href="chap-stock.html#eq:growth6">(4.12)</a>, with the corresponding increase in the weight
@@ -572,8 +572,8 @@ those specified in the growthandeatlengths length aggregation file. The
 format of this file is shown below:</p>
 <pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length group&gt;  &lt;number&gt;</code></pre>
 </div>
-<div id="subsec-growth7" class="section level3">
-<h3><span class="header-section-number">4.3.6</span> LengthPower Growth Function</h3>
+<div id="subsec-growth7" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.3.6</span> LengthPower Growth Function<a href="chap-stock.html#subsec-growth7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This growth function uses a simple power-based growth equation to
 calculate the increase in length. The increase in the length for each
 length group the stock is given by
@@ -594,8 +594,8 @@ those specified in the growthandeatlengths length aggregation file. The
 format of this file is shown below:</p>
 <pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;length group&gt;  &lt;number&gt;</code></pre>
 </div>
-<div id="subsec-growth8" class="section level3">
-<h3><span class="header-section-number">4.3.7</span> LengthVBSimple Growth Function</h3>
+<div id="subsec-growth8" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.3.7</span> LengthVBSimple Growth Function<a href="chap-stock.html#subsec-growth8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This growth function is a simplified form of the Von Bertalanffy growth
 equation. The increase in the length for each length group the stock is
 given by equation <a href="chap-stock.html#eq:growth8l">(4.14)</a>, and the corresponding increase in the weight
@@ -620,8 +620,8 @@ user should ensure that the value of <span class="math inline">\(L_{\infty}\)</s
 the mean length of the largest length group.</p>
 </div>
 </div>
-<div id="sec-stockgrowthimplement" class="section level2">
-<h2><span class="header-section-number">4.4</span> Growth Implementation</h2>
+<div id="sec-stockgrowthimplement" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.4</span> Growth Implementation<a href="chap-stock.html#sec-stockgrowthimplement" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The growth functions described above calculate the mean growth for the
 stock within the model. This must then be translated into a statistical
 distribution of actual growths around that mean. Currently there is only
@@ -633,8 +633,8 @@ where growth is allocated between two adjacent length categories. This
 is a result of the discretisation within Gadget. To avoid this the user
 should select a length category size small enough for some fish to grow
 by at least 3 or 4 categories in one time step.</p>
-<div id="beta-binomial" class="section level3">
-<h3><span class="header-section-number">4.4.1</span> Beta-Binomial</h3>
+<div id="beta-binomial" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.4.1</span> Beta-Binomial<a href="chap-stock.html#beta-binomial" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This method uses a statistical distribution to govern the implementation
 of fish growth. The statistical distribution chosen is the
 beta-binomial, an extension of the binomial distribution with the
@@ -679,8 +679,8 @@ provide the beta-binomial distribution with sufficient flexibility to
 produce a distribution around the mean.</p>
 </div>
 </div>
-<div id="sec-stocknatmort" class="section level2">
-<h2><span class="header-section-number">4.5</span> Natural Mortality</h2>
+<div id="sec-stocknatmort" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.5</span> Natural Mortality<a href="chap-stock.html#sec-stocknatmort" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The natural mortality is a measure of how much of the stock will be
 removed from the model due to additional natural causes that are not
 modelled as part of other processes (for example predation). In Gadget,
@@ -696,8 +696,8 @@ N_{a} = e^{-m_{a} \Delta t}\end{equation}\]</span></p>
 file as a vector, with one parameter per age group, as shown below:</p>
 <pre><code>naturalmortality       &lt;natural mortality vector&gt;</code></pre>
 </div>
-<div id="sec-stockprey" class="section level2">
-<h2><span class="header-section-number">4.6</span> Stock Prey</h2>
+<div id="sec-stockprey" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.6</span> Stock Prey<a href="chap-stock.html#sec-stockprey" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The stock prey section of the stock file determines if, and how, the
 stock will be treated as a prey in the Gadget model. The format for the
 first part of the prey section of the main stock file is given below:</p>
@@ -717,8 +717,8 @@ example below:</p>
 preylengths            &lt;length aggregation file&gt;
 energycontent          &lt;energy value&gt;</code></pre>
 </div>
-<div id="sec-stockpredator" class="section level2">
-<h2><span class="header-section-number">4.7</span> Stock Predator</h2>
+<div id="sec-stockpredator" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.7</span> Stock Predator<a href="chap-stock.html#sec-stockpredator" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The stock predator section of the stock file determines if, and how, the
 stock will be treated as a predator in the Gadget model. The format for
 the first part of the predator section is given below:</p>
@@ -742,8 +742,8 @@ section <a href="chap-stock.html#sec-suitability">4.9</a>. The <span class="math
 define how the stock consumes any prey that is eaten, and are described
 in the following section.</p>
 </div>
-<div id="sec-consumption" class="section level2">
-<h2><span class="header-section-number">4.8</span> Consumption</h2>
+<div id="sec-consumption" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.8</span> Consumption<a href="chap-stock.html#sec-consumption" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The consumption determines how much of a given prey is consumed by the
 predator. This will result in the population of the prey being reduced,
 and can also affect the growth of the predator, depending on the growth
@@ -812,8 +812,8 @@ level. The value of <span class="math inline">\(&lt;\psi&gt;\)</span> can have a
 predator (ie. when there isn’t sufficient food available) when the
 growth function has been set to “MULTSPEC” or “WeightJones”.</p>
 </div>
-<div id="sec-suitability" class="section level2">
-<h2><span class="header-section-number">4.9</span> Suitability</h2>
+<div id="sec-suitability" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.9</span> Suitability<a href="chap-stock.html#sec-suitability" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The suitability determines how the predators act on the preys. This
 selectivity relationship between the predator and the prey is based on
 the lengths of the predator and prey, and are defined by declaring a
@@ -839,8 +839,8 @@ suitabilty function</p>
 <p>For the following suitability functions, the convention used is to
 represent the length group of the prey by l, and the length group of the
 predator by L.</p>
-<div id="constant-suitability-function" class="section level3">
-<h3><span class="header-section-number">4.9.1</span> Constant Suitability Function</h3>
+<div id="constant-suitability-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.9.1</span> Constant Suitability Function<a href="chap-stock.html#constant-suitability-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a constant suitability function, where there is no dependence on
 either the length of the predator or the length of the prey as given by
 the following equation:</p>
@@ -851,8 +851,8 @@ S(l, L) = \alpha\end{equation}\]</span></p>
 required is:</p>
 <pre><code>&lt;preyname&gt;    function constant &lt;alpha&gt;</code></pre>
 </div>
-<div id="straightline-suitability-function" class="section level3">
-<h3><span class="header-section-number">4.9.2</span> StraightLine Suitability Function</h3>
+<div id="straightline-suitability-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.9.2</span> StraightLine Suitability Function<a href="chap-stock.html#straightline-suitability-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a suitability function that has no dependence on the length of
 the predator, and a linear dependence on the length of the prey as given
 by the following equation:</p>
@@ -863,8 +863,8 @@ S(l, L) = \alpha l + \beta\end{equation}\]</span></p>
 required is:</p>
 <pre><code>&lt;preyname&gt;    function straightline &lt;alpha&gt; &lt;beta&gt;</code></pre>
 </div>
-<div id="exponential-suitability-function" class="section level3">
-<h3><span class="header-section-number">4.9.3</span> Exponential Suitability Function</h3>
+<div id="exponential-suitability-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.9.3</span> Exponential Suitability Function<a href="chap-stock.html#exponential-suitability-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a suitability function that has a logarithmic dependence on both
 the length of the predator and the length of the prey as given by the
 following equation:</p>
@@ -875,8 +875,8 @@ S(l, L) = {\frac{\delta}{1 + e^{(- \alpha - \beta l - \gamma  L)}}}\end{equation
 is:</p>
 <pre><code>&lt;preyname&gt;    function exponential &lt;alpha&gt; &lt;beta&gt; &lt;gamma&gt; &lt;delta&gt;</code></pre>
 </div>
-<div id="exponentiall50-suitability-function" class="section level3">
-<h3><span class="header-section-number">4.9.4</span> ExponentialL50 Suitability Function</h3>
+<div id="exponentiall50-suitability-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.9.4</span> ExponentialL50 Suitability Function<a href="chap-stock.html#exponentiall50-suitability-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a suitability function that has no dependence on the length of
 the predator, and a logarithmic dependence on the length of the prey as
 given by the following equation:</p>
@@ -889,8 +889,8 @@ length of the prey with a 50% probability of predation. Hence, to
 specify this suitability function, the file format required is:</p>
 <pre><code>&lt;preyname&gt;    function newexponentiall50 &lt;alpha&gt; &lt;l50&gt;</code></pre>
 </div>
-<div id="richards-suitability-function" class="section level3">
-<h3><span class="header-section-number">4.9.5</span> Richards Suitability Function</h3>
+<div id="richards-suitability-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.9.5</span> Richards Suitability Function<a href="chap-stock.html#richards-suitability-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a suitability function that is an extension to the Exponential
 suitiability function, and has a logarithmic dependence on both the
 length of the predator and the length of the prey as given by the
@@ -902,8 +902,8 @@ S(l, L) = \left({\frac{p_3}{1 + e^{(- p_0 - p_1 l - p_2  L)}}}\right) ^ {\frac{1
 is:</p>
 <pre><code>&lt;preyname&gt;    function richards &lt;vector of 5 parameters&gt;</code></pre>
 </div>
-<div id="andersen-suitability-function" class="section level3">
-<h3><span class="header-section-number">4.9.6</span> Andersen Suitability Function</h3>
+<div id="andersen-suitability-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.9.6</span> Andersen Suitability Function<a href="chap-stock.html#andersen-suitability-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a more general suitability function that is dependant on the
 ratio of the predator length to the prey length as given by the
 following equation:</p>
@@ -919,8 +919,8 @@ to ensure that the suitability function is always well defined. To
 specify this suitability function, the file format required is:</p>
 <pre><code>&lt;preyname&gt;    function andersen &lt;vector of 5 parameters&gt;</code></pre>
 </div>
-<div id="andersen-fleet-suitability-function" class="section level3">
-<h3><span class="header-section-number">4.9.7</span> Andersen Fleet Suitability Function</h3>
+<div id="andersen-fleet-suitability-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.9.7</span> Andersen Fleet Suitability Function<a href="chap-stock.html#andersen-fleet-suitability-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a modified version of the Andersen suitability function that is
 dependant on the ratio of a parameter to the prey length as given by the
 following equation:</p>
@@ -939,8 +939,8 @@ proxy for the mesh size used by the fleets. To specify this suitability
 function, the file format required is:</p>
 <pre><code>&lt;preyname&gt;    function andersenfleet &lt;vector of 6 parameters&gt;</code></pre>
 </div>
-<div id="gamma-suitability-function" class="section level3">
-<h3><span class="header-section-number">4.9.8</span> Gamma Suitability Function</h3>
+<div id="gamma-suitability-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.9.8</span> Gamma Suitability Function<a href="chap-stock.html#gamma-suitability-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a suitability function that is only dependant on the prey length
 as given by the following equation:</p>
 <p><span class="math display" id="eq:gammasuit">\[\begin{equation}
@@ -956,8 +956,8 @@ represent the size of the mesh used by the fleet (specified in
 centimetres).</p>
 </div>
 </div>
-<div id="sec-stockinitial" class="section level2">
-<h2><span class="header-section-number">4.10</span> Initial Conditions</h2>
+<div id="sec-stockinitial" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.10</span> Initial Conditions<a href="chap-stock.html#sec-stockinitial" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The initial conditions section of stock file specifies the stock
 population at the start of the simulation (ie. at the beginning of the
 first timestep specified in the “time” file). This includes setting up
@@ -995,8 +995,8 @@ generate the length distribution, with a parametric weight-length
 relationship to calculate a mean weight for the initial population
 Numerical - specify the numbers, and the corresponding mean weights, for
 the initial population</p>
-<div id="normal-condition-distribution" class="section level3">
-<h3><span class="header-section-number">4.10.1</span> Normal Condition Distribution</h3>
+<div id="normal-condition-distribution" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.10.1</span> Normal Condition Distribution<a href="chap-stock.html#normal-condition-distribution" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To specify an initial stock with the lengths given by a Normal
 distribution, and using a relative condition factor to generate the
 weights, the main stock file needs to specify the name of a datafile
@@ -1017,8 +1017,8 @@ multiplied by an age weighting factor and an area weighting factor.</p>
 <p>Hence, the format for the initial stock file is given below:</p>
 <pre><code>&lt;age&gt;  &lt;area&gt;  &lt;age factor&gt;  &lt;area factor&gt;  &lt;mean&gt;  &lt;stddev&gt;  &lt;relcond&gt;</code></pre>
 </div>
-<div id="normal-parametric-distribution" class="section level3">
-<h3><span class="header-section-number">4.10.2</span> Normal Parametric Distribution</h3>
+<div id="normal-parametric-distribution" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.10.2</span> Normal Parametric Distribution<a href="chap-stock.html#normal-parametric-distribution" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To specify an initial stock with the lengths given by a Normal
 distribution, and using a weight-length relationship to generate the
 weights, the main stock file needs to specify the name of a datafile
@@ -1042,8 +1042,8 @@ multiplied by an age weighting factor and an area weighting factor.</p>
 <p>Hence, the format for the initial stock file is given below:</p>
 <pre><code>&lt;age&gt;  &lt;area&gt;  &lt;age factor&gt;  &lt;area factor&gt;  &lt;mean&gt;  &lt;stddev&gt;  &lt;alpha&gt;  &lt;beta&gt;</code></pre>
 </div>
-<div id="numerical-distribution" class="section level3">
-<h3><span class="header-section-number">4.10.3</span> Numerical Distribution</h3>
+<div id="numerical-distribution" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.10.3</span> Numerical Distribution<a href="chap-stock.html#numerical-distribution" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>An alternative approach is to define the initial stock population by
 specifying an age-length table, along with the mean weight, for the
 initial stock. This approach requires the main stock file to specify a
@@ -1058,8 +1058,8 @@ below:</p>
 age-length cell that the initial population will be put into.</p>
 </div>
 </div>
-<div id="sec-stockmigrate" class="section level2">
-<h2><span class="header-section-number">4.11</span> Migration</h2>
+<div id="sec-stockmigrate" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.11</span> Migration<a href="chap-stock.html#sec-stockmigrate" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The migration section of the stock file determines if, and how, the
 stock will migrate in the Gadget model. The migration of a stock within
 a Gadget model is calculated based on migration matrices. The format for
@@ -1073,8 +1073,8 @@ further information about the migration is required. There are currently
 <p>Migration Matrices - specify the migration matrices to be used Migration
 Ratios - specify the ratio of the stock that moves between areas, and
 let Gadget calculate the required matrices based on these ratios</p>
-<div id="migration-matrices" class="section level3">
-<h3><span class="header-section-number">4.11.1</span> Migration Matrices</h3>
+<div id="migration-matrices" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.11.1</span> Migration Matrices<a href="chap-stock.html#migration-matrices" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To specify the migration of the stock by defining the migration matrices
 directly, the main stock file needs to specify the name of a datafile
 containing information about when the migration will take place, and the
@@ -1113,8 +1113,8 @@ stock that are on area 1 at the start of the migration will move to area
 For the stock that start the timestep on area 2, 30% will move to area 1
 and the remaining 70% will stay on area 2.</p>
 </div>
-<div id="migration-ratios" class="section level3">
-<h3><span class="header-section-number">4.11.2</span> Migration Ratios</h3>
+<div id="migration-ratios" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.11.2</span> Migration Ratios<a href="chap-stock.html#migration-ratios" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>An alternative approach is to specify the migration of the stock by
 defining the ratio of the stock that will migrate between given areas,
 and let Gadget calculate the resulting migration matrices to use within
@@ -1158,8 +1158,8 @@ the timestep on area 2, 30% will move to area 1 and the remaining 70%
 will stay on area 2.</p>
 </div>
 </div>
-<div id="sec-stockmature" class="section level2">
-<h2><span class="header-section-number">4.12</span> Maturation</h2>
+<div id="sec-stockmature" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.12</span> Maturation<a href="chap-stock.html#sec-stockmature" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The maturation section of the stock file determines if, and how, the
 stock will mature in the Gadget model. The format for the first part of
 the maturation section is given below:</p>
@@ -1199,8 +1199,8 @@ age-length group for the mature stock. Note that there is a check to
 ensure that the corresponding age-length group exists for the mature
 stock, and if it doesn’t then the fish don’t become mature and will stay
 in the immature stock.</p>
-<div id="constant-maturity-function" class="section level3">
-<h3><span class="header-section-number">4.12.1</span> Constant Maturity Function</h3>
+<div id="constant-maturity-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.12.1</span> Constant Maturity Function<a href="chap-stock.html#constant-maturity-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This maturity function calculates the proportion of an age-length group
 of an immature stock that becomes mature according to the maturity
 equation <a href="chap-stock.html#eq:mat3">(4.33)</a> given below:</p>
@@ -1219,8 +1219,8 @@ maturitysteps               &lt;vector of timesteps&gt;</code></pre>
 <p>The <span class="math inline">\(&lt;\)</span>maturitysteps<span class="math inline">\(&gt;\)</span> vector is a vector of timesteps that the
 maturation process will take place on.</p>
 </div>
-<div id="constantweight-maturity-function" class="section level3">
-<h3><span class="header-section-number">4.12.2</span> ConstantWeight Maturity Function</h3>
+<div id="constantweight-maturity-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.12.2</span> ConstantWeight Maturity Function<a href="chap-stock.html#constantweight-maturity-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This maturity function is an extension to the Constant maturity
 function, with the maturity proportion being calculated according to the
 maturity equation <a href="chap-stock.html#eq:mat4">(4.34)</a> given below:</p>
@@ -1237,8 +1237,8 @@ below:</p>
 coefficients                &lt;alpha&gt;  &lt;l50&gt;  &lt;beta&gt;  &lt;a50&gt;  &lt;gamma&gt;  &lt;k50&gt;
 maturitysteps               &lt;vector of timesteps&gt;</code></pre>
 </div>
-<div id="fixedlength-maturity-function" class="section level3">
-<h3><span class="header-section-number">4.12.3</span> FixedLength Maturity Function</h3>
+<div id="fixedlength-maturity-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.12.3</span> FixedLength Maturity Function<a href="chap-stock.html#fixedlength-maturity-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This maturity function takes a different approach, and bases the
 proportion of the immature stock that matures on the length of the
 immature stock, as the length varies through the year. This is approach
@@ -1262,8 +1262,8 @@ maturitylengths             &lt;vector of lengths&gt;</code></pre>
 <p>Note that the <span class="math inline">\(&lt;\)</span>maturitysteps<span class="math inline">\(&gt;\)</span> and the <span class="math inline">\(&lt;\)</span>maturitylengths<span class="math inline">\(&gt;\)</span> vectors
 need to be the same size.</p>
 </div>
-<div id="continuous-maturity-function" class="section level3">
-<h3><span class="header-section-number">4.12.4</span> Continuous Maturity Function</h3>
+<div id="continuous-maturity-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.12.4</span> Continuous Maturity Function<a href="chap-stock.html#continuous-maturity-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This maturity function calculates the proportion of an age-length group
 of an immature stock that becomes mature according to the maturity
 equations<a href="chap-stock.html#eq:mat1a">(4.36)</a> and <a href="chap-stock.html#eq:mat1b">(4.37)</a> given below:</p>
@@ -1281,8 +1281,8 @@ timestep. The file format for this maturity function is given below:</p>
 coefficients                &lt;alpha&gt;  &lt;l50&gt;  &lt;beta&gt;  &lt;a50&gt;</code></pre>
 </div>
 </div>
-<div id="sec-stockmove" class="section level2">
-<h2><span class="header-section-number">4.13</span> Movement (“Transition”)</h2>
+<div id="sec-stockmove" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.13</span> Movement (“Transition”)<a href="chap-stock.html#sec-stockmove" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The movement section of the stock file determines if, and how, the stock
 will move (into a different stock) in the Gadget model. This allows for
 a Gadget model to be set up with different stock files for stock that is
@@ -1314,8 +1314,8 @@ the corresponding age-length group exists, and if it doesn’t then the
 fish don’t move and will stay in the oldest age group for current stock,
 which is modelled as a plus group.</p>
 </div>
-<div id="sec-stockrenew" class="section level2">
-<h2><span class="header-section-number">4.14</span> Renewal (“Recruitment”)</h2>
+<div id="sec-stockrenew" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.14</span> Renewal (“Recruitment”)<a href="chap-stock.html#sec-stockrenew" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The renewal section of the stock file determines if, and how, the stock
 will be renewed in the Gadget model. The format for the first part of
 the renewal section is given below:</p>
@@ -1346,8 +1346,8 @@ generate the length distribution, with a parametric weight-length
 relationship to calculate a mean weight for the new recruits Numerical -
 specify the numbers, and the corresponding mean weights, for the new
 recruits</p>
-<div id="normal-condition-distribution-1" class="section level3">
-<h3><span class="header-section-number">4.14.1</span> Normal Condition Distribution</h3>
+<div id="normal-condition-distribution-1" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.14.1</span> Normal Condition Distribution<a href="chap-stock.html#normal-condition-distribution-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To specify renewal data with the lengths given by a Normal distribution,
 and using a relative condition factor to generate the weights, the main
 stock file needs to specify the name of a datafile containing the
@@ -1364,8 +1364,8 @@ assign a mean weight for the recruits.</p>
 <p>Hence, the format for the renewal file is given below:</p>
 <pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;  &lt;relcond&gt;</code></pre>
 </div>
-<div id="normal-parametric-distribution-1" class="section level3">
-<h3><span class="header-section-number">4.14.2</span> Normal Parametric Distribution</h3>
+<div id="normal-parametric-distribution-1" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.14.2</span> Normal Parametric Distribution<a href="chap-stock.html#normal-parametric-distribution-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To specify renewal data with the lengths given by a Normal distribution,
 and using a weight-length relationship to generate the weights, the main
 stock file needs to specify the name of a datafile containing the
@@ -1381,8 +1381,8 @@ parameters to define the weight-length relationship for these recruits.</p>
 <p>Hence, the format for the renewal file is given below:</p>
 <pre><code>&lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;age&gt;  &lt;number&gt;  &lt;mean&gt;  &lt;stddev&gt;  &lt;alpha&gt;  &lt;beta&gt;</code></pre>
 </div>
-<div id="numerical-distribution-1" class="section level3">
-<h3><span class="header-section-number">4.14.3</span> Numerical Distribution</h3>
+<div id="numerical-distribution-1" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.14.3</span> Numerical Distribution<a href="chap-stock.html#numerical-distribution-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>An alternative approach is to define the renewal data by specifying an
 age-length table, along with the mean weight, for each timestep that
 will have new fish added to the stock. This approach requires the main
@@ -1398,8 +1398,8 @@ group and length group combination, as shown below:</p>
 age-length cell that the new fish will be put into.</p>
 </div>
 </div>
-<div id="sec-stockspawn" class="section level2">
-<h2><span class="header-section-number">4.15</span> Spawning</h2>
+<div id="sec-stockspawn" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.15</span> Spawning<a href="chap-stock.html#sec-stockspawn" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The spawning section of the stock file determines if, and how, the stock
 will spawn in the Gadget model. This covers the mortality and weight
 loss from the stock due to the spawning process, and optionally the
@@ -1492,8 +1492,8 @@ valid recruitment function names are:</p>
 <li><code>ricker</code> - use the Ricker recruitment function</li>
 <li><code>bevertonholt</code> - use the BevertonHolt recruitment function</li>
 </ul>
-<div id="fecundity-recruitment-function" class="section level3">
-<h3><span class="header-section-number">4.15.1</span> Fecundity Recruitment Function</h3>
+<div id="fecundity-recruitment-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.15.1</span> Fecundity Recruitment Function<a href="chap-stock.html#fecundity-recruitment-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This recruitment function calculates the number of recruits to be added
 to the spawned stock as a function of the length, age, number and weight
 of the spawning stock, given by the following equation:</p>
@@ -1504,8 +1504,8 @@ R = p_{0} \sum_{\it ages}\sum_{\it lengths} l ^{p_{1}} a ^{p_{2}} N_{al} ^{p_{3}
 is:</p>
 <pre><code>recruitment            fecundity  &lt;vector of 5 parameters&gt;</code></pre>
 </div>
-<div id="simplessb-recruitment-function" class="section level3">
-<h3><span class="header-section-number">4.15.2</span> SimpleSSB Recruitment Function</h3>
+<div id="simplessb-recruitment-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.15.2</span> SimpleSSB Recruitment Function<a href="chap-stock.html#simplessb-recruitment-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This recruitment function calculates the number of recruits to be added
 to the spawned stock as a simple proportion of the spawning stock
 biomass, given by the following equations:</p>
@@ -1519,8 +1519,8 @@ R = \mu S\end{equation}\]</span></p>
 is:</p>
 <pre><code>recruitment            simplessb  &lt;mu&gt;</code></pre>
 </div>
-<div id="ricker-recruitment-function" class="section level3">
-<h3><span class="header-section-number">4.15.3</span> Ricker Recruitment Function</h3>
+<div id="ricker-recruitment-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.15.3</span> Ricker Recruitment Function<a href="chap-stock.html#ricker-recruitment-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This recruitment function calculates the number of recruits to be added
 to the spawned stock, as a function of the spawning stock biomass (see
 equation <a href="chap-stock.html#eq:ssb">(4.41)</a>), based on the Ricker recruitment relationship given
@@ -1532,8 +1532,8 @@ R = \mu S e ^{-\lambda S}\end{equation}\]</span></p>
 is:</p>
 <pre><code>recruitment            ricker  &lt;mu&gt;  &lt;lambda&gt;</code></pre>
 </div>
-<div id="bevertonholt-recruitment-function" class="section level3">
-<h3><span class="header-section-number">4.15.4</span> BevertonHolt Recruitment Function</h3>
+<div id="bevertonholt-recruitment-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.15.4</span> BevertonHolt Recruitment Function<a href="chap-stock.html#bevertonholt-recruitment-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This recruitment function calculates the number of recruits to be added
 to the spawned stock, as a function of the spawning stock biomass (see
 equation <a href="chap-stock.html#eq:ssb">(4.41)</a>), based on the Beverton Holt recruitment
@@ -1545,8 +1545,8 @@ R = \frac{\mu S}{\lambda + S}\end{equation}\]</span></p>
 is:</p>
 <pre><code>recruitment            bevertonholt  &lt;mu&gt;  &lt;lambda&gt;</code></pre>
 </div>
-<div id="hockey-stick-recruitment-function" class="section level3">
-<h3><span class="header-section-number">4.15.5</span> Hockey stick Recruitment Function</h3>
+<div id="hockey-stick-recruitment-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.15.5</span> Hockey stick Recruitment Function<a href="chap-stock.html#hockey-stick-recruitment-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This recruitment function calculates the number of recruits to be added
 to the spawned stock, as a function of the spawning stock biomass (see
 equation <a href="chap-stock.html#eq:ssb">(4.41)</a>), based on the Hockey stick recruitment relationship
@@ -1563,8 +1563,8 @@ is:</p>
 <p>Note that to be in-line with definition of renewals and initial
 conditions <span class="math inline">\(R_0\)</span> is defined in terms multiples of 10 000 fish.</p>
 </div>
-<div id="baleen-recruitment-function" class="section level3">
-<h3><span class="header-section-number">4.15.6</span> Baleen Recruitment Function</h3>
+<div id="baleen-recruitment-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.15.6</span> Baleen Recruitment Function<a href="chap-stock.html#baleen-recruitment-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This recruitment function calculates the number of recruits to be added
 to the spawned stock, as a function of the spawning stock abundance (see
 equation <a href="chap-stock.html#eq:ssb">(4.41)</a>), based on the Baleen recruitment relationship
@@ -1579,8 +1579,8 @@ is:</p>
 <p>where <span class="math inline">\(B\)</span> is the birthrate, <span class="math inline">\(A\)</span> is the resilience parameter for the stock, <span class="math inline">\(K\)</span> the carrying capacity and <span class="math inline">\(z\)</span> the degree of compensation.</p>
 </div>
 </div>
-<div id="sec-lselection" class="section level2">
-<h2><span class="header-section-number">4.16</span> Length Selection</h2>
+<div id="sec-lselection" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.16</span> Length Selection<a href="chap-stock.html#sec-lselection" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The length selection function determines the proportion of the length
 group that will be selected, in a similar way to the suitability
 functions (see section <a href="chap-stock.html#sec-suitability">4.9</a> above). To define a length selection
@@ -1598,8 +1598,8 @@ valid length selection function names are:</p>
 <li><code>straightline</code> - use the StraightLine selection function</li>
 <li><code>exponential</code> - use the Exponential selection function</li>
 </ul>
-<div id="constant-selection-function" class="section level3">
-<h3><span class="header-section-number">4.16.1</span> Constant Selection Function</h3>
+<div id="constant-selection-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.16.1</span> Constant Selection Function<a href="chap-stock.html#constant-selection-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a selection function, where there is no dependence on the length
 of the stock is given by the following equation:</p>
 <p><span class="math display" id="eq:constsel">\[\begin{equation}
@@ -1610,8 +1610,8 @@ S(l) = \alpha
 required is:</p>
 <pre><code>&lt;function&gt;    constant  &lt;alpha&gt;</code></pre>
 </div>
-<div id="straightline-selection-function" class="section level3">
-<h3><span class="header-section-number">4.16.2</span> StraightLine Selection Function</h3>
+<div id="straightline-selection-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.16.2</span> StraightLine Selection Function<a href="chap-stock.html#straightline-selection-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a selection function that has a linear dependence on the length
 of the stock is given by the following equation:</p>
 <p><span class="math display" id="eq:straightsel">\[\begin{equation}
@@ -1621,8 +1621,8 @@ S(l) = \alpha l + \beta\end{equation}\]</span></p>
 required is:</p>
 <pre><code>&lt;function&gt;    straightline  &lt;alpha&gt;  &lt;beta&gt;</code></pre>
 </div>
-<div id="exponential-selection-function" class="section level3">
-<h3><span class="header-section-number">4.16.3</span> Exponential Selection Function</h3>
+<div id="exponential-selection-function" class="section level3 hasAnchor">
+<h3><span class="header-section-number">4.16.3</span> Exponential Selection Function<a href="chap-stock.html#exponential-selection-function" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>This is a selection function that has a logarithmic dependence on the
 length of the stock is given by the following equation:</p>
 <p><span class="math display" id="eq:expsel">\[\begin{equation}
@@ -1635,8 +1635,8 @@ specify this selection function, the file format required is:</p>
 <pre><code>&lt;function&gt;    exponential  &lt;alpha&gt;  &lt;l50&gt;</code></pre>
 </div>
 </div>
-<div id="sec-stockstray" class="section level2">
-<h2><span class="header-section-number">4.17</span> Straying</h2>
+<div id="sec-stockstray" class="section level2 hasAnchor">
+<h2><span class="header-section-number">4.17</span> Straying<a href="chap-stock.html#sec-stockstray" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The straying section of the stock file determines if, and how, the stock
 will stray from one substock to another substock in the Gadget model.
 The format for the first part of the straying section of the stock file
@@ -1736,7 +1736,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>3 Model Files | Gadget userguide</title>
   <meta name="description" content="3 Model Files | Gadget userguide" />
-  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="3 Model Files | Gadget userguide" />
   <meta property="og:type" content="book" />
-  
   
   
   
@@ -50,8 +49,9 @@
 
 
 <script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 
 
 
@@ -314,16 +314,16 @@
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="chap-model" class="section level1">
-<h1><span class="header-section-number">3</span> Model Files</h1>
+<div id="chap-model" class="section level1 hasAnchor">
+<h1><span class="header-section-number">3</span> Model Files<a href="chap-model.html#chap-model" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>Gadget requires a number of data files to define a Gadget model. The
 number of data files required depends on the complexity of the Gadget
 model, and there is no limit on the number, or name, of these data
 files. The main input file gives links to all the other data files
 required, and must be specified with the “-main <span class="math inline">\(&lt;\)</span>filename<span class="math inline">\(&gt;\)</span>” command
 line option, or be called “main”.</p>
-<div id="sec-mainfile" class="section level2">
-<h2><span class="header-section-number">3.1</span> Main File</h2>
+<div id="sec-mainfile" class="section level2 hasAnchor">
+<h2><span class="header-section-number">3.1</span> Main File<a href="chap-model.html#sec-mainfile" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The main Gadget input file is usually called “main”, unless it is
 specified with the “-main <span class="math inline">\(&lt;\)</span>filename<span class="math inline">\(&gt;\)</span>” command line option. This file
 only contains links to other files which will make up the Gadget model.
@@ -355,8 +355,8 @@ semi colon should be placed before the name of the printfile, as shown
 in the line below:</p>
 <pre><code>printfiles ; &lt;filename&gt; commented out so no printing will take place</code></pre>
 </div>
-<div id="sec-timefile" class="section level2">
-<h2><span class="header-section-number">3.2</span> Time File</h2>
+<div id="sec-timefile" class="section level2 hasAnchor">
+<h2><span class="header-section-number">3.2</span> Time File<a href="chap-model.html#sec-timefile" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>This specifies the start and end times for the model run, and the number
 of timesteps per year. Note that the model can run into the future, and
 that datasets covering only part of the overall run can be used. Gadget
@@ -385,8 +385,8 @@ September<span class="math inline">\(&gt;\)</span>, <span class="math inline">\(
 <pre><code>notimesteps     6 2 1 3 3 1 2</code></pre></li>
 </ol>
 </div>
-<div id="sec-areafile" class="section level2">
-<h2><span class="header-section-number">3.3</span> Area File</h2>
+<div id="sec-areafile" class="section level2 hasAnchor">
+<h2><span class="header-section-number">3.3</span> Area File<a href="chap-model.html#sec-areafile" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>This file specifies which areas the model will be run on, and gives a
 time dependent temperature for each area. Note that although the
 temperature data must be provided it need not actually be used,
@@ -401,8 +401,8 @@ size    &lt;vector of sizes&gt;
 temperature
 &lt;year&gt;  &lt;step&gt;  &lt;area&gt;  &lt;temperature&gt;</code></pre>
 </div>
-<div id="sec-otherinputfile" class="section level2">
-<h2><span class="header-section-number">3.4</span> Other Input Data Files</h2>
+<div id="sec-otherinputfile" class="section level2 hasAnchor">
+<h2><span class="header-section-number">3.4</span> Other Input Data Files<a href="chap-model.html#sec-otherinputfile" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>There are four other types of input that are important since they are
 used in other data files to denote a grouping of data. These are
 Aggregation files, which are files used to gather data into convenient
@@ -411,8 +411,8 @@ that can vary over time, StockVariable files, which are files used to
 denote vairables that can vary with population, and ActionAtTime, which
 is used to define the timesteps that an action takes place within a data
 file.</p>
-<div id="aggregation-files" class="section level3">
-<h3><span class="header-section-number">3.4.1</span> Aggregation Files</h3>
+<div id="aggregation-files" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.4.1</span> Aggregation Files<a href="chap-model.html#aggregation-files" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Aggregation files are important since they are used to group the data in
 convenient groups. They consist of a text label (used to identify the
 group in the data) followed by a list of the data that the label
@@ -420,8 +420,8 @@ represents. This data will then be read in from an associated data file.
 There are aggregation files to group areas, ages, lengths or preys
 together. Aggregation files can contain comments and blank lines, to
 make the format easier to view in a text editor.</p>
-<div id="subsec-areaagg" class="section level4">
-<h4><span class="header-section-number">3.4.1.1</span> Area Aggregation</h4>
+<div id="subsec-areaagg" class="section level4 hasAnchor">
+<h4><span class="header-section-number">3.4.1.1</span> Area Aggregation<a href="chap-model.html#subsec-areaagg" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Area aggregation files contain one or more identifying labels and then a
 list of one or more areas that the label refers to. The format for this
 is:</p>
@@ -433,8 +433,8 @@ south        3  4  5  7</code></pre>
 will be interpreted as applying to areas 1, 2 and 6 and the label
 “south” will be interpreted as applying to areas 3, 4, 5 and 7.</p>
 </div>
-<div id="subsec-ageagg" class="section level4">
-<h4><span class="header-section-number">3.4.1.2</span> Age Aggregation</h4>
+<div id="subsec-ageagg" class="section level4 hasAnchor">
+<h4><span class="header-section-number">3.4.1.2</span> Age Aggregation<a href="chap-model.html#subsec-ageagg" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Age aggregation files contain one or more identifying labels and then a
 list of one or more ages that the label refers to. The format for this
 is:</p>
@@ -446,8 +446,8 @@ old          5  6  7</code></pre>
 will be interpreted as applying to ages 1 - 4 and the label “old” will
 be interpreted as applying to ages 5 to 7.</p>
 </div>
-<div id="subsec-lenagg" class="section level4">
-<h4><span class="header-section-number">3.4.1.3</span> Length Aggregation</h4>
+<div id="subsec-lenagg" class="section level4 hasAnchor">
+<h4><span class="header-section-number">3.4.1.3</span> Length Aggregation<a href="chap-model.html#subsec-lenagg" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Length aggregation files contain one or more identifying labels and then
 the minimum and maximum length that the label refers to. The format for
 this is:</p>
@@ -465,8 +465,8 @@ will be interpreted as applying to lengths 5-25cm, the label “medium”
 will be interpreted as applying to the lengths 25-55cm and the label
 “large” will be interpreted as applying to lengths 55-80cm.</p>
 </div>
-<div id="subsec-preyagg" class="section level4">
-<h4><span class="header-section-number">3.4.1.4</span> Prey Aggregation</h4>
+<div id="subsec-preyagg" class="section level4 hasAnchor">
+<h4><span class="header-section-number">3.4.1.4</span> Prey Aggregation<a href="chap-model.html#subsec-preyagg" class="anchor-section" aria-label="Anchor link to header"></a></h4>
 <p>Prey aggregation files contain one or more identifying labels, and then
 the names of the preys, the minimum and maximum lengths for the preys
 and the digestion coefficients for the consumption of the preys. The
@@ -508,8 +508,8 @@ and the label “largecapelin” will be interpreted as applying to mature
 capelin (a stock called mature.capelin) of lengths 15-20cm.</p>
 </div>
 </div>
-<div id="subsec-timevar" class="section level3">
-<h3><span class="header-section-number">3.4.2</span> TimeVariable Files</h3>
+<div id="subsec-timevar" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.4.2</span> TimeVariable Files<a href="chap-model.html#subsec-timevar" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>TimeVariable files are used in place of a single variable in the input
 files, to define variables in the Gadget model that can vary over time.
 They are used by specifying the name of the TimeVariable file in place
@@ -543,8 +543,8 @@ to “grow2000” which is to be used from 2000 through to the end of the
 simulation. Note that this example assumes that the first timestep of
 the simulation is the first timestep in 1995.</p>
 </div>
-<div id="subsec-stockvar" class="section level3">
-<h3><span class="header-section-number">3.4.3</span> StockVariable Files</h3>
+<div id="subsec-stockvar" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.4.3</span> StockVariable Files<a href="chap-model.html#subsec-stockvar" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>StockVariable files are used in place of a single variable in the input
 files, in a similar manner to the TimeVariable files, to define
 variables in the Gadget model that can vary due to stock populations
@@ -578,8 +578,8 @@ calculated as the value of “param1” times the value of “param2” times
 the total biomass of the stocks “immature.capelin” plus
 “mature.capelin”.</p>
 </div>
-<div id="subsec-aat" class="section level3">
-<h3><span class="header-section-number">3.4.4</span> ActionAtTime</h3>
+<div id="subsec-aat" class="section level3 hasAnchor">
+<h3><span class="header-section-number">3.4.4</span> ActionAtTime<a href="chap-model.html#subsec-aat" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>ActionAtTime is a simple list of timesteps within a data file that
 define when a specified action (for example printing) will take place.
 The format for this is:</p>
@@ -670,7 +670,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');
