@@ -99,10 +99,10 @@ Getting Gadget {#sec-gettinggadget}
 
 Gadget is distributed via GitHub and can be obtained at:
 
-> http://github.com/Hafro/gadget2
+> https://github.com/gadget-framework/gadget2/
 
 That page will have instructions for how to install the most recent
-version of Gadget. Follow the instructions there to install 
+version of Gadget. Follow the instructions there to install
 
 Gadget is a program that runs on a Unix computing platform, and is
 regularly tested on machines running versions of Linux, Mac OSX and
@@ -162,14 +162,14 @@ information in these error messages to lead the user to the input file
 that is causing the error.
 
 If all else fails, and the error messages do not lead the user to the
-source of the error, then there is an email address set up for any
+source of the error, then there is an message board set up for any
 difficulties or questions that may arise, or reporting any bugs that get
 found. In addition to sorting out any problems that the user may be
 getting, we can also try to help with interpreting the output. This
-email address is gadgethelp\@hafro.is
+message board is located on the github repository for Gadget.
 
 Sending an email to this address should get a response within a couple
-of working days. This email address can also be used to give us any
+of working days. This message board can also be used to give us any
 feedback on the usefulness (or otherwise) of Gadget, so let us know what
 you think!
 
@@ -933,12 +933,12 @@ functions defined, so valid function names are:
 
 
 
-* `multspec` - use the MULTSPEC growth function 
-* `weightvb` - use the WeightVB growth function 
+* `multspec` - use the MULTSPEC growth function
+* `weightvb` - use the WeightVB growth function
 * `weightjones` - use the WeightJones growth function
-* `weightvbexpanded` - use the WeightVBExpanded growth function 
-* `lengthvb` - use the LengthVB growth function 
-* `lengthpower` - use the LengthPower growth function 
+* `weightvbexpanded` - use the WeightVBExpanded growth function
+* `lengthvb` - use the LengthVB growth function
+* `lengthpower` - use the LengthPower growth function
 * `lengthvbsimple` - use the LengthVBSimple growth function
 
 ### MULTSPEC Growth Function {#subsec-growth1}
@@ -1896,9 +1896,9 @@ functions defined, and the valid maturity function names are:
 
 
 
-* `newconstant` - use the Constant maturation function 
-* `newconstantweight` -use the ConstantWeight maturation function 
-* `fixedlength` - use the FixedLength maturation function 
+* `newconstant` - use the Constant maturation function
+* `newconstantweight` -use the ConstantWeight maturation function
+* `fixedlength` - use the FixedLength maturation function
 * `continuous` - use the Continuous maturation function
 
 
@@ -2090,7 +2090,7 @@ distribution data, as given below:
 
 Normal Condition - use a Normal function to generate the length
 distribution, with a relative condition factor to assign a mean weight
-to the new recruits 
+to the new recruits
 Normal Parametric - use a Normal function to
 generate the length distribution, with a parametric weight-length
 relationship to calculate a mean weight for the new recruits Numerical -
@@ -2293,7 +2293,7 @@ is:
 
     recruitment            fecundity  <vector of 5 parameters>
 
- 
+
 ### SimpleSSB Recruitment Function
 
 This recruitment function calculates the number of recruits to be added
@@ -2388,7 +2388,7 @@ is:
 
     recruitment            baleen  <B>  <A> <K> <z>
 
-where $B$ is the birthrate, $A$ is the resilience parameter for the stock, $K$ the carrying capacity and $z$ the degree of compensation. 
+where $B$ is the birthrate, $A$ is the resilience parameter for the stock, $K$ the carrying capacity and $z$ the degree of compensation.
 
 Length Selection {#sec-lselection}
 ----------------
@@ -2411,7 +2411,7 @@ valid length selection function names are:
 
 
 * `constant` - use the Constant selection function
-* `straightline` - use the StraightLine selection function 
+* `straightline` - use the StraightLine selection function
 * `exponential` - use the Exponential selection function
 
 ### Constant Selection Function
@@ -2682,10 +2682,10 @@ The $<$type$>$ defines the type of fleet for the $<$fleetname$>$ fleet,
 and the 5 valid fleet types that can used in Gadget are:
 
 
-    TotalFleet 
-    NumberFleet 
-    LinearFleet 
-    EffortFleet 
+    TotalFleet
+    NumberFleet
+    LinearFleet
+    EffortFleet
     QuotaFleet
 
 TotalFleet {#sec-totalfleet}
@@ -3058,17 +3058,17 @@ sections below. The $<$likelihood type$>$ defines the type of likelihood
 component that is to be used, and there are currently 12 valid
 likelihood types defined in Gadget. These are:
 
-* `BoundLikelihood` 
-* `Understocking` 
-* `CatchDistribution` 
+* `BoundLikelihood`
+* `Understocking`
+* `CatchDistribution`
 * `CatchStatistics`
-* `StockDistribution` 
+* `StockDistribution`
 * `SurveyIndices`
-* `SurveyDistribution` 
+* `SurveyDistribution`
 * `StomachContent`
-* `Recaptures` 
-* `RecStatistics` 
-* `MigrationPenalty` 
+* `Recaptures`
+* `RecStatistics`
+* `MigrationPenalty`
 * `MigrationProportion`
 * `CatchInKilos`
 
@@ -3513,11 +3513,11 @@ depends on the likelihood function used. The valid functions are:
 
 
 * `lengthcalcstddev` - use a weighted sum of squares of mean length
-* `lengthgivenstddev` - use a weighted sum of squares of mean length with given standard deviation 
-* `weightgivenstddev` - use a weighted sum of squares of mean weight with given standard deviation 
-* `weightnostddev` - use a unweighted sum of squares of mean weight 
-* `lengthnostddev` - use a unweighted sum of squares of mean length 
-* `weightgivenstddevlen` - use a weighted sum of squares of mean weight at length with given standard deviation 
+* `lengthgivenstddev` - use a weighted sum of squares of mean length with given standard deviation
+* `weightgivenstddev` - use a weighted sum of squares of mean weight with given standard deviation
+* `weightnostddev` - use a unweighted sum of squares of mean weight
+* `lengthnostddev` - use a unweighted sum of squares of mean length
+* `weightgivenstddevlen` - use a weighted sum of squares of mean weight at length with given standard deviation
 * `weightnostddevlen` - use a unweighted sum of squares of mean weight at length
 
 ### Weighted Sum of Squares of Mean Length
@@ -3730,7 +3730,7 @@ to compare the modelled age-length stock distribution to the input
 age-length stock distribution. Currently, there are two likelihood
 functions defined, and the valid functions are:
 
-* `sumofsquares` - use a sum of squares function 
+* `sumofsquares` - use a sum of squares function
 * `multinomial` - use a multinomial function
 
 
@@ -3830,10 +3830,10 @@ specified by the value of $<$survey index type$>$. There are currently 5
 valid options, which are:
 
 
-* `lengths` - defining a length group based survey index 
-* `ages` - defining an age group based survey index 
-* `fleets` - defining a length group based survey index, taking the fleet selectivity into account 
-* `acoustic` - defining an acoustic based survey index 
+* `lengths` - defining a length group based survey index
+* `ages` - defining an age group based survey index
+* `fleets` - defining a length group based survey index, taking the fleet selectivity into account
+* `acoustic` - defining an acoustic based survey index
 * `effort` - defining an fishing effort based survey index
 
 ### SurveyIndices by Length {#subsec-sibylength}
@@ -3878,12 +3878,12 @@ specified here. In total, there are 8 valid entries for $<$fit type$>$,
 and the associated parameters, and these are:
 
 
-* `linearfit` 
-* `loglinearfit` 
-* `fixedslopelinearfit` 
+* `linearfit`
+* `loglinearfit`
+* `fixedslopelinearfit`
 * `fixedslopeloglinearfit`
-* `fixedinterceptlinearfit` 
-* `fixedinterceptloglinearfit` 
+* `fixedinterceptlinearfit`
+* `fixedinterceptloglinearfit`
 * `fixedlinearfit`
 * `fixedloglinearfit`
 
@@ -4185,7 +4185,7 @@ survey index distribution from the modelled population. Currently, there
 are two functions defined, and the valid function names are:
 
 
-* `linearfit` - use a linear function 
+* `linearfit` - use a linear function
 * `powerfit` - use a power function
 
 
@@ -4202,9 +4202,9 @@ distribution. Currently, there are 4 functions defined, and the valid
 function names are:
 
 
-* `multinomial` - use a multinomial function 
+* `multinomial` - use a multinomial function
 * `pearson` - use a Pearson function
-* `gamma` - use a gamma function 
+* `gamma` - use a gamma function
 * `log` - use a log function
 
 
@@ -4492,7 +4492,7 @@ depends on the likelihood function used. The valid functions are:
 
 
 * `lengthcalcstddev` - use a weighted sum of squares of mean length
-* `lengthgivenstddev` - use a weighted sum of squares of mean length with given standard deviation 
+* `lengthgivenstddev` - use a weighted sum of squares of mean length with given standard deviation
 * `lengthnostddev` - use a unweighted sum of squares of mean length
 
 ### Weighted Sum of Squares of Mean Length
@@ -4823,7 +4823,7 @@ PredatorOverPrinter PreyOverPrinter StockPreyFullPrinter
 StockPreyPrinter PredatorPreyPrinter LikelihoodPrinter
 LikelihoodSummaryPrinter
 
- 
+
 StockStdPrinter {#sec-stockstdprinter}
 ---------------
 
@@ -5269,19 +5269,19 @@ output are:
 1.  CatchDistribution likelihood component (see
     section \@ref(sec-catchdist))
 
-    
+
         year-step-area-age-length-number
 
 2.  CatchStatistics likelihood component (see
     section \@ref(sec-catchstat))
 
-    
+
         year-step-area-age-number-mean[-stddev]
 
 3.  SurveyIndices likelihood component (see
     section \@ref(#sec:surveyindices))
 
-    
+
         year-step-area-index-number
 
 LikelihoodSummaryPrinter {#sec-likelihoodsummaryprinter}
@@ -6102,14 +6102,14 @@ Examples of valid loglevel values include:
     more detailed messages that would be written to the log file by
     default)
 
-    
+
         gadget -l -log gadget.log -loglevel 2
 
 2.  specifying a log file for a simulation run that includes error and
     warning messages (note that it is not possible to disable the
     warning messages during a simulation run)
 
-    
+
         gadget -s -log gadget.log -loglevel 3
 
 Paramin {#chap-paramin}
@@ -6161,7 +6161,7 @@ need root access to do that. Now you can call the functions from the
 console. Here is an example of a typical paramin run:
 
 
-    mpirun paramin -i <filename> -opt <filename> -network <filename> 
+    mpirun paramin -i <filename> -opt <filename> -network <filename>
         -o <filename> -function gadget-PARA -s -n -i <filename> > <filename>
 
 Now because paramin is implemented with MPI we need to call mpirun when
@@ -6589,6 +6589,5 @@ Gadget version 2.3.8 {#sec:v238}
 ---------------------
 
 
-Gadget development version {#sec:v9999}
+Gadget version 2.3.9 {#sec:v239}
 ---------------------
-

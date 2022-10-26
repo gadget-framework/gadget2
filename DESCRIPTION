@@ -1,8 +1,8 @@
 Package: gadget2
 Type: Package
 Title: Gadget is the Globally-Applicable Area Disaggregated General Ecosystem Toolbox
-Version: 2.3.99
-Date: 2022-10-25
+Version: 2.3.9
+Date: 2022-10-26
 Authors@R: c(person("Bjarki Thor", "Elvarsson", email="bjarki.elvarsson@hafogvatn.is",role = c("aut", "cre")),
             person("James","Begley", email="james@hafro.is",role=c("aut")),
             person("Hoskuldur","Bjornsson", email="hoski@hafro.is",role=c("aut")),
@@ -37,7 +37,7 @@ Description: A statistical ecosystem modelling package, taking many features of
              areas with migration between areas; predation between and within
              species; maturation; reproduction and recruitment; multiple
              commercial and survey fleets taking catches from the populations.
-             For more details see <https://hafro.github.io/gadget2>.
+             For more details see <https://gadget-framework.github.io/gadget2/>.
              This is the C++ Gadget2 runtime, making it available for R.
 Encoding: UTF-8
 Suggests:
