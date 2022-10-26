@@ -5,4 +5,4 @@ output: html_document
 
 * [Gadget user guide](userguide/)
 * [Gadget reference manual](reference/)
-* [Gadget course](https://hafro.github.io/gadget-course/)
+* [Gadget course](gadget-course/)
