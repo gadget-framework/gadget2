@@ -9,6 +9,7 @@
 
 /params.out
 .Rproj.user
+*.Rproj
 
 /src/*.o
 /src/*~

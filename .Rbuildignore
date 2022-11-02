@@ -10,7 +10,8 @@ gadget-para$
 ^\.bash_history\.*
 ^.zenodo.json$
 ^cran-comments$
-
+^cleanup$
+^README\.md$
 ^src-libgadgetinput$
 ^src-para$
 ^LICENSE\.md$
@@ -20,6 +21,14 @@ gadget-para$
 ^examples$
 ^gadget\.1$
 ^gadget\.dox$
+^gadget2\.cflags$
+^gadget2\.config$
+^gadget2\.creator$
+^gadget2\.cxxflags$
+^gadget2\.files$
+^gadget2\.includes$
 ^params\.out$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+\.tar.gz$
+\.tgz$

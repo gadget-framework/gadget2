@@ -1,4 +1,12 @@
 # https://cran.r-project.org/submit.html
+==== 2.3.9 
+
+Remove unwanted files 
+
+==== 2.3.8 
+
+Fixes broken web-links in description and man pages
+
 ==== 2.3.7
 
 Fixes issues with the use of bitwise boolean operators. 
