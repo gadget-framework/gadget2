@@ -6600,6 +6600,6 @@ Gadget version 2.3.9 {#sec:v239}
 ---------------------
 
 
-Gadget development version {#sec:v9999}
+Gadget version 2.3.10 {#sec:v2310}
 ---------------------
 
