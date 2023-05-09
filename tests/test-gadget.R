@@ -14,6 +14,6 @@ ok_group("gadget_binary", {
         sprintf("Gadget version %s", packageVersion("gadget2")),
         out), "Run gadget binary and get help text with matching version")
     ok(matching_line(
-        'http://www.github.com/Hafro/gadget2',
+        'https://github.com/gadget-framework/gadget2',
         out), "Help quoted webpage link (i.e. got to the end of the output")
 })
