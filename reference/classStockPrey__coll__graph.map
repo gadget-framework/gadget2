@@ -5,7 +5,7 @@
 <area shape="rect" id="node4" href="$classLivesOnAreas.html" title="This is the class used to store information about the areas an object is defined on for the current m..." alt="" coords="340,755,487,920"/>
 <area shape="rect" id="node5" href="$classIntVector.html" title="This class implements a dynamic vector of int values." alt="" coords="355,277,471,531"/>
 <area shape="rect" id="node8" href="$classConversionIndex.html" title="This is the class used to convert information from one LengthGroupDivision length structure to a seco..." alt="" coords="511,667,681,1008"/>
-<area shape="rect" id="node6" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values." alt="" coords="846,263,991,545"/>
+<area shape="rect" id="node6" href="$classDoubleVector.html" title="This class implements a dynamic vector of double values." alt="" coords="845,263,990,545"/>
 <area shape="rect" id="node7" href="$classLengthGroupDivision.html" title="This is the class used to store information about the length groups of the modelled stock population." alt="" coords="705,696,900,979"/>
 <area shape="rect" id="node9" href="$classDoubleMatrix.html" title="This class implements a dynamic vector of DoubleVector values." alt="" coords="924,703,1071,971"/>
 <area shape="rect" id="node10" href="$classPopInfoMatrix.html" title="This class implements a dynamic vector of PopInfoVector values." alt="" coords="1188,733,1337,942"/>

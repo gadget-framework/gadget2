@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['weightregression_1817',['WeightRegression',['../classWeightRegression.html',1,'']]],
-  ['whitespace_1818',['Whitespace',['../classWhitespace.html',1,'']]]
+  ['weightregression_1903',['WeightRegression',['../classWeightRegression.html',1,'']]],
+  ['whitespace_1904',['Whitespace',['../classWhitespace.html',1,'']]]
 ];

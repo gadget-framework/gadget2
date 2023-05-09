@@ -26,6 +26,6 @@
 <area shape="rect" id="node22" href="$classAgeBandMatrix.html" title="This class implements a vector of PopInfoIndexVector values, indexed from minage not 0." alt="" coords="1086,1484,1245,1723"/>
 <area shape="rect" id="node24" href="$classPredatorPtrVector.html" title="This class implements a dynamic vector of Predator values." alt="" coords="967,1791,1139,1971"/>
 <area shape="rect" id="node26" href="$classFormulaVector.html" title="This class implements a dynamic vector of Formula values." alt="" coords="1724,725,1876,949"/>
-<area shape="rect" id="node29" href="$classFormulaMatrix.html" title="This class implements a dynamic vector of FormulaVector values." alt="" coords="1638,2039,1791,2263"/>
+<area shape="rect" id="node29" href="$classFormulaMatrix.html" title="This class implements a dynamic vector of FormulaVector values." alt="" coords="1637,2039,1790,2263"/>
 <area shape="rect" id="node27" href="$classFormula.html" title="This is the class used to calculate the value of the variables used in the model simulation." alt="" coords="2001,285,2151,523"/>
 </map>
