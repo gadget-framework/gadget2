@@ -1,6 +1,6 @@
 SLAVEOBJECTS = netdata.o slavecommunication.o pvmconstants.o
 
-all: gadget-para
+all: ../gadget-para
 
 include ../src/GNUmakefile
 
@@ -13,7 +13,10 @@ override PKG_CXXFLAGS = $(GADGET_OPTIM) $(GADGET_CXXFLAGS) $(GADGET_PLATFORM) $(
 %.o: ../src/%.cc
 	$(CXX) $(CXXFLAGS) $(PKG_CXXFLAGS) -c $< -o $@
 
-gadget-para: $(SLAVEOBJECTS) $(GADGETOBJECTS)
-	$(CXX) -o gadget-para $+ $(LDFLAGS) $(GADGET_LDFLAGS)
+../gadget-para: $(SLAVEOBJECTS) $(GADGETOBJECTS)
+	$(CXX) -o $@ $+ $(LDFLAGS) $(GADGET_LDFLAGS)
+
+clean:
+	rm -f *.o ../gadget-para
 
 .PHONY: all clean

@@ -1,9 +1,4 @@
 ##########################################################################
-# The name of the final executable (eg gadget-paramin or gadget.exe)
-GADGET = gadget
-GADGETPARA = gadget-para
-
-##########################################################################
 # Pick the appropriate compiler from the following switches
 ##########################################################################
 # 1. Linux, or Cygwin, or Solaris, with MPI, mpic++ compiler
@@ -31,8 +26,7 @@ endif
 all: gadget
 
 gadget:
-	$(MAKE) -C src gadget GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
-	mv src/gadget $(GADGET)
+	$(MAKE) -C src all GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
 
 ##########################################################################
 # The following line is needed to create the gadget input library
@@ -41,12 +35,10 @@ gadget:
 ##########################################################################
 libgadgetinput.a:
 	$(MAKE) -C src-libgadgetinput libgadgetinput.a GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
-	mv src-libgadgetinput/$@ $@
 
 gadgetpara: CXX = mpic++
 gadgetpara:
-	$(MAKE) -C src-para gadget-para GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
-	mv src-para/gadget-para $(GADGETPARA)
+	$(MAKE) -C src-para all GADGET_PLATFORM="$(GADGET_PLATFORM)" GADGET_OPTIM="$(GADGET_OPTIM)"
 
 ## you need root permission to be able to do this ...
 install	:	$(GADGET)
