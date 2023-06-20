@@ -12,3 +12,7 @@ File path, e.g. "/usr/local/lib/R/site-library/gadget/bin/gadget"
 \description{
 Return the location of the gadget binary installed by this package
 }
+\examples{
+# Run gadget, capture help output
+help_output <- system2(gadget_binary(), '-h', stdout = TRUE)
+}

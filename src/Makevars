@@ -47,12 +47,12 @@ GADGETOBJECTS = gadget.o ecosystem.o initialize.o simulation.o fleet.o otherfood
     intvector.o doublevector.o charptrvector.o initialinputfile.o \
     commentstream.o parameter.o parametervector.o strstack.o 
 
-all: gadget
+all: ../gadget
 
-gadget: $(GADGETOBJECTS)
-	$(CXX) -o gadget $(GADGETOBJECTS) $(LDFLAGS) $(PKG_LDFLAGS)
+../gadget: $(GADGETOBJECTS)
+	$(CXX) -o $@ $(GADGETOBJECTS) $(LDFLAGS) $(PKG_LDFLAGS)
 
 clean:
-	rm -f *.o gadget
+	rm -f *.o ../gadget
 
 .PHONY: all clean
