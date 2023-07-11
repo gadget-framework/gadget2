@@ -1458,15 +1458,14 @@ to calculate the suitability for the predator acting on the prey.
 Currently there are 7 suitability functions defined, and the valid
 suitability function names are:
 
-
-constant - use the Constant suitabilty function straightline - use the
-StraightLine suitabilty function exponential - use the Exponential
-suitabilty function newexponentiall50 - use the ExponentialL50
-suitabilty function richards - use the Richards suitabilty function
-andersen - use the Andersen suitabilty function andersenfleet - use the
-Andersen suitabilty function, modified for fleets gamma - use the Gamma
-suitabilty function
-
+* `constant` - use the Constant suitabilty function
+* `straightline` - use the StraightLine suitabilty function
+* `exponential` - use the Exponential suitabilty function
+* `newexponentiall50` - use the ExponentialL50 suitabilty function
+* `richards` - use the Richards suitabilty function
+* `andersen` - use the Andersen suitabilty function
+* `andersenfleet` - use the Andersen suitabilty function, modified for fleets
+* `gamma` - use the Gamma suitabilty function
 
 For the following suitability functions, the convention used is to
 represent the length group of the prey by l, and the length group of the
