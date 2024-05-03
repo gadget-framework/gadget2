@@ -127,7 +127,7 @@ void StockPredator::Reset(const TimeClass* const TimeInfo) {
   //check that the various parameters that can be estimated are sensible
   if ((handle.getLogLevel() >= LOGWARN) && (TimeInfo->getTime() == 1)) {
     int i, check;
-    if (functionnumber == 1)
+    if (functionnumber == 1)  // 1 == maxconsumption
       for (i = 0; i < consParam.Size(); i++)
         if (consParam[i] < 0.0)
           handle.logMessage(LOGWARN, "Warning in stockpredator - negative consumption parameter", consParam[i]);
@@ -154,14 +154,14 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       fphi[inarea][predl] = 0.0;
     }
 
-    if (functionnumber == 1) {
+    if (functionnumber == 1) {  // 1 == maxconsumption
       double temperature = Area->getTemperature(area, TimeInfo->getTime());
       tmp = exp(temperature * (consParam[1] - temperature * temperature * consParam[2]))
            * consParam[0] * TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++)
         maxcons[inarea][predl] = tmp * pow(LgrpDiv->meanLength(predl), consParam[3]);
 
-    } else if (functionnumber == 2) {
+    } else if (functionnumber == 2) {  // 2 == whaleconsumption
       double max1, max2, max3, l;
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         l = LgrpDiv->meanLength(predl);
@@ -211,9 +211,9 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
   }
 
   tmp = TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
-  if (functionnumber == 1)
+  if (functionnumber == 1)  // 1 == maxconsumption
     tmp *= consParam[4];
-  else if (functionnumber == 2)
+  else if (functionnumber == 2)  // 2 == whaleconsumption
     tmp *= consParam[15];
   else
     handle.logMessage(LOGWARN, "Warning in stockpredator - unrecognised consumption format");
