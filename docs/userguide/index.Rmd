@@ -1364,7 +1364,7 @@ equation \@ref(eq:totalcons) below:
 
 \begin{equation}
 (\#eq:totalcons)
-C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{\displaystyle \sum_{\it preys} \sum_{\it prey\_lengths} F_{p}(l, L)}\end{equation}
+C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{E_p \displaystyle \sum_{\it preys} \sum_{\it prey\_lengths} F_{p}(l, L)}\end{equation}
 
 \begin{equation}
 (\#eq:preycons)
@@ -1391,16 +1391,12 @@ where:
 * $<\Delta t>$ is the length of the timestep
 * $<$ T $>$ is the temperature of the area that the feeding takes place on
 
-In equation \@ref(eq:totalcons), the parameter $<$ F $>$ gives the amount of a
-given prey that is consumed by the predator, given by multiplying the
-biomass of the prey by the suitability (see
-section \@ref(sec-suitability)), as shown in
-equation \@ref(eq:preycons). The summation over preys is over all preys
-that the predator consumes, including non-modelled prey, given as
-"otherfood" in section \@ref(chap-other). The value of $<$ C $>$ can have an affect on
-the growth of the predator when the growth function has been set to
-"WeightJones".
+Equation \@ref(eq:totalcons) produces the *total biomass* that the predator stock wants to consume of a given prey.
+When summing preys summation is over all preys that the predator consumes,
+including non-modelled prey given as "otherfood" in section \@ref(chap-other).
+The value of $<$ C $>$ can have an affect on the growth of the predator when the growth function has been set to "WeightJones" (see section \@ref(subsec-growth4)).
 
+Equation \@ref(eq:preycons) produces the *total energy content* that a single predator wants to consume of a given prey,
 
 ### Prey preference {#sec-preypreference}
 
