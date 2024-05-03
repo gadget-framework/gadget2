@@ -1402,14 +1402,6 @@ the growth of the predator when the growth function has been set to
 "WeightJones".
 
 
-In equation \@ref(eq:preycons), the parameter $<$ d $>$ gives the preference
-of the predator for the prey, controlling the form of the functional
-response that is used to model the predation. Setting this parameter to
-1 will ensure that a Type II functional response is used (note that this
-is always used when modelling the predation by the fleets, see
-section \@ref(chap-fleet).
-Any other value will mean that a Type III functional response is used.
-
 ### Prey preference {#sec-preypreference}
 
 The prey preference parameter is specified by listing the names of the
@@ -1421,6 +1413,14 @@ prey and the associated preference value, as shown in the example below:
     <name of prey 2>       <preference for prey 2>
     maxconsumption         <maximum consumption vector>
     ...
+
+In equation \@ref(eq:preycons), the parameter $<$ d $>$ gives the preference
+of the predator for the prey, controlling the form of the functional
+response that is used to model the predation. Setting this parameter to
+1 will ensure that a Type II functional response is used (note that this
+is always used when modelling the predation by the fleets, see
+section \@ref(chap-fleet).
+Any other value will mean that a Type III functional response is used.
 
 In equation \@ref(eq:maxcons), the parameter $<$ M $>$ gives the maximum
 possible consumption for the predator on the current timestep. This is a
