@@ -196,10 +196,12 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
                   * this->getPrey(prey)->getBiomass(area, preyl);
 
           //JMB - dont take the power if we dont have to
+          // NB: A Type III response is anything with a power > 1 https://en.wikipedia.org/wiki/Functional_response#Type_III
+          // tmp == F_p(l,L)
           if (!check)
             tmp = pow(tmp, preference[prey]);
-          (*cons[inarea][prey])[predl][preyl] = tmp;
-          Phi[inarea][predl] += tmp;
+          (*cons[inarea][prey])[predl][preyl] = tmp; // cons == F_p(l,L)
+          Phi[inarea][predl] += tmp;  // ∑ F_p(l,L) for use in C_p(l,L), ψ_L
         }
       }
 
@@ -212,13 +214,13 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
 
   tmp = TimeInfo->getTimeStepLength() / TimeInfo->numSubSteps();
   if (functionnumber == 1)  // 1 == maxconsumption
-    tmp *= consParam[4];
+    tmp *= consParam[4];  // halffeedingvalue
   else if (functionnumber == 2)  // 2 == whaleconsumption
-    tmp *= consParam[15];
+    tmp *= consParam[15];  // halffeedingvalue
   else
     handle.logMessage(LOGWARN, "Warning in stockpredator - unrecognised consumption format");
 
-  //Calculating fphi(L) and totalcons of predator in area
+  // Calculating subfphi (i.e. fphi for current substep) and totalcons of predator in area
   for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
     if (isZero(tmp)) {
       subfphi[inarea][predl] = 1.0;
@@ -227,7 +229,9 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
       subfphi[inarea][predl] = 0.0;
       totalcons[inarea][predl] = 0.0;
     } else {
+      // subfphi == ψ_L for current (sub)step
       subfphi[inarea][predl] = Phi[inarea][predl] / (Phi[inarea][predl] + tmp);
+      // totalcons == N_L M_L ψ_L
       totalcons[inarea][predl] = subfphi[inarea][predl]
         * maxcons[inarea][predl] * prednumber[inarea][predl].N;
     }
@@ -238,6 +242,7 @@ void StockPredator::Eat(int area, const AreaClass* const Area, const TimeClass* 
     if ((this->getPrey(prey)->isPreyArea(area)) && (!(isZero(this->getPrey(prey)->getEnergy())))) {
       for (predl = 0; predl < LgrpDiv->numLengthGroups(); predl++) {
         if (!(isZero(Phi[inarea][predl]))) {
+          // tmp == ( N_L M_L ψ_L ) / (∑F_p(l,L) * E_p)
           tmp = totalcons[inarea][predl] / (Phi[inarea][predl] * this->getPrey(prey)->getEnergy());
           for (preyl = 0; preyl < (*cons[inarea][prey])[predl].Size(); preyl++)
             (*cons[inarea][prey])[predl][preyl] *= tmp;
