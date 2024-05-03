@@ -1379,15 +1379,18 @@ M_{L} = m_{0} \Delta t e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}\end{equation}
 (\#eq:feedlevel)
 \psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H \Delta t + \displaystyle \sum_{\it preys} F_{p}(l, L)}\end{equation}
 
-where: $<$ L $>$ is the length of the predator $<$ l $>$ is the length
-of the prey $<$ H $>$ is the half feeding value $<$ d $>$ is the
-preference of the predator for the prey $<$ E $>$ is the energy content
-of the prey (see section \@ref(sec-stockprey) $<$ N $>$ is the number of prey in the
-length cell $<$ W $>$ is the mean weight of the prey in the length cell
-$<$ S $>$ is the suitability function (see
-section \@ref(sec-suitability)) $<\Delta t>$ is the length of the timestep
-$<$ T $>$ is the temperature of the area that the feeding takes place on
+where:
 
+* $<$ L $>$ is the length of the predator
+* $<$ l $>$ is the length of the prey
+* $<$ H $>$ is the half feeding value
+* $<$ d $>$ is the preference of the predator for the prey
+* $<$ E $>$ is the energy content of the prey (see section \@ref(sec-stockprey))
+* $<$ N $>$ is the number of prey in the length cell
+* $<$ W $>$ is the mean weight of the prey in the length cell
+* $<$ S $>$ is the suitability function (see section \@ref(sec-suitability))
+* $<\Delta t>$ is the length of the timestep
+* $<$ T $>$ is the temperature of the area that the feeding takes place on
 
 In equation \@ref(eq:totalcons), the parameter $<$ F $>$ gives the amount of a
 given prey that is consumed by the predator, given by multiplying the
