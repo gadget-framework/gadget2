@@ -1351,8 +1351,7 @@ $<$maximum consumption$>$ vector and $<$half feeding$>$ value parameters
 define how the stock consumes any prey that is eaten, and are described
 in the following section.
 
-Consumption {#sec-consumption}
------------
+### Consumption {#sec-consumption}
 
 The consumption determines how much of a given prey is consumed by the
 predator. This will result in the population of the prey being reduced,
@@ -1384,7 +1383,7 @@ where:
 * $<$ L $>$ is the length of the predator
 * $<$ l $>$ is the length of the prey
 * $<$ H $>$ is the half feeding value
-* $<$ d $>$ is the preference of the predator for the prey
+* $<$ d $>$ is the preference of the predator for the prey (see section \@ref(sec-preypreference))
 * $<$ E $>$ is the energy content of the prey (see section \@ref(sec-stockprey))
 * $<$ N $>$ is the number of prey in the length cell
 * $<$ W $>$ is the mean weight of the prey in the length cell
@@ -1410,6 +1409,9 @@ response that is used to model the predation. Setting this parameter to
 is always used when modelling the predation by the fleets, see
 section \@ref(chap-fleet).
 Any other value will mean that a Type III functional response is used.
+
+### Prey preference {#sec-preypreference}
+
 The prey preference parameter is specified by listing the names of the
 prey and the associated preference value, as shown in the example below:
 
@@ -1438,8 +1440,7 @@ level. The value of $<\psi>$ can have an affect on the growth of the
 predator (ie. when there isn't sufficient food available) when the
 growth function has been set to "MULTSPEC" or "WeightJones".
 
-Suitability {#sec-suitability}
------------
+### Suitability {#sec-suitability}
 
 The suitability determines how the predators act on the preys. This
 selectivity relationship between the predator and the prey is based on
