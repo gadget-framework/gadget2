@@ -132,6 +132,7 @@ sec-stocknatmort
 sec-stockprey
 sec-stockpredator
 sec-consumption
+sec-preypreference
 sec-suitability
 constant-suitability-function
 straightline-suitability-function
