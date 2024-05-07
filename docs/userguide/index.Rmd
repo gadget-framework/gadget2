@@ -1351,8 +1351,7 @@ $<$maximum consumption$>$ vector and $<$half feeding$>$ value parameters
 define how the stock consumes any prey that is eaten, and are described
 in the following section.
 
-Consumption {#sec-consumption}
------------
+### Consumption {#sec-consumption}
 
 The consumption determines how much of a given prey is consumed by the
 predator. This will result in the population of the prey being reduced,
@@ -1365,7 +1364,7 @@ equation \@ref(eq:totalcons) below:
 
 \begin{equation}
 (\#eq:totalcons)
-C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{\displaystyle \sum_{\it preys} F_{p}(l, L)}\end{equation}
+C_{p}(l, L) = \frac{N_{L} M_{L} \psi_{L} F_{p}(l, L)}{E_p \displaystyle \sum_{\it preys} \sum_{\it prey\_lengths} F_{p}(l, L)}\end{equation}
 
 \begin{equation}
 (\#eq:preycons)
@@ -1377,36 +1376,30 @@ M_{L} = m_{0} \Delta t e^{(m_{1}T - m_{2}T^3)} L^{m_{3}}\end{equation}
 
 \begin{equation}
 (\#eq:feedlevel)
-\psi_{L} = \frac{\displaystyle \sum_{\it preys} F_{p}(l, L)}{H \Delta t + \displaystyle \sum_{\it preys} F_{p}(l, L)}\end{equation}
+\psi_{L} = \frac{\displaystyle \sum_{\it preys} \sum_{\it prey\_lengths} F_{p}(l, L)}{H \Delta t + \displaystyle \sum_{\it preys} \sum_{\it prey\_lengths} F_{p}(l, L)}\end{equation}
 
-where: $<$ L $>$ is the length of the predator $<$ l $>$ is the length
-of the prey $<$ H $>$ is the half feeding value $<$ d $>$ is the
-preference of the predator for the prey $<$ E $>$ is the energy content
-of the prey (see section \@ref(sec-stockprey) $<$ N $>$ is the number of prey in the
-length cell $<$ W $>$ is the mean weight of the prey in the length cell
-$<$ S $>$ is the suitability function (see
-section \@ref(sec-suitability)) $<\Delta t>$ is the length of the timestep
-$<$ T $>$ is the temperature of the area that the feeding takes place on
+where:
 
+* $<$ L $>$ is the length of the predator
+* $<$ l $>$ is the length of the prey
+* $<$ H $>$ is the half feeding value
+* $<$ d $>$ is the preference of the predator for the prey (see section \@ref(sec-preypreference))
+* $<$ E $>$ is the energy content of the prey (see section \@ref(sec-stockprey))
+* $<$ N $>$ is the number of prey in the length cell
+* $<$ W $>$ is the mean weight of the prey in the length cell
+* $<$ S $>$ is the suitability function (see section \@ref(sec-suitability))
+* $<\Delta t>$ is the length of the timestep
+* $<$ T $>$ is the temperature of the area that the feeding takes place on
 
-In equation \@ref(eq:totalcons), the parameter $<$ F $>$ gives the amount of a
-given prey that is consumed by the predator, given by multiplying the
-biomass of the prey by the suitability (see
-section \@ref(sec-suitability)), as shown in
-equation \@ref(eq:preycons). The summation over preys is over all preys
-that the predator consumes, including non-modelled prey, given as
-"otherfood" in section \@ref(chap-other). The value of $<$ C $>$ can have an affect on
-the growth of the predator when the growth function has been set to
-"WeightJones".
+Equation \@ref(eq:totalcons) produces the *total biomass* that the predator stock wants to consume of a given prey.
+When summing preys summation is over all preys that the predator consumes,
+including non-modelled prey given as "otherfood" in section \@ref(chap-other).
+The value of $<$ C $>$ can have an affect on the growth of the predator when the growth function has been set to "WeightJones" (see section \@ref(subsec-growth4)).
 
+Equation \@ref(eq:preycons) produces the *total energy content* that a single predator wants to consume of a given prey,
 
-In equation \@ref(eq:preycons), the parameter $<$ d $>$ gives the preference
-of the predator for the prey, controlling the form of the functional
-response that is used to model the predation. Setting this parameter to
-1 will ensure that a Type II functional response is used (note that this
-is always used when modelling the predation by the fleets, see
-section \@ref(chap-fleet).
-Any other value will mean that a Type III functional response is used.
+### Prey preference {#sec-preypreference}
+
 The prey preference parameter is specified by listing the names of the
 prey and the associated preference value, as shown in the example below:
 
@@ -1416,6 +1409,14 @@ prey and the associated preference value, as shown in the example below:
     <name of prey 2>       <preference for prey 2>
     maxconsumption         <maximum consumption vector>
     ...
+
+In equation \@ref(eq:preycons), the parameter $<$ d $>$ gives the preference
+of the predator for the prey, controlling the form of the functional
+response that is used to model the predation. Setting this parameter to
+1 will ensure that a Type II functional response is used (note that this
+is always used when modelling the predation by the fleets, see
+section \@ref(chap-fleet).
+Any other value will mean that a Type III functional response is used.
 
 In equation \@ref(eq:maxcons), the parameter $<$ M $>$ gives the maximum
 possible consumption for the predator on the current timestep. This is a
@@ -1435,8 +1436,7 @@ level. The value of $<\psi>$ can have an affect on the growth of the
 predator (ie. when there isn't sufficient food available) when the
 growth function has been set to "MULTSPEC" or "WeightJones".
 
-Suitability {#sec-suitability}
------------
+### Suitability {#sec-suitability}
 
 The suitability determines how the predators act on the preys. This
 selectivity relationship between the predator and the prey is based on
