@@ -1054,9 +1054,9 @@ p_{3} + p_{4}x & \textrm{otherwise}
 
 where:
 $<\Delta t>$ is the length of the timestep, as a fraction of year
-$<$ C $>$ is the consumption (see section \@ref(sec-consumption)
+$<$ C $>$ is the consumption, calcluated by $M \psi$ (see \@ref(sec-preypreference), equation \@ref(eq:maxcons) & \@ref(eq:feedlevel) respectively)
 $<$ T $>$ is the temperature
-$<\psi>$ is the feeding level (see section \@ref(sec-consumption)
+$<\psi>$ is the feeding level (see \@ref(sec-preypreference), equation \@ref(eq:feedlevel))
 $<W_{ref}>$ is the reference weight
 
 
