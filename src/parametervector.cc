@@ -32,7 +32,7 @@ void ParameterVector::resize(Parameter& value) {
   if (v == 0) {
     v = new Parameter[1];
   } else {
-    Parameter* vnew = new Parameter[size + 1];
+    Parameter* vnew = new Parameter[(unsigned)(max(0, size + 1))];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;

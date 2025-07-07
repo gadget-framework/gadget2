@@ -23,7 +23,7 @@ void ModelVariableVector::resize(int addsize, Keeper* const keeper) {
     size = addsize;
     v = new ModelVariable[size];
   } else {
-    ModelVariable* vnew = new ModelVariable[addsize + size];
+    ModelVariable* vnew = new ModelVariable[(unsigned)(max(0, addsize + size))];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
     delete[] v;
@@ -44,7 +44,7 @@ void ModelVariableVector::resize(const ModelVariable& mvar, Keeper* const keeper
   if (v == 0) {
     v = new ModelVariable[1];
   } else {
-    ModelVariable* vnew = new ModelVariable[size + 1];
+    ModelVariable* vnew = new ModelVariable[(unsigned)(max(0, size + 1))];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
     delete[] v;

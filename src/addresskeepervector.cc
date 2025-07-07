@@ -13,7 +13,7 @@ void AddressKeeperVector::resize() {
   if (v == 0) {
     v = new AddressKeeper[1];
   } else {
-    AddressKeeper* vnew = new AddressKeeper[size + 1];
+    AddressKeeper* vnew = new AddressKeeper[(unsigned)(max(0, size + 1))];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;

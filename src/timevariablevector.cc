@@ -23,7 +23,7 @@ void TimeVariableVector::resize(int addsize, Keeper* const keeper) {
     size = addsize;
     v = new TimeVariable[size];
   } else {
-    TimeVariable* vnew = new TimeVariable[addsize + size];
+    TimeVariable* vnew = new TimeVariable[(unsigned)(max(0, addsize + size))];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
     delete[] v;
@@ -44,7 +44,7 @@ void TimeVariableVector::resize(const TimeVariable& tvar, Keeper* const keeper) 
   if (v == 0) {
     v = new TimeVariable[1];
   } else {
-    TimeVariable* vnew = new TimeVariable[size + 1];
+    TimeVariable* vnew = new TimeVariable[(unsigned)(max(0, size + 1))];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
     delete[] v;

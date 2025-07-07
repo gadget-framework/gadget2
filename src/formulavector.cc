@@ -49,7 +49,7 @@ void FormulaVector::resize(int addsize, Keeper* keeper) {
     size = addsize;
     v = new Formula[size];
   } else {
-    Formula* vnew = new Formula[size + addsize];
+    Formula* vnew = new Formula[(unsigned)(max(0, size + addsize))];
     for (i = 0; i < size; i++)
       v[i].Interchange(vnew[i], keeper);
     delete[] v;
