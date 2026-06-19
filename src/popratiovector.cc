@@ -35,7 +35,7 @@ void PopRatioVector::resize(PopRatio value) {
   if (v == 0) {
     v = new PopRatio[1];
   } else {
-    PopRatio* vnew = new PopRatio[size + 1];
+    PopRatio* vnew = new PopRatio[(unsigned)(max(0, size + 1))];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
@@ -50,7 +50,7 @@ void PopRatioVector::resize(double* num, double rat) {
   if (v == 0) {
     v = new PopRatio[1];
   } else {
-    PopRatio* vnew = new PopRatio[size + 1];
+    PopRatio* vnew = new PopRatio[(unsigned)(max(0, size + 1))];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;

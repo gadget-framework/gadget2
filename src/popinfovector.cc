@@ -38,7 +38,7 @@ void PopInfoVector::resizeBlank(int addsize) {
     size = addsize;
     v = new PopInfo[size];
   } else {
-    PopInfo* vnew = new PopInfo[addsize + size];
+    PopInfo* vnew = new PopInfo[(unsigned)(max(0, addsize + size))];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
@@ -52,7 +52,7 @@ void PopInfoVector::resize(PopInfo value) {
   if (v == 0) {
     v = new PopInfo[1];
   } else {
-    PopInfo* vnew = new PopInfo[size + 1];
+    PopInfo* vnew = new PopInfo[(unsigned)(max(0, size + 1))];
     for (i = 0; i < size; i++)
       vnew[i] = v[i];
     delete[] v;
